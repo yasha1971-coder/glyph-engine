@@ -3,8 +3,8 @@
 Status: PRE-PUBLICATION CHECK
 
 Decision:
-- GitHub public release: HOLD
-- encode.su post: HOLD
+- GitHub public release: DONE (experimental basis)
+- encode.su post: PENDING
 - commercial claims: HOLD
 
 1. Core
