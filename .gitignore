@@ -1,24 +1,40 @@
-# build
+# DATA
+data/
+data_*/
+out/
+out_*/
+
+# CHUNKS
+chunk_core/
+chunk_core_256/
+chunk_core_512/
+
+# BUILD
 build/
+
+# CACHE
 __pycache__/
 *.pyc
 
-# data
-data_*
-out/
-out_*
+# PERF
 perf.data
+*.data
 
-# temp
+# TEMP / GENERATED
 *.bin
 *.pkl
 *.csv
+tools/*.pkl
 
-# junk
-14
-# internal logs / dev state
+# RUNTIME / INTERNAL STATE
 STATE/
 STATUS.md
 PRODUCT_STATE_*
 CORE_FREEZE_*
 RUNBOOK_*
+
+# VENDOR DUPLICATES
+vendor/
+
+# JUNK
+14
