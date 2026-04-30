@@ -77,3 +77,23 @@ See:
 ## License
 
 Apache-2.0
+---
+
+## Quick Start
+
+Minimal example:
+
+    echo "error 500 test" > test.txt
+    ./glyph_cli_v2.py "error"
+
+Expected:
+- exact byte match positions returned
+
+Core guarantees:
+- deterministic results
+- no ranking
+- no fuzzy matching
+
+See:
+- PRODUCT_BASELINE_v1.md
+
