@@ -13,6 +13,26 @@ It performs deterministic exact matches at scale.
 
 ---
 
+## Quick Start
+
+Minimal example:
+
+    echo "error 500 test" > test.txt
+    ./glyph_cli_v2.py "error"
+
+Expected:
+- exact byte match positions returned
+
+Core guarantees:
+- deterministic results
+- no ranking
+- no fuzzy matching
+
+See:
+- PRODUCT_BASELINE_v1.md
+
+---
+
 ## What problem it solves
 
 Most systems trade accuracy for flexibility:
@@ -64,7 +84,9 @@ Experimental prototype.
 
 ---
 
-## IP Notice
+## Patent Status
+
+GLYPH uses public algorithms and provides no patent-safety guarantee.
 
 No patent clearance is claimed.  
 Commercial use requires independent legal review.
@@ -77,23 +99,3 @@ See:
 ## License
 
 Apache-2.0
----
-
-## Quick Start
-
-Minimal example:
-
-    echo "error 500 test" > test.txt
-    ./glyph_cli_v2.py "error"
-
-Expected:
-- exact byte match positions returned
-
-Core guarantees:
-- deterministic results
-- no ranking
-- no fuzzy matching
-
-See:
-- PRODUCT_BASELINE_v1.md
-
