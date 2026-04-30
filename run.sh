@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
 echo "[1/4] Starting HTTP server..."
+echo "[note] using local prebuilt artifacts"
 
 # убить старые процессы
 pkill -u $(whoami) -f "glyph_http_server" 2>/dev/null || true
