@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-import subprocess
+import requests
 
 def main():
     ap = argparse.ArgumentParser()
@@ -13,33 +13,13 @@ def main():
     else:
         hex_query = args.query.encode("utf-8").hex()
 
-    cmd = [
-        "./glyph_segmented_live_v3.py",
-        "--config", "shards_8gb_demo.json",
-        "--server-bin", "build/query_fm_server_v1"
-    ]
-
-    p = subprocess.Popen(
-        cmd,
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        bufsize=1,
+    r = requests.post(
+        "http://127.0.0.1:18080/query",
+        json={"hex": hex_query},
+        timeout=5
     )
 
-    while True:
-        line = p.stderr.readline().strip()
-        if line.startswith("READY"):
-            break
-
-    p.stdin.write("HEX " + hex_query + "\n")
-    p.stdin.flush()
-
-    result = p.stdout.readline()
-    print(result.strip())
-
-    p.kill()
+    print(r.json())
 
 if __name__ == "__main__":
     main()

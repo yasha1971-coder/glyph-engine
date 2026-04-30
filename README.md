@@ -23,7 +23,7 @@ Check service:
 
 Query prepared demo data:
 
-    ./glyph_cli_v2.py --hex "$(xxd -p -c 999999 /tmp/query_41905.bin)"
+    ./glyph_cli.py --hex "$(xxd -p -c 999999 /tmp/query_41905.bin)"
 
 Expected:
 - JSON response with exact byte-match shortlist
@@ -75,7 +75,7 @@ GLYPH does the opposite:
 
 CLI:
 
-    ./glyph_cli_v2.py "error 500"
+    ./glyph_cli.py "error 500"
 
 HTTP:
 

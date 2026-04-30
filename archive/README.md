@@ -1,3 +1,9 @@
 Legacy development snapshots.
 
-These files are not used in the current GLYPH v1.2 baseline.
+Current public entrypoints are in the repository root:
+- glyph_cli.py
+- glyph_http_server.py
+- glyph_segmented_live.py
+- glyph_live_retrieve.py
+
+Files in archive/ are kept for development history only.
