@@ -5,7 +5,7 @@ import time
 import sys
 from concurrent.futures import ThreadPoolExecutor
 
-from glyph_live_retrieve_v5 import FMServer, MMapSA, retrieve_bytes
+from glyph_live_retrieve import FMServer, MMapSA, retrieve_bytes
 
 
 def load_query_bytes_line(line):
