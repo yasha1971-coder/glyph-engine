@@ -15,13 +15,18 @@ It performs deterministic exact matches at scale.
 
 ## Quick Start
 
-Minimal example:
+GLYPH currently expects prepared index artifacts and a running local HTTP server.
 
-    echo "error 500 test" > test.txt
-    ./glyph_cli_v2.py "error"
+Check service:
+
+    curl http://127.0.0.1:18080/health
+
+Query prepared demo data:
+
+    ./glyph_cli_v2.py --hex "$(xxd -p -c 999999 /tmp/query_41905.bin)"
 
 Expected:
-- exact byte match positions returned
+- JSON response with exact byte-match shortlist
 
 Core guarantees:
 - deterministic results
