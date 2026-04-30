@@ -17,6 +17,10 @@ It performs deterministic exact matches at scale.
 
 GLYPH currently expects prepared index artifacts and a running local HTTP server.
 
+Note:
+- `run.sh` expects local prepared demo artifacts.
+- Large corpus/index artifacts are not included in this repository.
+
 Check service:
 
     curl http://127.0.0.1:18080/health
