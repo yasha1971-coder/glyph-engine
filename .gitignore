@@ -1,0 +1,24 @@
+# build
+build/
+__pycache__/
+*.pyc
+
+# data
+data_*
+out/
+out_*
+perf.data
+
+# temp
+*.bin
+*.pkl
+*.csv
+
+# junk
+14
+# internal logs / dev state
+STATE/
+STATUS.md
+PRODUCT_STATE_*
+CORE_FREEZE_*
+RUNBOOK_*

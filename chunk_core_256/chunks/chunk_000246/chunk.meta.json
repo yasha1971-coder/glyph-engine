@@ -1,0 +1,13 @@
+{
+  "chunk_id": 246,
+  "source_glyph": "/home/glyph/GLYPH_RELEASES/glyph_core_v9/data/corpus2/corpus2.glyph",
+  "raw_len": 16384,
+  "clean_len": 16385,
+  "global_start": 4030464,
+  "global_end": 4046848,
+  "chunk_dir": "/home/glyph/GLYPH_CPP_BACKEND/chunk_core_256/chunks/chunk_000246",
+  "raw_path": "/home/glyph/GLYPH_CPP_BACKEND/chunk_core_256/chunks/chunk_000246/chunk.raw.bin",
+  "clean_corpus_path": "/home/glyph/GLYPH_CPP_BACKEND/chunk_core_256/chunks/chunk_000246/chunk.clean.corpus.bin",
+  "sentinel": 0,
+  "byte_shift": 1
+}
