@@ -1,18 +1,25 @@
 # Mini example
 
-This is a conceptual minimal pipeline.
+This is a minimal end-to-end GLYPH pipeline.
 
-GLYPH requires prebuilt FM-index artifacts for real queries.
+It builds a tiny corpus, constructs:
 
-This example demonstrates:
-- structure
-- CLI usage
-- server startup
+- SA32u
+- BWT
+- FM-index
+
+Then it runs a direct FM query for `error`.
 
 Run:
 
-    ./examples/mini/run_mini.sh
+    ./examples/mini/build_mini.sh
 
-For real dataset see:
+Expected output includes:
+
+    count:    2
+
+This example is intentionally small and does not use the HTTP layer.
+
+For the larger local benchmark, see:
 
 - RUNBOOK_4GB.md
