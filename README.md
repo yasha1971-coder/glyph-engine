@@ -21,6 +21,11 @@ Note:
 - `run.sh` expects local prepared demo artifacts.
 - Large corpus/index artifacts are not included in this repository.
 
+
+For a minimal working example:
+
+    ./examples/mini/build_mini.sh
+
 Check service:
 
     curl http://127.0.0.1:18080/health
