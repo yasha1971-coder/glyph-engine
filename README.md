@@ -1,24 +1,18 @@
 # GLYPH
-
 GLYPH is a byte-exact substring retrieval engine over raw bytes.
-
 It is designed for high-speed exact matching without tokenization or scoring.
-
 It is NOT a search engine:
 - no ranking
 - no fuzzy matching
 - no scoring
-
 It performs deterministic exact matches at scale.
-
 ---
-
 ## ⚡ Try it in 10 seconds
-
 ```bash
 git clone https://github.com/yasha1971-coder/glyph-engine
 cd glyph-engine
 ./examples/mini/build_mini.sh
+
 Expected output:
 
 count:    2
@@ -92,21 +86,9 @@ When to use
 
 Performance
 
-* ~1.3–1.7 ms (warm, segmented)
+* ~1.3–1.7 ms (warm)
 * ~4 ms p99 (4GB shard)
 * mmap-based index
-
-⸻
-
-Example
-
-CLI:
-
-./glyph_cli.py "error 500"
-
-HTTP:
-
-POST /query
 
 ⸻
 
