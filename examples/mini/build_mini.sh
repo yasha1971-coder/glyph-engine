@@ -9,6 +9,10 @@ OUT_DIR="$MINI_DIR/out"
 
 mkdir -p "$OUT_DIR"
 
+echo "[mini] build C++ tools"
+cmake -S . -B build
+cmake --build build -j
+
 echo "[mini] corpus"
 cp "$MINI_DIR/data.txt" "$OUT_DIR/corpus.bin"
 
