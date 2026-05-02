@@ -1,7 +1,4 @@
-python3 - << 'PY'
-from pathlib import Path
-
-Path("README.md").write_text("""# GLYPH
+# GLYPH
 
 GLYPH is a byte-exact substring retrieval engine over raw bytes.
 
@@ -120,7 +117,3 @@ See:
 ## License
 
 Apache-2.0
-""")
-
-print("README OK")
-PY
