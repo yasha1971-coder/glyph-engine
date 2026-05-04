@@ -117,3 +117,8 @@ See:
 ## License
 
 Apache-2.0
+---
+
+## Benchmark
+
+See benchmark: https://github.com/yasha1971-coder/glyph-engine/issues/1
