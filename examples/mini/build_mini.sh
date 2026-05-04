@@ -32,7 +32,7 @@ echo "[mini] build FM"
 ./build/build_fm \
   "$OUT_DIR/corpus.bwt.bin" \
   "$OUT_DIR/corpus.fm.bin" \
-  64
+  16384
 
 echo "[mini] query direct FM"
 PATTERN_HEX="$(printf 'error' | xxd -p -c 999999)"
