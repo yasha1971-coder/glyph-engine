@@ -39,3 +39,8 @@ vendor/
 # JUNK
 14
 run.log
+HDFS.log
+HDFS_v1.zip
+bench_1gb/
+preprocessed/
+hdfs_queries.txt
