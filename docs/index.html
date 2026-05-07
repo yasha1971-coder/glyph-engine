@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>GLYPH</title>
+</head>
+<body>
+  <h1>GLYPH</h1>
+
+  <p><b>Persistent byte-level indexed retrieval over static corpora.</b></p>
+
+  <h2>Benchmark</h2>
+  <pre>
+Dataset: HDFS 1GB
+Queries: 100 exact blk_* lookups
+
+grep repeated scan: 11.516 sec
+GLYPH persistent FM: 0.001673 sec total
+Average: 0.0167 ms/query
+
+Cost:
+Persistent server RAM: ~9.4GB
+Index artifacts: ~13.1GB
+  </pre>
+
+  <h2>Tradeoff</h2>
+  <p>
+    GLYPH trades RAM and offline indexing for extremely fast repeated exact queries.
+  </p>
+
+  <h2>GitHub</h2>
+  <p>
+    <a href="https://github.com/yasha1971-coder/glyph-engine">
+      github.com/yasha1971-coder/glyph-engine
+    </a>
+  </p>
+</body>
+</html>
