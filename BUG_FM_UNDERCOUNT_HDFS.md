@@ -62,3 +62,25 @@ Next investigation:
 - verify FM rank/checkpoint logic on large BWT
 - test same pattern on smaller prefixes of HDFS corpus
 - bisect corpus size threshold
+
+## Size bisect
+
+Pattern:
+
+- blk_-1000095285706020638
+
+Results:
+
+| Corpus prefix | Python bytes.count | FM count |
+|---|---:|---:|
+| 64MB | 0 | 0 |
+| 128MB | 0 | 0 |
+| 256MB | 0 | 0 |
+| 512MB | 17 | 3 |
+| 1GB | 27 | 13 |
+
+Conclusion:
+
+The bug appears once the target pattern exists in the HDFS corpus.
+This is not caused by segmented routing.
+The issue is in the FM/BWT/query path or in how this real corpus is indexed.
