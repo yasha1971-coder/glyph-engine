@@ -106,3 +106,24 @@ Conclusion:
 The bug appears once the target pattern exists in the HDFS corpus.
 This is not caused by segmented routing.
 The issue is in the FM/BWT/query path or in how this real corpus is indexed.
+
+## Localization update
+
+512MB HDFS prefix:
+
+- Python bytes.count: 17
+- SA scan count: 17
+- BWT validation for matching SA rows: 17 checked / 0 bad
+- FM count with checkpoint_step=128: 3
+- FM count with checkpoint_step=64: 3
+
+Conclusion:
+
+SA and BWT are correct for the target pattern.
+The undercount is not caused by checkpoint step size.
+
+Likely faulty layer:
+
+- FM rank / occ calculation
+- C-table usage
+- backward-search implementation in query_fm_v1 / query_fm_server_v1
