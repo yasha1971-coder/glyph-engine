@@ -34,6 +34,24 @@ No large datasets required.
 
 ---
 
+## Documentation
+
+Architecture:
+- docs/architecture/ENGINE_OVERVIEW.md
+
+Specifications:
+- docs/specs/INDEX_FORMAT_V1.md
+- docs/specs/KNOWN_LIMITATIONS.md
+
+Benchmarks:
+- benchmarks/HDFS_1GB_BENCHMARK.md
+- benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
+
+Business / Contact:
+- docs/business/CONTACT.md
+
+---
+
 ## Quick Start (full system)
 
 GLYPH currently expects prepared index artifacts and a running local HTTP server.
