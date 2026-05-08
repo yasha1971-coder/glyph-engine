@@ -152,3 +152,36 @@ Interpretation:
 The FM query path returns an interval shifted inside/near the correct suffix-array interval.
 SA and BWT are correct.
 The fault is in FM backward-search support data or occ/C logic.
+
+## Root cause confirmed
+
+The FM undercount is caused by missing real appended sentinel in the indexed corpus.
+
+Previous behavior:
+
+- corpus did not contain 0x00
+- build_bwt emitted synthetic sentinel byte for SA=0
+- FM C-table was built from BWT containing this synthetic sentinel
+- corpus alphabet and BWT/FM alphabet were inconsistent
+- backward search intervals shifted and undercounted real matches
+
+Sentinel fix test:
+
+- input: 512MB HDFS prefix + appended 0x00
+- Python bytes.count: 17
+- FM count: 17
+- FM interval: [359783092, 359783109)
+
+Conclusion:
+
+FM correctness requires indexing corpus + real unique sentinel.
+
+For v0.x, safe mode is:
+
+- require corpus does not contain 0x00
+- append 0x00 before SA/BWT/FM build
+- exclude sentinel from user query surface
+
+Long-term raw-byte solution:
+
+- implement 257-symbol alphabet or explicit sentinel handling independent of byte values.
