@@ -9,37 +9,20 @@ OUT_DIR="$MINI_DIR/out"
 
 mkdir -p "$OUT_DIR"
 
-echo "[mini] build C++ tools"
-cmake -S . -B build
-cmake --build build -j
-
 echo "[mini] corpus"
 cp "$MINI_DIR/data.txt" "$OUT_DIR/corpus.bin"
 
-echo "[mini] build SA32u"
-./build/build_sa_u32 \
+echo "[mini] build canonical sentinel-safe index"
+"$ROOT/tools/build_glyph_index_v1.sh" \
   "$OUT_DIR/corpus.bin" \
-  "$OUT_DIR/corpus.sa.u32.bin"
-
-echo "[mini] build BWT"
-./build/build_bwt \
-  "$OUT_DIR/corpus.bin" \
-  "$OUT_DIR/corpus.sa.u32.bin" \
-  "$OUT_DIR/corpus.bwt.bin" \
-  0
-
-echo "[mini] build FM"
-./build/build_fm \
-  "$OUT_DIR/corpus.bwt.bin" \
-  "$OUT_DIR/corpus.fm.bin" \
-  16384
+  "$OUT_DIR"
 
 echo "[mini] query direct FM"
 PATTERN_HEX="$(printf 'error' | xxd -p -c 999999)"
 
 ./build/query_fm_v1 \
-  "$OUT_DIR/corpus.fm.bin" \
-  "$OUT_DIR/corpus.bwt.bin" \
+  "$OUT_DIR/fm.bin" \
+  "$OUT_DIR/bwt.bin" \
   "$PATTERN_HEX"
 
 echo "[mini] done"
