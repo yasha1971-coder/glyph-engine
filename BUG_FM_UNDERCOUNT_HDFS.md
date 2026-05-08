@@ -185,3 +185,46 @@ For v0.x, safe mode is:
 Long-term raw-byte solution:
 
 - implement 257-symbol alphabet or explicit sentinel handling independent of byte values.
+
+## Status update
+
+Previous status:
+
+- BLOCKER for segmented correctness validation
+
+Current status:
+
+- ROOT CAUSE FOUND
+- FIX PATH IMPLEMENTED
+
+Implemented safeguards:
+
+- tools/prepare_sentinel_corpus_v1.py
+- tools/build_glyph_index_v1.sh
+
+Canonical invariant:
+
+GLYPH FM-index v0.x must index:
+
+    corpus + real appended 0x00 sentinel
+
+The following flow is now required:
+
+    raw corpus
+    -> prepare_sentinel_corpus_v1.py
+    -> build_sa_u32
+    -> build_bwt
+    -> build_fm
+
+Validation result:
+
+- problematic HDFS pattern now returns exact FM counts
+- segmented retrieval correctness investigation may continue
+
+Remaining long-term limitation:
+
+v0.x still assumes:
+- corpus must not contain 0x00
+
+Future robust solution:
+- 257-symbol alphabet or explicit out-of-band sentinel representation
