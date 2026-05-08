@@ -120,58 +120,16 @@ Experimental prototype.
 
 ---
 
-## HDFS 1GB benchmark
+## Additional Documentation
 
-Dataset:
+Benchmarks:
+- benchmarks/HDFS_1GB_BENCHMARK.md
+- benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
 
-- HDFS.log truncated to 1GB
-- 100 unique `blk_*` exact queries
-
-Results:
-
-- grep repeated scan: 11.516 sec
-- GLYPH persistent FM backend: 0.001673 sec total
-- average: 0.0167 ms/query
-
-Cost:
-
-- corpus: 1.0GB
-- SA32u: 4.0GB
-- BWT: 1.0GB
-- FM: 8.1GB
-- persistent server RAM: ~9.4GB
-
-Interpretation:
-
-GLYPH is not a grep replacement for one-off scans.
-
-It trades RAM and offline indexing for extremely fast repeated exact queries over static corpora.
-
-See:
-- HDFS_1GB_BENCHMARK.md
-
----
-
-## Patent Status
-
-GLYPH uses public algorithms and provides no patent-safety guarantee.
-
-No patent clearance is claimed.
-Commercial use requires independent legal review.
-
-See:
+Security / Legal:
 - PATENT_RISK_AUDIT_v2.md
 
----
+License:
 
-## Benchmark
+- Apache-2.0
 
-See:
-- RUNBOOK_4GB.md
-- DEMO_SECURITY.md
-
----
-
-## License
-
-Apache-2.0
