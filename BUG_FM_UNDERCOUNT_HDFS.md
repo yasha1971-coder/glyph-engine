@@ -127,3 +127,28 @@ Likely faulty layer:
 - FM rank / occ calculation
 - C-table usage
 - backward-search implementation in query_fm_v1 / query_fm_server_v1
+
+## SA interval truth
+
+512MB HDFS prefix:
+
+Pattern:
+
+- blk_-1000095285706020638
+
+SA scan result:
+
+- SA match count: 17
+- correct SA interval: [359783091, 359783108)
+- matches are contiguous: true
+
+FM result:
+
+- FM interval: [359783106, 359783109)
+- FM count: 3
+
+Interpretation:
+
+The FM query path returns an interval shifted inside/near the correct suffix-array interval.
+SA and BWT are correct.
+The fault is in FM backward-search support data or occ/C logic.
