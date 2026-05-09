@@ -23,8 +23,9 @@ Expected output:
 
     count:    2
 
-This runs a full pipeline:
+This runs a full sentinel-safe pipeline:
 
+- prepares a real appended `0x00` sentinel corpus
 - builds suffix array (SA)
 - builds BWT
 - builds FM-index
