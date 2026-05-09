@@ -76,9 +76,13 @@ Expected:
 
 ## Core guarantees
 
+- byte-exact substring retrieval
 - deterministic results
 - no ranking
 - no fuzzy matching
+- no tokenization
+- no semantic interpretation
+- sentinel-safe FM-index construction
 
 ---
 
