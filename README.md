@@ -42,6 +42,7 @@ Architecture:
 
 Specifications:
 - docs/specs/INDEX_FORMAT_V1.md
+- docs/specs/SENTINEL_INVARIANT.md
 - docs/specs/KNOWN_LIMITATIONS.md
 
 Benchmarks:
