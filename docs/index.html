@@ -5,34 +5,93 @@
   <title>GLYPH</title>
 </head>
 <body>
-  <h1>GLYPH</h1>
 
-  <p><b>Persistent byte-level indexed retrieval over static corpora.</b></p>
+<h1>GLYPH</h1>
 
-  <h2>Benchmark</h2>
-  <pre>
-Dataset: HDFS 1GB
-Queries: 100 exact blk_* lookups
+<p>
+<b>Deterministic byte-exact retrieval over static corpora.</b>
+</p>
 
-grep repeated scan: 11.516 sec
-GLYPH persistent FM: 0.001673 sec total
-Average: 0.0167 ms/query
+<p>
+GLYPH is a retrieval primitive, not a search engine.
+</p>
 
-Cost:
-Persistent server RAM: ~9.4GB
-Index artifacts: ~13.1GB
-  </pre>
+<hr>
 
-  <h2>Tradeoff</h2>
-  <p>
-    GLYPH trades RAM and offline indexing for extremely fast repeated exact queries.
-  </p>
+<h2>Why GLYPH exists</h2>
 
-  <h2>GitHub</h2>
-  <p>
-    <a href="https://github.com/yasha1971-coder/glyph-engine">
-      github.com/yasha1971-coder/glyph-engine
-    </a>
-  </p>
+<p>
+Most retrieval systems optimize interpretation.
+</p>
+
+<p>
+GLYPH optimizes certainty.
+</p>
+
+<p>
+Same bytes in → same matches out.
+</p>
+
+<hr>
+
+<h2>Core guarantees</h2>
+
+<ul>
+  <li>byte-exact substring retrieval</li>
+  <li>deterministic results</li>
+  <li>no ranking</li>
+  <li>no fuzzy matching</li>
+  <li>no tokenization</li>
+  <li>no semantic interpretation</li>
+  <li>sentinel-safe FM-index construction</li>
+</ul>
+
+<hr>
+
+<h2>How it works</h2>
+
+<ol>
+  <li>Build suffix array + BWT + FM-index offline</li>
+  <li>Load persistent index into memory</li>
+  <li>Query exact bytes or hex patterns in ~ms</li>
+</ol>
+
+<hr>
+
+<h2>Use cases</h2>
+
+<ul>
+  <li>large-scale log search</li>
+  <li>binary corpus lookup</li>
+  <li>forensics / DFIR</li>
+  <li>exact retrieval before vector search</li>
+</ul>
+
+<hr>
+
+<h2>Quick start</h2>
+
+<pre>
+git clone https://github.com/yasha1971-coder/glyph-engine
+cd glyph-engine
+./examples/mini/build_mini.sh
+</pre>
+
+Expected:
+
+<pre>
+count:    2
+</pre>
+
+<hr>
+
+<h2>GitHub</h2>
+
+<p>
+<a href="https://github.com/yasha1971-coder/glyph-engine">
+github.com/yasha1971-coder/glyph-engine
+</a>
+</p>
+
 </body>
 </html>
