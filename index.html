@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLYPH — Deterministic Byte-Exact Retrieval</title>
+  <style>
+    body {
+      max-width: 880px;
+      margin: 64px auto;
+      padding: 0 24px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      color: #111;
+      background: #fff;
+    }
+    h1 { font-size: 48px; margin-bottom: 8px; letter-spacing: -1px; }
+    h2 { margin-top: 48px; }
+    .tagline { font-size: 22px; font-weight: 700; }
+    .muted { color: #555; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #ddd; padding: 18px; border-radius: 10px; }
+    pre { background: #f6f6f6; padding: 16px; overflow-x: auto; border-radius: 8px; }
+    a { color: #000; font-weight: 700; }
+    footer { margin-top: 56px; color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<h1>GLYPH</h1>
+
+<p class="tagline">Deterministic byte-exact retrieval over static corpora.</p>
+
+<p>No ranking. No embeddings. No interpretation.</p>
+
+<p>GLYPH is an experimental retrieval engine for exact byte matches at scale.</p>
+
+<h2>Why it exists</h2>
+
+<p>
+Most retrieval systems trade certainty for flexibility.
+GLYPH does the opposite: same bytes in, same matches out.
+</p>
+
+<h2>Core guarantees</h2>
+
+<div class="grid">
+  <div class="card">Byte-exact substring retrieval</div>
+  <div class="card">Deterministic results</div>
+  <div class="card">No semantic interpretation</div>
+  <div class="card">Sentinel-safe FM-index construction</div>
+</div>
+
+<h2>Architecture</h2>
+
+<pre>raw bytes
+  ↓
+suffix array
+  ↓
+BWT
+  ↓
+FM-index
+  ↓
+exact retrieval</pre>
+
+<h2>Quick start</h2>
+
+<pre>git clone https://github.com/yasha1971-coder/glyph-engine
+cd glyph-engine
+./examples/mini/build_mini.sh</pre>
+
+<p>Expected:</p>
+
+<pre>count:    2</pre>
+
+<h2>Benchmark signal</h2>
+
+<p>
+HDFS 1GB, 100 exact <code>blk_*</code> lookups:
+</p>
+
+<pre>grep repeated scan:        11.516 sec
+GLYPH persistent FM:       0.001673 sec total
+average:                   0.0167 ms/query</pre>
+
+<p class="muted">
+Experimental prototype. Not a grep replacement for one-off scans.
+Trades RAM and offline indexing for fast repeated exact queries over static corpora.
+</p>
+
+<h2>Links</h2>
+
+<p>
+<a href="https://github.com/yasha1971-coder/glyph-engine">GitHub</a>
+ ·
+<a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/README.md">README</a>
+ ·
+<a href="mailto:contact@glyph.rs">contact@glyph.rs</a>
+</p>
+
+<footer>
+Apache-2.0 · Experimental infrastructure research · glyph.rs
+</footer>
+
+</body>
+</html>
