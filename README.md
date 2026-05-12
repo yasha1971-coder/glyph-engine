@@ -157,3 +157,8 @@ See:
 ## License
 
 Apache-2.0
+
+## Contact
+
+- Website: https://glyph.rs
+- Email: contact@glyph.rs
