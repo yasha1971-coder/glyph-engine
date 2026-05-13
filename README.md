@@ -33,6 +33,23 @@ This runs a full sentinel-safe pipeline:
 
 No large datasets required.
 
+## Index your own file
+
+Build an FM index for any small file:
+
+    tools/build_glyph_index_v1.sh /path/to/your/file /tmp/glyph-index
+
+Query an exact pattern:
+
+    ./build/query_fm_v1 /tmp/glyph-index/fm.bin /tmp/glyph-index/bwt.bin "$(printf 'your pattern' | xxd -p -c 999999)"
+
+Important:
+
+- input corpus must not contain `0x00`
+- GLYPH v0.x appends a real terminal `0x00` sentinel
+- current indexes are optimized for static corpora
+- current RAM overhead is high
+
 ---
 
 ## Documentation
@@ -51,6 +68,19 @@ Benchmarks:
 
 Business / Contact:
 - docs/business/CONTACT.md
+
+---
+
+## Entry points
+
+| Path | Purpose |
+|---|---|
+| `examples/mini/` | Start here. Self-contained demo. |
+| `tools/build_glyph_index_v1.sh` | Canonical sentinel-safe index builder. |
+| `build/query_fm_v1` | Direct FM query binary. |
+| `glyph_cli.py` | HTTP client for a running local GLYPH server. |
+| `glyph_http_server.py` | Experimental persistent HTTP backend. |
+| `glyph_segmented_query_v1.py` | Experimental segmented query path. |
 
 ---
 
@@ -117,6 +147,12 @@ GLYPH does the opposite:
 - ~1.3–1.7 ms (warm)
 - ~4 ms p99 (4GB shard)
 - mmap-based index
+
+RAM note:
+
+Current plain index artifacts are large. The HDFS 1GB benchmark used about
+9.4GB RAM for 1GB corpus-scale experiments. This is a known limitation.
+Future work must address compressed/sampled SA and better memory economics.
 
 ---
 
