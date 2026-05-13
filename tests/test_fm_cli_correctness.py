@@ -93,6 +93,9 @@ class TestFMCLICorrectness(unittest.TestCase):
         r1 = run_query_count(corpus, pattern)
         r2 = run_query_count(corpus, pattern)
         self.assertEqual(r1, r2)
+    def test_input_corpus_with_zero_byte_rejected(self):
+        with self.assertRaises(ValueError):
+            run_query_count(b"abc\x00def", b"abc")
 
 
 if __name__ == "__main__":
