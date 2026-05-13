@@ -96,6 +96,38 @@ class TestFMCLICorrectness(unittest.TestCase):
     def test_input_corpus_with_zero_byte_rejected(self):
         with self.assertRaises(ValueError):
             run_query_count(b"abc\x00def", b"abc")
+    def test_bad_fm_magic_rejected(self):
+        corpus = b"hello world"
+
+        with tempfile.TemporaryDirectory() as td:
+            tdp = Path(td)
+            corpus_path = tdp / "corpus.bin"
+            corpus_path.write_bytes(corpus)
+
+            subprocess.run(
+                [str(BUILD_SCRIPT), str(corpus_path), str(tdp)],
+                cwd=str(ROOT),
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+            )
+
+            fm_path = tdp / "fm.bin"
+            data = bytearray(fm_path.read_bytes())
+            data[0:8] = b"BADMAGIC"
+            fm_path.write_bytes(data)
+
+            out = subprocess.run(
+                [str(QUERY_BIN), str(fm_path), str(tdp / "bwt.bin"), b"hello".hex()],
+                cwd=str(ROOT),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+
+            self.assertNotEqual(out.returncode, 0)
+            self.assertIn("bad fm magic", out.stderr)
 
 
 if __name__ == "__main__":
