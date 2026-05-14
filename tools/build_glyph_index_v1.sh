@@ -30,6 +30,48 @@ echo "[3/4] build BWT"
 echo "[4/4] build FM"
 ./build/build_fm "$BWT" "$FM" 128
 
+echo "[5/5] write manifest"
+python3 - <<PY
+import hashlib, json
+from pathlib import Path
+
+raw = Path("$RAW")
+index_corpus = Path("$INDEX_CORPUS")
+sa = Path("$SA")
+bwt = Path("$BWT")
+fm = Path("$FM")
+out = Path("$OUT")
+
+def sha256_file(p):
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+manifest = {
+    "format": "GLYPH_INDEX_MANIFEST_V1",
+    "raw_corpus": {
+        "path": str(raw),
+        "bytes": raw.stat().st_size,
+        "sha256": sha256_file(raw),
+    },
+    "index_corpus": {
+        "path": str(index_corpus),
+        "bytes": index_corpus.stat().st_size,
+        "sha256": sha256_file(index_corpus),
+        "sentinel": "0x00",
+    },
+    "artifacts": {
+        "sa": str(sa),
+        "bwt": str(bwt),
+        "fm": str(fm),
+    },
+}
+
+(out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
+print("manifest:", out / "manifest.json")
+PY
 echo "[done]"
 echo "index_corpus: $INDEX_CORPUS"
 echo "sa: $SA"
