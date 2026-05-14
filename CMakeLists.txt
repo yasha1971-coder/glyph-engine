@@ -144,3 +144,9 @@ add_executable(build_chunk_map_u24
 target_compile_options(build_chunk_map_u24 PRIVATE -O3)
 target_link_libraries(build_chunk_map_u24 PRIVATE Threads::Threads)
 
+add_executable(locate_backend_v2
+    src/locate_backend_v2.cpp
+)
+
+target_compile_options(locate_backend_v2 PRIVATE -O3)
+target_link_libraries(locate_backend_v2 PRIVATE Threads::Threads)
