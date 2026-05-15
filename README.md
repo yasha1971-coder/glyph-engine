@@ -1,5 +1,7 @@
 # GLYPH
 
+[![ci](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml)
+
 GLYPH is a byte-exact substring retrieval engine over raw bytes.
 
 It is designed for high-speed exact matching without tokenization or scoring.
@@ -83,6 +85,9 @@ Benchmarks:
 
 Business / Contact:
 - docs/business/CONTACT.md
+
+Project boundaries:
+- WHAT_GLYPH_IS_NOT.md
 
 ---
 
