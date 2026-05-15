@@ -1,0 +1,22 @@
+{
+  "name": "segmented_1gb_real",
+  "description": "Two independent 512MB shards from HDFS 1GB corpus.",
+  "shards": [
+    {
+      "id": 0,
+      "global_offset": 0,
+      "corpus": "segmented_demo/shard0/corpus.bin",
+      "sa": "segmented_demo/shard0/sa.bin",
+      "bwt": "segmented_demo/shard0/bwt.bin",
+      "fm": "segmented_demo/shard0/fm.bin"
+    },
+    {
+      "id": 1,
+      "global_offset": 536870912,
+      "corpus": "segmented_demo/shard1/corpus.bin",
+      "sa": "segmented_demo/shard1/sa.bin",
+      "bwt": "segmented_demo/shard1/bwt.bin",
+      "fm": "segmented_demo/shard1/fm.bin"
+    }
+  ]
+}

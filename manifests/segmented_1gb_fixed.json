@@ -1,0 +1,22 @@
+{
+  "name": "segmented_1gb_fixed",
+  "description": "Two independent 512MB HDFS shards indexed through sentinel-safe builder.",
+  "shards": [
+    {
+      "id": 0,
+      "global_offset": 0,
+      "corpus": "segmented_demo_fixed/shard0/corpus.sentinel.bin",
+      "sa": "segmented_demo_fixed/shard0/sa.bin",
+      "bwt": "segmented_demo_fixed/shard0/bwt.bin",
+      "fm": "segmented_demo_fixed/shard0/fm.bin"
+    },
+    {
+      "id": 1,
+      "global_offset": 536870912,
+      "corpus": "segmented_demo_fixed/shard1/corpus.sentinel.bin",
+      "sa": "segmented_demo_fixed/shard1/sa.bin",
+      "bwt": "segmented_demo_fixed/shard1/bwt.bin",
+      "fm": "segmented_demo_fixed/shard1/fm.bin"
+    }
+  ]
+}

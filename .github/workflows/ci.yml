@@ -27,3 +27,18 @@ jobs:
           python -c "import glyph_http_server"
           python -c "import glyph_cli"
           echo "Imports OK"
+
+      - name: Check build tools
+        run: |
+          cmake --version
+          g++ --version
+          xxd -h || true
+
+      - name: Build FM binaries
+        run: |
+          cmake -S . -B build
+          cmake --build build -j2
+
+      - name: Run correctness regression suite
+        run: |
+          ./tests/run_tests.sh

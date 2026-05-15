@@ -1,0 +1,230 @@
+# BUG — FM count undercounts HDFS block-id pattern
+
+Branch:
+
+- feature/segmented-v0.2
+
+Status:
+
+- BLOCKER for segmented correctness validation
+
+Dataset:
+
+- sanity_hdfs/corpus.bin
+- source: HDFS_1GB.log copied from bench_1gb/HDFS_1GB.log
+- size: 1GB
+
+Pattern:
+
+- blk_-1000095285706020638
+
+Ground truth:
+
+- Python bytes.count: 27
+
+FM result after clean rebuild:
+
+- FM interval: [715386539, 715386552)
+- FM count: 13
+
+Commands:
+
+    rm -rf sanity_hdfs
+    mkdir -p sanity_hdfs
+    cp bench_1gb/HDFS_1GB.log sanity_hdfs/corpus.bin
+
+    ./build/build_sa_u32 sanity_hdfs/corpus.bin sanity_hdfs/sa.bin
+    ./build/build_bwt sanity_hdfs/corpus.bin sanity_hdfs/sa.bin sanity_hdfs/bwt.bin 0
+    ./build/build_fm sanity_hdfs/bwt.bin sanity_hdfs/fm.bin 128
+
+    python3 - << 'PY'
+from pathlib import Path
+q = b"blk_-1000095285706020638"
+data = Path("sanity_hdfs/corpus.bin").read_bytes()
+print(data.count(q))
+PY
+
+    ./build/query_fm_v1 sanity_hdfs/fm.bin sanity_hdfs/bwt.bin 626c6b5f2d31303030303935323835373036303230363338
+
+Control:
+
+- synthetic sanity_fm corpus returns correct count:
+  - Python bytes.count: 1000
+  - FM count: 1000
+
+Conclusion:
+
+The FM path works on small synthetic data but undercounts this real HDFS pattern on a 1GB corpus.
+
+Next investigation:
+
+- validate BWT output against SA for sampled positions
+- verify FM rank/checkpoint logic on large BWT
+- test same pattern on smaller prefixes of HDFS corpus
+- bisect corpus size threshold
+
+## Size bisect
+
+Pattern:
+
+- blk_-1000095285706020638
+
+Results:
+
+| Corpus prefix | Python bytes.count | FM count |
+|---|---:|---:|
+| 64MB | 0 | 0 |
+| 128MB | 0 | 0 |
+| 256MB | 0 | 0 |
+| 512MB | 17 | 3 |
+| 1GB | 27 | 13 |
+
+Conclusion:
+
+The bug appears once the target pattern exists in the HDFS corpus.
+This is not caused by segmented routing.
+The issue is in the FM/BWT/query path or in how this real corpus is indexed.
+
+## Size bisect
+
+Pattern:
+
+- blk_-1000095285706020638
+
+Results:
+
+| Corpus prefix | Python bytes.count | FM count |
+|---|---:|---:|
+| 64MB | 0 | 0 |
+| 128MB | 0 | 0 |
+| 256MB | 0 | 0 |
+| 512MB | 17 | 3 |
+| 1GB | 27 | 13 |
+
+Conclusion:
+
+The bug appears once the target pattern exists in the HDFS corpus.
+This is not caused by segmented routing.
+The issue is in the FM/BWT/query path or in how this real corpus is indexed.
+
+## Localization update
+
+512MB HDFS prefix:
+
+- Python bytes.count: 17
+- SA scan count: 17
+- BWT validation for matching SA rows: 17 checked / 0 bad
+- FM count with checkpoint_step=128: 3
+- FM count with checkpoint_step=64: 3
+
+Conclusion:
+
+SA and BWT are correct for the target pattern.
+The undercount is not caused by checkpoint step size.
+
+Likely faulty layer:
+
+- FM rank / occ calculation
+- C-table usage
+- backward-search implementation in query_fm_v1 / query_fm_server_v1
+
+## SA interval truth
+
+512MB HDFS prefix:
+
+Pattern:
+
+- blk_-1000095285706020638
+
+SA scan result:
+
+- SA match count: 17
+- correct SA interval: [359783091, 359783108)
+- matches are contiguous: true
+
+FM result:
+
+- FM interval: [359783106, 359783109)
+- FM count: 3
+
+Interpretation:
+
+The FM query path returns an interval shifted inside/near the correct suffix-array interval.
+SA and BWT are correct.
+The fault is in FM backward-search support data or occ/C logic.
+
+## Root cause confirmed
+
+The FM undercount is caused by missing real appended sentinel in the indexed corpus.
+
+Previous behavior:
+
+- corpus did not contain 0x00
+- build_bwt emitted synthetic sentinel byte for SA=0
+- FM C-table was built from BWT containing this synthetic sentinel
+- corpus alphabet and BWT/FM alphabet were inconsistent
+- backward search intervals shifted and undercounted real matches
+
+Sentinel fix test:
+
+- input: 512MB HDFS prefix + appended 0x00
+- Python bytes.count: 17
+- FM count: 17
+- FM interval: [359783092, 359783109)
+
+Conclusion:
+
+FM correctness requires indexing corpus + real unique sentinel.
+
+For v0.x, safe mode is:
+
+- require corpus does not contain 0x00
+- append 0x00 before SA/BWT/FM build
+- exclude sentinel from user query surface
+
+Long-term raw-byte solution:
+
+- implement 257-symbol alphabet or explicit sentinel handling independent of byte values.
+
+## Status update
+
+Previous status:
+
+- BLOCKER for segmented correctness validation
+
+Current status:
+
+- ROOT CAUSE FOUND
+- FIX PATH IMPLEMENTED
+
+Implemented safeguards:
+
+- tools/prepare_sentinel_corpus_v1.py
+- tools/build_glyph_index_v1.sh
+
+Canonical invariant:
+
+GLYPH FM-index v0.x must index:
+
+    corpus + real appended 0x00 sentinel
+
+The following flow is now required:
+
+    raw corpus
+    -> prepare_sentinel_corpus_v1.py
+    -> build_sa_u32
+    -> build_bwt
+    -> build_fm
+
+Validation result:
+
+- problematic HDFS pattern now returns exact FM counts
+- segmented retrieval correctness investigation may continue
+
+Remaining long-term limitation:
+
+v0.x still assumes:
+- corpus must not contain 0x00
+
+Future robust solution:
+- 257-symbol alphabet or explicit out-of-band sentinel representation

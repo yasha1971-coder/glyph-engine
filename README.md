@@ -23,14 +23,64 @@ Expected output:
 
     count:    2
 
-This runs a full pipeline:
+This runs a full sentinel-safe pipeline:
 
+- prepares a real appended `0x00` sentinel corpus
 - builds suffix array (SA)
 - builds BWT
 - builds FM-index
 - runs a real query
 
 No large datasets required.
+
+## Index your own file
+
+Build an FM index for any small file:
+
+    tools/build_glyph_index_v1.sh /path/to/your/file /tmp/glyph-index
+
+Query an exact pattern:
+
+    ./build/query_fm_v1 /tmp/glyph-index/fm.bin /tmp/glyph-index/bwt.bin "$(printf 'your pattern' | xxd -p -c 999999)"
+
+Important:
+
+- input corpus must not contain `0x00`
+- GLYPH v0.x appends a real terminal `0x00` sentinel
+- current indexes are optimized for static corpora
+- current RAM overhead is high
+
+---
+
+## Documentation
+
+Architecture:
+- docs/architecture/ENGINE_OVERVIEW.md
+
+Specifications:
+- docs/specs/INDEX_FORMAT_V1.md
+- docs/specs/SENTINEL_INVARIANT.md
+- docs/specs/KNOWN_LIMITATIONS.md
+
+Benchmarks:
+- benchmarks/HDFS_1GB_BENCHMARK.md
+- benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
+
+Business / Contact:
+- docs/business/CONTACT.md
+
+---
+
+## Entry points
+
+| Path | Purpose |
+|---|---|
+| `examples/mini/` | Start here. Self-contained demo. |
+| `tools/build_glyph_index_v1.sh` | Canonical sentinel-safe index builder. |
+| `build/query_fm_v1` | Direct FM query binary. |
+| `glyph_cli.py` | HTTP client for a running local GLYPH server. |
+| `glyph_http_server.py` | Experimental persistent HTTP backend. |
+| `glyph_segmented_query_v1.py` | Experimental segmented query path. |
 
 ---
 
@@ -57,9 +107,13 @@ Expected:
 
 ## Core guarantees
 
+- byte-exact substring retrieval
 - deterministic results
 - no ranking
 - no fuzzy matching
+- no tokenization
+- no semantic interpretation
+- sentinel-safe FM-index construction
 
 ---
 
@@ -94,6 +148,12 @@ GLYPH does the opposite:
 - ~4 ms p99 (4GB shard)
 - mmap-based index
 
+RAM note:
+
+Current plain index artifacts are large. The HDFS 1GB benchmark used about
+9.4GB RAM for 1GB corpus-scale experiments. This is a known limitation.
+Future work must address compressed/sampled SA and better memory economics.
+
 ---
 
 ## Status
@@ -102,51 +162,19 @@ Experimental prototype.
 
 ---
 
-## HDFS 1GB benchmark
+## Additional Documentation
 
-Dataset:
+Benchmarks:
+- benchmarks/HDFS_1GB_BENCHMARK.md
+- benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
 
-- HDFS.log truncated to 1GB
-- 100 unique `blk_*` exact queries
-
-Results:
-
-- grep repeated scan: 11.516 sec
-- GLYPH persistent FM backend: 0.001673 sec total
-- average: 0.0167 ms/query
-
-Cost:
-
-- corpus: 1.0GB
-- SA32u: 4.0GB
-- BWT: 1.0GB
-- FM: 8.1GB
-- persistent server RAM: ~9.4GB
-
-Interpretation:
-
-GLYPH is not a grep replacement for one-off scans.
-
-It trades RAM and offline indexing for extremely fast repeated exact queries over static corpora.
-
-See:
-- HDFS_1GB_BENCHMARK.md
-
----
-
-## Patent Status
-
-GLYPH uses public algorithms and provides no patent-safety guarantee.
-
-No patent clearance is claimed.
-Commercial use requires independent legal review.
-
-See:
+Security / Legal:
 - PATENT_RISK_AUDIT_v2.md
 
----
+License:
 
-## Benchmark
+- Apache-2.0
+
 
 See:
 - RUNBOOK_4GB.md
@@ -154,11 +182,9 @@ See:
 
 ---
 
-## License
-
-Apache-2.0
 
 ## Contact
 
 - Website: https://glyph.rs
 - Email: contact@glyph.rs
+

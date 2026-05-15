@@ -1,0 +1,22 @@
+{
+  "name": "segmented_8gb_demo",
+  "description": "Two-shard segmented GLYPH demo using existing 4GB artifacts.",
+  "shards": [
+    {
+      "id": 0,
+      "global_offset": 0,
+      "corpus": "data_4gb/corpus_4gb_s0.bin",
+      "sa": "out_4gb/sa.bin",
+      "bwt": "out_4gb/bwt.bin",
+      "fm": "out_4gb/fm.bin"
+    },
+    {
+      "id": 1,
+      "global_offset": 4000000001,
+      "corpus": "data_4gb/corpus_4gb_s0.bin",
+      "sa": "out_4gb/sa.bin",
+      "bwt": "out_4gb/bwt.bin",
+      "fm": "out_4gb/fm.bin"
+    }
+  ]
+}

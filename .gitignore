@@ -44,3 +44,4 @@ HDFS_v1.zip
 bench_1gb/
 preprocessed/
 hdfs_queries.txt
+research/perf.data

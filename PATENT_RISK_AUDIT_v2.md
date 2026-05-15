@@ -1,10 +1,10 @@
 # GLYPH PATENT / IP RISK AUDIT v2
 
-Status: PRE-PUBLICATION CHECK
+Status: PUBLIC EXPERIMENTAL RELEASE
 
 Decision:
-- GitHub public release: DONE (experimental basis)
-- encode.su post: PENDING
+- GitHub public release: DONE
+- encode.su technical discussion: ACTIVE
 - commercial claims: HOLD
 
 1. Core
