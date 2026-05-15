@@ -182,26 +182,11 @@ Experimental prototype.
 
 ---
 
-## Additional Documentation
-
-Benchmarks:
-- benchmarks/HDFS_1GB_BENCHMARK.md
-- benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
-
-Security / Legal:
-- PATENT_RISK_AUDIT_v2.md
-
-License:
-
-- Apache-2.0
-
-
 See:
 - RUNBOOK_4GB.md
 - DEMO_SECURITY.md
 
 ---
-
 
 ## Contact
 
