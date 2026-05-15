@@ -52,6 +52,21 @@ Important:
 
 ---
 
+## Build
+
+Before running direct FM queries, build the C++ binaries:
+
+    cmake -S . -B build
+    cmake --build build -j2
+
+Required tools:
+- CMake
+- C++17 compiler
+- Python 3
+- `xxd`
+
+---
+
 ## Documentation
 
 Architecture:
@@ -84,9 +99,9 @@ Business / Contact:
 
 ---
 
-## Quick Start (full system)
+## Advanced: HTTP server mode
 
-GLYPH currently expects prepared index artifacts and a running local HTTP server.
+This mode is experimental and expects prepared index artifacts plus a running local HTTP server.
 
 Note:
 - run.sh expects local prepared demo artifacts
