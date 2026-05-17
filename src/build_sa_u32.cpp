@@ -76,15 +76,30 @@ int main(int argc, char** argv) {
         std::cout << "input:  \"" << input.string() << "\"\n";
         std::cout << "output: \"" << output.string() << "\"\n";
 
+        std::error_code ec;
+        uintmax_t file_size = fs::file_size(input, ec);
+        if (ec) {
+            throw std::runtime_error("cannot stat input: " + ec.message());
+        }
+
+        std::cout << "corpus_bytes: " << file_size << "\n";
+
+        if (file_size == 0) {
+            throw std::runtime_error("empty corpus");
+        }
+
+        if (file_size > static_cast<uintmax_t>(std::numeric_limits<uint32_t>::max())) {
+            throw std::runtime_error(
+                "corpus too large for uint32 SA: " +
+                std::to_string(file_size) +
+                " bytes (limit: " +
+                std::to_string(std::numeric_limits<uint32_t>::max()) +
+                ")"
+            );
+        }
+
         std::vector<uint8_t> text = read_file(input);
         int64_t n = static_cast<int64_t>(text.size());
-
-        std::cout << "corpus_bytes: " << n << "\n";
-
-        if (n <= 0) throw std::runtime_error("empty corpus");
-        if (static_cast<uint64_t>(n) > static_cast<uint64_t>(std::numeric_limits<uint32_t>::max())) {
-            throw std::runtime_error("corpus too large for uint32 SA");
-        }
 
         std::vector<int64_t> sa(static_cast<size_t>(n), 0);
 

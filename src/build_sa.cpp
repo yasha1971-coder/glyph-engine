@@ -81,18 +81,31 @@ int main(int argc, char **argv) {
         std::cout << "input:  " << input_path << "\n";
         std::cout << "output: " << output_path << "\n";
 
-        std::vector<uint8_t> text = read_file_bytes(input_path);
-        const int64_t n64 = static_cast<int64_t>(text.size());
+        std::error_code ec;
+        uintmax_t file_size = fs::file_size(input_path, ec);
+        if (ec) {
+            throw std::runtime_error("cannot stat input: " + ec.message());
+        }
 
-        if (n64 <= 0) {
+        std::cout << "corpus_bytes: " << file_size << "\n";
+
+        if (file_size == 0) {
             throw std::runtime_error("empty input corpus");
         }
-        if (n64 > static_cast<int64_t>(std::numeric_limits<int32_t>::max())) {
-            throw std::runtime_error("corpus too large for int32 SA");
+
+        if (file_size > static_cast<uintmax_t>(std::numeric_limits<int32_t>::max())) {
+            throw std::runtime_error(
+                "corpus too large for int32 SA: " +
+                std::to_string(file_size) +
+                " bytes (limit: " +
+                std::to_string(std::numeric_limits<int32_t>::max()) +
+                ")"
+            );
         }
 
+        std::vector<uint8_t> text = read_file_bytes(input_path);
+        const int64_t n64 = static_cast<int64_t>(text.size());
         const int32_t n = static_cast<int32_t>(n64);
-        std::cout << "corpus_bytes: " << n << "\n";
 
         std::vector<int32_t> sa(static_cast<size_t>(n), 0);
 
