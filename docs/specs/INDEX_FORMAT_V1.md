@@ -39,6 +39,46 @@ Meaning:
 Each checkpoint stores cumulative occurrence counts
 for all byte values before the corresponding block.
 
+## Artifact formats
+
+Current GLYPH v0.x artifacts:
+
+| Artifact | Format | Versioned | Notes |
+|---|---|---|---|
+| fm.bin | FMBINv1\0 | yes | main FM index |
+| fm_core.bin | FMV1 | yes | locate backend FM core |
+| locate_core_s*.bin | LOC1 | yes | sampled locate structure |
+| manifest.json | GLYPH_INDEX_MANIFEST_V1 | yes | integrity manifest |
+| sa.bin | raw uint32 array | no | SA32 only |
+| bwt.bin | raw uint8 stream | no | no header/version |
+
+## SA32 constraints
+
+Current SA format:
+
+    sa.bin = raw uint32 suffix array
+
+Implications:
+
+- hard corpus limit: 4,294,967,295 bytes
+- no embedded version field
+- no embedded corpus hash
+- no embedded endian marker
+
+SA64 cannot reuse this artifact format safely.
+
+A future SA64 format requires:
+
+- explicit magic bytes
+- explicit version field
+- explicit entry width
+- compatibility policy
+
+Status:
+
+- SA32 raw format is temporary
+- SA64 will introduce a new artifact format
+
 ## BWT assumptions
 
 GLYPH v0.x assumes:
