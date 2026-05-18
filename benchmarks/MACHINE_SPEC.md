@@ -83,3 +83,29 @@ Common failure modes:
 * omitting CPU, RAM, kernel, and Python version
 
 GLYPH benchmark numbers must be interpreted together with this document.
+
+## Cache residency note
+
+HDFS 1GB FM artifact:
+
+    bench_1gb/out/hdfs_1gb.fm.bin
+    size: 8.1 GiB
+
+CPU L3 cache:
+
+    32 MiB
+
+Conclusion:
+
+    The full FM artifact is not L3-cache-resident.
+
+Therefore stable warm-query p50/p95/p99 behavior should not be explained
+as full-index cache residency.
+
+More likely contributors:
+
+- OS page cache residency
+- mmap-backed access
+- small number of touched pages per query
+- simple persistent backend path
+- low orchestration overhead in single-backend mode
