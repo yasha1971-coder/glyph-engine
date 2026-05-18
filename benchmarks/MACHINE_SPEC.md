@@ -109,3 +109,40 @@ More likely contributors:
 - small number of touched pages per query
 - simple persistent backend path
 - low orchestration overhead in single-backend mode
+
+## Perf observation: persistent FM backend
+
+Command:
+
+    perf stat -e page-faults,cache-misses,cache-references \
+      python3 benchmarks/persistent_fm_v1.py \
+      --fm bench_1gb/out/hdfs_1gb.fm.bin \
+      --bwt bench_1gb/out/hdfs_1gb.bwt.bin \
+      --queries-file bench_1gb/queries.txt \
+      --warm-runs 3
+
+Result:
+
+    startup_ms:       ~3704 ms
+    warm p50:         ~0.014 ms
+    warm p99:         ~0.015 ms
+    page-faults:      ~2.36M
+    cache-misses:     ~52M
+    cache-references: ~1.67B
+
+Interpretation:
+
+    perf stat covers the full benchmark process, including backend startup,
+    mmap loading, and warm queries.
+
+    Therefore page-faults mostly describe startup/load behavior, not
+    individual warm-query behavior.
+
+    Warm query latency remains stable after startup.
+
+Current model:
+
+    The full FM artifact is not L3-cache-resident.
+    Stable warm behavior is likely caused by OS page cache residency,
+    mmap-backed access, small touched working set per query, and a simple
+    persistent backend path.
