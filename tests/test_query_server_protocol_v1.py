@@ -32,6 +32,15 @@ class TestQueryServerProtocolV1(unittest.TestCase):
         line = proc.stdout.readline().strip()
         proc.wait(timeout=5)
 
+        if proc.stdin:
+            proc.stdin.close()
+
+        if proc.stdout:
+            proc.stdout.close()
+
+        if proc.stderr:
+            proc.stderr.close()
+
         obj = json.loads(line)
         self.assertEqual(obj["pattern_hex"], "6572726f72")
         self.assertEqual(obj["interval"], [20, 22])
