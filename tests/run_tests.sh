@@ -10,3 +10,4 @@ python3 tests/test_query_verified.py
 python3 tests/test_sa_container_v1.py
 python3 tests/test_sa_container_reader_v1.py
 python3 tests/test_golden_queries_v1.py
+python3 tests/test_query_protocol_v1.py

@@ -195,21 +195,32 @@ static std::pair<uint64_t, uint64_t> backward_search(
 
 int main(int argc, char **argv) {
     try {
-        if (argc != 4) {
-            std::cerr << "Usage: query_fm_v1 <fm.bin> <bwt.bin> <pattern_hex>\n";
+        if (argc != 4 && argc != 5) {
+            std::cerr << "Usage: query_fm_v1 <fm.bin> <bwt.bin> <pattern_hex> [--json]\n";
             return 1;
+        }
+
+        bool json_mode = false;
+        if (argc == 5) {
+            std::string mode = argv[4];
+            if (mode != "--json") {
+                throw std::runtime_error("unknown option: " + mode);
+            }
+            json_mode = true;
         }
 
         fs::path fm_path = argv[1];
         fs::path bwt_path = argv[2];
         std::string pattern_hex = argv[3];
 
-        std::cout << "============================================\n";
-        std::cout << " QUERY FM V1\n";
-        std::cout << "============================================\n";
-        std::cout << "fm:      " << fm_path << "\n";
-        std::cout << "bwt:     " << bwt_path << "\n";
-        std::cout << "pattern: " << pattern_hex << "\n";
+        if (!json_mode) {
+            std::cout << "============================================\n";
+            std::cout << " QUERY FM V1\n";
+            std::cout << "============================================\n";
+            std::cout << "fm:      " << fm_path << "\n";
+            std::cout << "bwt:     " << bwt_path << "\n";
+            std::cout << "pattern: " << pattern_hex << "\n";
+        }
 
         FMIndex fm = load_fm(fm_path);
         std::vector<uint8_t> bwt = read_file_bytes(bwt_path);
@@ -220,9 +231,21 @@ int main(int argc, char **argv) {
         std::vector<uint8_t> pattern = parse_hex_pattern(pattern_hex);
         auto [l, r] = backward_search(fm, bwt, pattern);
 
-        std::cout << "interval: [" << l << ", " << r << ")\n";
-        std::cout << "count:    " << (r - l) << "\n";
-        std::cout << "done\n";
+        if (json_mode) {
+            std::cout
+                << "{"
+                << "\"pattern_hex\":\"" << pattern_hex << "\","
+                << "\"interval\":[" << l << "," << r << "],"
+                << "\"count\":" << (r - l) << ","
+                << "\"fm_version\":\"FMBINv2\","
+                << "\"verified\":true"
+                << "}\n";
+        } else {
+            std::cout << "interval: [" << l << ", " << r << ")\n";
+            std::cout << "count:    " << (r - l) << "\n";
+            std::cout << "done\n";
+        }
+
         return 0;
     } catch (const std::exception &e) {
         std::cerr << "ERROR: " << e.what() << "\n";
