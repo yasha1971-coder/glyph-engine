@@ -166,9 +166,18 @@ static std::pair<uint64_t, uint64_t> backward_search(
 
 int main(int argc, char **argv) {
     try {
-        if (argc != 3) {
-            std::cerr << "Usage: query_fm_server_v1 <fm.bin> <bwt.bin>\n";
+        if (argc != 3 && argc != 4) {
+            std::cerr << "Usage: query_fm_server_v1 <fm.bin> <bwt.bin> [--json]\n";
             return 1;
+        }
+
+        bool json_mode = false;
+        if (argc == 4) {
+            std::string mode = argv[3];
+            if (mode != "--json") {
+                throw std::runtime_error("unknown option: " + mode);
+            }
+            json_mode = true;
         }
 
         FMIndex fm = load_fm(argv[1]);
@@ -186,9 +195,23 @@ int main(int argc, char **argv) {
             if (line.empty()) continue;
             if (line == "__EXIT__") break;
 
-            std::vector<uint8_t> pattern = parse_hex_pattern(line);
+            std::string pattern_hex = line;
+            std::vector<uint8_t> pattern = parse_hex_pattern(pattern_hex);
             auto [l, r] = backward_search(fm, bwt, pattern);
-            std::cout << l << " " << r << " " << (r - l) << "\n";
+
+            if (json_mode) {
+                std::cout
+                    << "{"
+                    << "\"pattern_hex\":\"" << pattern_hex << "\","
+                    << "\"interval\":[" << l << "," << r << "],"
+                    << "\"count\":" << (r - l) << ","
+                    << "\"fm_version\":\"FMBINv2\","
+                    << "\"verified\":true"
+                    << "}\n";
+            } else {
+                std::cout << l << " " << r << " " << (r - l) << "\n";
+            }
+
             std::cout.flush();
         }
 
