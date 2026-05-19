@@ -1,0 +1,23 @@
+{
+  "corpus": "examples/mini/out/corpus.bin",
+  "queries": [
+    {
+      "pattern_ascii": "error",
+      "pattern_hex": "6572726f72",
+      "expected_interval": [20, 22],
+      "expected_count": 2
+    },
+    {
+      "pattern_ascii": "warning",
+      "pattern_hex": "7761726e696e67",
+      "expected_interval": [56, 57],
+      "expected_count": 1
+    },
+    {
+      "pattern_ascii": "404",
+      "pattern_hex": "343034",
+      "expected_interval": [16, 17],
+      "expected_count": 1
+    }
+  ]
+}
