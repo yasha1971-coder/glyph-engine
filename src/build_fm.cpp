@@ -37,6 +37,16 @@ static void write_one(std::ofstream &out, const T &value) {
     }
 }
 
+static uint64_t fnv1a64(const void *data, size_t len) {
+    const uint8_t *p = static_cast<const uint8_t *>(data);
+    uint64_t h = 14695981039346656037ull;
+    for (size_t i = 0; i < len; ++i) {
+        h ^= static_cast<uint64_t>(p[i]);
+        h *= 1099511628211ull;
+    }
+    return h;
+}
+
 int main(int argc, char **argv) {
     try {
         if (argc != 4) {
@@ -128,11 +138,17 @@ int main(int argc, char **argv) {
         }
 
         // Header
-        const char magic[8] = {'F','M','B','I','N','v','1','\0'};
+        const char magic[8] = {'F','M','B','I','N','v','2','\0'};
         out.write(magic, 8);
         if (!out) {
             throw std::runtime_error("failed to write magic");
         }
+
+        const uint64_t checkpoint_payload_bytes =
+            static_cast<uint64_t>(checkpoints.size() * sizeof(uint32_t));
+
+        const uint64_t checkpoint_fnv1a64 =
+            fnv1a64(checkpoints.data(), static_cast<size_t>(checkpoint_payload_bytes));
 
         write_one(out, n);
         write_one(out, checkpoint_step);
@@ -142,6 +158,9 @@ int main(int argc, char **argv) {
         for (size_t c = 0; c < 256; ++c) {
             write_one(out, C[c]);
         }
+
+        write_one(out, checkpoint_payload_bytes);
+        write_one(out, checkpoint_fnv1a64);
 
         // checkpoints
         out.write(reinterpret_cast<const char *>(checkpoints.data()),

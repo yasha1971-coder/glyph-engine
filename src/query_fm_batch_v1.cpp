@@ -48,6 +48,16 @@ static void read_one(std::ifstream &in, T &value) {
     }
 }
 
+static uint64_t fnv1a64(const void *data, size_t len) {
+    const uint8_t *p = static_cast<const uint8_t *>(data);
+    uint64_t h = 14695981039346656037ull;
+    for (size_t i = 0; i < len; ++i) {
+        h ^= static_cast<uint64_t>(p[i]);
+        h *= 1099511628211ull;
+    }
+    return h;
+}
+
 static FMIndex load_fm(const fs::path &path) {
     std::ifstream in(path, std::ios::binary);
     if (!in) {
@@ -61,7 +71,7 @@ static FMIndex load_fm(const fs::path &path) {
     }
 
     const std::string got(magic, magic + 8);
-    const std::string want("FMBINv1\0", 8);
+    const std::string want("FMBINv2\0", 8);
     if (got != want) {
         throw std::runtime_error("bad fm magic");
     }
@@ -71,15 +81,41 @@ static FMIndex load_fm(const fs::path &path) {
     read_one(in, fm.checkpoint_step);
     read_one(in, fm.num_blocks);
 
+    if (fm.checkpoint_step == 0) {
+        throw std::runtime_error("bad fm checkpoint_step");
+    }
+    if (fm.num_blocks == 0) {
+        throw std::runtime_error("bad fm num_blocks");
+    }
+
     for (size_t c = 0; c < 256; ++c) {
         read_one(in, fm.C[c]);
     }
+
+    uint64_t checkpoint_payload_bytes = 0;
+    uint64_t checkpoint_fnv1a64 = 0;
+    read_one(in, checkpoint_payload_bytes);
+    read_one(in, checkpoint_fnv1a64);
 
     fm.checkpoints.resize(static_cast<size_t>(fm.num_blocks) * 256);
     in.read(reinterpret_cast<char *>(fm.checkpoints.data()),
             static_cast<std::streamsize>(fm.checkpoints.size() * sizeof(uint32_t)));
     if (!in) {
         throw std::runtime_error("failed to read checkpoints");
+    }
+
+    const uint64_t expected_payload_bytes =
+        static_cast<uint64_t>(fm.checkpoints.size() * sizeof(uint32_t));
+
+    if (checkpoint_payload_bytes != expected_payload_bytes) {
+        throw std::runtime_error("fm checkpoint payload size mismatch");
+    }
+
+    const uint64_t actual_fnv1a64 =
+        fnv1a64(fm.checkpoints.data(), static_cast<size_t>(expected_payload_bytes));
+
+    if (actual_fnv1a64 != checkpoint_fnv1a64) {
+        throw std::runtime_error("fm checkpoint checksum mismatch");
     }
 
     return fm;
