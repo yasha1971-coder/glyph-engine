@@ -70,16 +70,22 @@ Candidates:
 - CRC32C: fast with hardware support, hardware-dependent
 - xxHash64: fast software hash, widely used, 64-bit output
 
-Decision:
+Initial implementation decision:
 
-    xxHash64
+    FNV-1a 64-bit
 
 Reason:
 
-- no hardware dependency
-- fast software implementation
-- 64-bit output is sufficient for corruption detection
-- suitable for non-cryptographic artifact integrity checks
+- no external dependency
+- tiny implementation
+- stable across platforms
+- sufficient for corruption detection
+- low implementation risk
+
+Future optimization:
+
+    xxHash64 may replace FNV-1a in a later format version
+    if checksum time becomes measurable.
 
 This checksum is not a security mechanism.
 It is an artifact corruption detector.
