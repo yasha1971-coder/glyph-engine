@@ -34,15 +34,16 @@ jobs:
           g++ --version
           xxd -h || true
 
-      - name: Build mini fixture index
-        run: |
-         ./examples/mini/build_mini.sh
-
       - name: Build FM binaries
         run: |
           cmake -S . -B build
           cmake --build build -j2
 
+      - name: Build mini fixture index
+        run: |
+          ./examples/mini/build_mini.sh
+
       - name: Run correctness regression suite
         run: |
           ./tests/run_tests.sh
+          
