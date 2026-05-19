@@ -34,6 +34,10 @@ jobs:
           g++ --version
           xxd -h || true
 
+      - name: Build mini fixture index
+        run: |
+         ./examples/mini/build_mini.sh
+
       - name: Build FM binaries
         run: |
           cmake -S . -B build
