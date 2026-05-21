@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_FM = ROOT / "examples" / "mini" / "out" / "fm.bin"
 DEFAULT_BWT = ROOT / "examples" / "mini" / "out" / "bwt.bin"
 SERVER_BIN = ROOT / "build" / "query_fm_server_v1"
-
+RUNTIME_GATE = ROOT / "tools" / "glyph_runtime_gate.py"
 
 app = FastAPI(title="GLYPH Query Protocol V1")
 
@@ -33,6 +33,24 @@ class BatchQuery(BaseModel):
 @app.on_event("startup")
 async def startup():
     global proc
+
+    gate = subprocess.run(
+        [
+            "python3",
+            str(RUNTIME_GATE),
+        ],
+        cwd=str(ROOT),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    if gate.returncode != 0:
+        raise RuntimeError(
+            "runtime gate failed:\n"
+            + gate.stdout
+            + gate.stderr
+        )
 
     proc = subprocess.Popen(
         [
