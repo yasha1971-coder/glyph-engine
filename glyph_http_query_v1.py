@@ -26,6 +26,10 @@ class Query(BaseModel):
     pattern_hex: str
 
 
+class BatchQuery(BaseModel):
+    patterns: list[str]
+
+
 @app.on_event("startup")
 async def startup():
     global proc
@@ -72,24 +76,53 @@ async def health():
     return {"status": "ok"}
 
 
-@app.post("/query")
-async def query(q: Query):
+async def query_engine(pattern_hex: str):
     if proc is None or proc.poll() is not None:
         raise HTTPException(status_code=500, detail="engine down")
 
+    proc.stdin.write(pattern_hex + "\n")
+    proc.stdin.flush()
+
+    line = await asyncio.wait_for(
+        asyncio.to_thread(proc.stdout.readline),
+        timeout=5.0,
+    )
+
+    try:
+        return json.loads(line.strip())
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=500, detail="bad engine response")
+
+
+@app.post("/query")
+async def query(q: Query):
     async with lock:
         try:
-            proc.stdin.write(q.pattern_hex + "\n")
-            proc.stdin.flush()
+            return await query_engine(q.pattern_hex)
+        except asyncio.TimeoutError:
+            raise HTTPException(status_code=504, detail="timeout")
 
-            line = await asyncio.wait_for(
-                asyncio.to_thread(proc.stdout.readline),
-                timeout=5.0,
-            )
 
-            return json.loads(line.strip())
+@app.post("/query_batch")
+async def query_batch(q: BatchQuery):
+    async with lock:
+        try:
+            results = []
+            for pattern_hex in q.patterns:
+                obj = await query_engine(pattern_hex)
+                results.append(
+                    {
+                        "pattern_hex": obj["pattern_hex"],
+                        "interval": obj["interval"],
+                        "count": obj["count"],
+                        "verified": obj["verified"],
+                    }
+                )
+
+            return {
+                "results": results,
+                "fm_version": "FMBINv2",
+            }
 
         except asyncio.TimeoutError:
             raise HTTPException(status_code=504, detail="timeout")
-        except json.JSONDecodeError:
-            raise HTTPException(status_code=500, detail="bad engine response")
