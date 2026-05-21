@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -9,8 +10,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 CAPABILITY_PROBE = ROOT / "tools" / "glyph_capability_probe.py"
-MINI_MANIFEST = ROOT / "examples" / "mini" / "out" / "manifest.json"
-FM_BIN = ROOT / "examples" / "mini" / "out" / "fm.bin"
+MINI_MANIFEST = Path(
+    os.environ.get(
+        "GLYPH_GATE_MANIFEST",
+        str(ROOT / "examples" / "mini" / "out" / "manifest.json"),
+    )
+)
+
+FM_BIN = Path(
+    os.environ.get(
+        "GLYPH_GATE_FM",
+        str(ROOT / "examples" / "mini" / "out" / "fm.bin"),
+    )
+)
 
 
 REQUIRED = {

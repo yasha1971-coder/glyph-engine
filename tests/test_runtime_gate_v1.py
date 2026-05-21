@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import os
 import subprocess
 import unittest
 from pathlib import Path
@@ -55,6 +56,32 @@ class TestRuntimeGateV1(unittest.TestCase):
             "PASS",
         )
 
+def test_runtime_gate_fails_on_missing_manifest(self):
+
+        env = os.environ.copy()
+        env["GLYPH_GATE_MANIFEST"] = "/tmp/glyph_missing_manifest_for_test.json"
+
+        proc = subprocess.run(
+            [
+                "python3",
+                str(ROOT / "tools" / "glyph_runtime_gate.py")
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+        )
+
+        self.assertNotEqual(proc.returncode, 0)
+
+        obj = json.loads(proc.stdout)
+
+        self.assertFalse(obj["ready"])
+
+        self.assertEqual(
+            obj["manifest_integrity"],
+            "FAIL",
+        )
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
