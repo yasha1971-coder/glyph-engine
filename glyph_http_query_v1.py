@@ -59,14 +59,31 @@ async def startup():
 @app.on_event("shutdown")
 async def shutdown():
     global proc
+
     if proc:
+
         try:
+
             if proc.stdin:
                 proc.stdin.write("__EXIT__\n")
                 proc.stdin.flush()
+                proc.stdin.close()
+
+            if proc.stdout:
+                proc.stdout.close()
+
+            if proc.stderr:
+                proc.stderr.close()
+
             proc.wait(timeout=2)
+
         except Exception:
+
             proc.kill()
+
+        finally:
+
+            proc = None
 
 
 @app.get("/health")
