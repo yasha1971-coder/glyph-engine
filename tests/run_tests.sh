@@ -13,3 +13,4 @@ python3 tests/test_golden_queries_v1.py
 python3 tests/test_query_protocol_v1.py
 python3 tests/test_query_server_protocol_v1.py
 python3 tests/test_http_query_protocol_v1.py
+python3 tests/test_capability_probe_v1.py
