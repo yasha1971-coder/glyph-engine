@@ -83,5 +83,32 @@ def test_runtime_gate_fails_on_missing_manifest(self):
             "FAIL",
         )
 
+def test_runtime_gate_fails_on_missing_fm_artifact(self):
+
+        env = os.environ.copy()
+        env["GLYPH_GATE_FM"] = "/tmp/glyph_missing_fm_for_test.bin"
+
+        proc = subprocess.run(
+            [
+                "python3",
+                str(ROOT / "tools" / "glyph_runtime_gate.py")
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+        )
+
+        self.assertNotEqual(proc.returncode, 0)
+
+        obj = json.loads(proc.stdout)
+
+        self.assertFalse(obj["ready"])
+
+        self.assertEqual(
+            obj["fm_artifact"],
+            "FAIL",
+        )
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
