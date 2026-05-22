@@ -142,5 +142,37 @@ def test_runtime_gate_fails_on_missing_bwt_artifact(self):
             "FAIL",
         )
 
+def test_runtime_gate_fails_on_missing_backend_binary(self):
+
+        env = os.environ.copy()
+        env["GLYPH_GATE_BACKEND"] = "/tmp/glyph_missing_backend_for_test"
+
+        proc = subprocess.run(
+            [
+                "python3",
+                str(ROOT / "tools" / "glyph_runtime_gate.py")
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+        )
+
+        self.assertNotEqual(proc.returncode, 0)
+
+        obj = json.loads(proc.stdout)
+
+        self.assertFalse(obj["ready"])
+
+        self.assertEqual(
+            obj["backend_binary"],
+            "FAIL",
+        )
+
+        self.assertEqual(
+            obj["resource_contract"],
+            "FAIL",
+        )
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
