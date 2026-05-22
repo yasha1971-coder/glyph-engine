@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+  #!/usr/bin/env python3
 
 import json
 import os
@@ -10,6 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 CAPABILITY_PROBE = ROOT / "tools" / "glyph_capability_probe.py"
+
 MINI_MANIFEST = Path(
     os.environ.get(
         "GLYPH_GATE_MANIFEST",
@@ -21,6 +22,20 @@ FM_BIN = Path(
     os.environ.get(
         "GLYPH_GATE_FM",
         str(ROOT / "examples" / "mini" / "out" / "fm.bin"),
+    )
+)
+
+BWT_BIN = Path(
+    os.environ.get(
+        "GLYPH_GATE_BWT",
+        str(ROOT / "examples" / "mini" / "out" / "bwt.bin"),
+    )
+)
+
+BACKEND_BIN = Path(
+    os.environ.get(
+        "GLYPH_GATE_BACKEND",
+        str(ROOT / "build" / "query_fm_server_v1"),
     )
 )
 
@@ -52,6 +67,7 @@ def check_required_versions(cap):
 
     for key, expected in REQUIRED.items():
         got = cap.get(key)
+
         if got != expected:
             failures.append(
                 {
@@ -72,28 +88,49 @@ def check_fm_exists():
     return FM_BIN.exists()
 
 
+def check_bwt_exists():
+    return BWT_BIN.exists()
+
+
+def check_backend_exists():
+    return BACKEND_BIN.exists()
+
+
 def main():
     result = {
         "runtime_gate_version": "GLYPH_RUNTIME_GATE_V1",
         "capability_contract": "UNKNOWN",
         "retrieval_contract": "UNKNOWN",
+        "resource_contract": "UNKNOWN",
         "manifest_integrity": "UNKNOWN",
         "fm_artifact": "UNKNOWN",
+        "bwt_artifact": "UNKNOWN",
+        "backend_binary": "UNKNOWN",
         "ready": False,
         "failures": [],
     }
 
     try:
         cap = run_capability_probe()
+
     except Exception as e:
         result["capability_contract"] = "FAIL"
+
         result["failures"].append(
             {
                 "check": "capability_probe",
                 "error": str(e),
             }
         )
-        print(json.dumps(result, sort_keys=True, indent=2))
+
+        print(
+            json.dumps(
+                result,
+                sort_keys=True,
+                indent=2,
+            )
+        )
+
         return 2
 
     version_failures = check_required_versions(cap)
@@ -102,14 +139,17 @@ def main():
         result["capability_contract"] = "FAIL"
         result["retrieval_contract"] = "FAIL"
         result["failures"].extend(version_failures)
+
     else:
         result["capability_contract"] = "PASS"
         result["retrieval_contract"] = "PASS"
 
     if check_manifest_exists():
         result["manifest_integrity"] = "PASS"
+
     else:
         result["manifest_integrity"] = "FAIL"
+
         result["failures"].append(
             {
                 "check": "manifest_exists",
@@ -119,8 +159,10 @@ def main():
 
     if check_fm_exists():
         result["fm_artifact"] = "PASS"
+
     else:
         result["fm_artifact"] = "FAIL"
+
         result["failures"].append(
             {
                 "check": "fm_exists",
@@ -128,14 +170,58 @@ def main():
             }
         )
 
+    if check_bwt_exists():
+        result["bwt_artifact"] = "PASS"
+
+    else:
+        result["bwt_artifact"] = "FAIL"
+
+        result["failures"].append(
+            {
+                "check": "bwt_exists",
+                "path": str(BWT_BIN),
+            }
+        )
+
+    if check_backend_exists():
+        result["backend_binary"] = "PASS"
+
+    else:
+        result["backend_binary"] = "FAIL"
+
+        result["failures"].append(
+            {
+                "check": "backend_exists",
+                "path": str(BACKEND_BIN),
+            }
+        )
+
+    resource_ok = (
+        result["backend_binary"] == "PASS"
+        and result["fm_artifact"] == "PASS"
+        and result["bwt_artifact"] == "PASS"
+    )
+
+    result["resource_contract"] = (
+        "PASS"
+        if resource_ok
+        else "FAIL"
+    )
+
     result["ready"] = (
         result["capability_contract"] == "PASS"
         and result["retrieval_contract"] == "PASS"
         and result["manifest_integrity"] == "PASS"
-        and result["fm_artifact"] == "PASS"
+        and result["resource_contract"] == "PASS"
     )
 
-    print(json.dumps(result, sort_keys=True, indent=2))
+    print(
+        json.dumps(
+            result,
+            sort_keys=True,
+            indent=2,
+        )
+    )
 
     if result["ready"]:
         return 0
@@ -144,4 +230,4 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main())    
