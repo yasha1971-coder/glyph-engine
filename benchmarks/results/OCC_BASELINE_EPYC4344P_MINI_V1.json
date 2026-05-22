@@ -1,0 +1,12 @@
+{
+  "protocol":"OCC_BENCH_V1",
+  "dataset":"mini",
+  "machine":"AMD EPYC 4344P",
+  "variant":"scalar",
+  "commit":"bff2428",
+  "iterations":10000,
+  "p50_ns":20,
+  "p95_ns":30,
+  "p99_ns":50,
+  "sink":1130
+}
