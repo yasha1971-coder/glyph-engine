@@ -110,5 +110,37 @@ def test_runtime_gate_fails_on_missing_fm_artifact(self):
             "FAIL",
         )
 
+def test_runtime_gate_fails_on_missing_bwt_artifact(self):
+
+        env = os.environ.copy()
+        env["GLYPH_GATE_BWT"] = "/tmp/glyph_missing_bwt_for_test.bin"
+
+        proc = subprocess.run(
+            [
+                "python3",
+                str(ROOT / "tools" / "glyph_runtime_gate.py")
+            ],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=env,
+        )
+
+        self.assertNotEqual(proc.returncode, 0)
+
+        obj = json.loads(proc.stdout)
+
+        self.assertFalse(obj["ready"])
+
+        self.assertEqual(
+            obj["bwt_artifact"],
+            "FAIL",
+        )
+
+        self.assertEqual(
+            obj["resource_contract"],
+            "FAIL",
+        )
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
