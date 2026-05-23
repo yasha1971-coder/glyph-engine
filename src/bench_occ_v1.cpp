@@ -12,6 +12,14 @@
 
 namespace fs = std::filesystem;
 
+static constexpr uint64_t ADAPTIVE_THRESHOLD = 32;
+
+enum class OccVariant {
+    Scalar,
+    SimdAvx2,
+    Adaptive
+};
+
 struct FMIndex {
     uint64_t n = 0;
     uint32_t checkpoint_step = 0;
@@ -179,7 +187,7 @@ static inline uint64_t occ_core(
     const std::vector<uint8_t>& bwt,
     uint8_t c,
     uint64_t pos,
-    bool simd
+    OccVariant variant
 ) {
     if(pos > fm.n) {
         pos = fm.n;
@@ -197,11 +205,25 @@ static inline uint64_t occ_core(
 
     auto ptr = bwt.data() + block * fm.checkpoint_step;
 
-    uint64_t extra = simd
-        ? occ_scan_simd(ptr, offset, c)
-        : occ_scan_scalar(ptr, offset, c);
+    uint64_t extra = 0;
+
+    if(variant == OccVariant::Scalar) {
+        extra = occ_scan_scalar(ptr, offset, c);
+    } else if(variant == OccVariant::SimdAvx2) {
+        extra = occ_scan_simd(ptr, offset, c);
+    } else {
+        extra = (offset < ADAPTIVE_THRESHOLD)
+            ? occ_scan_scalar(ptr, offset, c)
+            : occ_scan_simd(ptr, offset, c);
+    }
 
     return base + extra;
+}
+
+static const char* variant_name(OccVariant v) {
+    if(v == OccVariant::Scalar) return "scalar";
+    if(v == OccVariant::SimdAvx2) return "simd_avx2";
+    return "adaptive";
 }
 
 static uint64_t pct(std::vector<uint64_t> x, double p) {
@@ -222,7 +244,11 @@ int main(int argc, char** argv) {
     auto bwt = read_file_bytes(argv[2]);
     uint64_t it = std::stoull(argv[3]);
 
-    for(bool simd : {false,true}) {
+    for(OccVariant variant : {
+        OccVariant::Scalar,
+        OccVariant::SimdAvx2,
+        OccVariant::Adaptive
+    }) {
         std::vector<uint64_t> s;
         s.reserve(static_cast<size_t>(it));
 
@@ -244,7 +270,7 @@ int main(int argc, char** argv) {
                 bwt,
                 c,
                 pos,
-                simd
+                variant
             );
 
             auto t1 = std::chrono::high_resolution_clock::now();
@@ -259,7 +285,8 @@ int main(int argc, char** argv) {
         std::cout
             << "{"
             << "\"bench\":\"OCC_BENCH_V1\","
-            << "\"occ_variant\":\"" << (simd ? "simd_avx2" : "scalar") << "\","
+            << "\"occ_variant\":\"" << variant_name(variant) << "\","
+            << "\"adaptive_threshold\":" << ADAPTIVE_THRESHOLD << ","
             << "\"iterations\":" << it << ","
             << "\"avg_scan_bytes\":" << (total_scan / it) << ","
             << "\"p50_ns\":" << pct(s,50) << ","
