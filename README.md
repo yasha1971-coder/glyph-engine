@@ -83,6 +83,28 @@ Benchmarks:
 - benchmarks/HDFS_1GB_BENCHMARK.md
 - benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
 
+## Public reproducible benchmark
+
+GLYPH now includes an enwik9 public benchmark runbook.
+
+See:
+
+- benchmarks/ENWIK9_PUBLIC_BENCH_RUNBOOK_V1.md
+- benchmarks/LAYOUT_PROFILE_MATRIX_V1.md
+- benchmarks/PUBLIC_BENCH_EXPECTATIONS_V1.md
+
+The enwik9 corpus was verified to contain 0 null bytes, making it compatible with the current sentinel-safe GLYPH v0.x pipeline.
+
+Current public benchmark focus:
+
+- SA build
+- BWT build
+- FM layout scaling
+- checkpoint_step memory economics
+- cold CLI profile
+
+Persistent raw FM latency is intentionally not claimed yet.
+
 Business / Contact:
 - docs/business/CONTACT.md
 
