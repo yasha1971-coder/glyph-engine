@@ -150,3 +150,48 @@ add_executable(locate_backend_v2
 
 target_compile_options(locate_backend_v2 PRIVATE -O3)
 target_link_libraries(locate_backend_v2 PRIVATE Threads::Threads)
+# ============================================
+# bench_occ_v1
+# ============================================
+add_executable(bench_occ_v1
+    src/bench_occ_v1.cpp
+)
+
+target_compile_options(bench_occ_v1 PRIVATE
+    -O3
+    -march=native
+    -funroll-loops
+)
+
+target_link_libraries(bench_occ_v1 PRIVATE Threads::Threads)
+# ============================================
+# bench_occ_step_v1
+# ============================================
+add_executable(bench_occ_step_v1
+    src/bench_occ_step_v1.cpp
+)
+
+target_compile_options(bench_occ_step_v1 PRIVATE
+    -O3
+    -march=native
+    -funroll-loops
+)
+
+target_link_libraries(bench_occ_step_v1 PRIVATE Threads::Threads)
+# ============================================
+# bench_backward_search_v1
+# ============================================
+
+add_executable(bench_backward_search_v1
+    src/bench_backward_search_v1.cpp
+)
+
+target_compile_options(bench_backward_search_v1 PRIVATE
+    -O3
+    -march=native
+    -funroll-loops
+)
+
+target_link_libraries(bench_backward_search_v1 PRIVATE
+    Threads::Threads
+)
