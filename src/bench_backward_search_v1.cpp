@@ -10,6 +10,18 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#if defined(_MSC_VER)
+#include <intrin.h>
+#endif
+
+static inline uint32_t glyph_popcount32(uint32_t x) {
+#if defined(_MSC_VER)
+    return static_cast<uint32_t>(__popcnt(x));
+#else
+    return static_cast<uint32_t>(__builtin_popcount(x));
+#endif
+}
+
 
 namespace fs = std::filesystem;
 
@@ -184,7 +196,7 @@ static inline uint64_t occ_scan_avx2(
         uint32_t mask =
             static_cast<uint32_t>(_mm256_movemask_epi8(eq));
 
-        total += __builtin_popcount(mask);
+        total += glyph_popcount32(mask);
     }
 
     for (; i < len; ++i) {
