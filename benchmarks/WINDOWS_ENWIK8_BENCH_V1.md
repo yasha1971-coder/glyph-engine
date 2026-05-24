@@ -96,3 +96,33 @@ Conclusion:
 
 Windows laptop successfully builds and queries GLYPH index on enwik8.
 
+
+
+Cold/Warm CLI query timing:
+
+
+
+Command:
+
+query\_fm\_v1 fm.bin bwt.bin 746865 --json
+
+
+
+Cold-ish:
+
+0.949s
+
+
+
+Warm-ish:
+
+0.906s
+
+
+
+Interpretation:
+
+For Windows enwik8 step=256 CLI query, cold/warm difference is small.
+
+This measures full CLI path, not persistent in-memory query latency.
+
