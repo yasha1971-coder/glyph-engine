@@ -126,3 +126,37 @@ For Windows enwik8 step=256 CLI query, cold/warm difference is small.
 
 This measures full CLI path, not persistent in-memory query latency.
 
+
+
+Pattern frequency timing:
+
+
+
+the:
+
+\~0.91-0.95s
+
+
+
+aaa:
+
+0.943s
+
+
+
+qwxz:
+
+0.908s
+
+
+
+Finding:
+
+CLI query time is almost independent of match frequency.
+
+
+
+Interpretation:
+
+Current Windows CLI query timing is dominated by process/artifact setup rather than match count.
+
