@@ -160,3 +160,75 @@ Interpretation:
 
 Current Windows CLI query timing is dominated by process/artifact setup rather than match count.
 
+
+
+Persistent batch benchmark:
+
+
+
+Tool:
+
+benchmarks/windows\_persistent\_bench\_v1.py
+
+
+
+Mode:
+
+query\_fm\_server\_v1 stdin batch
+
+
+
+Queries:
+
+100
+
+
+
+Patterns:
+
+the
+
+aaa
+
+qwxz
+
+the and
+
+
+
+Result:
+
+returncode=0
+
+stdout\_lines=100
+
+elapsed\_ms=764.529
+
+avg\_ms\_per\_query\_including\_startup=7.6453
+
+
+
+Finding:
+
+Batch/persistent-style stdin path is dramatically faster than one-process-per-query CLI.
+
+
+
+Comparison:
+
+CLI single query:
+
+\~906-949 ms/query
+
+
+
+Batch 100 queries through one server process:
+
+\~7.65 ms/query including startup/load
+
+
+
+Interpretation:
+
+The main bottleneck is process/artifact lifecycle, not FM traversal.
+
