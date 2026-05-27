@@ -31,9 +31,11 @@ static inline uint64_t occ_simd_avx2(
             (uint32_t)
             _mm256_movemask_epi8(eq);
 
-        total +=
-            (uint64_t)
-            __builtin_popcount(mask);
+        #if defined(_MSC_VER)
+                total += __popcnt(mask);
+        #else
+                total += __builtin_popcount(mask);
+        #endif
     }
 
     for (; i < len; ++i) {
