@@ -79,6 +79,9 @@ Specifications:
 - docs/specs/SENTINEL_INVARIANT.md
 - docs/specs/KNOWN_LIMITATIONS.md
 
+Roadmap:
+- docs/roadmap/PERSISTENT_RETRIEVAL_ROADMAP_V1.md
+
 Benchmarks:
 - benchmarks/HDFS_1GB_BENCHMARK.md
 - benchmarks/SEGMENTED_FIXED_CORRECTNESS.md
