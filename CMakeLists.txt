@@ -69,6 +69,21 @@ target_compile_options(build_bwt PRIVATE
 target_link_libraries(build_bwt PRIVATE Threads::Threads)
 
 # ============================================
+# build_bwt_sentinel_v1
+# ============================================
+add_executable(build_bwt_sentinel_v1
+    src/build_bwt_sentinel_v1.cpp
+)
+
+target_compile_options(build_bwt_sentinel_v1 PRIVATE
+    -O3
+    -march=native
+    -funroll-loops
+)
+
+target_link_libraries(build_bwt_sentinel_v1 PRIVATE Threads::Threads)
+
+# ============================================
 # build_fm
 # ============================================
 add_executable(build_fm
