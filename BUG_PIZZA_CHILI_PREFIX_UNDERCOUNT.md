@@ -102,3 +102,63 @@ Next debugging steps:
    - Ten Days t
    - Ten Days th
 5. Check whether the issue is related to sentinel, SA=0, or early-corpus suffixes.
+--------------------------------------------------
+UPDATE: DIRECT SA INTERVAL VALIDATION
+--------------------------------------------------
+
+Direct binary search over SA for pattern:
+
+en Days th
+
+returned:
+
+866877230..866877233
+count=3
+
+FM backward search returned:
+
+866877232..866877234
+count=2
+
+Therefore:
+
+The SA is correct for this pattern.
+
+The target suffix at offset 54 exists at:
+
+SA index:
+866877230
+
+Suffix:
+
+en Days that Shook the World
+
+BWT at SA index 866877230 is correct:
+
+expected previous char:
+T
+
+actual BWT char:
+T
+
+C table:
+validated OK
+
+BWT histogram:
+validated OK
+
+Occ checkpoint base:
+validated OK around the failing interval
+
+Conclusion:
+
+The bug is now localized to the FM backward/Occ query path or to the exact way Occ(pos) is interpreted at interval boundaries.
+
+This is not:
+
+- query encoding issue
+- corpus mismatch
+- missing target bytes
+- SA ordering issue
+- BWT previous-char construction issue
+- C table issue
