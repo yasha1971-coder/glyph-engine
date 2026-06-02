@@ -22,6 +22,7 @@ def main():
     ap.add_argument("--bwt", required=True)
     ap.add_argument("--queries", required=True)
     ap.add_argument("--warmup", type=int, default=20)
+    ap.add_argument("--dump-raw", default=None)
     args = ap.parse_args()
 
     queries = [
@@ -66,6 +67,11 @@ def main():
 
     proc.kill()
 
+    if args.dump_raw:
+        with open(args.dump_raw, "w") as f:
+            for x in lat:
+                f.write(f"{x:.9f}\n")
+
     print("STEADY_STATE_LATENCY_BENCH_V1")
     print()
     print("queries:", len(queries))
@@ -78,6 +84,9 @@ def main():
     print("min_ms:", round(min(lat), 6))
     print("max_ms:", round(max(lat), 6))
     print("qps:", round(len(lat) / (sum(lat) / 1000.0), 3))
+
+    if args.dump_raw:
+        print("dump_raw:", args.dump_raw)
 
 
 if __name__ == "__main__":
