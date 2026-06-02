@@ -35,6 +35,25 @@ target_compile_options(build_sa PRIVATE
 target_link_libraries(build_sa PRIVATE Threads::Threads)
 
 # ============================================
+# build_sa_sentinel_v1
+# ============================================
+add_executable(build_sa_sentinel_v1
+    src/build_sa_sentinel_v1.cpp
+    third_party/libsais/libsais/src/libsais.c
+)
+
+target_include_directories(build_sa_sentinel_v1 PRIVATE
+    third_party/libsais/libsais/include
+)
+
+target_compile_options(build_sa_sentinel_v1 PRIVATE
+    $<$<COMPILE_LANGUAGE:C>:-O3>
+    $<$<COMPILE_LANGUAGE:CXX>:-O3 -march=native -funroll-loops>
+)
+
+target_link_libraries(build_sa_sentinel_v1 PRIVATE Threads::Threads)
+
+# ============================================
 # build_bwt
 # ============================================
 add_executable(build_bwt
@@ -108,6 +127,10 @@ target_compile_options(query_fm_batch_v1 PRIVATE
 )
 
 target_link_libraries(query_fm_batch_v1 PRIVATE Threads::Threads)
+
+# ============================================
+# query_fm_server_v1
+# ============================================
 add_executable(query_fm_server_v1
     src/query_fm_server_v1.cpp
 )
@@ -120,6 +143,9 @@ target_compile_options(query_fm_server_v1 PRIVATE
 
 target_link_libraries(query_fm_server_v1 PRIVATE Threads::Threads)
 
+# ============================================
+# build_sa_u32
+# ============================================
 add_executable(build_sa_u32
     src/build_sa_u32.cpp
     third_party/libsais/libsais/src/libsais64.c
@@ -137,6 +163,9 @@ target_compile_options(build_sa_u32 PRIVATE
 
 target_link_libraries(build_sa_u32 PRIVATE Threads::Threads)
 
+# ============================================
+# build_chunk_map_u24
+# ============================================
 add_executable(build_chunk_map_u24
     src/build_chunk_map_u24.cpp
 )
@@ -144,12 +173,16 @@ add_executable(build_chunk_map_u24
 target_compile_options(build_chunk_map_u24 PRIVATE -O3)
 target_link_libraries(build_chunk_map_u24 PRIVATE Threads::Threads)
 
+# ============================================
+# locate_backend_v2
+# ============================================
 add_executable(locate_backend_v2
     src/locate_backend_v2.cpp
 )
 
 target_compile_options(locate_backend_v2 PRIVATE -O3)
 target_link_libraries(locate_backend_v2 PRIVATE Threads::Threads)
+
 # ============================================
 # bench_occ_v1
 # ============================================
@@ -164,6 +197,7 @@ target_compile_options(bench_occ_v1 PRIVATE
 )
 
 target_link_libraries(bench_occ_v1 PRIVATE Threads::Threads)
+
 # ============================================
 # bench_occ_step_v1
 # ============================================
@@ -178,10 +212,10 @@ target_compile_options(bench_occ_step_v1 PRIVATE
 )
 
 target_link_libraries(bench_occ_step_v1 PRIVATE Threads::Threads)
+
 # ============================================
 # bench_backward_search_v1
 # ============================================
-
 add_executable(bench_backward_search_v1
     src/bench_backward_search_v1.cpp
 )
@@ -192,6 +226,4 @@ target_compile_options(bench_backward_search_v1 PRIVATE
     -funroll-loops
 )
 
-target_link_libraries(bench_backward_search_v1 PRIVATE
-    Threads::Threads
-)
+target_link_libraries(bench_backward_search_v1 PRIVATE Threads::Threads)
