@@ -162,3 +162,62 @@ This is not:
 - SA ordering issue
 - BWT previous-char construction issue
 - C table issue
+--------------------------------------------------
+ROOT CAUSE CONFIRMED
+--------------------------------------------------
+
+build_bwt.cpp uses a synthetic sentinel model:
+
+if SA[i] == 0:
+    BWT[i] = sentinel
+else:
+    BWT[i] = text[SA[i] - 1]
+
+However, the SA was built over corpus length n without appending
+a real sentinel byte as an actual text symbol / suffix.
+
+Therefore:
+
+BWT contains a sentinel byte in histogram/C/Occ space, but the SA
+order does not include a corresponding real sentinel suffix.
+
+This creates a convention mismatch between:
+
+- SA interval semantics
+- BWT histogram
+- C table
+- backward search
+
+Observed effect:
+
+Single-character intervals may have correct count but shifted boundaries.
+
+Multi-character intervals may undercount or miss valid matches.
+
+Confirmed example:
+
+Ten Days th
+
+Python/direct SA count:
+1
+
+GLYPH FM count:
+0
+
+Diagnosis:
+
+Synthetic sentinel without real appended sentinel is not a valid strict
+FM-index model for byte-exact retrieval.
+
+Required architectural fix:
+
+Build SA/BWT/FM over:
+
+text + real sentinel
+
+or implement an explicitly consistent out-of-band sentinel model.
+
+Status:
+
+DO NOT USE current FMBINv2 artifacts for strict correctness claims
+until sentinel model is fixed.
