@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import json
 import struct
 import subprocess
 from pathlib import Path
@@ -69,6 +70,7 @@ def main():
     ap.add_argument("--sa", required=True)
     ap.add_argument("--corpus", required=True)
     ap.add_argument("--max-hits", type=int, default=5)
+    ap.add_argument("--json", action="store_true")
 
     args = ap.parse_args()
 
@@ -80,17 +82,59 @@ def main():
         args.bwt
     )
 
-    print("query:", args.query)
-    print("interval:", l, r)
-    print("count:", cnt)
-    print()
-
     hits = locate(
         args.sa,
         l,
         r,
         len(corpus_bytes)
     )
+
+    if args.json:
+
+        if not hits:
+            out = {
+                "query": args.query,
+                "query_hex": args.query.encode("latin1").hex(),
+                "match": False,
+                "count": 0,
+                "interval": [l, r],
+                "method": "sentinel-safe-fm-sa-v1",
+                "index_tag": "retrieval-v1",
+                "corpus_path": args.corpus,
+                "verified": False,
+                "hits": []
+            }
+
+            print(json.dumps(out, ensure_ascii=False, indent=2))
+            return
+
+        out = {
+            "query": args.query,
+            "query_hex": args.query.encode("latin1").hex(),
+            "match": True,
+            "count": cnt,
+            "interval": [l, r],
+            "method": "sentinel-safe-fm-sa-v1",
+            "index_tag": "retrieval-v1",
+            "corpus_path": args.corpus,
+            "verified": True,
+            "hits": []
+        }
+
+        for pos in hits[:args.max_hits]:
+            out["hits"].append({
+                "offset": pos,
+                "length": len(args.query.encode("latin1")),
+                "snippet": snippet(corpus_bytes, pos)
+            })
+
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        return
+
+    print("query:", args.query)
+    print("interval:", l, r)
+    print("count:", cnt)
+    print()
 
     if not hits:
         print("NO HITS")
