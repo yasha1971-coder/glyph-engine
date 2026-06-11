@@ -61,6 +61,15 @@ def snippet(corpus, offset, before=80, after=160):
     )
 
 
+def write_evidence(path, obj):
+    out_path = Path(path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(
+        json.dumps(obj, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8"
+    )
+
+
 def main():
     ap = argparse.ArgumentParser()
 
@@ -71,6 +80,7 @@ def main():
     ap.add_argument("--corpus", required=True)
     ap.add_argument("--max-hits", type=int, default=5)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--evidence-out")
 
     args = ap.parse_args()
 
@@ -89,46 +99,34 @@ def main():
         len(corpus_bytes)
     )
 
+    evidence = {
+        "query": args.query,
+        "query_hex": args.query.encode("latin1").hex(),
+        "match": bool(hits),
+        "count": cnt if hits else 0,
+        "interval": [l, r],
+        "method": "sentinel-safe-fm-sa-v1",
+        "index_tag": "retrieval-v1",
+        "corpus_path": args.corpus,
+        "fm_path": args.fm,
+        "bwt_path": args.bwt,
+        "sa_path": args.sa,
+        "verified": bool(hits),
+        "hits": []
+    }
+
+    for pos in hits[:args.max_hits]:
+        evidence["hits"].append({
+            "offset": pos,
+            "length": len(args.query.encode("latin1")),
+            "snippet": snippet(corpus_bytes, pos)
+        })
+
+    if args.evidence_out:
+        write_evidence(args.evidence_out, evidence)
+
     if args.json:
-
-        if not hits:
-            out = {
-                "query": args.query,
-                "query_hex": args.query.encode("latin1").hex(),
-                "match": False,
-                "count": 0,
-                "interval": [l, r],
-                "method": "sentinel-safe-fm-sa-v1",
-                "index_tag": "retrieval-v1",
-                "corpus_path": args.corpus,
-                "verified": False,
-                "hits": []
-            }
-
-            print(json.dumps(out, ensure_ascii=False, indent=2))
-            return
-
-        out = {
-            "query": args.query,
-            "query_hex": args.query.encode("latin1").hex(),
-            "match": True,
-            "count": cnt,
-            "interval": [l, r],
-            "method": "sentinel-safe-fm-sa-v1",
-            "index_tag": "retrieval-v1",
-            "corpus_path": args.corpus,
-            "verified": True,
-            "hits": []
-        }
-
-        for pos in hits[:args.max_hits]:
-            out["hits"].append({
-                "offset": pos,
-                "length": len(args.query.encode("latin1")),
-                "snippet": snippet(corpus_bytes, pos)
-            })
-
-        print(json.dumps(out, ensure_ascii=False, indent=2))
+        print(json.dumps(evidence, ensure_ascii=False, indent=2))
         return
 
     print("query:", args.query)
@@ -140,12 +138,12 @@ def main():
         print("NO HITS")
         return
 
-    for i, pos in enumerate(hits[:args.max_hits], start=1):
+    for i, hit in enumerate(evidence["hits"], start=1):
         print("=" * 80)
         print("hit:", i)
-        print("offset:", pos)
+        print("offset:", hit["offset"])
         print()
-        print(snippet(corpus_bytes, pos))
+        print(hit["snippet"])
         print()
 
 
