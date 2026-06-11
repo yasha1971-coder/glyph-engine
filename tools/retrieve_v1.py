@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import hashlib
 import json
 import struct
 import subprocess
@@ -28,6 +29,10 @@ def fm_query(query, fm, bwt):
 
     l, r, cnt = map(int, line.split())
     return l, r, cnt
+
+
+def sha256_bytes(data):
+    return hashlib.sha256(data).hexdigest()
 
 
 def locate(sa_path, l, r, original_bytes):
@@ -85,6 +90,7 @@ def main():
     args = ap.parse_args()
 
     corpus_bytes = Path(args.corpus).read_bytes()
+    corpus_sha256 = sha256_bytes(corpus_bytes)
 
     l, r, cnt = fm_query(
         args.query,
@@ -108,6 +114,7 @@ def main():
         "method": "sentinel-safe-fm-sa-v1",
         "index_tag": "retrieval-v1",
         "corpus_path": args.corpus,
+        "corpus_sha256": corpus_sha256,
         "fm_path": args.fm,
         "bwt_path": args.bwt,
         "sa_path": args.sa,
