@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
+
+
+def sha256_bytes(data):
+    return hashlib.sha256(data).hexdigest()
 
 
 def main():
@@ -23,6 +28,19 @@ def main():
         return 1
 
     corpus = Path(corpus_path).read_bytes()
+
+    actual_sha = sha256_bytes(corpus)
+    expected_sha = ev.get("corpus_sha256")
+
+    if expected_sha:
+        print(f"expected_sha256={expected_sha}")
+        print(f"actual_sha256={actual_sha}")
+
+        if actual_sha != expected_sha:
+            print("CORPUS_FINGERPRINT_MISMATCH")
+            return 3
+
+        print("CORPUS_FINGERPRINT_VERIFIED")
 
     query_bytes = bytes.fromhex(ev["query_hex"])
 
