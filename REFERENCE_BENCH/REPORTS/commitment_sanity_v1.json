@@ -1,0 +1,15 @@
+{
+  "commitment_version": "commitment-v1",
+  "corpus_path": "/home/glyph/GLYPH_LEGAL_PILOT/corpora/sanity.txt",
+  "sa_path": "/home/glyph/GLYPH_LEGAL_PILOT/out/sanity/sa.bin",
+  "corpus_sha256": "531a90f4cb8d299a91400ee38a917e0d1066f417830f6e63fd706b11ddaf6ca3",
+  "sa_sha256": "495e53b47d5c7fe5c28df2574dccd56abc94007269af0c5f2932fefa3c5230fd",
+  "corpus_root": "a1705a782515e0756b572284e7be204d5a232f4feb8547bf20e099a2ab8a482b",
+  "sa_root": "b6e0899cd1ba4927b4379361d28bcb3c40e7983def01472f77d77f8be95d538d",
+  "build_spec_hash": "2ce7024ea16b717843148304fa59b25504781a937ec5ee4b12d6c2eddff36800",
+  "commitment_root": "c5313bd7b25e8ed9e38a23d7f42ed3b4a36a550fd643ecd9059830e3819494d0",
+  "chunk_size": 4096,
+  "hash_function": "sha256",
+  "created_at_utc": "2026-06-12T22:08:37Z",
+  "method": "merkle-sha256-chunked-v1"
+}
