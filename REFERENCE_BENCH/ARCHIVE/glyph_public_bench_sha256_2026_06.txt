@@ -1,0 +1,7 @@
+159b85351e5f76e60cbe32e04c677847a9ecba3adc79addab6f4c6c7aa3744bc  /tmp/glyph-public-bench/enwik9
+99cdb5ac84392252d3f0912ccedd195bc95bd80cbef3b0cdf2eee4ad9a3b7a51  /tmp/glyph-public-bench/enwik9.zip
+65cd61263b70ab51c5335e5893ad13f044f926252adbab51fc58672df44a584b  /tmp/glyph-public-bench/out/bwt.bin
+448d99153ee9c379e96723ffbda3e886784aa528d1e1121c966f99ee643541bd  /tmp/glyph-public-bench/out/fm.bin
+ac0214e862cfee5a1f0ddda83691b2b7f07cf148f6641366e3d732d388f0e4a9  /tmp/glyph-public-bench/out/sa.bin
+3e69c0a96407c65d9a2cbf8ca26183f57576398e737634b15c809751cfa6a452  /tmp/glyph-public-bench/out256/fm.bin
+9d0942f656c914495146ee3f41e820747369f801a8f6ff784d96fe76e7dce35b  /tmp/glyph-public-bench/out64/fm.bin
