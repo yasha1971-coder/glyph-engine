@@ -4,11 +4,31 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
-echo "[verify] GLYPH mini deterministic verification"
+echo "[verify] GLYPH one-command verification"
 
-if [[ ! -x "$ROOT/examples/mini/run_mini.sh" ]]; then
-  echo "VERIFY FAIL: examples/mini/run_mini.sh is not executable"
-  exit 1
+need_build=0
+
+for bin in \
+  build/query_fm_v1 \
+  build/build_sa_sentinel_v1 \
+  build/build_bwt_sentinel_v1 \
+  build/build_fm
+do
+  if [[ ! -x "$bin" ]]; then
+    need_build=1
+  fi
+done
+
+if [[ "$need_build" -eq 1 ]]; then
+  echo "[verify] building required binaries"
+  cmake -S . -B build
+  cmake --build build --target \
+    query_fm_v1 \
+    build_sa_sentinel_v1 \
+    build_bwt_sentinel_v1 \
+    build_fm
+else
+  echo "[verify] required binaries found"
 fi
 
 OUT="$(mktemp)"
