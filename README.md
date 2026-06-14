@@ -2,6 +2,28 @@
 
 [![ci](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml)
 
+## Verify GLYPH in one command
+
+```bash
+git clone https://github.com/yasha1971-coder/glyph-engine.git
+cd glyph-engine
+./verify.sh
+```
+
+Expected output:
+
+```text
+VERIFY OK
+```
+
+This checks the canonical mini verification pipeline.
+
+See:
+
+- docs/specs/GLYPH_VERIFICATION_CLAIM_V1.md
+
+---
+
 GLYPH is a byte-exact substring retrieval engine over raw bytes.
 
 It is designed for high-speed exact matching without tokenization or scoring.
