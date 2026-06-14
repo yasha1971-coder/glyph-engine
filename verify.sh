@@ -20,13 +20,25 @@ do
 done
 
 if [[ "$need_build" -eq 1 ]]; then
+
+  for cmd in cmake make c++; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+      echo "VERIFY FAIL: missing required command: $cmd"
+      echo "Install build tools, then run ./verify.sh again."
+      exit 1
+    fi
+  done
+
   echo "[verify] building required binaries"
+
   cmake -S . -B build
+
   cmake --build build --target \
     query_fm_v1 \
     build_sa_sentinel_v1 \
     build_bwt_sentinel_v1 \
     build_fm
+
 else
   echo "[verify] required binaries found"
 fi
