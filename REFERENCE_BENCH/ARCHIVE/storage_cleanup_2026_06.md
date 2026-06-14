@@ -57,3 +57,29 @@ Freed:
 Restore rule:
 Copy the archived directory back to:
 ~/GLYPH_CPP_BACKEND/out_4gb
+
+4. Archived and removed glyph-public-bench.
+
+Path:
+/tmp/glyph-public-bench
+
+Archive destination:
+External SSD / GLYPH_ARCHIVE2026-06/glyph-public-bench
+
+Verified SHA256 match on:
+- enwik9
+- out/fm.bin
+- out/sa.bin
+
+Archive manifest:
+REFERENCE_BENCH/ARCHIVE/glyph_public_bench_archive_manifest_2026_06.md
+
+Checksum list:
+REFERENCE_BENCH/ARCHIVE/glyph_public_bench_sha256_2026_06.txt
+
+Freed:
+~55G
+
+Restore rule:
+Copy archive back to:
+/tmp/glyph-public-bench
