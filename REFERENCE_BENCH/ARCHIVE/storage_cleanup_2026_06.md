@@ -30,3 +30,30 @@ Result:
 Disk moved from approximately 99% used to 97% used.
 
 No unique GLYPH source, spec, report, evidence, or commitment artifacts were deleted.
+
+3. Archived and removed out_4gb.
+
+Path:
+out_4gb
+
+Archive destination:
+External SSD / GLYPH_ARCHIVE2026-06/out_4gb
+
+Verified SHA256 match on:
+- fm.bin
+- sa.bin
+- bwt.bin
+- chunk_map.bin
+
+Archive manifest:
+REFERENCE_BENCH/ARCHIVE/out_4gb_archive_manifest_2026_06.md
+
+Checksum list:
+REFERENCE_BENCH/ARCHIVE/out_4gb_sha256_2026_06.txt
+
+Freed:
+~75G
+
+Restore rule:
+Copy the archived directory back to:
+~/GLYPH_CPP_BACKEND/out_4gb
