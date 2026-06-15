@@ -6,25 +6,26 @@ cd "$ROOT"
 
 echo "[verify] GLYPH one-command verification"
 
+REQUIRED_BINS=(
+  build/build_sa_u32
+  build/build_bwt
+  build/build_fm
+  build/query_fm_v1
+)
+
 need_build=0
 
-for bin in \
-  build/query_fm_v1 \
-  build/build_sa_sentinel_v1 \
-  build/build_bwt_sentinel_v1 \
-  build/build_fm
-do
+for bin in "${REQUIRED_BINS[@]}"; do
   if [[ ! -x "$bin" ]]; then
     need_build=1
   fi
 done
 
 if [[ "$need_build" -eq 1 ]]; then
-
-  for cmd in cmake make c++; do
+  for cmd in cmake make c++ python3 xxd; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
       echo "VERIFY FAIL: missing required command: $cmd"
-      echo "Install build tools, then run ./verify.sh again."
+      echo "Install build tools, Python 3, and xxd; then run ./verify.sh again."
       exit 1
     fi
   done
@@ -34,11 +35,10 @@ if [[ "$need_build" -eq 1 ]]; then
   cmake -S . -B build
 
   cmake --build build --target \
-    query_fm_v1 \
-    build_sa_sentinel_v1 \
-    build_bwt_sentinel_v1 \
-    build_fm
-
+    build_sa_u32 \
+    build_bwt \
+    build_fm \
+    query_fm_v1
 else
   echo "[verify] required binaries found"
 fi
