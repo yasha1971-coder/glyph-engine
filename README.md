@@ -186,39 +186,69 @@ Expected:
 
 ## What problem it solves
 
-Most systems trade accuracy for flexibility:
+GLYPH is built for one narrow class of problems:
 
-- grep → scans (slow at scale)
-- Elasticsearch → ranks (approximate)
-- vector search → approximate similarity
+prove or reproduce exact byte presence inside a static corpus.
 
-GLYPH does the opposite:
+The current target is not general search.
 
-- exact byte matches
-- no interpretation
-- deterministic results
+The strongest fit is:
+
+* static archives
+* frozen datasets
+* provenance investigations
+* training-data membership checks
+* exact evidence over immutable corpora
+
+GLYPH is useful when the question is:
+
+```text
+Did these exact bytes exist in this exact corpus state?
+```
+
+Not:
+
+```text
+What is semantically relevant?
+```
 
 ---
 
 ## When to use
 
-- large-scale log search
-- binary corpus lookup
-- forensic / debugging analysis
-- RAG pre-filtering (exact stage before embedding)
+Use GLYPH when:
+
+* the corpus is static or versioned
+* exact byte identity matters
+* repeated exact queries are expected
+* reproducibility is more important than ranking
+
+Do not use GLYPH as:
+
+* a general search engine
+* a live log analytics system
+* an embedding/vector database
+* a replacement for grep on one-off scans
 
 ---
 
 ## Performance
 
-- ~1.3–1.7 ms (warm)
-- ~4 ms p99 (4GB shard)
-- mmap-based index
+Performance numbers are experimental and depend heavily on corpus size,
+index layout, cache state, and runtime mode.
 
-RAM note:
+Current public focus:
+
+* correctness
+* reproducibility
+* deterministic verification
+* memory-model transparency
+
+Known limitation:
 
 Current plain index artifacts are large. The HDFS 1GB benchmark used about
 9.4GB RAM for 1GB corpus-scale experiments. This is a known limitation.
+
 Future work must address compressed/sampled SA and better memory economics.
 
 ---
