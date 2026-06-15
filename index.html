@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GLYPH — Deterministic Byte-Exact Retrieval</title>
+  <title>GLYPH — Verifiable Byte-Exact Retrieval</title>
   <style>
     body {
       max-width: 880px;
@@ -29,27 +29,68 @@
 
 <h1>GLYPH</h1>
 
-<p class="tagline">Deterministic byte-exact retrieval over static corpora.</p>
+<p class="tagline">Verifiable byte-exact retrieval over static corpora.</p>
 
-<p>No ranking. No embeddings. No interpretation.</p>
-
-<p>GLYPH is an experimental retrieval engine for exact byte matches at scale.</p>
-
-<h2>Why it exists</h2>
+<p><strong>Current goal:</strong> first independent external verifier.</p>
 
 <p>
-Most retrieval systems trade certainty for flexibility.
-GLYPH does the opposite: same bytes in, same matches out.
+GLYPH is an experimental infrastructure project for deterministic exact byte matching.
+Its current focus is not ranking, search UX, or embeddings.
+Its current focus is reproducible verification.
 </p>
 
-<h2>Core guarantees</h2>
+<h2>Verify GLYPH in one command</h2>
+
+<pre>git clone https://github.com/yasha1971-coder/glyph-engine.git
+cd glyph-engine
+./verify.sh</pre>
+
+<p>Expected:</p>
+
+<pre>VERIFY OK</pre>
+
+<p>
+This runs the canonical mini verification pipeline and checks that GLYPH builds a
+sentinel-safe FM-index over a fixed mini corpus and returns an exact match count
+of <code>2</code> for the query <code>error</code>.
+</p>
+
+<p>
+If you run this independently, please report the result:
+<a href="mailto:contact@glyph.rs">contact@glyph.rs</a>
+</p>
+
+<h2>What GLYPH is</h2>
+
+<p>
+GLYPH is a byte-exact substring retrieval engine over raw bytes.
+</p>
+
+<p>No ranking. No embeddings. No fuzzy matching. No semantic interpretation.</p>
 
 <div class="grid">
   <div class="card">Byte-exact substring retrieval</div>
   <div class="card">Deterministic results</div>
-  <div class="card">No semantic interpretation</div>
+  <div class="card">Portable verification path</div>
   <div class="card">Sentinel-safe FM-index construction</div>
 </div>
+
+<h2>Verification claim</h2>
+
+<p>
+The current minimal claim:
+</p>
+
+<pre>same repository state
+same verification procedure
+same expected result: VERIFY OK</pre>
+
+<p>
+Specification:
+<a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/GLYPH_VERIFICATION_CLAIM_V1.md">
+GLYPH_VERIFICATION_CLAIM_V1
+</a>
+</p>
 
 <h2>Architecture</h2>
 
@@ -61,9 +102,11 @@ BWT
   ↓
 FM-index
   ↓
-exact retrieval</pre>
+exact retrieval
+  ↓
+evidence / verification</pre>
 
-<h2>Quick start</h2>
+<h2>Historical quick demo</h2>
 
 <pre>git clone https://github.com/yasha1971-coder/glyph-engine
 cd glyph-engine
@@ -72,6 +115,11 @@ cd glyph-engine
 <p>Expected:</p>
 
 <pre>count:    2</pre>
+
+<p class="muted">
+This was the original minimal sentinel-safe demo path.
+It remains available for compatibility with earlier documentation and posts.
+</p>
 
 <h2>Benchmark signal</h2>
 
@@ -94,6 +142,8 @@ Trades RAM and offline indexing for fast repeated exact queries over static corp
 <a href="https://github.com/yasha1971-coder/glyph-engine">GitHub</a>
  ·
 <a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/README.md">README</a>
+ ·
+<a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/GLYPH_REVIEW_READINESS_V1.md">Review readiness</a>
  ·
 <a href="mailto:contact@glyph.rs">contact@glyph.rs</a>
 </p>
