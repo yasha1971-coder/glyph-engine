@@ -51,3 +51,6 @@ winmini/
 win_enwik8/
 snapshots/
 REFERENCE_BENCH/CORPORA/
+
+# Large generated benchmark outputs
+REFERENCE_BENCH/OUT/
