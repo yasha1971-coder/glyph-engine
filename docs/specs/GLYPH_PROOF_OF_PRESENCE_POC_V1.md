@@ -1,6 +1,6 @@
-# GLYPH_PROOF_OF_PRESENCE_POC_V1
+## GLYPH_PROOF_OF_PRESENCE_POC_V1
 
-# Status
+## Status
 
 Research Prototype
 
@@ -8,7 +8,7 @@ Not Production
 
 ---
 
-# Purpose
+## Purpose
 
 Document the first proof-of-data-presence prototype built on top of GLYPH retrieval primitives.
 
@@ -18,7 +18,7 @@ It does not describe a production proof system.
 
 ---
 
-# Scope
+## Scope
 
 This prototype explores whether a committed corpus can emit small portable artifacts that allow independent verification of:
 
@@ -31,7 +31,7 @@ The goal is to evaluate feasibility, not to provide production-grade cryptograph
 
 ---
 
-# Corpus Commitment
+## Corpus Commitment
 
 The prototype builds a Merkle commitment over fixed corpus blocks.
 
@@ -43,7 +43,7 @@ Current implementation is intended for experimentation and research.
 
 ---
 
-# Membership Proof
+## Membership Proof
 
 Current capability
 
@@ -64,7 +64,7 @@ A valid membership proof demonstrates that the claimed span existed within the c
 
 ---
 
-# Non-Membership Proof
+## Non-Membership Proof
 
 Current capability
 
@@ -98,7 +98,7 @@ A production version would require an authenticated suffix-array structure or an
 
 ---
 
-# Privacy Considerations
+## Privacy Considerations
 
 Witness artifacts contain neighboring corpus fragments.
 
@@ -110,7 +110,7 @@ Future versions may require privacy-preserving witness structures.
 
 ---
 
-# Threat Model
+## Threat Model
 
 Detects
 
@@ -131,7 +131,7 @@ Does Not Yet Guarantee
 
 ---
 
-# Reproducible Example
+## Reproducible Example
 
 Prototype implementation
 
@@ -155,7 +155,7 @@ VERIFY OK
 
 ---
 
-# What This Prototype Does NOT Claim
+## What This Prototype Does NOT Claim
 
 This prototype does not claim:
 
@@ -169,7 +169,7 @@ This prototype does not claim:
 
 ---
 
-# Future Work
+## Future Work
 
 Potential directions:
 
@@ -183,7 +183,7 @@ Potential directions:
 
 ---
 
-# Relation to Prior Art
+## Relation to Prior Art
 
 This prototype is conceptually related to:
 
@@ -199,7 +199,7 @@ The current goal is only to explore how GLYPH retrieval primitives can be combin
 
 ---
 
-# Relation to GLYPH
+## Relation to GLYPH
 
 GLYPH remains a deterministic byte-exact retrieval system.
 
