@@ -90,6 +90,30 @@ def main() -> int:
 
     reproduce_status = "PASS" if verified.returncode == 0 and count is not None else "FAIL"
 
+    offsets = []
+    offset_mode = "not_available_in_query_fm_v1"
+
+    if interval is not None:
+        locate_cmd = [
+            "python3",
+            "tools/glyph_locate_offsets_v0.py",
+            "--index-dir",
+            str(index_dir.relative_to(ROOT) if index_dir.is_relative_to(ROOT) else index_dir),
+            "--l",
+            str(interval[0]),
+            "--r",
+            str(interval[1]),
+        ]
+        locate_run = run(locate_cmd, cwd=ROOT)
+        if locate_run.returncode == 0:
+            try:
+                locate_data = json.loads(locate_run.stdout)
+                if locate_data.get("ok") is True:
+                    offsets = locate_data.get("offsets", [])
+                    offset_mode = locate_data.get("offset_mode", "locate_backend_v2")
+            except json.JSONDecodeError:
+                pass
+
     artifact = {
         "artifact_version": "GLYPH_AUDIT_ARTIFACT_V0",
         "created_at_utc": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
@@ -112,8 +136,8 @@ def main() -> int:
         "result": {
             "match_count": count if count is not None else 0,
             "fm_interval": interval,
-            "offsets": [],
-            "offset_mode": "not_available_in_query_fm_v1",
+            "offsets": offsets,
+            "offset_mode": offset_mode,
         },
         "verification": {
             "command": " ".join(verify_cmd),
@@ -131,6 +155,8 @@ def main() -> int:
     print(f"[audit-v0] wrote {out_path}")
     print(f"[audit-v0] reproduce_status={reproduce_status}")
     print(f"[audit-v0] match_count={artifact['result']['match_count']}")
+    print(f"[audit-v0] offset_mode={artifact['result']['offset_mode']}")
+    print(f"[audit-v0] offsets={artifact['result']['offsets']}")
     return 0 if reproduce_status == "PASS" else 1
 
 
