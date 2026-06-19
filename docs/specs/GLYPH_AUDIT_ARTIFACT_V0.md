@@ -44,16 +44,20 @@ The artifact should allow an independent reviewer to answer:
   },
   "query": {
     "encoding": "hex",
+    "hex": "string",
     "sha256": "string",
     "length_bytes": 0
   },
   "result": {
     "match_count": 0,
-    "offsets": []
+    "fm_interval": [0, 0],
+    "offsets": [],
+    "offset_mode": "locate_backend_v2|not_available"
   },
   "verification": {
     "command": "string",
-    "reproduce_status": "PASS|FAIL|UNKNOWN"
+    "reproduce_status": "PASS|FAIL|UNKNOWN",
+    "returncode": 0
   }
 }
 ```
@@ -64,6 +68,15 @@ A valid V0 artifact means:
 
 The exact query bytes were searched against the declared corpus/index state, and the recorded result can be reproduced by running the verification command.
 
+In V0, when offsets are present, the verifier also checks that each recorded offset points to corpus bytes exactly equal to the query bytes.
+
+For example, if the query is `error` and the artifact records offsets `[0, 37]`, verification checks:
+
+- `corpus[0:5] == b"error"`
+- `corpus[37:42] == b"error"`
+
+This is still a reproducibility and byte-check claim, not a cryptographic completeness proof.
+
 ## Non-Goals
 
 V0 does not claim:
@@ -73,6 +86,7 @@ V0 does not claim:
 - zero-knowledge privacy
 - authenticated FM-index correctness
 - complete cryptographic non-membership
+- cryptographic completeness of all offsets
 - production-grade proof system
 
 ## Future Directions
