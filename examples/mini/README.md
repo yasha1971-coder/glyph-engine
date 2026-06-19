@@ -39,6 +39,7 @@ This artifact records:
 - query hash
 - FM interval
 - match count
+- exact match offsets
 - replay command
 - reproduce status
 
@@ -65,5 +66,13 @@ Verify the audit artifact:
 Expected output includes:
 
     VERIFY AUDIT ARTIFACT OK
+
+For the default `error` query, the artifact should contain:
+
+    "offset_mode": "locate_backend_v2"
+    "offsets": [
+      0,
+      37
+    ]
 
 Generated artifacts under `examples/mini/out/` are local build outputs and should not be committed.
