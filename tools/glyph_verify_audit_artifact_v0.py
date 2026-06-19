@@ -160,6 +160,22 @@ def main() -> int:
     if expected_interval is not None and interval != expected_interval:
         return fail(f"fm_interval mismatch: expected={expected_interval} actual={interval}")
 
+    offsets = result_info.get("offsets", [])
+    if offsets:
+        corpus_bytes = corpus_path.read_bytes()
+        for o in offsets:
+            if not isinstance(o, int):
+                return fail(f"offset is not int: {o!r}")
+            if o < 0:
+                return fail(f"offset is negative: {o}")
+            if o + len(query_bytes) > len(corpus_bytes):
+                return fail(f"offset out of bounds: {o}")
+            got = corpus_bytes[o:o + len(query_bytes)]
+            if got != query_bytes:
+                return fail(
+                    f"offset bytes mismatch at {o}: expected={query_bytes!r} actual={got!r}"
+                )
+
     print("[audit-v0 verify] corpus sha256 OK")
     print("[audit-v0 verify] manifest sha256 OK")
     print("[audit-v0 verify] query sha256 OK")
