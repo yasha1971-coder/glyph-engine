@@ -29,6 +29,7 @@ Then see:
 
 - examples/mini/
 - examples/public-evidence-demo/
+- examples/public-evidence-demo/run_pizza_50mb_demo.sh
 - docs/specs/
 
 ---
