@@ -109,6 +109,25 @@ Expected result:
 
     python3 -m json.tool <evidence_case_v1.json> | head -120
 
+## Locate layer requirement
+
+Audit Artifact V0 can verify FM interval and match count.
+
+Evidence Case V1 requires exact offsets.
+
+For human-readable snippets, the index directory must include the locate layer:
+
+    fm_core.bin
+    locate_core_s16.bin
+
+Without the locate layer, an audit artifact may still verify successfully, but Evidence Case V1 can contain zero records because no offsets are available.
+
+For local experiments, these generated files stay under:
+
+    examples/public-evidence-demo/work/
+
+and must not be committed.
+
 ## Success criterion
 
 The demo succeeds when an external reviewer can reproduce:

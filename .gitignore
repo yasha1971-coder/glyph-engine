@@ -54,3 +54,6 @@ REFERENCE_BENCH/CORPORA/
 
 # Large generated benchmark outputs
 REFERENCE_BENCH/OUT/
+
+# Public evidence demo local generated artifacts
+examples/public-evidence-demo/work/
