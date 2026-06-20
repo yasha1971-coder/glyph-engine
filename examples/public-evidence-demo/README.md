@@ -140,6 +140,50 @@ and inspect an Evidence Case V1 with:
 
 for each evidence record.
 
+## Local validation: Pizza & Chili English 50MB
+
+This demo path has been locally validated on a 50MB prefix of the Pizza & Chili English corpus.
+
+Local corpus:
+
+    REFERENCE_BENCH/OUT/pizza_sentinel_test/english_50mb.txt
+
+Working copy used for the demo:
+
+    examples/public-evidence-demo/work/pizza_english_50mb/corpus.bin
+
+Corpus properties:
+
+    size_bytes: 50000000
+    null_bytes: 0
+
+Query:
+
+    Ten Days that Shook the World
+
+Observed Audit Artifact V0 result after building the locate layer:
+
+    reproduce_status: PASS
+    match_count: 1
+    fm_interval: [12587658, 12587659]
+    offset_mode: locate_backend_v2
+    offsets: [53]
+
+Observed Evidence Case V1 result:
+
+    records: 1
+    byte_check: true
+
+The evidence snippet contains:
+
+    Ten Days that Shook the World
+
+Important lesson from this validation:
+
+Audit Artifact V0 can verify FM interval and match count without offsets.
+
+Evidence Case V1 requires the locate layer to recover exact offsets and human-readable snippets.
+
 ## Current next step
 
 Choose the smallest public corpus that makes the evidence path meaningful.
