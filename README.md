@@ -30,6 +30,7 @@ Then see:
 - examples/mini/
 - examples/public-evidence-demo/
 - examples/public-evidence-demo/run_pizza_50mb_demo.sh
+- examples/xz-cve-2024-3094-demo/run_phase1_nvd_demo.sh
 - docs/specs/
 
 ---
