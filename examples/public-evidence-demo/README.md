@@ -140,6 +140,23 @@ and inspect an Evidence Case V1 with:
 
 for each evidence record.
 
+## Run the local Pizza 50MB demo
+
+If the local Pizza & Chili English 50MB corpus prefix is available, run:
+
+    ./examples/public-evidence-demo/run_pizza_50mb_demo.sh
+
+Expected final output:
+
+    VERIFY AUDIT ARTIFACT OK
+    [public-demo] PASS
+
+This script writes generated files only under:
+
+    examples/public-evidence-demo/work/
+
+which is ignored by git.
+
 ## Local validation: Pizza & Chili English 50MB
 
 This demo path has been locally validated on a 50MB prefix of the Pizza & Chili English corpus.
