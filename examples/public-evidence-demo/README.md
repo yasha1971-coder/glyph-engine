@@ -1,0 +1,130 @@
+# Public Evidence Demo
+
+This directory defines the first public GLYPH evidence demo path.
+
+Status:
+
+* design skeleton
+* no large corpus committed
+* no generated index artifacts committed
+
+Purpose:
+
+Show how GLYPH can produce reproducible exact-byte retrieval evidence over a fixed public corpus.
+
+This demo is not intended to prove a whole incident, authorship, intent, legal responsibility, or cryptographic completeness.
+
+It demonstrates a narrow verifiable retrieval chain:
+
+    fixed public corpus
+    → GLYPH index
+    → exact byte query
+    → FM interval
+    → offsets
+    → Audit Artifact V0
+    → audit verifier
+    → Evidence Case V1
+    → human-readable snippets
+
+## What this demo claims
+
+GLYPH can produce a reproducible audit artifact for exact byte-level retrieval over a fixed committed corpus.
+
+A reviewer can verify that:
+
+* the corpus hash matches
+* the index manifest hash matches
+* the query hash matches
+* the recorded match count matches replay
+* the recorded FM interval matches replay
+* each returned offset points to bytes equal to the query
+* the evidence case snippets are derived from verified offsets
+
+## What this demo does not claim
+
+This demo does not claim:
+
+* legal proof
+* zero-knowledge proof
+* cryptographic completeness proof
+* cryptographic non-membership proof
+* full incident reconstruction
+* attribution
+* semantic truth
+* replacement for SIEM, ELK, Splunk, grep, or forensic suites
+
+## Candidate public corpus
+
+The first real public corpus should be:
+
+* small enough for an external reviewer to reproduce
+* publicly downloadable
+* stable or content-addressable
+* free of licensing ambiguity
+* suitable for exact string queries
+* explainable without hype
+
+Candidate directions:
+
+* small public source-code snapshot
+* fixed public text corpus
+* small public log-like corpus
+* later: XZ Utils / CVE-2024-3094 / JiaT75 / GitHub or GH Archive exact-string evidence demo
+
+The XZ/GH Archive case should be treated carefully.
+
+GLYPH would not prove the whole CVE-2024-3094 incident.
+
+GLYPH would only show reproducible exact byte-level occurrences in a fixed committed corpus.
+
+## Demo procedure
+
+1. Obtain fixed public corpus.
+2. Record corpus source and hash.
+3. Build GLYPH index.
+4. Run exact queries.
+5. Generate Audit Artifact V0:
+
+    python3 tools/glyph_make_audit_artifact_v0.py \
+      --index-dir <index_dir> \
+      --query <exact_string> \
+      --output <audit_artifact_v0.json>
+
+6. Verify Audit Artifact V0:
+
+    python3 tools/glyph_verify_audit_artifact_v0.py \
+      <audit_artifact_v0.json>
+
+Expected result:
+
+    VERIFY AUDIT ARTIFACT OK
+
+7. Generate Evidence Case V1:
+
+    python3 tools/glyph_make_evidence_case_v1.py \
+      --artifact <audit_artifact_v0.json> \
+      --output <evidence_case_v1.json>
+
+8. Inspect human-readable evidence records:
+
+    python3 -m json.tool <evidence_case_v1.json> | head -120
+
+## Success criterion
+
+The demo succeeds when an external reviewer can reproduce:
+
+    VERIFY AUDIT ARTIFACT OK
+
+and inspect an Evidence Case V1 with:
+
+    byte_check=true
+
+for each evidence record.
+
+## Current next step
+
+Choose the smallest public corpus that makes the evidence path meaningful.
+
+Do not start with a heavy XZ/GH Archive corpus until the small public demo path is clean.
+
+The purpose of this directory is to prevent a jump from mini example directly into a complex incident-scale corpus.
