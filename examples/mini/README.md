@@ -76,3 +76,37 @@ For the default `error` query, the artifact should contain:
     ]
 
 Generated artifacts under `examples/mini/out/` are local build outputs and should not be committed.
+
+## Evidence Case V1
+
+The mini example can also derive a human-readable evidence case from the audit artifact.
+
+The evidence case shows:
+
+- exact match offsets
+- matched bytes as hex
+- matched text when UTF-8 decodable
+- surrounding snippets
+- byte_check status for each record
+
+Create the evidence case:
+
+    python3 tools/glyph_make_evidence_case_v1.py \
+      --artifact examples/mini/out/audit_artifact_v0.json \
+      --output examples/mini/out/evidence_case_v1.json
+
+Expected output includes:
+
+    [evidence-case-v1] records=2
+
+Inspect the evidence case:
+
+    python3 -m json.tool examples/mini/out/evidence_case_v1.json | head -120
+
+For the default `error` query, the evidence case should contain two records with:
+
+    "byte_check": true
+
+This is a human-readable evidence layer derived from the reproducible audit artifact.
+
+It is not a legal proof, zero-knowledge proof, cryptographic completeness proof, or cryptographic non-membership proof.
