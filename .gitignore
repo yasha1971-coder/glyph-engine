@@ -57,3 +57,9 @@ REFERENCE_BENCH/OUT/
 
 # Public evidence demo local generated artifacts
 examples/public-evidence-demo/work/
+
+# XZ CVE demo local generated artifacts
+examples/xz-cve-2024-3094-demo/work/
+
+# XZ CVE demo local generated artifacts
+examples/xz-cve-2024-3094-demo/work/
