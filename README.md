@@ -1,5 +1,36 @@
 # GLYPH
 
+## What is GLYPH?
+
+GLYPH is a pre-indexed exact-byte retrieval and evidence layer for fixed corpora.
+
+It is useful after a corpus becomes an archive or evidence object, when the goal is not just to find a string, but to show exactly where it was found and how another person can reproduce the result.
+
+GLYPH produces a reproducible exact-byte evidence chain:
+
+- corpus hash
+- index manifest hash
+- query hash
+- FM interval
+- match count
+- exact offsets when the locate layer is available
+- byte-checks
+- replay command
+- Audit Artifact V0
+- Evidence Case V1
+
+GLYPH is not a cold-start grep replacement, SIEM replacement, ELK/Splunk replacement, semantic search engine, legal proof system, or zero-knowledge proof system.
+
+If you cloned this repository, start with:
+
+    ./verify.sh
+
+Then see:
+
+- examples/mini/
+- examples/public-evidence-demo/
+- docs/specs/
+
 [![ci](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml)
 
 ## Verify GLYPH in one command
