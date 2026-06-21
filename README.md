@@ -37,6 +37,36 @@ Then see:
 
 [![CI status](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml)
 
+## Evidence demos
+
+GLYPH's current public entry path is evidence-first.
+
+Start small:
+
+    ./verify.sh
+
+Mini evidence flow:
+
+    ./examples/mini/run_mini.sh
+
+Public-style 50MB corpus demo:
+
+    ./examples/public-evidence-demo/run_pizza_50mb_demo.sh
+
+Real-event XZ CVE-2024-3094 Phase 1 demo:
+
+    ./examples/xz-cve-2024-3094-demo/capture_nvd_source_v1.sh
+    ./examples/xz-cve-2024-3094-demo/run_phase1_nvd_demo.sh
+
+Expected successful evidence-demo output includes:
+
+    VERIFY AUDIT ARTIFACT OK
+    [xz-demo] PASS
+
+The XZ demo does not prove the whole CVE-2024-3094 incident.
+
+It demonstrates a reproducible exact-byte evidence chain over a fixed captured corpus.
+
 ## Verify GLYPH in one command
 
 ```bash
