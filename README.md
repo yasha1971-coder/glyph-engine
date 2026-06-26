@@ -30,16 +30,35 @@ Then see:
 - examples/mini/
 - examples/public-evidence-demo/
 - examples/public-evidence-demo/run_pizza_50mb_demo.sh
-- examples/xz-cve-2024-3094-demo/run_phase1_nvd_demo.sh
 - docs/specs/
 
 ---
 
 [![CI status](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml)
 
-## Evidence demos
+## What GLYPH verifies
 
-GLYPH's current public entry path is evidence-first.
+GLYPH is useful when a corpus is already fixed, large, remote, or expensive to rescan.
+
+The core workflow is:
+
+    fixed corpus
+    → corpus hash
+    → exact query bytes
+    → match count
+    → offsets
+    → byte-checks
+    → replayable audit artifact
+
+The verifier does not need to search the whole corpus again.
+
+If they have the same corpus, they can seek directly to the recorded offsets, read the bytes, and verify that the exact query is present there.
+
+This is the narrow claim:
+
+    exact bytes existed at exact offsets in this exact corpus state.
+
+This is not a claim of semantic truth, attribution, intent, legal proof, or full incident reconstruction.
 
 Start small:
 
@@ -52,20 +71,6 @@ Mini evidence flow:
 Public-style 50MB corpus demo:
 
     ./examples/public-evidence-demo/run_pizza_50mb_demo.sh
-
-Real-event XZ CVE-2024-3094 Phase 1 demo:
-
-    ./examples/xz-cve-2024-3094-demo/capture_nvd_source_v1.sh
-    ./examples/xz-cve-2024-3094-demo/run_phase1_nvd_demo.sh
-
-Expected successful evidence-demo output includes:
-
-    VERIFY AUDIT ARTIFACT OK
-    [xz-demo] PASS
-
-The XZ demo does not prove the whole CVE-2024-3094 incident.
-
-It demonstrates a reproducible exact-byte evidence chain over a fixed captured corpus.
 
 ## Verify GLYPH in one command
 
