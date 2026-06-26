@@ -276,9 +276,9 @@ It does not yet implement a true layer 3 cryptographic proof system.
 
 There are only two serious futures for GLYPH:
 
-### Path A — Freeze
+### Path A — Pause pending validation
 
-Freeze GLYPH as a technically valid research artifact.
+Pause active GLYPH product development while keeping it as a technically valid research artifact.
 
 Condition:
 
@@ -331,7 +331,7 @@ Do not continue GLYPH development unless one of these happens:
 
 Otherwise:
 
-Freeze active development.
+Pause active product development pending external validation.
 
 ## Current conclusion
 
@@ -349,4 +349,4 @@ The stronger frontier is:
     over fixed corpora
     with measured verifier-side value
 
-Until that value is externally confirmed, GLYPH should be treated as a frozen research layer, not an active product.
+Until that value is externally confirmed, GLYPH should be treated as a paused research layer, not an active product.
