@@ -242,3 +242,11 @@ target_compile_options(bench_backward_search_v1 PRIVATE
 )
 
 target_link_libraries(bench_backward_search_v1 PRIVATE Threads::Threads)
+
+
+# query_fm_core_v1
+add_executable(query_fm_core_v1
+    src/query_fm_core_v1.cpp
+)
+target_compile_options(query_fm_core_v1 PRIVATE -O3)
+
