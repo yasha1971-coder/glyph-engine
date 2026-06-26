@@ -36,6 +36,7 @@ def parse_query_output(text: str):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runtime-dir", required=True)
+    ap.add_argument("--sample-step", type=int, default=16)
     group = ap.add_mutually_exclusive_group(required=True)
     group.add_argument("--query")
     group.add_argument("--query-hex")
@@ -54,7 +55,7 @@ def main():
     required = [
         runtime / "bwt.bin",
         runtime / "fm_core.bin",
-        runtime / "locate_core_s16.bin",
+        runtime / f"locate_core_s{args.sample_step}.bin",
     ]
 
     missing = [str(p) for p in required if not p.exists()]
@@ -106,6 +107,8 @@ def main():
             str(l),
             "--r",
             str(r),
+            "--sample-step",
+            str(args.sample_step),
         ],
         check=True,
         text=True,

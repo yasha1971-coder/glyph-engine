@@ -21,13 +21,13 @@ def locate_backend_path() -> Path:
     raise FileNotFoundError("locate_backend_v2 not found")
 
 
-def run_locate(index_dir: Path, l: int, r: int):
+def run_locate(index_dir: Path, l: int, r: int, sample_step: int):
     backend = locate_backend_path()
 
     cmd = [
         str(backend),
         str(index_dir / "fm_core.bin"),
-        str(index_dir / "locate_core_s16.bin"),
+        str(index_dir / f"locate_core_s{sample_step}.bin"),
         str(index_dir / "bwt.bin"),
     ]
 
@@ -87,13 +87,14 @@ def main() -> int:
     ap.add_argument("--index-dir", required=True)
     ap.add_argument("--l", type=int, required=True)
     ap.add_argument("--r", type=int, required=True)
+    ap.add_argument("--sample-step", type=int, default=16)
     args = ap.parse_args()
 
     index_dir = Path(args.index_dir).resolve()
 
     required = [
         index_dir / "fm_core.bin",
-        index_dir / "locate_core_s16.bin",
+        index_dir / f"locate_core_s{args.sample_step}.bin",
         index_dir / "bwt.bin",
     ]
     missing = [str(p) for p in required if not p.exists()]
@@ -106,7 +107,7 @@ def main() -> int:
         return 2
 
     try:
-        result = run_locate(index_dir, args.l, args.r)
+        result = run_locate(index_dir, args.l, args.r, args.sample_step)
     except Exception as e:
         print(json.dumps({
             "ok": False,
