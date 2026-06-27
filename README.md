@@ -340,3 +340,53 @@ See:
 - Website: https://glyph.rs
 - Email: contact@glyph.rs
 
+## Experimental compressed bounded evidence path
+
+GLYPH also has an experimental compressed bounded evidence path over RLBWT runtime.
+
+This path is intended for review and engineering validation.
+
+It demonstrates:
+
+* compressed BWT runtime using bwt.rlbwt
+* rank support using bwt.rlbwt.rank
+* exact FM interval and match count
+* bounded offset recovery using max_offsets
+* byte verification for returned offsets
+* replay verification of the bounded evidence artifact
+
+The current verified artifact format is documented in:
+
+- `docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md`
+
+The tiny reproducible fixture is:
+
+./tools/run_rlbwt_bounded_evidence_tiny_fixture_v1.sh
+
+The fixture is included in the top-level verifier:
+
+./verify.sh
+
+Current verified tiny fixture result:
+
+- query: `the`
+- FM interval: `[65, 68]`
+- match count: `3`
+- max offsets: `2`
+- returned offsets: `[43, 55]`
+- byte check: PASS
+- replay verifier: PASS
+
+Important non-claims:
+
+* This is not exhaustive locate when bounded=true.
+* This is not semantic search, ranking, fuzzy matching, or token search.
+* This is not a legal proof by itself.
+* This is an experimental compressed exact-retrieval evidence path with reproducible bounded offsets.
+
+For high-count queries, bounded evidence separates exact counting from exhaustive offset enumeration:
+
+full exact count
++ deterministic bounded offsets
++ byte verification
++ replay verification
