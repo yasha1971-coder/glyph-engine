@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "RLBWT_BOUNDED_EVIDENCE_SCHEMA_V1",
+  "title": "RLBWT_BOUNDED_EVIDENCE_V1",
+  "type": "object",
+  "required": [
+    "artifact_version",
+    "profile",
+    "query",
+    "source_corpus",
+    "runtime_dir",
+    "runtime_files",
+    "retrieval",
+    "byte_check"
+  ],
+  "properties": {
+    "artifact_version": {
+      "const": "RLBWT_BOUNDED_EVIDENCE_V1"
+    },
+    "profile": {
+      "const": "RLBWT_FULL_RUNTIME_PROFILE_V1"
+    },
+    "runtime_dir": {
+      "type": "string"
+    },
+    "query": {
+      "type": "object",
+      "required": ["text", "hex", "sha256", "bytes"],
+      "properties": {
+        "text": { "type": "string" },
+        "hex": { "type": "string" },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "bytes": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "source_corpus": {
+      "type": "object",
+      "required": ["path", "bytes", "sha256"],
+      "properties": {
+        "path": { "type": "string" },
+        "bytes": { "type": "integer", "minimum": 0 },
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      },
+      "additionalProperties": true
+    },
+    "runtime_files": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "bytes", "sha256"],
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "retrieval": {
+      "type": "object",
+      "required": [
+        "fm_interval",
+        "match_count",
+        "total_possible_count",
+        "max_offsets",
+        "returned_count",
+        "bounded",
+        "offsets"
+      ],
+      "properties": {
+        "fm_interval": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "integer", "minimum": 0 }
+        },
+        "match_count": { "type": "integer", "minimum": 0 },
+        "total_possible_count": { "type": "integer", "minimum": 0 },
+        "max_offsets": { "type": "integer", "minimum": 0 },
+        "returned_count": { "type": "integer", "minimum": 0 },
+        "bounded": { "type": "boolean" },
+        "offsets": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "additionalProperties": true
+    },
+    "byte_check": {
+      "type": "object",
+      "required": ["all_returned_offsets_match_query"],
+      "properties": {
+        "all_returned_offsets_match_query": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

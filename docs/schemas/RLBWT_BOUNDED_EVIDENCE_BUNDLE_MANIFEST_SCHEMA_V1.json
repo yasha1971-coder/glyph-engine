@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "RLBWT_BOUNDED_EVIDENCE_BUNDLE_MANIFEST_SCHEMA_V1",
+  "title": "RLBWT_BOUNDED_EVIDENCE_BUNDLE_V1 manifest",
+  "type": "object",
+  "required": [
+    "bundle_version",
+    "artifact_version",
+    "profile",
+    "evidence",
+    "source_corpus",
+    "runtime_dir",
+    "files",
+    "replay_command"
+  ],
+  "properties": {
+    "bundle_version": {
+      "const": "RLBWT_BOUNDED_EVIDENCE_BUNDLE_V1"
+    },
+    "artifact_version": {
+      "const": "RLBWT_BOUNDED_EVIDENCE_V1"
+    },
+    "profile": {
+      "const": "RLBWT_FULL_RUNTIME_PROFILE_V1"
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "source_corpus": {
+      "type": "string"
+    },
+    "runtime_dir": {
+      "type": "string"
+    },
+    "replay_command": {
+      "type": "string"
+    },
+    "files": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "required": ["path", "bytes", "sha256"],
+        "properties": {
+          "path": { "type": "string" },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": true
+}
