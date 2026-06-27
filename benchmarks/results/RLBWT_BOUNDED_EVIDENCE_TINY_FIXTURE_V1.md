@@ -43,3 +43,17 @@ Expected:
 This fixture turns RLBWT bounded evidence replay from a Pizza50 `/tmp` demonstration into a small reproducible repo workflow.
 
 It is suitable as the next candidate for inclusion in `./verify.sh`.
+
+## Repair validation
+
+Repair commit:
+
+- `1d7d180 fix: repair RLBWT bounded evidence tiny fixture runner`
+
+Validation:
+
+- runner executed successfully after repair
+- bounded evidence artifact created
+- replay verifier passed
+- tiny fixture PASS
+
