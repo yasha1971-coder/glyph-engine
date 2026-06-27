@@ -64,6 +64,11 @@ python3 "$ROOT/tools/make_rlbwt_bounded_evidence_bundle_v1.py" \
 python3 "$ROOT/tools/verify_rlbwt_bounded_evidence_bundle_v1.py" \
   --bundle "$BUNDLE"
 
+# Schema smoke validation for artifact and bundle manifest.
+python3 "$ROOT/tools/validate_rlbwt_bounded_evidence_schemas_v1.py" \
+  --artifact "$ART" \
+  --bundle-manifest "$BUNDLE/bundle_manifest_v1.json"
+
 python3 - <<'PY' "$ART"
 import json
 import sys

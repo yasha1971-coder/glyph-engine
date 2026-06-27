@@ -44,3 +44,21 @@ The smoke validator checks:
 ## Result
 
 Schema smoke validation passed on the current tiny fixture artifact and bundle manifest.
+
+## Verify integration
+
+Schema smoke validation is now exercised through the tiny fixture runner:
+
+    tools/run_rlbwt_bounded_evidence_tiny_fixture_v1.sh
+
+Because this fixture is invoked by top-level:
+
+    ./verify.sh
+
+the one-command verification path now covers:
+
+    bounded evidence artifact replay
+    portable bundle replay
+    schema smoke validation for artifact
+    schema smoke validation for bundle manifest
+
