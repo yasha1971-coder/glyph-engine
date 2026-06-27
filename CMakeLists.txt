@@ -257,3 +257,10 @@ add_executable(rlbwt_query_core_v1
 )
 target_compile_options(rlbwt_query_core_v1 PRIVATE -O3)
 
+
+# rlbwt_locate_core_v1
+add_executable(rlbwt_locate_core_v1
+    src/rlbwt_locate_core_v1.cpp
+)
+target_compile_options(rlbwt_locate_core_v1 PRIVATE -O3)
+
