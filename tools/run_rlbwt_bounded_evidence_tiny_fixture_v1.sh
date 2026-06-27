@@ -30,6 +30,7 @@ PY
 INDEX="$WORK/index"
 RUNTIME="$WORK/rlbwt_runtime"
 ART="$WORK/rlbwt_bounded_evidence_v1.json"
+BUNDLE="$WORK/rlbwt_bounded_evidence_bundle_v1"
 
 # Build normal GLYPH index.
 bash "$ROOT/tools/build_glyph_index_v1.sh" "$CORPUS" "$INDEX"
@@ -53,6 +54,15 @@ python3 "$ROOT/tools/make_rlbwt_bounded_evidence_v1.py" \
 # Replay verify artifact.
 python3 "$ROOT/tools/verify_rlbwt_bounded_evidence_v1.py" \
   --artifact "$ART"
+
+# Create and replay-verify portable bounded evidence bundle.
+python3 "$ROOT/tools/make_rlbwt_bounded_evidence_bundle_v1.py" \
+  --artifact "$ART" \
+  --out-dir "$BUNDLE" \
+  --force
+
+python3 "$ROOT/tools/verify_rlbwt_bounded_evidence_bundle_v1.py" \
+  --bundle "$BUNDLE"
 
 python3 - <<'PY' "$ART"
 import json

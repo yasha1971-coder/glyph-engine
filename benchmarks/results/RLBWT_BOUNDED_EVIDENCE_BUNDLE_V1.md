@@ -76,3 +76,21 @@ Still missing:
 - tarball packaging
 - path-independent public release example
 - integration with existing Evidence Bundle V1 family
+
+## Verify integration
+
+Portable bundle replay is now exercised through the tiny fixture runner:
+
+    tools/run_rlbwt_bounded_evidence_tiny_fixture_v1.sh
+
+Because this fixture is invoked by top-level:
+
+    ./verify.sh
+
+the one-command verification path now covers:
+
+    bounded evidence artifact creation
+    bounded evidence artifact replay
+    portable bundle creation
+    portable bundle replay
+
