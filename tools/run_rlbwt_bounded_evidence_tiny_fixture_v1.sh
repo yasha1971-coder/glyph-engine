@@ -32,16 +32,14 @@ RUNTIME="$WORK/rlbwt_runtime"
 ART="$WORK/rlbwt_bounded_evidence_v1.json"
 
 # Build normal GLYPH index.
-python3 "$ROOT/tools/build_glyph_index_v1.py" \
-  --corpus "$CORPUS" \
-  --out-dir "$INDEX"
+bash "$ROOT/tools/build_glyph_index_v1.sh" "$CORPUS" "$INDEX"
 
 # Export RLBWT full runtime.
 python3 "$ROOT/tools/export_rlbwt_full_runtime_v1.py" \
   --source-index-dir "$INDEX" \
   --out-dir "$RUNTIME" \
   --rank-step 128 \
-  --sample-step 16 \
+  --sample-step 128 \
   --force
 
 # Create bounded evidence artifact.
