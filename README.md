@@ -258,7 +258,7 @@ Expected:
 
 GLYPH is built for one narrow class of problems:
 
-prove or reproduce exact byte presence inside a static corpus.
+verify and reproduce exact byte presence inside a fixed static corpus.
 
 The current target is not general search.
 

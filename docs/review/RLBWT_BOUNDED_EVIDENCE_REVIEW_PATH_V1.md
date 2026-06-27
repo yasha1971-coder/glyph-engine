@@ -140,7 +140,7 @@ This path does not claim:
 - legal proof by itself
 - signed or notarized artifact authenticity
 
-This path claims only that the current repository can reproduce and replay a bounded exact evidence chain over compressed RLBWT runtime for the included tiny fixture.
+This path demonstrates only that the current repository can reproduce and replay a bounded exact evidence chain over compressed RLBWT runtime for the included tiny fixture.
 
 ## Current boundary
 
