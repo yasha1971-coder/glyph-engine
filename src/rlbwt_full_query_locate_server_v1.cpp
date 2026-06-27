@@ -377,26 +377,41 @@ int main(int argc, char** argv) {
             throw std::runtime_error("LOC1 sa_size != raw_len");
         }
 
-        std::string query_hex;
+        std::string line;
 
-        while (std::getline(std::cin, query_hex)) {
-            if (query_hex == "QUIT") {
+        while (std::getline(std::cin, line)) {
+            if (line == "QUIT") {
                 break;
             }
 
             try {
+                std::string query_hex = line;
+                uint64_t max_offsets = UINT64_MAX;
+
+                size_t tab = line.find('\t');
+                if (tab != std::string::npos) {
+                    query_hex = line.substr(0, tab);
+                    std::string lim = line.substr(tab + 1);
+                    if (!lim.empty()) {
+                        max_offsets = std::stoull(lim);
+                    }
+                }
+
                 std::vector<uint8_t> query = parse_hex(query_hex);
                 auto [l, r] = backward_search(core, query);
 
+                uint64_t total_possible_count = r - l;
+                uint64_t to_locate = std::min<uint64_t>(total_possible_count, max_offsets);
+
                 std::vector<uint64_t> offsets;
-                offsets.reserve(static_cast<size_t>(r - l));
+                offsets.reserve(static_cast<size_t>(to_locate));
 
                 uint64_t total_steps = 0;
                 uint64_t max_steps = 0;
 
-                for (uint64_t i = l; i < r; ++i) {
+                for (uint64_t k = 0; k < to_locate; ++k) {
                     uint64_t steps = 0;
-                    uint64_t off = locate_one(core, loc, i, steps);
+                    uint64_t off = locate_one(core, loc, l + k, steps);
                     offsets.push_back(off);
                     total_steps += steps;
                     if (steps > max_steps) max_steps = steps;
@@ -404,11 +419,15 @@ int main(int argc, char** argv) {
 
                 std::sort(offsets.begin(), offsets.end());
 
+                bool bounded = to_locate < total_possible_count;
+
                 std::cout
                     << "OK"
                     << "\t" << l
                     << "\t" << r
-                    << "\t" << (r - l)
+                    << "\t" << total_possible_count
+                    << "\t" << offsets.size()
+                    << "\t" << (bounded ? "true" : "false")
                     << "\t" << total_steps
                     << "\t" << max_steps
                     << "\t";
