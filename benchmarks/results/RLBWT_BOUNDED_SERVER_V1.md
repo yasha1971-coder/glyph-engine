@@ -17,10 +17,6 @@ Server output:
 
 This allows GLYPH to return full exact count and bounded deterministic offset evidence without exhaustive locate.
 
-# RLBWT_BOUNDED_SERVER_V1
-
-server warm repeats per case: 200
-
 | corpus | query | max_offsets | match_count | located_count | bounded | avg_sec | p50_sec | p95_sec | p99_sec | min_sec | max_sec | total_steps | max_steps |
 |---|---|---:|---:|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|
 | pizza50 | `the` | 0 | 761402 | 0 | true | 0.000013 | 0.000013 | 0.000013 | 0.000017 | 0.000011 | 0.000153 | 0 | 0 |
