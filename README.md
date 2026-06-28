@@ -359,6 +359,7 @@ The current verified artifact format is documented in:
 
 - `docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md`
 - `docs/review/RLBWT_BOUNDED_EVIDENCE_REVIEW_PATH_V1.md`
+- `docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md`
 
 The tiny reproducible fixture is:
 

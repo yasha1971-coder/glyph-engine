@@ -100,6 +100,14 @@ Expected result:
 - replay_result.ok: true
 - byte_check: true inside nested artifact replay result
 
+## Current technical state
+
+Current technical state map:
+
+    docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md
+
+This document separates verified working paths, reference-only binary-safe work, known boundaries, explicit non-claims, and implementation triggers.
+
 ## Relevant specs
 
 Artifact spec:
