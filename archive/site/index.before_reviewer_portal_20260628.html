@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GLYPH — Verifiable Byte-Exact Retrieval</title>
+  <style>
+    body {
+      max-width: 880px;
+      margin: 64px auto;
+      padding: 0 24px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      line-height: 1.55;
+      color: #111;
+      background: #fff;
+    }
+    h1 { font-size: 48px; margin-bottom: 8px; letter-spacing: -1px; }
+    h2 { margin-top: 48px; }
+    .tagline { font-size: 22px; font-weight: 700; }
+    .muted { color: #555; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .card { border: 1px solid #ddd; padding: 18px; border-radius: 10px; }
+    pre { background: #f6f6f6; padding: 16px; overflow-x: auto; border-radius: 8px; }
+    a { color: #000; font-weight: 700; }
+    footer { margin-top: 56px; color: #666; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<h1>GLYPH</h1>
+
+<p class="tagline">Verifiable byte-exact retrieval over static corpora.</p>
+
+<p><strong>Current goal:</strong> first independent external verifier.</p>
+
+<p>
+GLYPH is an experimental infrastructure project for deterministic exact byte matching.
+Its current focus is not ranking, search UX, or embeddings.
+Its current focus is reproducible verification.
+</p>
+
+<h2>Verify GLYPH in one command</h2>
+
+<pre>git clone https://github.com/yasha1971-coder/glyph-engine.git
+cd glyph-engine
+./verify.sh</pre>
+
+<p>Expected:</p>
+
+<pre>VERIFY OK</pre>
+
+<p>
+This runs the canonical mini verification pipeline and checks that GLYPH builds a
+sentinel-safe FM-index over a fixed mini corpus and returns an exact match count
+of <code>2</code> for the query <code>error</code>.
+</p>
+
+<p>
+If you run this independently, please report the result:
+<a href="mailto:contact@glyph.rs">contact@glyph.rs</a>
+</p>
+
+<h2>What GLYPH is</h2>
+
+<p>
+GLYPH is a byte-exact substring retrieval engine over raw bytes.
+</p>
+
+<p>No ranking. No embeddings. No fuzzy matching. No semantic interpretation.</p>
+
+<div class="grid">
+  <div class="card">Byte-exact substring retrieval</div>
+  <div class="card">Deterministic results</div>
+  <div class="card">Portable verification path</div>
+  <div class="card">Sentinel-safe FM-index construction</div>
+</div>
+
+<h2>Verification claim</h2>
+
+<p>
+The current minimal claim:
+</p>
+
+<pre>same repository state
+same verification procedure
+same expected result: VERIFY OK</pre>
+
+<p>
+Specification:
+<a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/GLYPH_VERIFICATION_CLAIM_V1.md">
+GLYPH_VERIFICATION_CLAIM_V1
+</a>
+</p>
+
+<h2>Architecture</h2>
+
+<pre>raw bytes
+  ↓
+suffix array
+  ↓
+BWT
+  ↓
+FM-index
+  ↓
+exact retrieval
+  ↓
+evidence / verification</pre>
+
+<h2>Historical quick demo</h2>
+
+<pre>git clone https://github.com/yasha1971-coder/glyph-engine
+cd glyph-engine
+./examples/mini/build_mini.sh</pre>
+
+<p>Expected:</p>
+
+<pre>count:    2</pre>
+
+<p class="muted">
+This was the original minimal sentinel-safe demo path.
+It remains available for compatibility with earlier documentation and posts.
+</p>
+
+<h2>Benchmark signal</h2>
+
+<p>
+HDFS 1GB, 100 exact <code>blk_*</code> lookups:
+</p>
+
+<pre>grep repeated scan:        11.516 sec
+GLYPH persistent FM:       0.001673 sec total
+average:                   0.0167 ms/query</pre>
+
+<p class="muted">
+Experimental prototype. Not a grep replacement for one-off scans.
+Trades RAM and offline indexing for fast repeated exact queries over static corpora.
+</p>
+
+<h2>Research Directions</h2>
+
+<div class="grid">
+  <div class="card">Deterministic verification</div>
+  <div class="card">Portable evidence artifacts</div>
+  <div class="card">Proof-of-data-presence research</div>
+  <div class="card">Reproducible retrieval infrastructure</div>
+</div>
+
+<p class="muted">
+These are active research directions, not production capabilities.
+Current public verification remains:
+git clone → ./verify.sh → VERIFY OK.
+</p>
+
+<h2>Links</h2>
+
+<p>
+<a href="https://github.com/yasha1971-coder/glyph-engine">GitHub</a>
+ ·
+<a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/README.md">README</a>
+ ·
+<a href="https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/GLYPH_REVIEW_READINESS_V1.md">Review readiness</a>
+ ·
+<a href="mailto:contact@glyph.rs">contact@glyph.rs</a>
+</p>
+
+<footer>
+Apache-2.0 · Experimental infrastructure research · glyph.rs
+</footer>
+
+</body>
+</html>
