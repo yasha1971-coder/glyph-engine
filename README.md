@@ -355,7 +355,11 @@ This may matter for:
 
 If this is a real pain for you, tell us your use case:
 
-https://github.com/yasha1971-coder/glyph-engine/issues/new/choose
+https://github.com/yasha1971-coder/glyph-engine/issues/3
+
+Or join the discussion:
+
+https://github.com/yasha1971-coder/glyph-engine/discussions/4
 
 If you know a tool that already provides the same replayable exact-byte evidence chain, please tell us that too.
 

@@ -18,9 +18,10 @@ This is a voluntary feedback loop.
 - README section: `Who is this for?`
 - `verify.sh` post-success feedback link
 
-## Feedback target
+## Feedback targets
 
-https://github.com/yasha1971-coder/glyph-engine/issues/new/choose
+- Issue #3: https://github.com/yasha1971-coder/glyph-engine/issues/3
+- Discussion #4: https://github.com/yasha1971-coder/glyph-engine/discussions/4
 
 ## Goal
 

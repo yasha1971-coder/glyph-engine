@@ -56,7 +56,8 @@ echo "VERIFY OK"
 
 echo ""
 echo "If this worked for you, tell us your use case:"
-echo "https://github.com/yasha1971-coder/glyph-engine/issues/new/choose"
+echo "Issue: https://github.com/yasha1971-coder/glyph-engine/issues/3"
+echo "Discussion: https://github.com/yasha1971-coder/glyph-engine/discussions/4"
 
   exit 0
 fi
