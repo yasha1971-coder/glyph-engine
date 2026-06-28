@@ -1,0 +1,70 @@
+name: Use case / feedback
+description: Tell us what you would use GLYPH for
+title: "[use case] "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for looking at GLYPH.
+
+        GLYPH is currently looking for real cases where replayable exact-byte evidence over fixed corpora matters.
+
+        No commitment is expected. Short answers are enough.
+
+  - type: dropdown
+    id: domain
+    attributes:
+      label: Domain
+      description: What area are you coming from?
+      options:
+        - DFIR / incident response
+        - Malware / binary analysis
+        - Logs / observability
+        - Legal / compliance / audit
+        - RAG / LLM provenance
+        - Succinct data structures / research
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-pain
+    attributes:
+      label: What problem are you solving today?
+      description: Describe the real case, not the feature request.
+      placeholder: "Example: I need to show that an exact byte/string existed in a fixed log/image/corpus and let someone else replay the result."
+    validations:
+      required: true
+
+  - type: input
+    id: last-time
+    attributes:
+      label: When did this last happen?
+      placeholder: "Today / this week / this month / never, just curious"
+    validations:
+      required: false
+
+  - type: textarea
+    id: current-tool
+    attributes:
+      label: What do you use today?
+      description: grep, ripgrep, YARA, SIEM, custom scripts, RAG citations, forensic tools, etc.
+    validations:
+      required: false
+
+  - type: textarea
+    id: replay-need
+    attributes:
+      label: Would replayable exact-byte evidence help?
+      description: Why or why not?
+    validations:
+      required: false
+
+  - type: textarea
+    id: corpus
+    attributes:
+      label: What kind of corpus?
+      placeholder: "Fixed logs, source tree, legal docs, malware corpus, binary samples, memory image, RAG knowledge base, etc."
+    validations:
+      required: false

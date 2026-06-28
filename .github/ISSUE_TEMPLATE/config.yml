@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GLYPH reviewer portal
+    url: https://glyph.rs
+    about: Public technical reviewer entrypoint.
+  - name: GLYPH AI-readable brief
+    url: https://glyph.rs/llms.txt
+    about: Short Markdown summary for reviewers and AI retrieval systems.

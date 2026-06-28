@@ -53,6 +53,11 @@ if grep -q "count:[[:space:]]*2" "$OUT"; then
 ./tools/run_rlbwt_bounded_evidence_tiny_fixture_v1.sh
 
 echo "VERIFY OK"
+
+echo ""
+echo "If this worked for you, tell us your use case:"
+echo "https://github.com/yasha1971-coder/glyph-engine/issues/new/choose"
+
   exit 0
 fi
 

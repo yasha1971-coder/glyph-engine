@@ -340,6 +340,25 @@ See:
 - Website: https://glyph.rs
 - Email: contact@glyph.rs
 
+## Who is this for?
+
+GLYPH is looking for people who need to verify exact bytes in a fixed corpus and let someone else replay the result.
+
+This may matter for:
+
+- DFIR and incident response
+- malware or binary corpus analysis
+- fixed log and audit corpora
+- legal, compliance, and review workflows
+- RAG / LLM citation grounding
+- succinct data structure research
+
+If this is a real pain for you, tell us your use case:
+
+https://github.com/yasha1971-coder/glyph-engine/issues/new/choose
+
+If you know a tool that already provides the same replayable exact-byte evidence chain, please tell us that too.
+
 ## Experimental compressed bounded evidence path
 
 GLYPH also has an experimental compressed bounded evidence path over RLBWT runtime.
