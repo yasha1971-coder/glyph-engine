@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="GLYPH is a replayable exact-byte evidence layer for fixed corpora. Verify exact query/count/offset evidence with portable artifacts." />
+  <title>GLYPH — Replayable Exact-Byte Evidence</title>
+  <style>
+    :root {
+      --bg: #080a0f;
+      --panel: #111622;
+      --panel2: #151c2b;
+      --text: #f4f7fb;
+      --muted: #9da9ba;
+      --line: rgba(255,255,255,.11);
+      --blue: #6aa8ff;
+      --cyan: #5df2d6;
+      --green: #92ffb8;
+      --amber: #ffd27a;
+      --red: #ff8a8a;
+      --shadow: 0 24px 80px rgba(0,0,0,.35);
+      --radius: 22px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(93,242,214,.13), transparent 32%),
+        radial-gradient(circle at 80% 10%, rgba(106,168,255,.15), transparent 30%),
+        linear-gradient(180deg, #080a0f 0%, #0b0f17 45%, #080a0f 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    code, pre { font-family: var(--mono); }
+
+    .wrap {
+      width: min(1160px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(8,10,15,.72);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav {
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: .08em;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background:
+        linear-gradient(135deg, rgba(93,242,214,.9), rgba(106,168,255,.9));
+      box-shadow: 0 0 34px rgba(93,242,214,.25);
+    }
+
+    .navlinks {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .navlinks a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-weight: 650;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.24);
+      background: rgba(255,255,255,.075);
+    }
+
+    .btn.primary {
+      border: 0;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #071019;
+      box-shadow: 0 16px 50px rgba(93,242,214,.2);
+    }
+
+    .hero {
+      padding: 96px 0 52px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--cyan);
+      background: rgba(93,242,214,.08);
+      border: 1px solid rgba(93,242,214,.24);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: clamp(44px, 8vw, 92px);
+      line-height: .95;
+      letter-spacing: -.06em;
+      margin: 0 0 24px;
+      max-width: 1020px;
+    }
+
+    .gradient {
+      background: linear-gradient(135deg, #fff, #b6f8ed 36%, #8db9ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      font-size: clamp(18px, 2.2vw, 25px);
+      color: var(--muted);
+      max-width: 870px;
+      margin: 0 0 30px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 34px 0 38px;
+    }
+
+    .terminal {
+      background: rgba(0,0,0,.36);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      max-width: 840px;
+    }
+
+    .terminal .bar {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.18); }
+    .terminal pre {
+      margin: 0;
+      padding: 20px;
+      overflow-x: auto;
+      color: #d9e7ff;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid.three { grid-template-columns: repeat(3, 1fr); }
+    .grid.two { grid-template-columns: repeat(2, 1fr); }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 12px 60px rgba(0,0,0,.18);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      letter-spacing: -.02em;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .status.green { color: var(--green); }
+    .status.amber { color: var(--amber); }
+    .status.red { color: var(--red); }
+
+    section {
+      padding: 58px 0;
+    }
+
+    .section-title {
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1;
+      letter-spacing: -.045em;
+      margin: 0 0 18px;
+    }
+
+    .section-lead {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 820px;
+      margin: 0 0 28px;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .step {
+      padding: 18px;
+      min-height: 124px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+    }
+
+    .step small {
+      color: var(--cyan);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .step strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 16px;
+    }
+
+    .step span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .metric:last-child { border-bottom: 0; }
+    .metric span { color: var(--muted); }
+    .metric strong { font-family: var(--mono); text-align: right; }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.025);
+    }
+
+    .matrix th, .matrix td {
+      padding: 14px 13px;
+      border-bottom: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    .matrix th {
+      color: var(--text);
+      background: rgba(255,255,255,.055);
+    }
+
+    .matrix td {
+      color: var(--muted);
+    }
+
+    .yes { color: var(--green); font-weight: 800; }
+    .no { color: var(--red); font-weight: 800; }
+    .partial { color: var(--amber); font-weight: 800; }
+
+    .notice {
+      border-left: 4px solid var(--amber);
+      background: rgba(255,210,122,.08);
+      padding: 18px 20px;
+      border-radius: 16px;
+      color: #ffe8b3;
+    }
+
+    footer {
+      padding: 42px 0 60px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      margin-top: 40px;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      color: #d9e7ff;
+    }
+
+    @media (max-width: 900px) {
+      .grid.three, .grid.two, .chain { grid-template-columns: 1fr; }
+      .navlinks { display: none; }
+      .hero { padding-top: 64px; }
+      .matrix { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#">
+      <span class="mark"></span>
+      <span>GLYPH</span>
+    </a>
+    <nav class="navlinks">
+      <a href="#verify">Verify</a>
+      <a href="#chain">Evidence chain</a>
+      <a href="#state">Technical state</a>
+      <a href="#boundaries">Boundaries</a>
+      <a href="https://github.com/yasha1971-coder/glyph-engine">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="kicker">Experimental infrastructure · external review checkpoint available</div>
+      <h1><span class="gradient">Replayable exact-byte evidence</span> for fixed corpora.</h1>
+      <p class="lead">
+        GLYPH is not another search UI. It is an engineering path for producing
+        reproducible exact-byte retrieval evidence: fixed corpus, exact query,
+        match count, bounded offsets, byte checks, portable artifacts, and replay verification.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn primary" href="https://github.com/yasha1971-coder/glyph-engine">Review on GitHub</a>
+        <a class="btn" href="#verify">Run the checkpoint</a>
+        <a class="btn" href="#boundaries">Read the boundaries</a>
+      </div>
+
+      <div class="terminal" id="verify">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>review checkpoint</span></div>
+        <pre><code>git clone https://github.com/yasha1971-coder/glyph-engine.git
+cd glyph-engine
+git checkout rlbwt-bounded-evidence-v1
+./verify.sh
+
+# expected:
+# [tiny-fixture] PASS
+# VERIFY OK</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid three">
+      <div class="card">
+        <div class="status green">verified today</div>
+        <h3>RLBWT bounded evidence</h3>
+        <p>Artifact replay, portable bundle replay, schema smoke validation, and one-command verification over sentinel-safe fixed corpora.</p>
+      </div>
+      <div class="card">
+        <div class="status amber">reference only</div>
+        <h3>Binary-safe direction</h3>
+        <p>0x00 boundary documented. Virtual sentinel 256 selected. Tiny reference fixture proves target semantics, but production runtime is not binary-safe yet.</p>
+      </div>
+      <div class="card">
+        <div class="status red">not claimed</div>
+        <h3>No overclaim layer</h3>
+        <p>Not a SIEM, not Elasticsearch, not Splunk, not YARA, not legal proof, not timestamped, not signed, not distributed.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="chain">
+    <div class="wrap">
+      <h2 class="section-title">Evidence chain, not search results.</h2>
+      <p class="section-lead">
+        Search tools return matches. GLYPH’s current research target is different:
+        make exact-byte retrieval results replayable by another person from a fixed corpus.
+      </p>
+
+      <div class="chain">
+        <div class="step"><small>01</small><strong>Fixed corpus</strong><span>Corpus identity recorded by hash and manifest.</span></div>
+        <div class="step"><small>02</small><strong>Exact query</strong><span>Query bytes and hash are recorded.</span></div>
+        <div class="step"><small>03</small><strong>FM interval/count</strong><span>Exact match count from compressed runtime.</span></div>
+        <div class="step"><small>04</small><strong>Bounded offsets</strong><span>Deterministic returned offsets under max_offsets.</span></div>
+        <div class="step"><small>05</small><strong>Replay</strong><span>Artifact, bundle, schema, and verifier path.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="state">
+    <div class="wrap grid two">
+      <div>
+        <h2 class="section-title">Current verified checkpoint.</h2>
+        <p class="section-lead">
+          The public review checkpoint is intentionally tiny. It is designed to be fast,
+          reproducible, and easy to challenge.
+        </p>
+        <div class="card">
+          <div class="metric"><span>Tag</span><strong>rlbwt-bounded-evidence-v1</strong></div>
+          <div class="metric"><span>Artifact version</span><strong>RLBWT_BOUNDED_EVIDENCE_V1</strong></div>
+          <div class="metric"><span>Runtime profile</span><strong>RLBWT_FULL_RUNTIME_PROFILE_V1</strong></div>
+          <div class="metric"><span>Query</span><strong>the</strong></div>
+          <div class="metric"><span>FM interval</span><strong>[65, 68]</strong></div>
+          <div class="metric"><span>Match count</span><strong>3</strong></div>
+          <div class="metric"><span>Returned offsets</span><strong>[43, 55]</strong></div>
+          <div class="metric"><span>Byte check</span><strong>PASS</strong></div>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="section-title">Binary-safe status.</h2>
+        <p class="section-lead">
+          Binary-safe is not claimed as production support. The current work documents the boundary
+          and fixes the reference semantics for future implementation.
+        </p>
+        <div class="card">
+          <div class="metric"><span>Current v0.x runtime</span><strong>sentinel-safe</strong></div>
+          <div class="metric"><span>0x00 in source corpus</span><strong>expected fail</strong></div>
+          <div class="metric"><span>Chosen design</span><strong>virtual sentinel 256</strong></div>
+          <div class="metric"><span>Reference corpus</span><strong>41 00 42 00 43 00 42</strong></div>
+          <div class="metric"><span>Reference query</span><strong>00 42</strong></div>
+          <div class="metric"><span>Reference count</span><strong>2</strong></div>
+          <div class="metric"><span>Reference offsets</span><strong>[1, 5]</strong></div>
+          <div class="metric"><span>Production binary-safe</span><strong>not claimed</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="section-title">Where GLYPH sits.</h2>
+      <p class="section-lead">
+        GLYPH should not be compared as a faster grep, a SIEM, or a malware scanner.
+        The relevant question is whether a system produces a portable, replayable exact-byte evidence artifact.
+      </p>
+
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>System class</th>
+            <th>Main job</th>
+            <th>Exact bytes</th>
+            <th>Replay artifact</th>
+            <th>Portable bundle</th>
+            <th>GLYPH relation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>grep / ripgrep</td>
+            <td>Fast local text search</td>
+            <td><span class="partial">partial</span></td>
+            <td><span class="no">no</span></td>
+            <td><span class="no">no</span></td>
+            <td>GLYPH is not replacing grep; it records replayable evidence.</td>
+          </tr>
+          <tr>
+            <td>Elastic / Splunk</td>
+            <td>Search, observability, security analytics</td>
+            <td><span class="partial">contextual</span></td>
+            <td><span class="no">no</span></td>
+            <td><span class="no">no</span></td>
+            <td>GLYPH is not a platform; it is a byte-evidence layer.</td>
+          </tr>
+          <tr>
+            <td>YARA</td>
+            <td>Textual/binary pattern matching for malware research</td>
+            <td><span class="yes">yes</span></td>
+            <td><span class="no">no</span></td>
+            <td><span class="no">no</span></td>
+            <td>Future possible fit: evidence artifact for confirmed pattern hits.</td>
+          </tr>
+          <tr>
+            <td>OpenTimestamps / CT / Sigstore</td>
+            <td>Time, transparency, signing, provenance</td>
+            <td><span class="no">no search</span></td>
+            <td><span class="partial">different layer</span></td>
+            <td><span class="partial">different layer</span></td>
+            <td>Complementary trust layer, not exact retrieval.</td>
+          </tr>
+          <tr>
+            <td>GLYPH current checkpoint</td>
+            <td>Replayable exact-byte bounded evidence</td>
+            <td><span class="yes">yes</span></td>
+            <td><span class="yes">yes</span></td>
+            <td><span class="yes">yes</span></td>
+            <td>Experimental reference path over fixed sentinel-safe corpora.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="boundaries">
+    <div class="wrap">
+      <h2 class="section-title">Boundaries are part of the design.</h2>
+      <p class="section-lead">
+        GLYPH’s current public checkpoint is deliberately narrow. The goal is reviewable engineering,
+        not inflated claims.
+      </p>
+
+      <div class="notice">
+        <strong>Current strongest claim:</strong>
+        GLYPH has a reproducible review checkpoint for replayable exact-byte bounded evidence over fixed sentinel-safe corpora.
+      </div>
+
+      <div class="grid three" style="margin-top:18px;">
+        <div class="card">
+          <h3>Not binary-safe yet</h3>
+          <p>0x00 support is documented as a boundary. Reference semantics exist, but production C++ runtime support is not claimed.</p>
+        </div>
+        <div class="card">
+          <h3>Not a legal proof</h3>
+          <p>No timestamp, signature, notarization, or chain-of-custody claim is made by the current checkpoint.</p>
+        </div>
+        <div class="card">
+          <h3>Not distributed</h3>
+          <p>The current verified path is a single-repository review fixture, not petabyte-scale distributed infrastructure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="portfolio">
+    <div class="wrap">
+      <h2 class="section-title">24-hour reviewer portal.</h2>
+      <p class="section-lead">
+        GLYPH’s public page is designed to work without a meeting. A reviewer should be able to open the repository,
+        inspect the technical state, run the checkpoint, and see exactly what is verified and what is not claimed.
+      </p>
+
+      <div class="grid three">
+        <div class="card">
+          <div class="status green">run now</div>
+          <h3>One-command verification</h3>
+          <p><span class="mono">./verify.sh</span> rebuilds the tiny fixture, creates bounded evidence, replays the artifact, replays the bundle, and validates schemas.</p>
+        </div>
+        <div class="card">
+          <div class="status green">review now</div>
+          <h3>Technical state map</h3>
+          <p>The current state map separates verified working paths, reference-only work, known boundaries, non-claims, and implementation triggers.</p>
+        </div>
+        <div class="card">
+          <div class="status amber">challenge now</div>
+          <h3>Artifact portfolio</h3>
+          <p>The repository contains specs, replay reports, bundle format, tarball verifier, binary-safe boundary notes, and reference fixtures.</p>
+        </div>
+      </div>
+
+      <div class="terminal" style="margin-top:18px;">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>artifact portfolio</span></div>
+        <pre><code>docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md
+docs/review/RLBWT_BOUNDED_EVIDENCE_REVIEW_PATH_V1.md
+
+docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md
+docs/specs/RLBWT_BOUNDED_EVIDENCE_BUNDLE_SPEC_V1.md
+docs/specs/BINARY_SAFE_DESIGN_DECISION_V1.md
+
+benchmarks/results/RLBWT_BOUNDED_EVIDENCE_V1_REPLAY.md
+benchmarks/results/RLBWT_BOUNDED_EVIDENCE_BUNDLE_V1.md
+benchmarks/results/BINARY_SAFE_FM_TINY_FIXTURE_V1.md</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap grid two">
+      <div>
+        <h2 class="section-title">Reviewer path.</h2>
+        <p class="section-lead">
+          Start with the current technical state map. Then run the verifier. Then challenge the artifact format.
+        </p>
+      </div>
+      <div class="terminal">
+        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>files to inspect</span></div>
+        <pre><code>docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md
+docs/review/RLBWT_BOUNDED_EVIDENCE_REVIEW_PATH_V1.md
+docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md
+docs/specs/RLBWT_BOUNDED_EVIDENCE_BUNDLE_SPEC_V1.md
+
+./verify.sh</code></pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand" style="margin-bottom:14px;">
+      <span class="mark"></span>
+      <span>GLYPH</span>
+    </div>
+    <p>
+      Experimental infrastructure for replayable exact-byte evidence over fixed corpora.
+      Current focus: external technical verification.
+    </p>
+    <p>
+      <a class="mono" href="https://github.com/yasha1971-coder/glyph-engine">github.com/yasha1971-coder/glyph-engine</a>
+      ·
+      <a class="mono" href="mailto:contact@glyph.rs">contact@glyph.rs</a>
+    </p>
+  </div>
+</footer>
+</body>
+</html>
