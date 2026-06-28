@@ -1,0 +1,75 @@
+# GLYPH Engine
+
+> Replayable exact-byte evidence layer for fixed corpora.
+
+GLYPH is an experimental engineering project for deterministic exact-byte retrieval and replayable evidence artifacts over fixed corpora. It is not a general search engine, SIEM, malware scanner, legal proof system, or vector/RAG product.
+
+## Current verified checkpoint
+
+- Live site: https://glyph.rs
+- Repository: https://github.com/yasha1971-coder/glyph-engine
+- Review tag: `rlbwt-bounded-evidence-v1`
+- One-command verifier: `./verify.sh`
+- Expected verifier result: `[tiny-fixture] PASS` and `VERIFY OK`
+
+## Current strongest claim
+
+GLYPH has a reproducible review checkpoint for replayable exact-byte bounded evidence over fixed sentinel-safe corpora.
+
+## Verified evidence chain
+
+The current verified RLBWT bounded evidence path demonstrates:
+
+1. Fixed corpus identity by hash and manifest.
+2. Exact query bytes and query hash.
+3. Exact FM interval.
+4. Exact match count.
+5. Bounded deterministic offsets using `max_offsets`.
+6. Direct byte verification for returned offsets.
+7. Evidence artifact creation.
+8. Artifact replay verification.
+9. Portable bundle creation and replay verification.
+10. Schema smoke validation through the one-command verifier.
+
+## Current technical state
+
+- Current verified path: RLBWT bounded evidence over sentinel-safe fixed corpora.
+- Artifact version: `RLBWT_BOUNDED_EVIDENCE_V1`
+- Bundle version: `RLBWT_BOUNDED_EVIDENCE_BUNDLE_V1`
+- Runtime profile: `RLBWT_FULL_RUNTIME_PROFILE_V1`
+- Current binary-safe production runtime: not claimed.
+- Binary-safe reference work: documented boundary, virtual sentinel design, symbol corpus prototype, and FM tiny reference fixture.
+
+## Important boundaries
+
+GLYPH currently does not claim:
+
+- production binary-safe indexing
+- arbitrary malware/RAM dump support
+- distributed or petabyte-scale deployment
+- timestamped evidence
+- signed or notarized evidence
+- court-grade legal proof
+- source authenticity beyond recorded hashes
+- exhaustive locate when `bounded=true`
+- semantic search
+- fuzzy search
+- token search
+- ranking
+
+## Key files for reviewers
+
+- Current technical state: https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md
+- RLBWT bounded evidence review path: https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/review/RLBWT_BOUNDED_EVIDENCE_REVIEW_PATH_V1.md
+- RLBWT bounded evidence spec: https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md
+- RLBWT bounded evidence bundle spec: https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/RLBWT_BOUNDED_EVIDENCE_BUNDLE_SPEC_V1.md
+- Binary-safe design decision: https://github.com/yasha1971-coder/glyph-engine/blob/main/docs/specs/BINARY_SAFE_DESIGN_DECISION_V1.md
+
+## Run
+
+```bash
+git clone https://github.com/yasha1971-coder/glyph-engine.git
+cd glyph-engine
+git checkout rlbwt-bounded-evidence-v1
+./verify.sh
+

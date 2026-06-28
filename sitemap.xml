@@ -1,0 +1,138 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://glyph.rs/</loc>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://glyph.rs/llms.txt</loc>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://github.com/yasha1971-coder/glyph-engine</loc>
+    <priority>0.8</priority>
+  </url>
+</urlset>
+EOF
+
+python3 - <<‘PY’
+from pathlib import Path
+import json
+
+json_ld = {
+“@context”: “https://schema.org”,
+“@graph”: [
+{
+“@type”: “WebSite”,
+“name”: “GLYPH”,
+“url”: “https://glyph.rs/”,
+“description”: “Public reviewer portal for GLYPH, an experimental replayable exact-byte evidence layer for fixed corpora.”
+},
+{
+“@type”: “SoftwareSourceCode”,
+“name”: “GLYPH Engine”,
+“codeRepository”: “https://github.com/yasha1971-coder/glyph-engine”,
+“programmingLanguage”: [“C++”, “Python”, “Shell”],
+“runtimePlatform”: [“Linux”, “macOS”],
+“description”: “Experimental exact-byte retrieval and replayable bounded evidence artifacts over fixed corpora using FM-index/RLBWT runtime paths.”
+},
+{
+“@type”: “SoftwareApplication”,
+“name”: “GLYPH Engine”,
+“applicationCategory”: “DeveloperApplication”,
+“operatingSystem”: “Linux, macOS”,
+“softwareVersion”: “rlbwt-bounded-evidence-v1”,
+“url”: “https://glyph.rs/”,
+“codeRepository”: “https://github.com/yasha1971-coder/glyph-engine”,
+“description”: “Experimental replayable exact-byte evidence layer for fixed corpora. Current verified checkpoint supports exact query/count, bounded offsets, byte checks, portable artifacts, and replay verification.”,
+“isAccessibleForFree”: True
+}
+]
+}
+
+script = ‘\n’ + json.dumps(json_ld, indent=2) + ‘\n\n’
+
+for path in [Path(“index.html”), Path(“site/index.html”)]:
+s = path.read_text()
+if ‘”@type”: “SoftwareApplication”’ in s and ‘“GLYPH Engine”’ in s:
+print(f”{path}: JSON-LD already present”)
+continue
+if “” not in s:
+raise SystemExit(f”{path}: missing ”)
+path.write_text(s.replace(””, script + “”))
+print(f”{path}: inserted JSON-LD”)
+PY
+
+cat > docs/review/GLYPH_AI_DISCOVERY_FILES_V1.md <<‘EOF’
+
+GLYPH_AI_DISCOVERY_FILES_V1
+
+Status: deployed discovery files
+Date: 2026-06-28
+
+Purpose
+
+Record the AI/search discovery files added for glyph.rs.
+
+The goal is to make the public GLYPH reviewer portal easier to crawl, cite, and understand by classic search engines and AI retrieval systems, while avoiding overclaiming.
+
+Files added
+
+* robots.txt
+* llms.txt
+* sitemap.xml
+
+Files updated
+
+* index.html
+* site/index.html
+
+JSON-LD
+
+The homepage now includes JSON-LD structured data for:
+
+* WebSite
+* SoftwareSourceCode
+* SoftwareApplication
+
+Policy
+
+The current policy allows classic search crawlers, AI search/retrieval crawlers, AI user-request fetchers, and AI training crawlers.
+
+This is intentional because GLYPH is currently an open public research/engineering project seeking discoverability and external review.
+
+Verification
+
+After deployment, check:
+
+curl -A "OAI-SearchBot" https://glyph.rs/
+curl -A "OAI-SearchBot" https://glyph.rs/robots.txt
+curl -A "OAI-SearchBot" https://glyph.rs/llms.txt
+curl -A "OAI-SearchBot" https://glyph.rs/sitemap.xml
+
+Expected result:
+
+* homepage returns full static HTML
+* robots.txt returns crawler directives
+* llms.txt returns clean Markdown
+* sitemap.xml returns XML sitemap
+    EOF
+
+grep -n “OAI-SearchBot|GPTBot|Claude-SearchBot|PerplexityBot|Sitemap” robots.txt
+grep -n “Replayable exact-byte evidence layer|Current strongest claim|Important boundaries” llms.txt
+grep -n “SoftwareApplication|SoftwareSourceCode|WebSite” index.html site/index.html
+grep -n “GLYPH_AI_DISCOVERY_FILES_V1” docs/review/GLYPH_AI_DISCOVERY_FILES_V1.md
+
+./tools/run_binary_safe_boundary_probe_v1.sh
+python3 tools/run_binary_safe_fm_tiny_fixture_v1.py
+./verify.sh
+
+git status –short
+
+git add robots.txt llms.txt sitemap.xml index.html site/index.html docs/review/GLYPH_AI_DISCOVERY_FILES_V1.md
+git commit -m “site: add AI discovery files and structured data”
+git push
+
+git status
+git log –oneline -7
