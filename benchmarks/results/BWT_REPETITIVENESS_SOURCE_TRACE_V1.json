@@ -1,0 +1,154 @@
+{
+  "all_available_bwt_hashes_equal": true,
+  "files": {
+    "corpus2_true_bwt": {
+      "bytes": 100000001,
+      "path": "out/corpus2_true_bwt.bin",
+      "sha256": "69f5a6708eb49c1f0f6f70e5fb285d94a162fc6efd252947d87519cbdfc2311b"
+    },
+    "corpus2_true_sa": {
+      "bytes": 400000004,
+      "path": "out/corpus2_true_sa.bin",
+      "sha256": "1c0911abf67ad5b25d71d8846471d658d2a9175b9a8d46659e17b37beddb4546"
+    },
+    "main_bwt": {
+      "bytes": 100000001,
+      "path": "out/bwt.bin",
+      "sha256": "69f5a6708eb49c1f0f6f70e5fb285d94a162fc6efd252947d87519cbdfc2311b"
+    },
+    "py_true_bwt": {
+      "bytes": 100000001,
+      "path": "out/py_true/corpus2_true_backend.bwt.bin",
+      "sha256": "69f5a6708eb49c1f0f6f70e5fb285d94a162fc6efd252947d87519cbdfc2311b"
+    },
+    "py_true_sa": {
+      "bytes": 400000004,
+      "path": "out/py_true/corpus2_true_backend.sa.bin",
+      "sha256": "1c0911abf67ad5b25d71d8846471d658d2a9175b9a8d46659e17b37beddb4546"
+    },
+    "sa": {
+      "bytes": 400000004,
+      "path": "out/sa.bin",
+      "sha256": "1c0911abf67ad5b25d71d8846471d658d2a9175b9a8d46659e17b37beddb4546"
+    },
+    "source_corpus": {
+      "bytes": 100000001,
+      "path": "out/py_true/corpus2_true_backend.corpus.bin",
+      "sha256": "4ad7c92379421daee73f1e99f75d12ad83b70a61d9975feebf3c3a11469191c0"
+    }
+  },
+  "interpretation": {
+    "answer": "yes",
+    "boundary": "This traces local artifact provenance only; it does not identify the original dataset name or external source.",
+    "main_question": "Can the measured low r/n on out/bwt.bin be tied to a source corpus?"
+  },
+  "ok": true,
+  "source_block_duplicate_stats": [
+    {
+      "block_size": 64,
+      "blocks_total": 1562501,
+      "duplicate_blocks": 1257825,
+      "duplicate_fraction": 0.8050074847952098,
+      "unique_blocks": 304676
+    },
+    {
+      "block_size": 256,
+      "blocks_total": 390626,
+      "duplicate_blocks": 228445,
+      "duplicate_fraction": 0.5848177028666807,
+      "unique_blocks": 162181
+    },
+    {
+      "block_size": 1024,
+      "blocks_total": 97657,
+      "duplicate_blocks": 18170,
+      "duplicate_fraction": 0.18605937106403023,
+      "unique_blocks": 79487
+    },
+    {
+      "block_size": 4096,
+      "blocks_total": 24415,
+      "duplicate_blocks": 0,
+      "duplicate_fraction": 0.0,
+      "unique_blocks": 24415
+    },
+    {
+      "block_size": 16384,
+      "blocks_total": 6104,
+      "duplicate_blocks": 0,
+      "duplicate_fraction": 0.0,
+      "unique_blocks": 6104
+    }
+  ],
+  "source_corpus_stats": {
+    "alphabet_size": 112,
+    "bytes": 100000001,
+    "entropy_bits_per_byte": 5.5353482940969325,
+    "newline_bytes": 0,
+    "nul_bytes": 1,
+    "printable_fraction": 0.7770254522297455,
+    "sha256": "4ad7c92379421daee73f1e99f75d12ad83b70a61d9975feebf3c3a11469191c0",
+    "top_bytes": [
+      {
+        "byte": 209,
+        "count": 7453451,
+        "fraction": 0.07453450925465491
+      },
+      {
+        "byte": 35,
+        "count": 7392623,
+        "fraction": 0.0739262292607377
+      },
+      {
+        "byte": 33,
+        "count": 7172741,
+        "fraction": 0.0717274092827259
+      },
+      {
+        "byte": 102,
+        "count": 6141358,
+        "fraction": 0.061413579385864205
+      },
+      {
+        "byte": 210,
+        "count": 3569851,
+        "fraction": 0.0356985096430149
+      },
+      {
+        "byte": 96,
+        "count": 3383067,
+        "fraction": 0.033830669661693305
+      },
+      {
+        "byte": 98,
+        "count": 3288082,
+        "fraction": 0.0328808196711918
+      },
+      {
+        "byte": 117,
+        "count": 3071787,
+        "fraction": 0.030717869692821302
+      },
+      {
+        "byte": 59,
+        "count": 2725444,
+        "fraction": 0.0272544397274556
+      },
+      {
+        "byte": 112,
+        "count": 2694360,
+        "fraction": 0.026943599730564004
+      },
+      {
+        "byte": 106,
+        "count": 2662911,
+        "fraction": 0.026629109733708904
+      },
+      {
+        "byte": 45,
+        "count": 2631259,
+        "fraction": 0.026312589736874104
+      }
+    ]
+  }
+}
