@@ -1,0 +1,82 @@
+{
+  "ok": true,
+  "estimates": [
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/hdfs_out/hdfs.bwt.bin",
+      "bwt_bytes": 1577982906,
+      "runs": 169747064,
+      "r_over_n": 0.1075721817736852,
+      "avg_run_len": 9.296083648315708,
+      "rle_5_bytes": 848735320,
+      "rle_9_bytes": 1527723576,
+      "rle_5_vs_bwt": 0.537860908868426,
+      "rle_9_vs_bwt": 0.9681496359631667
+    },
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/bench_1gb/out/hdfs_1gb.bwt.bin",
+      "bwt_bytes": 1073741824,
+      "runs": 114137344,
+      "r_over_n": 0.10629868507385254,
+      "avg_run_len": 9.407454093201958,
+      "rle_5_bytes": 570686720,
+      "rle_9_bytes": 1027236096,
+      "rle_5_vs_bwt": 0.5314934253692627,
+      "rle_9_vs_bwt": 0.9566881656646729
+    },
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/sanity_hdfs/bwt.bin",
+      "bwt_bytes": 1073741824,
+      "runs": 114137344,
+      "r_over_n": 0.10629868507385254,
+      "avg_run_len": 9.407454093201958,
+      "rle_5_bytes": 570686720,
+      "rle_9_bytes": 1027236096,
+      "rle_5_vs_bwt": 0.5314934253692627,
+      "rle_9_vs_bwt": 0.9566881656646729
+    },
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/REFERENCE_BENCH/OUT/pizza_chili_english_2gb/bwt.bin",
+      "bwt_bytes": 2000000000,
+      "runs": 582473952,
+      "r_over_n": 0.291236976,
+      "avg_run_len": 3.433629938528135,
+      "rle_5_bytes": 2912369760,
+      "rle_9_bytes": 5242265568,
+      "rle_5_vs_bwt": 1.45618488,
+      "rle_9_vs_bwt": 2.621132784
+    },
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/REFERENCE_BENCH/OUT/pizza_sentinel_2gb/bwt.bin",
+      "bwt_bytes": 2000000001,
+      "runs": 582473953,
+      "r_over_n": 0.2912369763543815,
+      "avg_run_len": 3.433629934350043,
+      "rle_5_bytes": 2912369765,
+      "rle_9_bytes": 5242265577,
+      "rle_5_vs_bwt": 1.4561848817719076,
+      "rle_9_vs_bwt": 2.6211327871894334
+    },
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/out_1gb/bwt.bin",
+      "bwt_bytes": 1000000000,
+      "runs": 294636317,
+      "r_over_n": 0.294636317,
+      "avg_run_len": 3.3940147303701194,
+      "rle_5_bytes": 1473181585,
+      "rle_9_bytes": 2651726853,
+      "rle_5_vs_bwt": 1.473181585,
+      "rle_9_vs_bwt": 2.651726853
+    },
+    {
+      "path": "/home/glyph/GLYPH_CPP_BACKEND/out_2gb/bwt.bin",
+      "bwt_bytes": 2000000001,
+      "runs": 294636323,
+      "r_over_n": 0.1473181614263409,
+      "avg_run_len": 6.788029325902224,
+      "rle_5_bytes": 1473181615,
+      "rle_9_bytes": 2651726907,
+      "rle_5_vs_bwt": 0.7365908071317046,
+      "rle_9_vs_bwt": 1.3258634528370683
+    }
+  ]
+}
