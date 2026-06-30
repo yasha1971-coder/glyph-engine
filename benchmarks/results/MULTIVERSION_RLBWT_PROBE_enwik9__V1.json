@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "decision": "no_strong_multiversion_signal_at_this_scale",
+  "nonoverlap_to_overlap_rn_improvement": 2.751841339335832,
+  "cases": [
+    {
+      "label": "nonoverlap",
+      "collection_bytes": 268435640,
+      "version_mib": 64,
+      "shift_mib": 64,
+      "versions": 4,
+      "source": "/tmp/enwik9",
+      "source_sha256": "159b85351e5f76e60cbe32e04c677847a9ecba3adc79addab6f4c6c7aa3744bc",
+      "bwt_bytes": 268435641,
+      "runs": 93505121,
+      "r_over_n": 0.3483334800537906,
+      "avg_run_len": 2.870812187922841,
+      "classification": "not_run_compressible",
+      "sha256": "04aa8a103096ff8153a370f2376ee162b89bc6c1455f07cc9b16708c9662379c"
+    },
+    {
+      "label": "overlap",
+      "collection_bytes": 268435628,
+      "version_mib": 64,
+      "shift_mib": 8,
+      "versions": 4,
+      "source": "/tmp/enwik9",
+      "source_sha256": "159b85351e5f76e60cbe32e04c677847a9ecba3adc79addab6f4c6c7aa3744bc",
+      "bwt_bytes": 268435629,
+      "runs": 33979109,
+      "r_over_n": 0.12658196352914092,
+      "avg_run_len": 7.900019656195223,
+      "classification": "moderately_repetitive",
+      "sha256": "bc84289e2660ef7b62b61e61386821800c345f86c0730f6ce1ae159048abb515"
+    }
+  ]
+}

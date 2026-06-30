@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "decision": "no_strong_multiversion_signal_at_this_scale",
+  "nonoverlap_to_overlap_rn_improvement": 2.569206743867714,
+  "cases": [
+    {
+      "label": "nonoverlap",
+      "collection_bytes": 67109048,
+      "version_mib": 16,
+      "shift_mib": 16,
+      "versions": 4,
+      "source": "/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/named_multiversion_sources_v1/silesia_no_nul_subset.bin",
+      "source_sha256": "bb91ea7d17fb9ef39b13f2ce154e29c612fe75b147fa0f22864e97802f86210e",
+      "bwt_bytes": 67109049,
+      "runs": 13649553,
+      "r_over_n": 0.20339362877873593,
+      "avg_run_len": 4.9165748504731255,
+      "classification": "not_run_compressible",
+      "sha256": "62d424ba58a01a5fb26c7bea4a2334240abc47f808890d2003f5cc7962cc9f24"
+    },
+    {
+      "label": "overlap",
+      "collection_bytes": 67109036,
+      "version_mib": 16,
+      "shift_mib": 2,
+      "versions": 4,
+      "source": "/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/named_multiversion_sources_v1/silesia_no_nul_subset.bin",
+      "source_sha256": "bb91ea7d17fb9ef39b13f2ce154e29c612fe75b147fa0f22864e97802f86210e",
+      "bwt_bytes": 67109037,
+      "runs": 5312749,
+      "r_over_n": 0.07916592514954432,
+      "avg_run_len": 12.631697262565952,
+      "classification": "moderately_repetitive",
+      "sha256": "f01b49a6e500ceff373c3e4226b33cf82eede26cc25b0971e35935b20bf853c2"
+    }
+  ]
+}
