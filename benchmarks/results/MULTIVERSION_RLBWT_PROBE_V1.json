@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "decision": "multiversion_hypothesis_alive",
+  "nonoverlap_to_overlap_rn_improvement": 3.067076536875597,
+  "cases": [
+    {
+      "label": "nonoverlap",
+      "collection_bytes": 268435640,
+      "version_mib": 64,
+      "shift_mib": 64,
+      "versions": 4,
+      "source": "/home/glyph/GLYPH_CPP_BACKEND/HDFS.log",
+      "source_sha256": "0783096174d7832c618337f9609e06e04abd86ddd7089b3c12b407e63bfebc52",
+      "bwt_bytes": 268435641,
+      "runs": 28528291,
+      "r_over_n": 0.10627609245077854,
+      "avg_run_len": 9.40945396974533,
+      "classification": "moderately_repetitive",
+      "sha256": "4cdae3d009e0ce0e4ecbb61d83009d876ab3d3d4e1e74827a5ea7c99ef20a42d"
+    },
+    {
+      "label": "overlap",
+      "collection_bytes": 268435628,
+      "version_mib": 64,
+      "shift_mib": 8,
+      "versions": 4,
+      "source": "/home/glyph/GLYPH_CPP_BACKEND/HDFS.log",
+      "source_sha256": "0783096174d7832c618337f9609e06e04abd86ddd7089b3c12b407e63bfebc52",
+      "bwt_bytes": 268435629,
+      "runs": 9301460,
+      "r_over_n": 0.03465061636806789,
+      "avg_run_len": 28.859515495416847,
+      "classification": "repetitive",
+      "sha256": "5e673a2e6c4884c9db1b03fb9139a35658e2d5fe18b2f07861d0f355e877dc3a"
+    }
+  ]
+}
