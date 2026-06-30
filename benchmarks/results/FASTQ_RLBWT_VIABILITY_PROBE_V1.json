@@ -1,0 +1,147 @@
+{
+  "ok": true,
+  "results": [
+    {
+      "block_duplicate_stats": [
+        {
+          "block_size": 64,
+          "blocks_total": 1048576,
+          "duplicate_blocks": 320044,
+          "duplicate_fraction": 0.3052177429199219,
+          "probe_bytes": 67108864,
+          "unique_blocks": 728532
+        },
+        {
+          "block_size": 256,
+          "blocks_total": 262144,
+          "duplicate_blocks": 0,
+          "duplicate_fraction": 0.0,
+          "probe_bytes": 67108864,
+          "unique_blocks": 262144
+        },
+        {
+          "block_size": 1024,
+          "blocks_total": 65536,
+          "duplicate_blocks": 0,
+          "duplicate_fraction": 0.0,
+          "probe_bytes": 67108864,
+          "unique_blocks": 65536
+        },
+        {
+          "block_size": 4096,
+          "blocks_total": 16384,
+          "duplicate_blocks": 0,
+          "duplicate_fraction": 0.0,
+          "probe_bytes": 67108864,
+          "unique_blocks": 16384
+        },
+        {
+          "block_size": 16384,
+          "blocks_total": 4096,
+          "duplicate_blocks": 0,
+          "duplicate_fraction": 0.0,
+          "probe_bytes": 67108864,
+          "unique_blocks": 4096
+        }
+      ],
+      "build": {
+        "cmd": [
+          "/home/glyph/GLYPH_CPP_BACKEND/tools/build_glyph_index_v1.sh",
+          "/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/corpus.sample.bin",
+          "/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index"
+        ],
+        "log_tail": "[1/4] prepare sentinel corpus\ninput: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/corpus.sample.bin\noutput: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/corpus.sentinel.bin\ninput_bytes: 268435456\noutput_bytes: 268435457\nsentinel_appended: 0x00\n[2/4] build SA32u\n============================================\n BUILD SA U32 VIA LIBSAIS64\n============================================\ninput:  \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/corpus.sentinel.bin\"\noutput: \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/sa.bin\"\ncorpus_bytes: 268435457\nlibsais64_ok\nbasic_validation_ok\nsaved: \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/sa.bin\"\ndone\n[3/4] build BWT\n============================================\n BUILD TRUE BWT\n============================================\ncorpus:   \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/corpus.sentinel.bin\"\nsa:       \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/sa.bin\"\noutput:   \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/bwt.bin\"\nsentinel: 0\nbwt_ok\nsaved: \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/bwt.bin\"\ndone\n[4/4] build FM\n============================================\n BUILD FM V1\n============================================\nbwt:             \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/bwt.bin\"\noutput:          \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/fm.bin\"\ncheckpoint_step: 128\nbwt_bytes: 268435457\nhist_ok\nC_ok\nnum_blocks: 2097154\nsaved: \"/home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/fm.bin\"\ndone\n[5/5] write manifest\nmanifest: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/manifest.json\n[done]\nindex_corpus: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/corpus.sentinel.bin\nsa: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/sa.bin\nbwt: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/bwt.bin\nfm: /home/glyph/GLYPH_CPP_BACKEND/benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/index/fm.bin",
+        "ok": true,
+        "returncode": 0
+      },
+      "bwt": {
+        "alphabet_size": 26,
+        "avg_run_len": 6.593989659955974,
+        "bwt_bytes": 268435457,
+        "r_over_n": 0.1516532557023568,
+        "runs": 40709111,
+        "sha256": "1c9eecfae18e219643fd01400f695e4ea9119f400be62d8acd0682c985a62e86",
+        "verdict": "poor RLBWT signal"
+      },
+      "ok": true,
+      "raw_stats": {
+        "alphabet_size": 25,
+        "bytes": 268435456,
+        "entropy_bits_per_byte": 2.9285472730396025,
+        "newline_bytes": 4606939,
+        "nul_bytes": 0,
+        "printable_fraction": 1.0,
+        "sha256": "90aaa29953c91c7c6b55d3f541cb0cc18b0acbc695d3bcc2b17795e20e37b9f6",
+        "top_bytes": [
+          {
+            "byte": 63,
+            "count": 112305375,
+            "fraction": 0.4183701239526272
+          },
+          {
+            "byte": 71,
+            "count": 30720795,
+            "fraction": 0.11444387957453728
+          },
+          {
+            "byte": 67,
+            "count": 30189896,
+            "fraction": 0.11246612668037415
+          },
+          {
+            "byte": 65,
+            "count": 27852627,
+            "fraction": 0.10375912114977837
+          },
+          {
+            "byte": 84,
+            "count": 27537509,
+            "fraction": 0.10258521512150764
+          },
+          {
+            "byte": 10,
+            "count": 4606939,
+            "fraction": 0.017162185162305832
+          },
+          {
+            "byte": 36,
+            "count": 4019800,
+            "fraction": 0.014974921941757202
+          },
+          {
+            "byte": 50,
+            "count": 3664578,
+            "fraction": 0.013651616871356964
+          },
+          {
+            "byte": 49,
+            "count": 2921259,
+            "fraction": 0.010882537811994553
+          },
+          {
+            "byte": 52,
+            "count": 2512823,
+            "fraction": 0.009360995143651962
+          },
+          {
+            "byte": 53,
+            "count": 2496295,
+            "fraction": 0.009299423545598984
+          },
+          {
+            "byte": 54,
+            "count": 2492821,
+            "fraction": 0.009286481887102127
+          }
+        ]
+      },
+      "sample_bytes": 268435456,
+      "sample_mib": 256,
+      "sample_path": "benchmarks/work/fastq_rlbwt_viability_v1/NA12878_1gb.fastq__256MiB/corpus.sample.bin",
+      "sample_sha256": "90aaa29953c91c7c6b55d3f541cb0cc18b0acbc695d3bcc2b17795e20e37b9f6",
+      "source": "/tmp/NA12878_1gb.fastq",
+      "source_is_gzip": false,
+      "source_size_bytes": 1073741824
+    }
+  ]
+}

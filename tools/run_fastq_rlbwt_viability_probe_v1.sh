@@ -53,6 +53,7 @@ echo "[samples MiB] $SAMPLES"
 
 python3 tools/fastq_rlbwt_viability_probe_v1.py \
   --sample-mib $SAMPLES \
+  -- \
   "${PATHS[@]}"
 
 echo
