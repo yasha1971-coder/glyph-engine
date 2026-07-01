@@ -415,3 +415,46 @@ full exact count
 + deterministic bounded offsets
 + byte verification
 + replay verification
+
+## Structural Fingerprint Replay
+
+GLYPH also includes a deterministic structural measurement artifact:
+
+```text
+GLYPH_STRUCTURAL_FINGERPRINT_V0
+```
+
+This is not a codec predictor and not a compression optimizer.
+
+It is a replayable structural fingerprint of a byte corpus, including:
+
+- source byte identity
+- SHA256
+- byte statistics
+- entropy profile
+- anchor repeat profile
+- optional BWT run profile
+- explicit non-claims
+
+The artifact can be regenerated and replay-verified from the original source bytes:
+
+```bash
+python3 tools/glyph_structural_fingerprint_v0.py examples/mini/out/corpus.bin --out /tmp/mini_structural_fingerprint_v0.json
+python3 tools/replay_structural_fingerprint_v0.py /tmp/mini_structural_fingerprint_v0.json --out /tmp/mini_structural_fingerprint_replay_v0.json
+```
+
+The top-level verifier includes a smoke test:
+
+```bash
+./verify.sh
+```
+
+Expected verifier lines include:
+
+```text
+[verify] Structural Fingerprint V0 replay smoke
+[verify] structural fingerprint replay ok
+VERIFY OK
+```
+
+This extends GLYPH from replayable exact-byte retrieval evidence into replayable structural corpus measurement.
