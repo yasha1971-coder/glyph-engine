@@ -416,6 +416,46 @@ full exact count
 + byte verification
 + replay verification
 
+## Start Here: Verified Path
+
+GLYPH is a verifiable exact-byte retrieval and evidence engine for committed byte corpora.
+
+The fastest way to verify the current repo state is:
+
+```bash
+git clone https://github.com/yasha1971-coder/glyph-engine.git
+cd glyph-engine
+./verify.sh
+```
+
+Expected verifier lines include:
+
+```text
+[verify] RLBWT bounded evidence tiny fixture
+[verify] Structural Fingerprint V0 replay smoke
+[verify] structural fingerprint replay ok
+VERIFY OK
+```
+
+Current verified capabilities:
+
+- replayable exact-byte retrieval evidence on a bounded RLBWT fixture
+- portable evidence bundle replay
+- deterministic Structural Fingerprint V0 artifact
+- Structural Fingerprint replay verification from source bytes
+
+Important non-claims:
+
+- GLYPH is not a codec predictor
+- GLYPH is not a compression optimizer
+- GLYPH is not a machine-learning classifier
+- GLYPH is not a legal-proof oracle
+
+If this solves or nearly solves a real use case, open an issue or discussion:
+
+- Issue: https://github.com/yasha1971-coder/glyph-engine/issues/3
+- Discussion: https://github.com/yasha1971-coder/glyph-engine/discussions/4
+
 ## Structural Fingerprint Replay
 
 GLYPH also includes a deterministic structural measurement artifact:
