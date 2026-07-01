@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GLYPH Structural Fingerprint V0",
+  "type": "object",
+  "required": [
+    "artifact_version",
+    "purpose",
+    "source",
+    "byte_stats",
+    "entropy_profile",
+    "anchor_repeat_profiles"
+  ],
+  "properties": {
+    "artifact_version": {
+      "const": "GLYPH_STRUCTURAL_FINGERPRINT_V0"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": ["path", "name", "sha256"]
+    },
+    "byte_stats": {
+      "type": "object",
+      "required": [
+        "bytes",
+        "alphabet_size",
+        "nul_bytes",
+        "newline_bytes",
+        "printable_fraction",
+        "entropy_bits_per_byte"
+      ]
+    },
+    "entropy_profile": {
+      "type": "object"
+    },
+    "anchor_repeat_profiles": {
+      "type": "array"
+    },
+    "bwt_profile": {
+      "type": ["object", "null"]
+    }
+  }
+}

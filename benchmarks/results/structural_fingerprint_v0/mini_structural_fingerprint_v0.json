@@ -1,0 +1,179 @@
+{
+  "anchor_repeat_profiles": [
+    {
+      "far_gt_900kb_fraction": 0.0,
+      "k": 8,
+      "median_distance": null,
+      "near_le_64kb_fraction": 0.0,
+      "pair_count": 0,
+      "stride": 32,
+      "useful_anchors": 0
+    },
+    {
+      "far_gt_900kb_fraction": 0.0,
+      "k": 12,
+      "median_distance": null,
+      "near_le_64kb_fraction": 0.0,
+      "pair_count": 0,
+      "stride": 32,
+      "useful_anchors": 0
+    },
+    {
+      "far_gt_900kb_fraction": 0.0,
+      "k": 16,
+      "median_distance": null,
+      "near_le_64kb_fraction": 0.0,
+      "pair_count": 0,
+      "stride": 32,
+      "useful_anchors": 0
+    },
+    {
+      "far_gt_900kb_fraction": 0.0,
+      "k": 24,
+      "median_distance": null,
+      "near_le_64kb_fraction": 0.0,
+      "pair_count": 0,
+      "stride": 32,
+      "useful_anchors": 0
+    },
+    {
+      "far_gt_900kb_fraction": 0.0,
+      "k": 32,
+      "median_distance": null,
+      "near_le_64kb_fraction": 0.0,
+      "pair_count": 0,
+      "stride": 32,
+      "useful_anchors": 0
+    }
+  ],
+  "artifact_version": "GLYPH_STRUCTURAL_FINGERPRINT_V0",
+  "bwt_profile": null,
+  "byte_stats": {
+    "alphabet_size": 18,
+    "bytes": 56,
+    "entropy_bits_per_byte": 3.9094857267452126,
+    "newline_bytes": 3,
+    "nul_bytes": 0,
+    "printable_fraction": 1.0,
+    "top_bytes": [
+      {
+        "byte": 32,
+        "count": 8,
+        "fraction": 0.14285714285714285,
+        "hex": "20"
+      },
+      {
+        "byte": 114,
+        "count": 7,
+        "fraction": 0.125,
+        "hex": "72"
+      },
+      {
+        "byte": 111,
+        "count": 5,
+        "fraction": 0.08928571428571429,
+        "hex": "6f"
+      },
+      {
+        "byte": 101,
+        "count": 4,
+        "fraction": 0.07142857142857142,
+        "hex": "65"
+      },
+      {
+        "byte": 116,
+        "count": 4,
+        "fraction": 0.07142857142857142,
+        "hex": "74"
+      },
+      {
+        "byte": 115,
+        "count": 4,
+        "fraction": 0.07142857142857142,
+        "hex": "73"
+      },
+      {
+        "byte": 48,
+        "count": 3,
+        "fraction": 0.05357142857142857,
+        "hex": "30"
+      },
+      {
+        "byte": 108,
+        "count": 3,
+        "fraction": 0.05357142857142857,
+        "hex": "6c"
+      },
+      {
+        "byte": 103,
+        "count": 3,
+        "fraction": 0.05357142857142857,
+        "hex": "67"
+      },
+      {
+        "byte": 10,
+        "count": 3,
+        "fraction": 0.05357142857142857,
+        "hex": "0a"
+      },
+      {
+        "byte": 119,
+        "count": 2,
+        "fraction": 0.03571428571428571,
+        "hex": "77"
+      },
+      {
+        "byte": 110,
+        "count": 2,
+        "fraction": 0.03571428571428571,
+        "hex": "6e"
+      },
+      {
+        "byte": 105,
+        "count": 2,
+        "fraction": 0.03571428571428571,
+        "hex": "69"
+      },
+      {
+        "byte": 52,
+        "count": 2,
+        "fraction": 0.03571428571428571,
+        "hex": "34"
+      },
+      {
+        "byte": 53,
+        "count": 1,
+        "fraction": 0.017857142857142856,
+        "hex": "35"
+      },
+      {
+        "byte": 97,
+        "count": 1,
+        "fraction": 0.017857142857142856,
+        "hex": "61"
+      }
+    ]
+  },
+  "entropy_profile": {
+    "chunk_size": 65536,
+    "chunks": 1,
+    "first_16": [
+      3.9094857267452126
+    ],
+    "max": 3.9094857267452126,
+    "mean": 3.9094857267452126,
+    "min": 3.9094857267452126,
+    "range": 0.0
+  },
+  "non_claims": [
+    "does_not_predict_best_codec",
+    "does_not_replace_compressor_trials",
+    "does_not_claim_semantic_understanding"
+  ],
+  "purpose": "deterministic structural fingerprint, not codec prediction",
+  "source": {
+    "name": "corpus.bin",
+    "path": "/home/glyph/GLYPH_CPP_BACKEND/examples/mini/out/corpus.bin",
+    "sha256": "57e2e68e3157e4ba474efe8492abd3896148e5c8bf5e09f6ea0336ddf15ca60f"
+  }
+}

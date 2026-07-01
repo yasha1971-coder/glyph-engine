@@ -1,0 +1,194 @@
+{
+  "anchor_repeat_profiles": [
+    {
+      "far_gt_900kb_fraction": 0.49188577836207564,
+      "k": 8,
+      "median_distance": 871904.0,
+      "near_le_64kb_fraction": 0.16868184981826617,
+      "pair_count": 517240,
+      "stride": 32,
+      "useful_anchors": 113345
+    },
+    {
+      "far_gt_900kb_fraction": 0.42325361794388344,
+      "k": 12,
+      "median_distance": 546272,
+      "near_le_64kb_fraction": 0.200076412465793,
+      "pair_count": 321937,
+      "stride": 32,
+      "useful_anchors": 66778
+    },
+    {
+      "far_gt_900kb_fraction": 0.3866535857186827,
+      "k": 16,
+      "median_distance": 449504.0,
+      "near_le_64kb_fraction": 0.21179978454909204,
+      "pair_count": 259920,
+      "stride": 32,
+      "useful_anchors": 45255
+    },
+    {
+      "far_gt_900kb_fraction": 0.426604185988491,
+      "k": 24,
+      "median_distance": 600928,
+      "near_le_64kb_fraction": 0.1665337867521437,
+      "pair_count": 184377,
+      "stride": 32,
+      "useful_anchors": 33863
+    },
+    {
+      "far_gt_900kb_fraction": 0.48481367821131083,
+      "k": 32,
+      "median_distance": 845216.0,
+      "near_le_64kb_fraction": 0.12799649276633054,
+      "pair_count": 114050,
+      "stride": 32,
+      "useful_anchors": 24052
+    }
+  ],
+  "artifact_version": "GLYPH_STRUCTURAL_FINGERPRINT_V0",
+  "bwt_profile": null,
+  "byte_stats": {
+    "alphabet_size": 98,
+    "bytes": 41458703,
+    "entropy_bits_per_byte": 4.970730978411172,
+    "newline_bytes": 930838,
+    "nul_bytes": 0,
+    "printable_fraction": 0.9999999758796121,
+    "top_bytes": [
+      {
+        "byte": 32,
+        "count": 3854483,
+        "fraction": 0.09297162528215125,
+        "hex": "20"
+      },
+      {
+        "byte": 62,
+        "count": 3011945,
+        "fraction": 0.07264928186489578,
+        "hex": "3e"
+      },
+      {
+        "byte": 60,
+        "count": 3011880,
+        "fraction": 0.07264771403967944,
+        "hex": "3c"
+      },
+      {
+        "byte": 101,
+        "count": 2621499,
+        "fraction": 0.06323157287385474,
+        "hex": "65"
+      },
+      {
+        "byte": 105,
+        "count": 2419415,
+        "fraction": 0.05835722839665293,
+        "hex": "69"
+      },
+      {
+        "byte": 111,
+        "count": 2052474,
+        "fraction": 0.049506469124227064,
+        "hex": "6f"
+      },
+      {
+        "byte": 115,
+        "count": 1576983,
+        "fraction": 0.03803744174051948,
+        "hex": "73"
+      },
+      {
+        "byte": 116,
+        "count": 1576393,
+        "fraction": 0.03802321071163273,
+        "hex": "74"
+      },
+      {
+        "byte": 97,
+        "count": 1567271,
+        "fraction": 0.03780318453281088,
+        "hex": "61"
+      },
+      {
+        "byte": 110,
+        "count": 1516975,
+        "fraction": 0.03659002550079775,
+        "hex": "6e"
+      },
+      {
+        "byte": 47,
+        "count": 1496831,
+        "fraction": 0.036104144406061134,
+        "hex": "2f"
+      },
+      {
+        "byte": 114,
+        "count": 1353292,
+        "fraction": 0.032641928041019515,
+        "hex": "72"
+      },
+      {
+        "byte": 112,
+        "count": 1178240,
+        "fraction": 0.02841960589071009,
+        "hex": "70"
+      },
+      {
+        "byte": 100,
+        "count": 1029581,
+        "fraction": 0.024833893139397052,
+        "hex": "64"
+      },
+      {
+        "byte": 108,
+        "count": 997917,
+        "fraction": 0.024070145175549753,
+        "hex": "6c"
+      },
+      {
+        "byte": 104,
+        "count": 976579,
+        "fraction": 0.02355546433760844,
+        "hex": "68"
+      }
+    ]
+  },
+  "entropy_profile": {
+    "chunk_size": 65536,
+    "chunks": 633,
+    "first_16": [
+      5.035362964086725,
+      4.963401961074917,
+      4.931486768114385,
+      4.9608635628354705,
+      4.940386249494884,
+      4.985542912224503,
+      4.989781570574654,
+      4.9692112809804945,
+      4.937766989094641,
+      5.007283335179961,
+      4.933532804532339,
+      4.979258341751769,
+      4.97141794999227,
+      5.001828132587179,
+      4.961949020074299,
+      4.9780646364781225
+    ],
+    "max": 5.141862502645541,
+    "mean": 4.9459883306367765,
+    "min": 4.864165741484554,
+    "range": 0.2776967611609873
+  },
+  "non_claims": [
+    "does_not_predict_best_codec",
+    "does_not_replace_compressor_trials",
+    "does_not_claim_semantic_understanding"
+  ],
+  "purpose": "deterministic structural fingerprint, not codec prediction",
+  "source": {
+    "name": "webster",
+    "path": "/tmp/silesia_check/webster",
+    "sha256": "6a68f69b26daf09f9dd84f7470368553194a0b294fcfa80f1604efb11143a383"
+  }
+}
