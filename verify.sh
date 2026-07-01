@@ -52,6 +52,35 @@ if grep -q "count:[[:space:]]*2" "$OUT"; then
   echo "[verify] RLBWT bounded evidence tiny fixture"
 ./tools/run_rlbwt_bounded_evidence_tiny_fixture_v1.sh
 
+
+echo "[verify] Structural Fingerprint V0 replay smoke"
+
+SF_SOURCE="examples/rlbwt-bounded-evidence-tiny/out/corpus.bin"
+SF_BWT="examples/rlbwt-bounded-evidence-tiny/out/index/bwt.bin"
+SF_ARTIFACT="examples/rlbwt-bounded-evidence-tiny/out/structural_fingerprint_v0.json"
+SF_REPLAY="examples/rlbwt-bounded-evidence-tiny/out/structural_fingerprint_replay_v0.json"
+
+python3 tools/glyph_structural_fingerprint_v0.py "$SF_SOURCE" \
+  --bwt-path "$SF_BWT" \
+  --out "$SF_ARTIFACT" >/dev/null
+
+python3 tools/replay_structural_fingerprint_v0.py "$SF_ARTIFACT" \
+  --out "$SF_REPLAY" >/dev/null
+
+python3 - <<'PY2'
+import json
+from pathlib import Path
+
+p = Path("examples/rlbwt-bounded-evidence-tiny/out/structural_fingerprint_replay_v0.json")
+j = json.loads(p.read_text())
+
+if not j.get("ok"):
+    raise SystemExit(f"structural fingerprint replay failed: {j.get('errors')}")
+
+print("[verify] structural fingerprint replay ok")
+PY2
+
+
 echo "VERIFY OK"
 
 echo ""
