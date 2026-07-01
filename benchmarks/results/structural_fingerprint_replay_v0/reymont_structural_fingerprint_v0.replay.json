@@ -1,0 +1,33 @@
+{
+  "artifact": "/home/glyph/GLYPH_CPP_BACKEND/benchmarks/results/structural_fingerprint_v0/reymont_structural_fingerprint_v0.json",
+  "comparisons": {
+    "anchor_repeat_profiles": {
+      "match": true
+    },
+    "artifact_version": {
+      "match": true
+    },
+    "bwt_profile": {
+      "match": true
+    },
+    "byte_stats": {
+      "match": true
+    },
+    "entropy_profile": {
+      "match": true
+    },
+    "non_claims": {
+      "match": true
+    },
+    "purpose": {
+      "match": true
+    },
+    "source": {
+      "match": true
+    }
+  },
+  "errors": [],
+  "ok": true,
+  "replay_version": "GLYPH_STRUCTURAL_FINGERPRINT_REPLAY_V0",
+  "source": "/tmp/silesia_check/reymont"
+}
