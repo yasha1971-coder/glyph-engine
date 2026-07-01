@@ -49,7 +49,10 @@ trap 'rm -f "$OUT"' EXIT
 "$ROOT/examples/mini/run_mini.sh" > "$OUT"
 
 if grep -q "count:[[:space:]]*2" "$OUT"; then
-  echo "[verify] RLBWT bounded evidence tiny fixture"
+  echo "[verify] building RLBWT locate server"
+cmake --build build --target rlbwt_full_query_locate_server_v1
+
+echo "[verify] RLBWT bounded evidence tiny fixture"
 ./tools/run_rlbwt_bounded_evidence_tiny_fixture_v1.sh
 
 
