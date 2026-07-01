@@ -1,0 +1,994 @@
+{
+  "ok": true,
+  "date": "2026-07-01",
+  "source": "/home/glyph/GLYPH_CPP_BACKEND/benchmarks/results/ANCHOR_REPEAT_DISTANCE_PROFILE_V1.json",
+  "binary_files": 11,
+  "decision": "anchor_distance_predictor_rejected_or_weak",
+  "results": {
+    "all_numeric": {
+      "feature_count": 108,
+      "best_in_sample_rule": {
+        "feature": "bytes",
+        "class": "metadata",
+        "direction": "xz_if_ge",
+        "threshold": 21606400,
+        "correct": 9,
+        "total": 11,
+        "accuracy": 0.8181818181818182,
+        "predictions": {
+          "dickens": "bzip2",
+          "mozilla": "xz",
+          "mr": "bzip2",
+          "ooffice": "bzip2",
+          "osdb": "bzip2",
+          "reymont": "bzip2",
+          "samba": "xz",
+          "sao": "bzip2",
+          "webster": "xz",
+          "x-ray": "bzip2",
+          "xml": "bzip2"
+        }
+      },
+      "loocv": {
+        "correct": 6,
+        "total": 11,
+        "accuracy": 0.5454545454545454,
+        "predictions": [
+          {
+            "file": "dickens",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k8_unique_anchors",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 167190,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mozilla",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mr",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "ooffice",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "osdb",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "reymont",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "samba",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 41458703,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "sao",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "webster",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "x-ray",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k8_unique_anchors",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 167190,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "xml",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "bytes",
+              "class": "metadata",
+              "direction": "xz_if_ge",
+              "threshold": 21606400,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          }
+        ]
+      }
+    },
+    "no_metadata": {
+      "feature_count": 105,
+      "best_in_sample_rule": {
+        "feature": "k12_all_pair_count",
+        "class": "count_or_scale",
+        "direction": "xz_if_ge",
+        "threshold": 222876,
+        "correct": 9,
+        "total": 11,
+        "accuracy": 0.8181818181818182,
+        "predictions": {
+          "dickens": "bzip2",
+          "mozilla": "xz",
+          "mr": "bzip2",
+          "ooffice": "bzip2",
+          "osdb": "bzip2",
+          "reymont": "bzip2",
+          "samba": "xz",
+          "sao": "bzip2",
+          "webster": "xz",
+          "x-ray": "bzip2",
+          "xml": "bzip2"
+        }
+      },
+      "loocv": {
+        "correct": 4,
+        "total": 11,
+        "accuracy": 0.36363636363636365,
+        "predictions": [
+          {
+            "file": "dickens",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k8_unique_anchors",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 167190,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mozilla",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mr",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "ooffice",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "osdb",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.0333503831727059,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "reymont",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_900kb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.08607435412728419,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "samba",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.058333333333333334,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "sao",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "webster",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "x-ray",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k8_unique_anchors",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 167190,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "xml",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          }
+        ]
+      }
+    },
+    "normalized_or_distance_only": {
+      "feature_count": 75,
+      "best_in_sample_rule": {
+        "feature": "k12_useful_pair_p99",
+        "class": "normalized_or_distance",
+        "direction": "xz_if_ge",
+        "threshold": 10800992,
+        "correct": 9,
+        "total": 11,
+        "accuracy": 0.8181818181818182,
+        "predictions": {
+          "dickens": "bzip2",
+          "mozilla": "xz",
+          "mr": "bzip2",
+          "ooffice": "bzip2",
+          "osdb": "bzip2",
+          "reymont": "bzip2",
+          "samba": "xz",
+          "sao": "bzip2",
+          "webster": "xz",
+          "x-ray": "bzip2",
+          "xml": "bzip2"
+        }
+      },
+      "loocv": {
+        "correct": 3,
+        "total": 11,
+        "accuracy": 0.2727272727272727,
+        "predictions": [
+          {
+            "file": "dickens",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.0333503831727059,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mozilla",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mr",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_repeat_key_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_le",
+              "threshold": 0.1042571254233691,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "ooffice",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "osdb",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.0333503831727059,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "reymont",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_900kb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.08607435412728419,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "samba",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.058333333333333334,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "sao",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "webster",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "x-ray",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_repeat_key_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_le",
+              "threshold": 0.1042571254233691,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "xml",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          }
+        ]
+      }
+    },
+    "no_counts_no_metadata": {
+      "feature_count": 75,
+      "best_in_sample_rule": {
+        "feature": "k12_useful_pair_p99",
+        "class": "normalized_or_distance",
+        "direction": "xz_if_ge",
+        "threshold": 10800992,
+        "correct": 9,
+        "total": 11,
+        "accuracy": 0.8181818181818182,
+        "predictions": {
+          "dickens": "bzip2",
+          "mozilla": "xz",
+          "mr": "bzip2",
+          "ooffice": "bzip2",
+          "osdb": "bzip2",
+          "reymont": "bzip2",
+          "samba": "xz",
+          "sao": "bzip2",
+          "webster": "xz",
+          "x-ray": "bzip2",
+          "xml": "bzip2"
+        }
+      },
+      "loocv": {
+        "correct": 3,
+        "total": 11,
+        "accuracy": 0.2727272727272727,
+        "predictions": [
+          {
+            "file": "dickens",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.0333503831727059,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mozilla",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mr",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_repeat_key_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_le",
+              "threshold": 0.1042571254233691,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "ooffice",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "osdb",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.0333503831727059,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "reymont",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_900kb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.08607435412728419,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "samba",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_far_gt_4mb_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 0.058333333333333334,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "sao",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "webster",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "x-ray",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k12_repeat_key_fraction",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_le",
+              "threshold": 0.1042571254233691,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "xml",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_useful_pair_p99",
+              "class": "normalized_or_distance",
+              "direction": "xz_if_ge",
+              "threshold": 10800992,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          }
+        ]
+      }
+    },
+    "count_or_scale_only": {
+      "feature_count": 30,
+      "best_in_sample_rule": {
+        "feature": "k12_all_pair_count",
+        "class": "count_or_scale",
+        "direction": "xz_if_ge",
+        "threshold": 222876,
+        "correct": 9,
+        "total": 11,
+        "accuracy": 0.8181818181818182,
+        "predictions": {
+          "dickens": "bzip2",
+          "mozilla": "xz",
+          "mr": "bzip2",
+          "ooffice": "bzip2",
+          "osdb": "bzip2",
+          "reymont": "bzip2",
+          "samba": "xz",
+          "sao": "bzip2",
+          "webster": "xz",
+          "x-ray": "bzip2",
+          "xml": "bzip2"
+        }
+      },
+      "loocv": {
+        "correct": 6,
+        "total": 11,
+        "accuracy": 0.5454545454545454,
+        "predictions": [
+          {
+            "file": "dickens",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k8_unique_anchors",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 167190,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mozilla",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "mr",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "ooffice",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "osdb",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "reymont",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "samba",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 428156,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "sao",
+            "label": "xz",
+            "predicted": "bzip2",
+            "correct": false,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "webster",
+            "label": "xz",
+            "predicted": "xz",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "x-ray",
+            "label": "bzip2",
+            "predicted": "xz",
+            "correct": false,
+            "rule": {
+              "feature": "k8_unique_anchors",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 167190,
+              "train_accuracy": 0.9,
+              "train_correct": 9,
+              "train_total": 10
+            }
+          },
+          {
+            "file": "xml",
+            "label": "bzip2",
+            "predicted": "bzip2",
+            "correct": true,
+            "rule": {
+              "feature": "k12_all_pair_count",
+              "class": "count_or_scale",
+              "direction": "xz_if_ge",
+              "threshold": 222876,
+              "train_accuracy": 0.8,
+              "train_correct": 8,
+              "train_total": 10
+            }
+          }
+        ]
+      }
+    }
+  }
+}
