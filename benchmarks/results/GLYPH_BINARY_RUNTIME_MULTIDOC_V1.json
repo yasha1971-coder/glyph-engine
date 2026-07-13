@@ -1,0 +1,1142 @@
+{
+  "bounded_global_coordinate_prefix_verified": true,
+  "coordinate_model": "(document_id, document_offset)",
+  "count_path_conformant": true,
+  "cross_document_matches_structurally_impossible": true,
+  "cross_only_checks": [
+    {
+      "coordinates": [],
+      "document_local_count": 0,
+      "fixture": "ascii_bc",
+      "physical_concat_count": 1,
+      "query_hex": "6263",
+      "rejected_by_construction": true,
+      "runtime_count": 0
+    },
+    {
+      "coordinates": [],
+      "document_local_count": 0,
+      "fixture": "nul_ff_nul",
+      "physical_concat_count": 1,
+      "query_hex": "ff00",
+      "rejected_by_construction": true,
+      "runtime_count": 0
+    },
+    {
+      "coordinates": [],
+      "document_local_count": 0,
+      "fixture": "all_256_split_boundary",
+      "physical_concat_count": 1,
+      "query_hex": "7f80",
+      "rejected_by_construction": true,
+      "runtime_count": 0
+    }
+  ],
+  "cross_only_fixture_count": 3,
+  "document_boundary_policy": "NO_PHYSICAL_DOCUMENT_CONCATENATION",
+  "duplicate_documents_preserved": true,
+  "empty_document_ids_preserved": true,
+  "fixture_count": 6,
+  "fixtures": [
+    {
+      "document_count": 2,
+      "document_lengths": [
+        2,
+        2
+      ],
+      "document_sha256": [
+        "fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603",
+        "21e721c35a5823fdb452fa2f9f0a612c74fb952e06927489c6b27a43b817bed4"
+      ],
+      "fixture": "ascii_boundaries",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "6162"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              1,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "6364"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "coordinates": [],
+          "match_count": 0,
+          "query_hex": "6263"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              1,
+              1
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "64"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "coordinates": [],
+          "match_count": 0,
+          "query_hex": "61626364"
+        }
+      ],
+      "query_count": 6
+    },
+    {
+      "document_count": 3,
+      "document_lengths": [
+        2,
+        0,
+        2
+      ],
+      "document_sha256": [
+        "fb8e20fc2e4c3f248c60c39bd652f3c1347298bb977b8b4d5903b85055620603",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "21e721c35a5823fdb452fa2f9f0a612c74fb952e06927489c6b27a43b817bed4"
+      ],
+      "fixture": "empty_document_ids",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "6162"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              2,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "6364"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "coordinates": [],
+          "match_count": 0,
+          "query_hex": "00"
+        }
+      ],
+      "query_count": 4
+    },
+    {
+      "document_count": 2,
+      "document_lengths": [
+        4,
+        4
+      ],
+      "document_sha256": [
+        "0967115f2813a3541eaef77de9d9d5773f1c0c04314b0bbfe4ff3b3b1c55b5d5",
+        "0967115f2813a3541eaef77de9d9d5773f1c0c04314b0bbfe4ff3b3b1c55b5d5"
+      ],
+      "fixture": "duplicate_documents",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "match_count": 2,
+          "query_hex": "73616d65"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "match_count": 2,
+          "query_hex": "616d"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "match_count": 2,
+          "query_hex": "73"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "coordinates": [],
+          "match_count": 0,
+          "query_hex": "6e6f742d70726573656e74"
+        }
+      ],
+      "query_count": 4
+    },
+    {
+      "document_count": 3,
+      "document_lengths": [
+        2,
+        2,
+        2
+      ],
+      "document_sha256": [
+        "06eb7d6a69ee19e5fbdf749018d3d2abfa04bcbd1365db312eb86dc7169389b8",
+        "c00b4d3c929cb5cc316691ed4636f634576f2c9b2954767234c5274e9dde185d",
+        "ea5dbf9596d187e9500f23e9a680109475341cf4e81f7e043f7d97152c10772f"
+      ],
+      "fixture": "binary_documents",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 3
+            },
+            {
+              "bounded": false,
+              "max_offsets": 4,
+              "returned_count": 3
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "match_count": 3,
+          "query_hex": "00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "match_count": 2,
+          "query_hex": "ff"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "00ff"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              2,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "ff00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              1,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "0041"
+        }
+      ],
+      "query_count": 5
+    },
+    {
+      "document_count": 2,
+      "document_lengths": [
+        128,
+        128
+      ],
+      "document_sha256": [
+        "471fb943aa23c511f6f72f8d1652d9c880cfa392ad80503120547703e56a2be5",
+        "60ae23ee1dd9974d2f4036aa646f97b13f1a5a8b6304c31faea05c59cb363c65"
+      ],
+      "fixture": "all_256_split",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              127
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "7f"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              1,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "80"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              1,
+              127
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "ff"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "coordinates": [],
+          "match_count": 0,
+          "query_hex": "7f80"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "coordinates": [],
+          "match_count": 0,
+          "query_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        }
+      ],
+      "query_count": 6
+    },
+    {
+      "document_count": 4,
+      "document_lengths": [
+        4,
+        2,
+        0,
+        6
+      ],
+      "document_sha256": [
+        "61be55a8e2f6b4e172338bddf184d6dbee29c98853e0a0485ecee7f27b9af0b4",
+        "961b6dd3ede3cb8ecbaacbd68de040cd78eb2ed5889130cceb4c49268ea4d506",
+        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "ed02457b5c41d964dbd2f2a609d63fe1bb7528dbe55e1abf5b52c249cd735797"
+      ],
+      "fixture": "repeated_matches",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 11,
+              "returned_count": 11
+            },
+            {
+              "bounded": false,
+              "max_offsets": 12,
+              "returned_count": 12
+            },
+            {
+              "bounded": false,
+              "max_offsets": 13,
+              "returned_count": 12
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              3
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ],
+            [
+              3,
+              5
+            ]
+          ],
+          "match_count": 12,
+          "query_hex": "61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 8,
+              "returned_count": 8
+            },
+            {
+              "bounded": false,
+              "max_offsets": 9,
+              "returned_count": 9
+            },
+            {
+              "bounded": false,
+              "max_offsets": 10,
+              "returned_count": 9
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "match_count": 9,
+          "query_hex": "6161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 5,
+              "returned_count": 5
+            },
+            {
+              "bounded": false,
+              "max_offsets": 6,
+              "returned_count": 6
+            },
+            {
+              "bounded": false,
+              "max_offsets": 7,
+              "returned_count": 6
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              3,
+              3
+            ]
+          ],
+          "match_count": 6,
+          "query_hex": "616161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 3,
+              "returned_count": 3
+            },
+            {
+              "bounded": false,
+              "max_offsets": 4,
+              "returned_count": 4
+            },
+            {
+              "bounded": false,
+              "max_offsets": 5,
+              "returned_count": 4
+            }
+          ],
+          "coordinates": [
+            [
+              0,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              3,
+              2
+            ]
+          ],
+          "match_count": 4,
+          "query_hex": "61616161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "coordinates": [
+            [
+              3,
+              0
+            ]
+          ],
+          "match_count": 1,
+          "query_hex": "616161616161"
+        }
+      ],
+      "query_count": 5
+    }
+  ],
+  "format": "GLYPH_BINARY_RUNTIME_MULTIDOC_V1",
+  "index_topology": "one_independent_index_per_document",
+  "locate_path_conformant": true,
+  "logical_sentinel": 256,
+  "multidoc_path_conformant": true,
+  "mutation_count": 3,
+  "mutations": [
+    {
+      "mutation": "document_order_changes_coordinates",
+      "original_coordinates": [
+        [
+          1,
+          0
+        ]
+      ],
+      "rejected": true,
+      "reordered_coordinates": [
+        [
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "exit_code": 2,
+      "mutation": "wrong_corpus_for_index",
+      "rejected": true
+    },
+    {
+      "mutation": "physical_cross_document_matches",
+      "rejected": true
+    }
+  ],
+  "non_claims": [
+    "Multi-document search is not yet a committed evidence artifact.",
+    "Runtime artifact replay is not yet established.",
+    "Full runtime conformance is not yet established."
+  ],
+  "ok": true,
+  "query_count": 30,
+  "remaining_runtime_work": [
+    "committed multi-document corpus identity",
+    "runtime evidence artifact",
+    "deterministic runtime replay",
+    "self-contained runtime bundle",
+    "proof-graph integration"
+  ],
+  "runtime_conformant": false,
+  "runtime_profile": "GLYPH_BINARY_RUNTIME_V1",
+  "source_byte_domain": "0x00..0xFF"
+}
