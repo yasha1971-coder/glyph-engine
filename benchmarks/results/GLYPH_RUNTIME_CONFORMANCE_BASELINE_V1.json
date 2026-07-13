@@ -1,0 +1,83 @@
+{
+  "audit_ok": true,
+  "binaries": {
+    "build_bwt_sentinel_v1": "/home/glyph/GLYPH_CPP_BACKEND/build/build_bwt_sentinel_v1",
+    "build_fm": "/home/glyph/GLYPH_CPP_BACKEND/build/build_fm",
+    "build_sa_sentinel_v1": "/home/glyph/GLYPH_CPP_BACKEND/build/build_sa_sentinel_v1",
+    "query_fm_v1": "/home/glyph/GLYPH_CPP_BACKEND/build/query_fm_v1"
+  },
+  "binary_safe_arbitrary_bytes": false,
+  "format": "GLYPH_RUNTIME_CONFORMANCE_BASELINE_V1",
+  "gaps": [
+    {
+      "id": "RUNTIME-GAP-01",
+      "obligation": "R1",
+      "reason": "source corpus containing 0x00 is rejected",
+      "status": "OPEN"
+    },
+    {
+      "id": "RUNTIME-GAP-02",
+      "obligation": "R2",
+      "reason": "physical byte 0x00 is used as sentinel",
+      "status": "OPEN"
+    },
+    {
+      "id": "RUNTIME-GAP-03",
+      "obligation": "R2",
+      "reason": "query 00 can address the physical sentinel instead of a source byte",
+      "status": "OPEN"
+    },
+    {
+      "id": "RUNTIME-GAP-04",
+      "obligation": "R4",
+      "reason": "BWT symbol storage is uint8",
+      "status": "OPEN"
+    },
+    {
+      "id": "RUNTIME-GAP-05",
+      "obligation": "R5",
+      "reason": "FM alphabet contains 256 entries, not 257",
+      "status": "OPEN"
+    }
+  ],
+  "next_required_runtime": {
+    "minimum_storage_width_bits": 9,
+    "name": "GLYPH_BINARY_RUNTIME_V1",
+    "source_symbols": "0..255",
+    "virtual_sentinel": 256
+  },
+  "non_claims": [
+    "This baseline is not runtime conformance.",
+    "P1-P12 currently verify reference semantics.",
+    "The current C++ runtime remains sentinel-safe v0.x."
+  ],
+  "ok": true,
+  "open_gap_count": 5,
+  "proof_graph_target": "GLYPH_PROOF_GRAPH_V1",
+  "runtime_conformant": false,
+  "runtime_profile": "GLYPH_SENTINEL_SAFE_V0X",
+  "source_checks": {
+    "bwt_stored_as_uint8": true,
+    "fm_uses_256_symbols": true,
+    "query_pattern_uses_uint8": true,
+    "sa_appends_physical_zero": true,
+    "sa_rejects_nul": true
+  },
+  "tests": {
+    "ascii_ana_count": 2,
+    "byte_ff_count": 2,
+    "embedded_nul_rejected": true,
+    "query_00_result": {
+      "count": 1,
+      "fm_version": "FMBINv2",
+      "interval": [
+        0,
+        1
+      ],
+      "pattern_hex": "00",
+      "verified": true
+    },
+    "sentinel_exposed_as_byte_query": true
+  },
+  "virtual_sentinel_256": false
+}
