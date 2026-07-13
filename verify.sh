@@ -87,6 +87,9 @@ PY2
 echo "[verify] GLYPH proof graph P1-P12"
 ./tools/run_glyph_proof_graph_v1.sh
 
+echo "[verify] GLYPH runtime conformance graph"
+./tools/run_glyph_runtime_conformance_graph_v1.sh
+
 echo "VERIFY OK"
 
 echo ""
