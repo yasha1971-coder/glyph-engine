@@ -292,3 +292,66 @@ add_executable(rlbwt_full_query_locate_limit_v1
 )
 target_compile_options(rlbwt_full_query_locate_limit_v1 PRIVATE -O3)
 
+# GLYPH_BINARY_RUNTIME_V1
+
+add_executable(build_sa_binary_v1
+    src/build_sa_binary_v1.cpp
+    third_party/libsais/libsais/src/libsais.c
+)
+
+target_include_directories(build_sa_binary_v1 PRIVATE
+    src
+    third_party/libsais/libsais/include
+)
+
+target_compile_features(build_sa_binary_v1 PRIVATE cxx_std_17)
+target_compile_options(build_sa_binary_v1 PRIVATE
+    -O3
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
+target_link_libraries(build_sa_binary_v1 PRIVATE
+    Threads::Threads
+)
+
+add_executable(build_bwt_binary_v1
+    src/build_bwt_binary_v1.cpp
+)
+
+target_include_directories(build_bwt_binary_v1 PRIVATE src)
+target_compile_features(build_bwt_binary_v1 PRIVATE cxx_std_17)
+target_compile_options(build_bwt_binary_v1 PRIVATE
+    -O3
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
+add_executable(build_fm_binary_v1
+    src/build_fm_binary_v1.cpp
+)
+
+target_include_directories(build_fm_binary_v1 PRIVATE src)
+target_compile_features(build_fm_binary_v1 PRIVATE cxx_std_17)
+target_compile_options(build_fm_binary_v1 PRIVATE
+    -O3
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
+add_executable(query_fm_binary_v1
+    src/query_fm_binary_v1.cpp
+)
+
+target_include_directories(query_fm_binary_v1 PRIVATE src)
+target_compile_features(query_fm_binary_v1 PRIVATE cxx_std_17)
+target_compile_options(query_fm_binary_v1 PRIVATE
+    -O3
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+

@@ -1,0 +1,2910 @@
+{
+  "bwt_storage": {
+    "sentinel": 256,
+    "source_bytes": "0..255",
+    "symbol_width_bits": 16
+  },
+  "closed_baseline_gaps": [
+    "RUNTIME-GAP-01",
+    "RUNTIME-GAP-02",
+    "RUNTIME-GAP-03",
+    "RUNTIME-GAP-04",
+    "RUNTIME-GAP-05"
+  ],
+  "count_path_conformant": true,
+  "fixture_count": 5,
+  "fixtures": [
+    {
+      "bwt_rows": 7,
+      "bwt_zero_symbol_count": 0,
+      "corpus_bytes": 6,
+      "corpus_sha256": "b493d48364afe44d11c0165cf470a4164d1e2609911ef998be868d46ade3de4e",
+      "fixture": "ascii",
+      "queries": [
+        {
+          "actual_count": 2,
+          "expected_count": 2,
+          "interval": [
+            2,
+            4
+          ],
+          "query_hex": "616e61",
+          "query_length_bytes": 3
+        },
+        {
+          "actual_count": 3,
+          "expected_count": 3,
+          "interval": [
+            1,
+            4
+          ],
+          "query_hex": "61",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            4,
+            5
+          ],
+          "query_hex": "62616e616e61",
+          "query_length_bytes": 6
+        },
+        {
+          "actual_count": 0,
+          "expected_count": 0,
+          "interval": [
+            7,
+            7
+          ],
+          "query_hex": "6e6f742d70726573656e74",
+          "query_length_bytes": 11
+        }
+      ],
+      "query_count": 4,
+      "sa_rows": 7,
+      "sentinel_count": 1,
+      "source_zero_count": 0
+    },
+    {
+      "bwt_rows": 6,
+      "bwt_zero_symbol_count": 2,
+      "corpus_bytes": 5,
+      "corpus_sha256": "86412c1073b4690b5be04da1469a8d83f82e7d8fcd4aa057b872ba64cdb1a206",
+      "fixture": "embedded_nul",
+      "queries": [
+        {
+          "actual_count": 2,
+          "expected_count": 2,
+          "interval": [
+            1,
+            3
+          ],
+          "query_hex": "00",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            4,
+            5
+          ],
+          "query_hex": "410042",
+          "query_length_bytes": 3
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            1,
+            2
+          ],
+          "query_hex": "0041",
+          "query_length_bytes": 2
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            5,
+            6
+          ],
+          "query_hex": "4200",
+          "query_length_bytes": 2
+        },
+        {
+          "actual_count": 0,
+          "expected_count": 0,
+          "interval": [
+            1,
+            1
+          ],
+          "query_hex": "0000",
+          "query_length_bytes": 2
+        }
+      ],
+      "query_count": 5,
+      "sa_rows": 6,
+      "sentinel_count": 1,
+      "source_zero_count": 2
+    },
+    {
+      "bwt_rows": 6,
+      "bwt_zero_symbol_count": 4,
+      "corpus_bytes": 5,
+      "corpus_sha256": "231963ba01dc93f158790d3be3bd7159c3ed7a84be935f24bf1911131ead3a34",
+      "fixture": "repeated_nul",
+      "queries": [
+        {
+          "actual_count": 4,
+          "expected_count": 4,
+          "interval": [
+            1,
+            5
+          ],
+          "query_hex": "00",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 2,
+          "expected_count": 2,
+          "interval": [
+            2,
+            4
+          ],
+          "query_hex": "0000",
+          "query_length_bytes": 2
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            2,
+            3
+          ],
+          "query_hex": "000000",
+          "query_length_bytes": 3
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            5,
+            6
+          ],
+          "query_hex": "ff00",
+          "query_length_bytes": 2
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            4,
+            5
+          ],
+          "query_hex": "00ff",
+          "query_length_bytes": 2
+        }
+      ],
+      "query_count": 5,
+      "sa_rows": 6,
+      "sentinel_count": 1,
+      "source_zero_count": 4
+    },
+    {
+      "bwt_rows": 257,
+      "bwt_zero_symbol_count": 1,
+      "corpus_bytes": 256,
+      "corpus_sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+      "fixture": "all_256_bytes",
+      "queries": [
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            1,
+            2
+          ],
+          "query_hex": "00",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            2,
+            3
+          ],
+          "query_hex": "01",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            3,
+            4
+          ],
+          "query_hex": "02",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            4,
+            5
+          ],
+          "query_hex": "03",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            5,
+            6
+          ],
+          "query_hex": "04",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            6,
+            7
+          ],
+          "query_hex": "05",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            7,
+            8
+          ],
+          "query_hex": "06",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            8,
+            9
+          ],
+          "query_hex": "07",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            9,
+            10
+          ],
+          "query_hex": "08",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            10,
+            11
+          ],
+          "query_hex": "09",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            11,
+            12
+          ],
+          "query_hex": "0a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            12,
+            13
+          ],
+          "query_hex": "0b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            13,
+            14
+          ],
+          "query_hex": "0c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            14,
+            15
+          ],
+          "query_hex": "0d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            15,
+            16
+          ],
+          "query_hex": "0e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            16,
+            17
+          ],
+          "query_hex": "0f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            17,
+            18
+          ],
+          "query_hex": "10",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            18,
+            19
+          ],
+          "query_hex": "11",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            19,
+            20
+          ],
+          "query_hex": "12",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            20,
+            21
+          ],
+          "query_hex": "13",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            21,
+            22
+          ],
+          "query_hex": "14",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            22,
+            23
+          ],
+          "query_hex": "15",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            23,
+            24
+          ],
+          "query_hex": "16",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            24,
+            25
+          ],
+          "query_hex": "17",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            25,
+            26
+          ],
+          "query_hex": "18",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            26,
+            27
+          ],
+          "query_hex": "19",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            27,
+            28
+          ],
+          "query_hex": "1a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            28,
+            29
+          ],
+          "query_hex": "1b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            29,
+            30
+          ],
+          "query_hex": "1c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            30,
+            31
+          ],
+          "query_hex": "1d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            31,
+            32
+          ],
+          "query_hex": "1e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            32,
+            33
+          ],
+          "query_hex": "1f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            33,
+            34
+          ],
+          "query_hex": "20",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            34,
+            35
+          ],
+          "query_hex": "21",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            35,
+            36
+          ],
+          "query_hex": "22",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            36,
+            37
+          ],
+          "query_hex": "23",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            37,
+            38
+          ],
+          "query_hex": "24",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            38,
+            39
+          ],
+          "query_hex": "25",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            39,
+            40
+          ],
+          "query_hex": "26",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            40,
+            41
+          ],
+          "query_hex": "27",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            41,
+            42
+          ],
+          "query_hex": "28",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            42,
+            43
+          ],
+          "query_hex": "29",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            43,
+            44
+          ],
+          "query_hex": "2a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            44,
+            45
+          ],
+          "query_hex": "2b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            45,
+            46
+          ],
+          "query_hex": "2c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            46,
+            47
+          ],
+          "query_hex": "2d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            47,
+            48
+          ],
+          "query_hex": "2e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            48,
+            49
+          ],
+          "query_hex": "2f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            49,
+            50
+          ],
+          "query_hex": "30",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            50,
+            51
+          ],
+          "query_hex": "31",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            51,
+            52
+          ],
+          "query_hex": "32",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            52,
+            53
+          ],
+          "query_hex": "33",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            53,
+            54
+          ],
+          "query_hex": "34",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            54,
+            55
+          ],
+          "query_hex": "35",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            55,
+            56
+          ],
+          "query_hex": "36",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            56,
+            57
+          ],
+          "query_hex": "37",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            57,
+            58
+          ],
+          "query_hex": "38",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            58,
+            59
+          ],
+          "query_hex": "39",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            59,
+            60
+          ],
+          "query_hex": "3a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            60,
+            61
+          ],
+          "query_hex": "3b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            61,
+            62
+          ],
+          "query_hex": "3c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            62,
+            63
+          ],
+          "query_hex": "3d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            63,
+            64
+          ],
+          "query_hex": "3e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            64,
+            65
+          ],
+          "query_hex": "3f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            65,
+            66
+          ],
+          "query_hex": "40",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            66,
+            67
+          ],
+          "query_hex": "41",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            67,
+            68
+          ],
+          "query_hex": "42",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            68,
+            69
+          ],
+          "query_hex": "43",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            69,
+            70
+          ],
+          "query_hex": "44",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            70,
+            71
+          ],
+          "query_hex": "45",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            71,
+            72
+          ],
+          "query_hex": "46",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            72,
+            73
+          ],
+          "query_hex": "47",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            73,
+            74
+          ],
+          "query_hex": "48",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            74,
+            75
+          ],
+          "query_hex": "49",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            75,
+            76
+          ],
+          "query_hex": "4a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            76,
+            77
+          ],
+          "query_hex": "4b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            77,
+            78
+          ],
+          "query_hex": "4c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            78,
+            79
+          ],
+          "query_hex": "4d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            79,
+            80
+          ],
+          "query_hex": "4e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            80,
+            81
+          ],
+          "query_hex": "4f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            81,
+            82
+          ],
+          "query_hex": "50",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            82,
+            83
+          ],
+          "query_hex": "51",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            83,
+            84
+          ],
+          "query_hex": "52",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            84,
+            85
+          ],
+          "query_hex": "53",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            85,
+            86
+          ],
+          "query_hex": "54",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            86,
+            87
+          ],
+          "query_hex": "55",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            87,
+            88
+          ],
+          "query_hex": "56",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            88,
+            89
+          ],
+          "query_hex": "57",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            89,
+            90
+          ],
+          "query_hex": "58",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            90,
+            91
+          ],
+          "query_hex": "59",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            91,
+            92
+          ],
+          "query_hex": "5a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            92,
+            93
+          ],
+          "query_hex": "5b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            93,
+            94
+          ],
+          "query_hex": "5c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            94,
+            95
+          ],
+          "query_hex": "5d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            95,
+            96
+          ],
+          "query_hex": "5e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            96,
+            97
+          ],
+          "query_hex": "5f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            97,
+            98
+          ],
+          "query_hex": "60",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            98,
+            99
+          ],
+          "query_hex": "61",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            99,
+            100
+          ],
+          "query_hex": "62",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            100,
+            101
+          ],
+          "query_hex": "63",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            101,
+            102
+          ],
+          "query_hex": "64",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            102,
+            103
+          ],
+          "query_hex": "65",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            103,
+            104
+          ],
+          "query_hex": "66",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            104,
+            105
+          ],
+          "query_hex": "67",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            105,
+            106
+          ],
+          "query_hex": "68",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            106,
+            107
+          ],
+          "query_hex": "69",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            107,
+            108
+          ],
+          "query_hex": "6a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            108,
+            109
+          ],
+          "query_hex": "6b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            109,
+            110
+          ],
+          "query_hex": "6c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            110,
+            111
+          ],
+          "query_hex": "6d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            111,
+            112
+          ],
+          "query_hex": "6e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            112,
+            113
+          ],
+          "query_hex": "6f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            113,
+            114
+          ],
+          "query_hex": "70",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            114,
+            115
+          ],
+          "query_hex": "71",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            115,
+            116
+          ],
+          "query_hex": "72",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            116,
+            117
+          ],
+          "query_hex": "73",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            117,
+            118
+          ],
+          "query_hex": "74",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            118,
+            119
+          ],
+          "query_hex": "75",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            119,
+            120
+          ],
+          "query_hex": "76",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            120,
+            121
+          ],
+          "query_hex": "77",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            121,
+            122
+          ],
+          "query_hex": "78",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            122,
+            123
+          ],
+          "query_hex": "79",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            123,
+            124
+          ],
+          "query_hex": "7a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            124,
+            125
+          ],
+          "query_hex": "7b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            125,
+            126
+          ],
+          "query_hex": "7c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            126,
+            127
+          ],
+          "query_hex": "7d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            127,
+            128
+          ],
+          "query_hex": "7e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            128,
+            129
+          ],
+          "query_hex": "7f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            129,
+            130
+          ],
+          "query_hex": "80",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            130,
+            131
+          ],
+          "query_hex": "81",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            131,
+            132
+          ],
+          "query_hex": "82",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            132,
+            133
+          ],
+          "query_hex": "83",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            133,
+            134
+          ],
+          "query_hex": "84",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            134,
+            135
+          ],
+          "query_hex": "85",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            135,
+            136
+          ],
+          "query_hex": "86",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            136,
+            137
+          ],
+          "query_hex": "87",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            137,
+            138
+          ],
+          "query_hex": "88",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            138,
+            139
+          ],
+          "query_hex": "89",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            139,
+            140
+          ],
+          "query_hex": "8a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            140,
+            141
+          ],
+          "query_hex": "8b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            141,
+            142
+          ],
+          "query_hex": "8c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            142,
+            143
+          ],
+          "query_hex": "8d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            143,
+            144
+          ],
+          "query_hex": "8e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            144,
+            145
+          ],
+          "query_hex": "8f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            145,
+            146
+          ],
+          "query_hex": "90",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            146,
+            147
+          ],
+          "query_hex": "91",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            147,
+            148
+          ],
+          "query_hex": "92",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            148,
+            149
+          ],
+          "query_hex": "93",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            149,
+            150
+          ],
+          "query_hex": "94",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            150,
+            151
+          ],
+          "query_hex": "95",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            151,
+            152
+          ],
+          "query_hex": "96",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            152,
+            153
+          ],
+          "query_hex": "97",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            153,
+            154
+          ],
+          "query_hex": "98",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            154,
+            155
+          ],
+          "query_hex": "99",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            155,
+            156
+          ],
+          "query_hex": "9a",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            156,
+            157
+          ],
+          "query_hex": "9b",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            157,
+            158
+          ],
+          "query_hex": "9c",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            158,
+            159
+          ],
+          "query_hex": "9d",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            159,
+            160
+          ],
+          "query_hex": "9e",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            160,
+            161
+          ],
+          "query_hex": "9f",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            161,
+            162
+          ],
+          "query_hex": "a0",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            162,
+            163
+          ],
+          "query_hex": "a1",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            163,
+            164
+          ],
+          "query_hex": "a2",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            164,
+            165
+          ],
+          "query_hex": "a3",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            165,
+            166
+          ],
+          "query_hex": "a4",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            166,
+            167
+          ],
+          "query_hex": "a5",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            167,
+            168
+          ],
+          "query_hex": "a6",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            168,
+            169
+          ],
+          "query_hex": "a7",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            169,
+            170
+          ],
+          "query_hex": "a8",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            170,
+            171
+          ],
+          "query_hex": "a9",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            171,
+            172
+          ],
+          "query_hex": "aa",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            172,
+            173
+          ],
+          "query_hex": "ab",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            173,
+            174
+          ],
+          "query_hex": "ac",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            174,
+            175
+          ],
+          "query_hex": "ad",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            175,
+            176
+          ],
+          "query_hex": "ae",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            176,
+            177
+          ],
+          "query_hex": "af",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            177,
+            178
+          ],
+          "query_hex": "b0",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            178,
+            179
+          ],
+          "query_hex": "b1",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            179,
+            180
+          ],
+          "query_hex": "b2",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            180,
+            181
+          ],
+          "query_hex": "b3",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            181,
+            182
+          ],
+          "query_hex": "b4",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            182,
+            183
+          ],
+          "query_hex": "b5",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            183,
+            184
+          ],
+          "query_hex": "b6",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            184,
+            185
+          ],
+          "query_hex": "b7",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            185,
+            186
+          ],
+          "query_hex": "b8",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            186,
+            187
+          ],
+          "query_hex": "b9",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            187,
+            188
+          ],
+          "query_hex": "ba",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            188,
+            189
+          ],
+          "query_hex": "bb",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            189,
+            190
+          ],
+          "query_hex": "bc",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            190,
+            191
+          ],
+          "query_hex": "bd",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            191,
+            192
+          ],
+          "query_hex": "be",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            192,
+            193
+          ],
+          "query_hex": "bf",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            193,
+            194
+          ],
+          "query_hex": "c0",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            194,
+            195
+          ],
+          "query_hex": "c1",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            195,
+            196
+          ],
+          "query_hex": "c2",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            196,
+            197
+          ],
+          "query_hex": "c3",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            197,
+            198
+          ],
+          "query_hex": "c4",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            198,
+            199
+          ],
+          "query_hex": "c5",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            199,
+            200
+          ],
+          "query_hex": "c6",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            200,
+            201
+          ],
+          "query_hex": "c7",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            201,
+            202
+          ],
+          "query_hex": "c8",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            202,
+            203
+          ],
+          "query_hex": "c9",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            203,
+            204
+          ],
+          "query_hex": "ca",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            204,
+            205
+          ],
+          "query_hex": "cb",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            205,
+            206
+          ],
+          "query_hex": "cc",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            206,
+            207
+          ],
+          "query_hex": "cd",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            207,
+            208
+          ],
+          "query_hex": "ce",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            208,
+            209
+          ],
+          "query_hex": "cf",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            209,
+            210
+          ],
+          "query_hex": "d0",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            210,
+            211
+          ],
+          "query_hex": "d1",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            211,
+            212
+          ],
+          "query_hex": "d2",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            212,
+            213
+          ],
+          "query_hex": "d3",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            213,
+            214
+          ],
+          "query_hex": "d4",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            214,
+            215
+          ],
+          "query_hex": "d5",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            215,
+            216
+          ],
+          "query_hex": "d6",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            216,
+            217
+          ],
+          "query_hex": "d7",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            217,
+            218
+          ],
+          "query_hex": "d8",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            218,
+            219
+          ],
+          "query_hex": "d9",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            219,
+            220
+          ],
+          "query_hex": "da",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            220,
+            221
+          ],
+          "query_hex": "db",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            221,
+            222
+          ],
+          "query_hex": "dc",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            222,
+            223
+          ],
+          "query_hex": "dd",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            223,
+            224
+          ],
+          "query_hex": "de",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            224,
+            225
+          ],
+          "query_hex": "df",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            225,
+            226
+          ],
+          "query_hex": "e0",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            226,
+            227
+          ],
+          "query_hex": "e1",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            227,
+            228
+          ],
+          "query_hex": "e2",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            228,
+            229
+          ],
+          "query_hex": "e3",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            229,
+            230
+          ],
+          "query_hex": "e4",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            230,
+            231
+          ],
+          "query_hex": "e5",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            231,
+            232
+          ],
+          "query_hex": "e6",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            232,
+            233
+          ],
+          "query_hex": "e7",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            233,
+            234
+          ],
+          "query_hex": "e8",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            234,
+            235
+          ],
+          "query_hex": "e9",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            235,
+            236
+          ],
+          "query_hex": "ea",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            236,
+            237
+          ],
+          "query_hex": "eb",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            237,
+            238
+          ],
+          "query_hex": "ec",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            238,
+            239
+          ],
+          "query_hex": "ed",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            239,
+            240
+          ],
+          "query_hex": "ee",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            240,
+            241
+          ],
+          "query_hex": "ef",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            241,
+            242
+          ],
+          "query_hex": "f0",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            242,
+            243
+          ],
+          "query_hex": "f1",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            243,
+            244
+          ],
+          "query_hex": "f2",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            244,
+            245
+          ],
+          "query_hex": "f3",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            245,
+            246
+          ],
+          "query_hex": "f4",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            246,
+            247
+          ],
+          "query_hex": "f5",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            247,
+            248
+          ],
+          "query_hex": "f6",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            248,
+            249
+          ],
+          "query_hex": "f7",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            249,
+            250
+          ],
+          "query_hex": "f8",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            250,
+            251
+          ],
+          "query_hex": "f9",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            251,
+            252
+          ],
+          "query_hex": "fa",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            252,
+            253
+          ],
+          "query_hex": "fb",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            253,
+            254
+          ],
+          "query_hex": "fc",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            254,
+            255
+          ],
+          "query_hex": "fd",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            255,
+            256
+          ],
+          "query_hex": "fe",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            256,
+            257
+          ],
+          "query_hex": "ff",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            1,
+            2
+          ],
+          "query_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+          "query_length_bytes": 256
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            1,
+            2
+          ],
+          "query_hex": "0001",
+          "query_length_bytes": 2
+        },
+        {
+          "actual_count": 1,
+          "expected_count": 1,
+          "interval": [
+            255,
+            256
+          ],
+          "query_hex": "feff",
+          "query_length_bytes": 2
+        },
+        {
+          "actual_count": 0,
+          "expected_count": 0,
+          "interval": [
+            257,
+            257
+          ],
+          "query_hex": "ff00",
+          "query_length_bytes": 2
+        }
+      ],
+      "query_count": 260,
+      "sa_rows": 257,
+      "sentinel_count": 1,
+      "source_zero_count": 1
+    },
+    {
+      "bwt_rows": 1,
+      "bwt_zero_symbol_count": 0,
+      "corpus_bytes": 0,
+      "corpus_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture": "empty_corpus",
+      "queries": [
+        {
+          "actual_count": 0,
+          "expected_count": 0,
+          "interval": [
+            1,
+            1
+          ],
+          "query_hex": "00",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 0,
+          "expected_count": 0,
+          "interval": [
+            1,
+            1
+          ],
+          "query_hex": "ff",
+          "query_length_bytes": 1
+        },
+        {
+          "actual_count": 0,
+          "expected_count": 0,
+          "interval": [
+            1,
+            1
+          ],
+          "query_hex": "41",
+          "query_length_bytes": 1
+        }
+      ],
+      "query_count": 3,
+      "sa_rows": 1,
+      "sentinel_count": 1,
+      "source_zero_count": 0
+    }
+  ],
+  "format": "GLYPH_BINARY_RUNTIME_COUNT_V1",
+  "logical_sentinel": 256,
+  "malformed_queries": [
+    {
+      "exit_code": 2,
+      "query_text": "",
+      "rejected": true
+    },
+    {
+      "exit_code": 2,
+      "query_text": "0",
+      "rejected": true
+    },
+    {
+      "exit_code": 2,
+      "query_text": "00FF",
+      "rejected": true
+    },
+    {
+      "exit_code": 2,
+      "query_text": "0x00",
+      "rejected": true
+    },
+    {
+      "exit_code": 2,
+      "query_text": "00 ff",
+      "rejected": true
+    },
+    {
+      "exit_code": 2,
+      "query_text": "gg",
+      "rejected": true
+    }
+  ],
+  "malformed_query_count": 6,
+  "non_claims": [
+    "Count-path conformance is not full runtime conformance.",
+    "The existing sentinel-safe v0.x format remains unchanged.",
+    "Locate and bundle conformance are not yet established."
+  ],
+  "ok": true,
+  "query_count": 277,
+  "remaining_runtime_work": [
+    "C++ locate path",
+    "multi-document boundary path",
+    "runtime artifact replay",
+    "self-contained binary-runtime bundle",
+    "proof-graph integration"
+  ],
+  "runtime_conformant": false,
+  "runtime_profile": "GLYPH_BINARY_RUNTIME_V1",
+  "sa_internal_mapping": {
+    "alphabet_size": 257,
+    "sentinel": 0,
+    "source_byte_formula": "byte + 1"
+  },
+  "source_byte_domain": "0x00..0xFF"
+}
