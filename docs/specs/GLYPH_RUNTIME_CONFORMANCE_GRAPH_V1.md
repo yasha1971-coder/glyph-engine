@@ -1,7 +1,7 @@
 # GLYPH_RUNTIME_CONFORMANCE_GRAPH_V1
 
-Status: executable conformance closure  
-Version: 1  
+Status: executable conformance closure
+Version: 1
 Date: 2026-07-13
 
 ## Purpose
