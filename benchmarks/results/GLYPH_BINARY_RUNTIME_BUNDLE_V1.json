@@ -1,0 +1,102 @@
+{
+  "bundle_root_sha256": "732a72ac0615ae94df6189db512bfa047890a8972cc4317fd5d76cf0dc58d2f8",
+  "bundle_root_verified": true,
+  "bundle_version": "GLYPH_BINARY_RUNTIME_BUNDLE_V1",
+  "copied_bundle_replay_verified": true,
+  "count_path_conformant": true,
+  "deterministic_bundle_verified": true,
+  "document_count": 4,
+  "exact_manifest_coverage_verified": true,
+  "external_data_dependencies": [],
+  "file_count": 11,
+  "format": "GLYPH_BINARY_RUNTIME_BUNDLE_GATE_V1",
+  "locate_path_conformant": true,
+  "multidoc_path_conformant": true,
+  "mutation_count": 10,
+  "mutations": [
+    {
+      "exit_code": 1,
+      "mutation": "missing_evidence",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"manifest coverage mismatch; missing=['evidence.json']; extra=[]\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "altered_document",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"file SHA256 mismatch: documents/doc_00000000.bin\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "altered_runtime_binary",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"file SHA256 mismatch: build/build_fm_binary_v1\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "missing_evidence_module",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"manifest coverage mismatch; missing=['tools/glyph_binary_runtime_evidence_v1.py']; extra=[]\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "undeclared_extra_file",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"manifest coverage mismatch; missing=[]; extra=['extra.bin']\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "wrong_bundle_root",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"bundle root SHA256 mismatch\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "parent_traversal_path",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"noncanonical or traversal bundle path\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "wrong_file_count",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"manifest file_count mismatch\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "symlink_document",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"symlink payload forbidden: documents/doc_00000000.bin\",\n  \"ok\": false\n}"
+    },
+    {
+      "exit_code": 1,
+      "mutation": "non_executable_runtime_binary",
+      "rejected": true,
+      "stdout": "{\n  \"bundle_version\": \"GLYPH_BINARY_RUNTIME_BUNDLE_V1\",\n  \"error\": \"executable payload is not executable: build/build_sa_binary_v1\",\n  \"ok\": false\n}"
+    }
+  ],
+  "network_dependency_required": false,
+  "non_claims": [
+    "The bundle assumes a compatible Linux userspace.",
+    "The bundle is not a hermetic VM or container image.",
+    "Full runtime conformance awaits proof-graph integration."
+  ],
+  "ok": true,
+  "original_source_paths_removed_before_replay": true,
+  "payload_hashes_verified": true,
+  "remaining_runtime_work": [
+    "integrate runtime gates into executable proof graph",
+    "make final VERIFY OK depend on runtime conformance",
+    "full runtime conformance closure"
+  ],
+  "replay_code_bundled": true,
+  "replay_outside_repository_verified": true,
+  "repository_dependency_required": false,
+  "runtime_binaries_bundled": true,
+  "runtime_bundle_conformant": true,
+  "runtime_conformant": false,
+  "runtime_evidence_conformant": true,
+  "runtime_profile": "GLYPH_BINARY_RUNTIME_V1",
+  "self_contained": true,
+  "source_documents_bundled": true
+}
