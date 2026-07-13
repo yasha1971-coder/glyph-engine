@@ -1,0 +1,2929 @@
+{
+  "all_offsets_byte_checked": true,
+  "bounded_locate_verified": true,
+  "coordinate_model": "(document_id, document_offset)",
+  "count_path_conformant": true,
+  "document_count_supported": 1,
+  "fixture_count": 7,
+  "fixtures": [
+    {
+      "corpus_bytes": 6,
+      "corpus_sha256": "b493d48364afe44d11c0165cf470a4164d1e2609911ef998be868d46ade3de4e",
+      "fixture": "ascii",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "match_count": 2,
+          "offsets": [
+            1,
+            3
+          ],
+          "query_hex": "616e61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 3
+            },
+            {
+              "bounded": false,
+              "max_offsets": 4,
+              "returned_count": 3
+            }
+          ],
+          "match_count": 3,
+          "offsets": [
+            1,
+            3,
+            5
+          ],
+          "query_hex": "61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "62616e616e61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "6e6f742d70726573656e74"
+        }
+      ],
+      "query_count": 4
+    },
+    {
+      "corpus_bytes": 5,
+      "corpus_sha256": "86412c1073b4690b5be04da1469a8d83f82e7d8fcd4aa057b872ba64cdb1a206",
+      "fixture": "embedded_nul",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "match_count": 2,
+          "offsets": [
+            1,
+            3
+          ],
+          "query_hex": "00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "410042"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            3
+          ],
+          "query_hex": "0041"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            2
+          ],
+          "query_hex": "4200"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "0000"
+        }
+      ],
+      "query_count": 5
+    },
+    {
+      "corpus_bytes": 5,
+      "corpus_sha256": "231963ba01dc93f158790d3be3bd7159c3ed7a84be935f24bf1911131ead3a34",
+      "fixture": "repeated_nul",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 3,
+              "returned_count": 3
+            },
+            {
+              "bounded": false,
+              "max_offsets": 4,
+              "returned_count": 4
+            },
+            {
+              "bounded": false,
+              "max_offsets": 5,
+              "returned_count": 4
+            }
+          ],
+          "match_count": 4,
+          "offsets": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "query_hex": "00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "match_count": 2,
+          "offsets": [
+            0,
+            1
+          ],
+          "query_hex": "0000"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "000000"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            3
+          ],
+          "query_hex": "ff00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            2
+          ],
+          "query_hex": "00ff"
+        }
+      ],
+      "query_count": 5
+    },
+    {
+      "corpus_bytes": 6,
+      "corpus_sha256": "ed02457b5c41d964dbd2f2a609d63fe1bb7528dbe55e1abf5b52c249cd735797",
+      "fixture": "repeated_matches",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 5,
+              "returned_count": 5
+            },
+            {
+              "bounded": false,
+              "max_offsets": 6,
+              "returned_count": 6
+            },
+            {
+              "bounded": false,
+              "max_offsets": 7,
+              "returned_count": 6
+            }
+          ],
+          "match_count": 6,
+          "offsets": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "query_hex": "61"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 4,
+              "returned_count": 4
+            },
+            {
+              "bounded": false,
+              "max_offsets": 5,
+              "returned_count": 5
+            },
+            {
+              "bounded": false,
+              "max_offsets": 6,
+              "returned_count": 5
+            }
+          ],
+          "match_count": 5,
+          "offsets": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "query_hex": "6161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 3,
+              "returned_count": 3
+            },
+            {
+              "bounded": false,
+              "max_offsets": 4,
+              "returned_count": 4
+            },
+            {
+              "bounded": false,
+              "max_offsets": 5,
+              "returned_count": 4
+            }
+          ],
+          "match_count": 4,
+          "offsets": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "query_hex": "616161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": true,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 3
+            },
+            {
+              "bounded": false,
+              "max_offsets": 4,
+              "returned_count": 3
+            }
+          ],
+          "match_count": 3,
+          "offsets": [
+            0,
+            1,
+            2
+          ],
+          "query_hex": "61616161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "616161616161"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "61616161616161"
+        }
+      ],
+      "query_count": 6
+    },
+    {
+      "corpus_bytes": 6,
+      "corpus_sha256": "03c49131f6e233454482bbee3e3ec4a71ca4c4384eb9315379459d183d30898a",
+      "fixture": "invalid_utf8",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": true,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 2
+            },
+            {
+              "bounded": false,
+              "max_offsets": 3,
+              "returned_count": 2
+            }
+          ],
+          "match_count": 2,
+          "offsets": [
+            0,
+            5
+          ],
+          "query_hex": "80"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            1
+          ],
+          "query_hex": "81fe"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            3
+          ],
+          "query_hex": "ff00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": true,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 1
+            },
+            {
+              "bounded": false,
+              "max_offsets": 2,
+              "returned_count": 1
+            }
+          ],
+          "match_count": 1,
+          "offsets": [
+            4
+          ],
+          "query_hex": "0080"
+        }
+      ],
+      "query_count": 4
+    },
+    {
+      "corpus_bytes": 256,
+      "corpus_sha256": "40aff2e9d2d8922e47afd4648e6967497158785fbd1da870e7110266bf944880",
+      "fixture": "all_256_bytes",
+      "queries": [
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "00"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            1
+          ],
+          "query_hex": "01"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            2
+          ],
+          "query_hex": "02"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            3
+          ],
+          "query_hex": "03"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            4
+          ],
+          "query_hex": "04"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            5
+          ],
+          "query_hex": "05"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            6
+          ],
+          "query_hex": "06"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            7
+          ],
+          "query_hex": "07"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            8
+          ],
+          "query_hex": "08"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            9
+          ],
+          "query_hex": "09"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            10
+          ],
+          "query_hex": "0a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            11
+          ],
+          "query_hex": "0b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            12
+          ],
+          "query_hex": "0c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            13
+          ],
+          "query_hex": "0d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            14
+          ],
+          "query_hex": "0e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            15
+          ],
+          "query_hex": "0f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            16
+          ],
+          "query_hex": "10"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            17
+          ],
+          "query_hex": "11"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            18
+          ],
+          "query_hex": "12"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            19
+          ],
+          "query_hex": "13"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            20
+          ],
+          "query_hex": "14"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            21
+          ],
+          "query_hex": "15"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            22
+          ],
+          "query_hex": "16"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            23
+          ],
+          "query_hex": "17"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            24
+          ],
+          "query_hex": "18"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            25
+          ],
+          "query_hex": "19"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            26
+          ],
+          "query_hex": "1a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            27
+          ],
+          "query_hex": "1b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            28
+          ],
+          "query_hex": "1c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            29
+          ],
+          "query_hex": "1d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            30
+          ],
+          "query_hex": "1e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            31
+          ],
+          "query_hex": "1f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            32
+          ],
+          "query_hex": "20"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            33
+          ],
+          "query_hex": "21"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            34
+          ],
+          "query_hex": "22"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            35
+          ],
+          "query_hex": "23"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            36
+          ],
+          "query_hex": "24"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            37
+          ],
+          "query_hex": "25"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            38
+          ],
+          "query_hex": "26"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            39
+          ],
+          "query_hex": "27"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            40
+          ],
+          "query_hex": "28"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            41
+          ],
+          "query_hex": "29"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            42
+          ],
+          "query_hex": "2a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            43
+          ],
+          "query_hex": "2b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            44
+          ],
+          "query_hex": "2c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            45
+          ],
+          "query_hex": "2d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            46
+          ],
+          "query_hex": "2e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            47
+          ],
+          "query_hex": "2f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            48
+          ],
+          "query_hex": "30"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            49
+          ],
+          "query_hex": "31"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            50
+          ],
+          "query_hex": "32"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            51
+          ],
+          "query_hex": "33"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            52
+          ],
+          "query_hex": "34"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            53
+          ],
+          "query_hex": "35"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            54
+          ],
+          "query_hex": "36"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            55
+          ],
+          "query_hex": "37"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            56
+          ],
+          "query_hex": "38"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            57
+          ],
+          "query_hex": "39"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            58
+          ],
+          "query_hex": "3a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            59
+          ],
+          "query_hex": "3b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            60
+          ],
+          "query_hex": "3c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            61
+          ],
+          "query_hex": "3d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            62
+          ],
+          "query_hex": "3e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            63
+          ],
+          "query_hex": "3f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            64
+          ],
+          "query_hex": "40"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            65
+          ],
+          "query_hex": "41"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            66
+          ],
+          "query_hex": "42"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            67
+          ],
+          "query_hex": "43"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            68
+          ],
+          "query_hex": "44"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            69
+          ],
+          "query_hex": "45"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            70
+          ],
+          "query_hex": "46"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            71
+          ],
+          "query_hex": "47"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            72
+          ],
+          "query_hex": "48"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            73
+          ],
+          "query_hex": "49"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            74
+          ],
+          "query_hex": "4a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            75
+          ],
+          "query_hex": "4b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            76
+          ],
+          "query_hex": "4c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            77
+          ],
+          "query_hex": "4d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            78
+          ],
+          "query_hex": "4e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            79
+          ],
+          "query_hex": "4f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            80
+          ],
+          "query_hex": "50"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            81
+          ],
+          "query_hex": "51"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            82
+          ],
+          "query_hex": "52"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            83
+          ],
+          "query_hex": "53"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            84
+          ],
+          "query_hex": "54"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            85
+          ],
+          "query_hex": "55"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            86
+          ],
+          "query_hex": "56"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            87
+          ],
+          "query_hex": "57"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            88
+          ],
+          "query_hex": "58"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            89
+          ],
+          "query_hex": "59"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            90
+          ],
+          "query_hex": "5a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            91
+          ],
+          "query_hex": "5b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            92
+          ],
+          "query_hex": "5c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            93
+          ],
+          "query_hex": "5d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            94
+          ],
+          "query_hex": "5e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            95
+          ],
+          "query_hex": "5f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            96
+          ],
+          "query_hex": "60"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            97
+          ],
+          "query_hex": "61"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            98
+          ],
+          "query_hex": "62"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            99
+          ],
+          "query_hex": "63"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            100
+          ],
+          "query_hex": "64"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            101
+          ],
+          "query_hex": "65"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            102
+          ],
+          "query_hex": "66"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            103
+          ],
+          "query_hex": "67"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            104
+          ],
+          "query_hex": "68"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            105
+          ],
+          "query_hex": "69"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            106
+          ],
+          "query_hex": "6a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            107
+          ],
+          "query_hex": "6b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            108
+          ],
+          "query_hex": "6c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            109
+          ],
+          "query_hex": "6d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            110
+          ],
+          "query_hex": "6e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            111
+          ],
+          "query_hex": "6f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            112
+          ],
+          "query_hex": "70"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            113
+          ],
+          "query_hex": "71"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            114
+          ],
+          "query_hex": "72"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            115
+          ],
+          "query_hex": "73"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            116
+          ],
+          "query_hex": "74"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            117
+          ],
+          "query_hex": "75"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            118
+          ],
+          "query_hex": "76"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            119
+          ],
+          "query_hex": "77"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            120
+          ],
+          "query_hex": "78"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            121
+          ],
+          "query_hex": "79"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            122
+          ],
+          "query_hex": "7a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            123
+          ],
+          "query_hex": "7b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            124
+          ],
+          "query_hex": "7c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            125
+          ],
+          "query_hex": "7d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            126
+          ],
+          "query_hex": "7e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            127
+          ],
+          "query_hex": "7f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            128
+          ],
+          "query_hex": "80"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            129
+          ],
+          "query_hex": "81"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            130
+          ],
+          "query_hex": "82"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            131
+          ],
+          "query_hex": "83"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            132
+          ],
+          "query_hex": "84"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            133
+          ],
+          "query_hex": "85"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            134
+          ],
+          "query_hex": "86"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            135
+          ],
+          "query_hex": "87"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            136
+          ],
+          "query_hex": "88"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            137
+          ],
+          "query_hex": "89"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            138
+          ],
+          "query_hex": "8a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            139
+          ],
+          "query_hex": "8b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            140
+          ],
+          "query_hex": "8c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            141
+          ],
+          "query_hex": "8d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            142
+          ],
+          "query_hex": "8e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            143
+          ],
+          "query_hex": "8f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            144
+          ],
+          "query_hex": "90"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            145
+          ],
+          "query_hex": "91"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            146
+          ],
+          "query_hex": "92"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            147
+          ],
+          "query_hex": "93"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            148
+          ],
+          "query_hex": "94"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            149
+          ],
+          "query_hex": "95"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            150
+          ],
+          "query_hex": "96"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            151
+          ],
+          "query_hex": "97"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            152
+          ],
+          "query_hex": "98"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            153
+          ],
+          "query_hex": "99"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            154
+          ],
+          "query_hex": "9a"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            155
+          ],
+          "query_hex": "9b"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            156
+          ],
+          "query_hex": "9c"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            157
+          ],
+          "query_hex": "9d"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            158
+          ],
+          "query_hex": "9e"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            159
+          ],
+          "query_hex": "9f"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            160
+          ],
+          "query_hex": "a0"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            161
+          ],
+          "query_hex": "a1"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            162
+          ],
+          "query_hex": "a2"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            163
+          ],
+          "query_hex": "a3"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            164
+          ],
+          "query_hex": "a4"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            165
+          ],
+          "query_hex": "a5"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            166
+          ],
+          "query_hex": "a6"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            167
+          ],
+          "query_hex": "a7"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            168
+          ],
+          "query_hex": "a8"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            169
+          ],
+          "query_hex": "a9"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            170
+          ],
+          "query_hex": "aa"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            171
+          ],
+          "query_hex": "ab"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            172
+          ],
+          "query_hex": "ac"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            173
+          ],
+          "query_hex": "ad"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            174
+          ],
+          "query_hex": "ae"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            175
+          ],
+          "query_hex": "af"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            176
+          ],
+          "query_hex": "b0"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            177
+          ],
+          "query_hex": "b1"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            178
+          ],
+          "query_hex": "b2"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            179
+          ],
+          "query_hex": "b3"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            180
+          ],
+          "query_hex": "b4"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            181
+          ],
+          "query_hex": "b5"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            182
+          ],
+          "query_hex": "b6"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            183
+          ],
+          "query_hex": "b7"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            184
+          ],
+          "query_hex": "b8"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            185
+          ],
+          "query_hex": "b9"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            186
+          ],
+          "query_hex": "ba"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            187
+          ],
+          "query_hex": "bb"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            188
+          ],
+          "query_hex": "bc"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            189
+          ],
+          "query_hex": "bd"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            190
+          ],
+          "query_hex": "be"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            191
+          ],
+          "query_hex": "bf"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            192
+          ],
+          "query_hex": "c0"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            193
+          ],
+          "query_hex": "c1"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            194
+          ],
+          "query_hex": "c2"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            195
+          ],
+          "query_hex": "c3"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            196
+          ],
+          "query_hex": "c4"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            197
+          ],
+          "query_hex": "c5"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            198
+          ],
+          "query_hex": "c6"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            199
+          ],
+          "query_hex": "c7"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            200
+          ],
+          "query_hex": "c8"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            201
+          ],
+          "query_hex": "c9"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            202
+          ],
+          "query_hex": "ca"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            203
+          ],
+          "query_hex": "cb"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            204
+          ],
+          "query_hex": "cc"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            205
+          ],
+          "query_hex": "cd"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            206
+          ],
+          "query_hex": "ce"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            207
+          ],
+          "query_hex": "cf"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            208
+          ],
+          "query_hex": "d0"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            209
+          ],
+          "query_hex": "d1"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            210
+          ],
+          "query_hex": "d2"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            211
+          ],
+          "query_hex": "d3"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            212
+          ],
+          "query_hex": "d4"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            213
+          ],
+          "query_hex": "d5"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            214
+          ],
+          "query_hex": "d6"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            215
+          ],
+          "query_hex": "d7"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            216
+          ],
+          "query_hex": "d8"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            217
+          ],
+          "query_hex": "d9"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            218
+          ],
+          "query_hex": "da"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            219
+          ],
+          "query_hex": "db"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            220
+          ],
+          "query_hex": "dc"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            221
+          ],
+          "query_hex": "dd"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            222
+          ],
+          "query_hex": "de"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            223
+          ],
+          "query_hex": "df"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            224
+          ],
+          "query_hex": "e0"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            225
+          ],
+          "query_hex": "e1"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            226
+          ],
+          "query_hex": "e2"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            227
+          ],
+          "query_hex": "e3"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            228
+          ],
+          "query_hex": "e4"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            229
+          ],
+          "query_hex": "e5"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            230
+          ],
+          "query_hex": "e6"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            231
+          ],
+          "query_hex": "e7"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            232
+          ],
+          "query_hex": "e8"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            233
+          ],
+          "query_hex": "e9"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            234
+          ],
+          "query_hex": "ea"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            235
+          ],
+          "query_hex": "eb"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            236
+          ],
+          "query_hex": "ec"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            237
+          ],
+          "query_hex": "ed"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            238
+          ],
+          "query_hex": "ee"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            239
+          ],
+          "query_hex": "ef"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            240
+          ],
+          "query_hex": "f0"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            241
+          ],
+          "query_hex": "f1"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            242
+          ],
+          "query_hex": "f2"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            243
+          ],
+          "query_hex": "f3"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            244
+          ],
+          "query_hex": "f4"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            245
+          ],
+          "query_hex": "f5"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            246
+          ],
+          "query_hex": "f6"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            247
+          ],
+          "query_hex": "f7"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            248
+          ],
+          "query_hex": "f8"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            249
+          ],
+          "query_hex": "f9"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            250
+          ],
+          "query_hex": "fa"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            251
+          ],
+          "query_hex": "fb"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            252
+          ],
+          "query_hex": "fc"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            253
+          ],
+          "query_hex": "fd"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            254
+          ],
+          "query_hex": "fe"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            255
+          ],
+          "query_hex": "ff"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            0
+          ],
+          "query_hex": "0001"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 1,
+          "offsets": [
+            254
+          ],
+          "query_hex": "feff"
+        },
+        {
+          "bounded_results": [],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "ff00"
+        }
+      ],
+      "query_count": 260
+    },
+    {
+      "corpus_bytes": 0,
+      "corpus_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fixture": "empty_corpus",
+      "queries": [
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "00"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "ff"
+        },
+        {
+          "bounded_results": [
+            {
+              "bounded": false,
+              "max_offsets": 0,
+              "returned_count": 0
+            },
+            {
+              "bounded": false,
+              "max_offsets": 1,
+              "returned_count": 0
+            }
+          ],
+          "match_count": 0,
+          "offsets": [],
+          "query_hex": "41"
+        }
+      ],
+      "query_count": 3
+    }
+  ],
+  "format": "GLYPH_BINARY_RUNTIME_LOCATE_V1",
+  "locate_path_conformant": true,
+  "logical_sentinel": 256,
+  "mutation_count": 13,
+  "mutations": [
+    {
+      "mutation": "malformed_query_''",
+      "rejected": true
+    },
+    {
+      "mutation": "malformed_query_'0'",
+      "rejected": true
+    },
+    {
+      "mutation": "malformed_query_'00FF'",
+      "rejected": true
+    },
+    {
+      "mutation": "malformed_query_'0x00'",
+      "rejected": true
+    },
+    {
+      "mutation": "malformed_query_'00 ff'",
+      "rejected": true
+    },
+    {
+      "mutation": "malformed_query_'gg'",
+      "rejected": true
+    },
+    {
+      "mutation": "invalid_max_offsets_-1",
+      "rejected": true
+    },
+    {
+      "mutation": "invalid_max_offsets_x",
+      "rejected": true
+    },
+    {
+      "mutation": "invalid_max_offsets_1x",
+      "rejected": true
+    },
+    {
+      "mutation": "mismatched_sa_identity",
+      "rejected": true
+    },
+    {
+      "mutation": "corrupt_sa",
+      "rejected": true
+    },
+    {
+      "mutation": "corrupt_bwt",
+      "rejected": true
+    },
+    {
+      "mutation": "corrupt_fm",
+      "rejected": true
+    }
+  ],
+  "non_claims": [
+    "Single-document locate is not full runtime conformance.",
+    "Multi-document boundaries are not yet implemented.",
+    "Runtime artifact and bundle replay are not yet established."
+  ],
+  "ok": true,
+  "query_count": 287,
+  "remaining_runtime_work": [
+    "multi-document boundary runtime",
+    "runtime evidence artifact",
+    "deterministic runtime replay",
+    "self-contained runtime bundle",
+    "proof-graph integration"
+  ],
+  "runtime_conformant": false,
+  "runtime_profile": "GLYPH_BINARY_RUNTIME_V1",
+  "source_byte_domain": "0x00..0xFF",
+  "terminal_suffix_never_returned": true
+}

@@ -355,3 +355,28 @@ target_compile_options(query_fm_binary_v1 PRIVATE
     -Wpedantic
 )
 
+# GLYPH_BINARY_RUNTIME_LOCATE_V1
+
+add_executable(query_fm_locate_binary_v1
+    src/query_fm_locate_binary_v1.cpp
+)
+
+target_include_directories(
+    query_fm_locate_binary_v1
+    PRIVATE src
+)
+
+target_compile_features(
+    query_fm_locate_binary_v1
+    PRIVATE cxx_std_17
+)
+
+target_compile_options(
+    query_fm_locate_binary_v1
+    PRIVATE
+    -O3
+    -Wall
+    -Wextra
+    -Wpedantic
+)
+
