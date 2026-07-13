@@ -787,10 +787,31 @@ def main() -> int:
         duplicate_query,
     )
 
-    reordered_documents = [
-        duplicate_documents[1],
-        duplicate_documents[0],
+    order_documents = [
+        b"left-document",
+        b"right-document",
     ]
+
+    order_query = b"right"
+
+    order_artifact = make_artifact(
+        order_documents,
+        order_query,
+    )
+
+    reordered_documents = [
+        order_documents[1],
+        order_documents[0],
+    ]
+
+    if (
+        corpus_identity(order_documents)
+        ==
+        corpus_identity(reordered_documents)
+    ):
+        raise AssertionError(
+            "asymmetric document reorder did not change corpus identity"
+        )
 
     altered_length_documents = [
         b"same",
@@ -948,7 +969,7 @@ def main() -> int:
             "document_order_mutation",
             lambda: replay_artifact(
                 reordered_documents,
-                duplicate_artifact,
+                order_artifact,
             ),
         ),
         expect_failure(

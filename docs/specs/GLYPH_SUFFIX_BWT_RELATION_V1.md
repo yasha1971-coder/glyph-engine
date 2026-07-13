@@ -389,3 +389,34 @@ P3 is complete only when:
 5. byte/sentinel alias mutations fail;
 6. document-crossing predecessor mutations fail;
 7. existing top-level verification remains green.
+
+## Terminal suffix row correction
+
+Normative correction:
+
+For every document of byte length `n`, the canonical generalized suffix
+matrix contains coordinates:
+
+    (doc_id, 0)
+    ...
+    (doc_id, n)
+
+The coordinate `(doc_id, n)` is the terminal suffix consisting only of that
+document's virtual sentinel.
+
+Therefore every document contributes:
+
+    n + 1 suffix rows
+
+including an empty document, which contributes one virtual-sentinel-only row.
+
+This terminal row is required so that:
+
+- the first and last FM columns have the same token multiset;
+- every source byte has a predecessor relation in BWT;
+- every virtual sentinel occurs exactly once;
+- LF is a permutation;
+- backward search intervals correspond to contiguous suffix-array rows.
+
+A suffix array containing only offsets `0..n-1` is insufficient for the
+virtual-sentinel FM construction and must be rejected.

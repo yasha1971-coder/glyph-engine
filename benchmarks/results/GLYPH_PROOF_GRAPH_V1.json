@@ -1,0 +1,334 @@
+{
+  "all_dependencies_satisfied": true,
+  "all_required_nodes_present": true,
+  "failed": 0,
+  "format": "GLYPH_VERIFY_CHAIN_V1",
+  "mutations": {
+    "dependency_skip_rejected": true,
+    "duplicate_node_rejected": true,
+    "missing_node_rejected": true
+  },
+  "ok": true,
+  "p11_handoff_accepted": true,
+  "passed": 12,
+  "proof_count": 12,
+  "proof_graph_version": "GLYPH_PROOF_GRAPH_V1",
+  "proof_obligation": "P12",
+  "proofs": [
+    {
+      "checker": "tools/check_virtual_sentinel_total_order_v1.py",
+      "checker_sha256": "a3272453f325a08fe6c434a401762eeb872e95c7760f82e895a94db9c0a962cb",
+      "depends": [],
+      "id": "P1",
+      "json_result_found": true,
+      "name": "Virtual Sentinel Total Order",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_VIRTUAL_SENTINEL_TOTAL_ORDER_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "6ffb515459457ad8494c0ea3360e5077630c8b0207e83bc46f2ba8adafdda12e"
+    },
+    {
+      "checker": "tools/check_suffix_array_validity_v1.py",
+      "checker_sha256": "e14d1f4b1005185fd2393e2b1bb74d63658f74e84243bc5b807c6d663c025a3f",
+      "depends": [
+        "P1"
+      ],
+      "id": "P2",
+      "json_result_found": true,
+      "name": "Suffix Array Validity",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_SUFFIX_ARRAY_VALIDITY_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "8f7a80dfaa4f065a27eb41d353a1999036e367de518f457a83807a6903af7419"
+    },
+    {
+      "checker": "tools/check_suffix_bwt_relation_v1.py",
+      "checker_sha256": "3d233a639c635156aaddbde33135733d6620e63eefccf33b1875f66ae7e71dbe",
+      "depends": [
+        "P1",
+        "P2"
+      ],
+      "id": "P3",
+      "json_result_found": true,
+      "name": "Suffix BWT Relation",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_SUFFIX_BWT_RELATION_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "e3f922fedcf229ff963ed7c85e8259b31c58dc50bafb4af3b881cba534c9326e"
+    },
+    {
+      "checker": "tools/check_corpus_identity_v1.py",
+      "checker_sha256": "8dd5085fcf8c6a107044354c19f377d2677823a771b56e6007a005cd3d0a5211",
+      "depends": [],
+      "id": "P4",
+      "json_result_found": true,
+      "name": "Canonical Corpus Identity",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_CORPUS_IDENTITY_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "023635003ea815e9dc49dd9cf4f543952f76fadcebd603085091a9f7d2895bb1"
+    },
+    {
+      "checker": "tools/check_fm_token_rank_lf_consistency_v1.py",
+      "checker_sha256": "9b32ab10f2cdc247958f9c024fb8566a4ed60c389d978a4e4093a9e31567128f",
+      "depends": [
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "id": "P5",
+      "json_result_found": true,
+      "name": "FM Token Rank LF Consistency",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_FM_TOKEN_RANK_LF_CONSISTENCY_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "0eb99750ce6a7c52f064d775ca2e438608ca46288679102e5e8e6c866b3c69c1"
+    },
+    {
+      "checker": "tools/check_fm_backward_search_exactness_v1.py",
+      "checker_sha256": "75943eafcc70c891d4374f08106c2bdab8ed5cefdbaeb2b5ef6c0399e3f2efe8",
+      "depends": [
+        "P5"
+      ],
+      "id": "P6",
+      "json_result_found": true,
+      "name": "FM Backward Search Exactness",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_FM_BACKWARD_SEARCH_EXACTNESS_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "b2d8c70b0a16ea325e764acf2cf1aa9d736c8cfaa6c517716e5890f16e48ac3b"
+    },
+    {
+      "checker": "tools/check_locate_coordinate_exactness_v1.py",
+      "checker_sha256": "712479a810d7de929f7281d57bd176477ed6c894aa4c3a5ab8ce214d58d86466",
+      "depends": [
+        "P4",
+        "P5",
+        "P6"
+      ],
+      "id": "P7",
+      "json_result_found": true,
+      "name": "Locate Coordinate Exactness",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_LOCATE_COORDINATE_EXACTNESS_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "a24875062a71901bf6d8c1971192b3c8c5429b086e7c2aa2898867feb62dc352"
+    },
+    {
+      "checker": "tools/check_binary_safe_query_transport_v1.py",
+      "checker_sha256": "d844cebdf247eefcc00cab80021c1e25d80ca0e3959784176b4185a2430c7c4b",
+      "depends": [
+        "P1",
+        "P6"
+      ],
+      "id": "P8",
+      "json_result_found": true,
+      "name": "Binary Safe Query Transport",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_BINARY_SAFE_QUERY_TRANSPORT_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "9c41bfcbf65e2c7c06a9ca5a7efac186aa41506a87f55585c23d32c891bbead5"
+    },
+    {
+      "checker": "tools/check_document_boundary_semantics_v1.py",
+      "checker_sha256": "c8fd07500d970a778ffca379c84785786fb74fa36c03098aad9a0f821f5df864",
+      "depends": [
+        "P4",
+        "P6",
+        "P7",
+        "P8"
+      ],
+      "id": "P9",
+      "json_result_found": true,
+      "name": "Document Boundary Semantics",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_DOCUMENT_BOUNDARY_SEMANTICS_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "67e1787edbd9245d3af6e90a8f7c8ee9f923338d67aa0a96d895eeb5e5bc609c"
+    },
+    {
+      "checker": "tools/check_replay_determinism_v1.py",
+      "checker_sha256": "51af06228580ed77f452272422a675e6d95e24e606aca9ea6480aae7c90d9ec6",
+      "depends": [
+        "P4",
+        "P6",
+        "P7",
+        "P8",
+        "P9"
+      ],
+      "id": "P10",
+      "json_result_found": true,
+      "name": "Replay Determinism",
+      "p12_ready": null,
+      "spec": "docs/specs/GLYPH_REPLAY_DETERMINISM_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "f48d96f6b9620a6c911946d13de909bafdae352540f3178baaf8e72e3758eaa1"
+    },
+    {
+      "checker": "tools/check_bundle_completeness_v1.py",
+      "checker_sha256": "715de9f7f4dbb2bef8cef0b152e83572a6abda38aa9fc7a98ccd38732e9f16be",
+      "depends": [
+        "P4",
+        "P7",
+        "P8",
+        "P9",
+        "P10"
+      ],
+      "id": "P11",
+      "json_result_found": true,
+      "name": "Bundle Completeness",
+      "p12_ready": true,
+      "spec": "docs/specs/GLYPH_BUNDLE_COMPLETENESS_V1.md",
+      "status": "PASS",
+      "stdout_sha256": "7dff2055c5ae61083204f5901683ecb5cee8daf021a808e82eff462f5f0ea2ae"
+    },
+    {
+      "checker": "tools/check_verify_chain_v1.py",
+      "depends": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5",
+        "P6",
+        "P7",
+        "P8",
+        "P9",
+        "P10",
+        "P11"
+      ],
+      "id": "P12",
+      "name": "End-to-End Verify Chain Closure",
+      "spec": "docs/specs/GLYPH_VERIFY_CHAIN_V1.md",
+      "status": "PASS"
+    }
+  ],
+  "required_files": [
+    {
+      "path": "docs/specs/GLYPH_VERIFY_CHAIN_V1.md",
+      "sha256": "e676fcbcd85f4aeacd08c6a8102a7700a16c0fcd4e59ced93a71d8982d21b477",
+      "size_bytes": 2452
+    },
+    {
+      "path": "docs/specs/GLYPH_PROOF_GRAPH_V1.md",
+      "sha256": "d51f26fb4a5e264c4d222d910261dcad4d64fbe05a2a194ab11d6c418a1b0b82",
+      "size_bytes": 3493
+    },
+    {
+      "path": "tools/run_glyph_proof_graph_v1.sh",
+      "sha256": "fd0214473dcee57ddb2cf2a9787c8b5e001a6bc4790a87a79f32ea48fc5c5c67",
+      "size_bytes": 1351
+    },
+    {
+      "path": "docs/specs/GLYPH_VIRTUAL_SENTINEL_TOTAL_ORDER_V1.md",
+      "sha256": "bf44d04127cd55157ddc400aa7f36c8dd3364d628a2621c2ab7dea011d49e7a4",
+      "size_bytes": 4469
+    },
+    {
+      "path": "tools/check_virtual_sentinel_total_order_v1.py",
+      "sha256": "a3272453f325a08fe6c434a401762eeb872e95c7760f82e895a94db9c0a962cb",
+      "size_bytes": 4780
+    },
+    {
+      "path": "docs/specs/GLYPH_SUFFIX_ARRAY_VALIDITY_V1.md",
+      "sha256": "d0bf7fbb71c451f90d779037565f8878a34beecfd03a1080f11cc470ebff188c",
+      "size_bytes": 5100
+    },
+    {
+      "path": "tools/check_suffix_array_validity_v1.py",
+      "sha256": "e14d1f4b1005185fd2393e2b1bb74d63658f74e84243bc5b807c6d663c025a3f",
+      "size_bytes": 11289
+    },
+    {
+      "path": "docs/specs/GLYPH_SUFFIX_BWT_RELATION_V1.md",
+      "sha256": "24c3b72521ce47d4aff10d6fdb3a23068574318a86a919f60ca94ea5b19b58cb",
+      "size_bytes": 8627
+    },
+    {
+      "path": "tools/check_suffix_bwt_relation_v1.py",
+      "sha256": "3d233a639c635156aaddbde33135733d6620e63eefccf33b1875f66ae7e71dbe",
+      "size_bytes": 19019
+    },
+    {
+      "path": "docs/specs/GLYPH_CORPUS_IDENTITY_V1.md",
+      "sha256": "547b343ba12ab24949167d74f4dc18b51cb2ee7c9cf62e598174e3eae0f14154",
+      "size_bytes": 9479
+    },
+    {
+      "path": "tools/check_corpus_identity_v1.py",
+      "sha256": "8dd5085fcf8c6a107044354c19f377d2677823a771b56e6007a005cd3d0a5211",
+      "size_bytes": 19845
+    },
+    {
+      "path": "docs/specs/GLYPH_FM_TOKEN_RANK_LF_CONSISTENCY_V1.md",
+      "sha256": "378f8b2fb9e16c3e17a4ff8cd7b85fb06f8890ebd8029fb209c97820950ad893",
+      "size_bytes": 6721
+    },
+    {
+      "path": "tools/check_fm_token_rank_lf_consistency_v1.py",
+      "sha256": "9b32ab10f2cdc247958f9c024fb8566a4ed60c389d978a4e4093a9e31567128f",
+      "size_bytes": 10249
+    },
+    {
+      "path": "docs/specs/GLYPH_FM_BACKWARD_SEARCH_EXACTNESS_V1.md",
+      "sha256": "87a030f9d73235fab520b5703c8bf626582f8f342e41db20c4dbc7e5b3832235",
+      "size_bytes": 6360
+    },
+    {
+      "path": "tools/check_fm_backward_search_exactness_v1.py",
+      "sha256": "75943eafcc70c891d4374f08106c2bdab8ed5cefdbaeb2b5ef6c0399e3f2efe8",
+      "size_bytes": 17606
+    },
+    {
+      "path": "docs/specs/GLYPH_LOCATE_COORDINATE_EXACTNESS_V1.md",
+      "sha256": "37806db27838b083025b6f1aebe9ef6546384e8046869d49f18a5766d97a7b0c",
+      "size_bytes": 7406
+    },
+    {
+      "path": "tools/check_locate_coordinate_exactness_v1.py",
+      "sha256": "712479a810d7de929f7281d57bd176477ed6c894aa4c3a5ab8ce214d58d86466",
+      "size_bytes": 23339
+    },
+    {
+      "path": "docs/specs/GLYPH_BINARY_SAFE_QUERY_TRANSPORT_V1.md",
+      "sha256": "4fce828a28619f1942750073d52d0d4a455c403d0a6df62c644239355dd0dc5d",
+      "size_bytes": 5971
+    },
+    {
+      "path": "tools/check_binary_safe_query_transport_v1.py",
+      "sha256": "d844cebdf247eefcc00cab80021c1e25d80ca0e3959784176b4185a2430c7c4b",
+      "size_bytes": 14583
+    },
+    {
+      "path": "docs/specs/GLYPH_DOCUMENT_BOUNDARY_SEMANTICS_V1.md",
+      "sha256": "4c82b8109a914762c569142708e78bb746802c6e43f7f08eb8aea379362be7fa",
+      "size_bytes": 7888
+    },
+    {
+      "path": "tools/check_document_boundary_semantics_v1.py",
+      "sha256": "c8fd07500d970a778ffca379c84785786fb74fa36c03098aad9a0f821f5df864",
+      "size_bytes": 25622
+    },
+    {
+      "path": "docs/specs/GLYPH_REPLAY_DETERMINISM_V1.md",
+      "sha256": "1c22ea1955760215a9f4dc8a97adbf316761ec686e8062e040e51a34abeba2b2",
+      "size_bytes": 3574
+    },
+    {
+      "path": "tools/check_replay_determinism_v1.py",
+      "sha256": "51af06228580ed77f452272422a675e6d95e24e606aca9ea6480aae7c90d9ec6",
+      "size_bytes": 14947
+    },
+    {
+      "path": "docs/specs/GLYPH_BUNDLE_COMPLETENESS_V1.md",
+      "sha256": "890f9f3fc923d9683a1b27571fccb3ea3c4e4d7fb5a6cf3db470c70b25571224",
+      "size_bytes": 8996
+    },
+    {
+      "path": "tools/check_bundle_completeness_v1.py",
+      "sha256": "715de9f7f4dbb2bef8cef0b152e83572a6abda38aa9fc7a98ccd38732e9f16be",
+      "size_bytes": 54814
+    }
+  ],
+  "verify_ok_permitted": true
+}

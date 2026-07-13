@@ -326,3 +326,29 @@ P9 is complete only when:
 7. binary boundary fixtures pass;
 8. all mutation fixtures fail;
 9. top-level verification remains green.
+
+## Document-order mutation fixture
+
+Canonical corpus identity binds the ordered document sequence.
+
+For documents:
+
+    [doc_0, doc_1]
+
+the reordered sequence:
+
+    [doc_1, doc_0]
+
+must have a different corpus identity when the document entries differ.
+
+A fixture that swaps two byte-identical documents does not represent an
+observable order mutation because the ordered byte-and-length sequence remains
+identical. Therefore document-order rejection fixtures must use asymmetric
+documents while replaying the artifact committed to the original order.
+
+P9 must reject replay when:
+
+- the supplied document order differs from the committed order;
+- the stored corpus identity remains bound to the original corpus;
+- document-local coordinates would be interpreted under different `doc_id`
+  assignments.

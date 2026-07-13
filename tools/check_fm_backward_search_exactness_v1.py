@@ -69,7 +69,7 @@ def build_sa(
     rows = [
         Coordinate(doc_id, offset)
         for doc_id, data in enumerate(documents)
-        for offset in range(len(data))
+        for offset in range(len(data) + 1)
     ]
 
     rows.sort(
@@ -562,6 +562,88 @@ def main() -> int:
         b"ana",
     )
 
+    forward_counterexample_candidates = [
+        b"an",
+        b"na",
+        b"ban",
+        b"bana",
+        b"anan",
+        b"banana",
+    ]
+
+    forward_counterexample_pattern = next(
+        (
+            pattern
+            for pattern in forward_counterexample_candidates
+            if backward_search(
+                mutation_bwt,
+                pattern,
+                process_forward=True,
+            )
+            !=
+            backward_search(
+                mutation_bwt,
+                pattern,
+            )
+        ),
+        None,
+    )
+
+    if forward_counterexample_pattern is None:
+        raise AssertionError(
+            "no deterministic forward-order counterexample found"
+        )
+
+    forward_counterexample_interval = backward_search(
+        mutation_bwt,
+        forward_counterexample_pattern,
+    )
+
+    initial_right_counterexample_pattern = None
+
+    initial_right_candidates = [
+        bytes([value])
+        for value in range(256)
+    ]
+
+    initial_right_candidates.extend(
+        bytes([first, second])
+        for first in range(256)
+        for second in range(256)
+    )
+
+    for candidate in initial_right_candidates:
+        canonical_candidate_interval = backward_search(
+            mutation_bwt,
+            candidate,
+        )
+
+        mutated_candidate_interval = backward_search(
+            mutation_bwt,
+            candidate,
+            initial_r=max(
+                0,
+                len(mutation_bwt) - 1,
+            ),
+        )
+
+        if (
+            canonical_candidate_interval
+            != mutated_candidate_interval
+        ):
+            initial_right_counterexample_pattern = candidate
+            break
+
+    if initial_right_counterexample_pattern is None:
+        raise AssertionError(
+            "no deterministic wrong-initial-right counterexample found"
+        )
+
+    initial_right_counterexample_interval = backward_search(
+        mutation_bwt,
+        initial_right_counterexample_pattern,
+    )
+
     mutations = [
         empty_query_rejected,
         expect_failure(
@@ -585,10 +667,11 @@ def main() -> int:
             lambda: (
                 backward_search(
                     mutation_bwt,
-                    b"ana",
+                    forward_counterexample_pattern,
                     process_forward=True,
                 )
-                == canonical_interval
+                ==
+                forward_counterexample_interval
             )
             or (_ for _ in ()).throw(
                 AssertionError(
@@ -601,13 +684,14 @@ def main() -> int:
             lambda: (
                 backward_search(
                     mutation_bwt,
-                    b"ana",
+                    initial_right_counterexample_pattern,
                     initial_r=max(
                         0,
                         len(mutation_bwt) - 1,
                     ),
                 )
-                == canonical_interval
+                ==
+                initial_right_counterexample_interval
             )
             or (_ for _ in ()).throw(
                 AssertionError(

@@ -86,7 +86,7 @@ def expected_coordinate_set(
     return {
         Coordinate(doc_id, offset)
         for doc_id, document in enumerate(documents)
-        for offset in range(len(document))
+        for offset in range(len(document) + 1)
     }
 
 
@@ -135,7 +135,7 @@ def validate_coordinate(
             f"SA[{position}] has negative offset: {coordinate}",
         )
 
-    if coordinate.offset >= document_length:
+    if coordinate.offset > document_length:
         raise SuffixArrayValidationError(
             "offset_out_of_range",
             (
@@ -378,47 +378,29 @@ def run_negative_fixtures() -> list[dict]:
         )
     )
 
-    offset_at_length = list(canonical)
-    offset_at_length[0] = Coordinate(
-        0,
-        len(documents[0]),
+    terminal_coordinates = [
+        Coordinate(doc_id, len(document))
+        for doc_id, document in enumerate(documents)
+    ]
+
+    for terminal in terminal_coordinates:
+        if terminal not in canonical:
+            raise AssertionError(
+                f"terminal suffix coordinate missing: {terminal}"
+            )
+
+    terminal_validation = validate_suffix_array(
+        documents,
+        canonical,
     )
 
-    results.append(
-        expect_rejection(
-            "offset_equal_document_length",
-            documents,
-            offset_at_length,
-            {"offset_out_of_range"},
+    if terminal_validation["suffix_count"] != sum(
+        len(document) + 1
+        for document in documents
+    ):
+        raise AssertionError(
+            "terminal suffix rows are not included in SA length"
         )
-    )
-
-    offset_beyond_length = list(canonical)
-    offset_beyond_length[0] = Coordinate(
-        1,
-        len(documents[1]) + 1,
-    )
-
-    results.append(
-        expect_rejection(
-            "offset_beyond_document_length",
-            documents,
-            offset_beyond_length,
-            {"offset_out_of_range"},
-        )
-    )
-
-    empty_document_coordinate = list(canonical)
-    empty_document_coordinate[0] = Coordinate(2, 0)
-
-    results.append(
-        expect_rejection(
-            "coordinate_inside_empty_document",
-            documents,
-            empty_document_coordinate,
-            {"offset_out_of_range"},
-        )
-    )
 
     adjacent_inversion = list(canonical)
 

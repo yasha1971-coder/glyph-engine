@@ -55,7 +55,7 @@ def suffixes(
     rows: list[Coordinate] = []
 
     for doc_id, data in enumerate(documents):
-        for offset in range(len(data)):
+        for offset in range(len(data) + 1):
             rows.append(Coordinate(doc_id, offset))
 
     def suffix_key(coord: Coordinate):
@@ -212,7 +212,6 @@ def validate(
             for token in bwt
         )
         for doc_id, data in enumerate(documents)
-        if data
     }
 
     for doc_id, count in sentinel_counts.items():

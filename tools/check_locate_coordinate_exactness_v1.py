@@ -67,7 +67,7 @@ def build_sa(
     rows = [
         Coordinate(doc_id, offset)
         for doc_id, data in enumerate(documents)
-        for offset in range(len(data))
+        for offset in range(len(data) + 1)
     ]
 
     rows.sort(
@@ -259,7 +259,28 @@ def full_locate(
 
     if coordinates != expected:
         raise LocateError(
-            "full locate differs from naive oracle"
+            {
+                "pattern_hex": pattern.hex(),
+                "fm_interval": [l, r],
+                "coordinates": [
+                    [coordinate.doc_id, coordinate.doc_offset]
+                    for coordinate in coordinates
+                ],
+                "expected": [
+                    [coordinate.doc_id, coordinate.doc_offset]
+                    for coordinate in expected
+                ],
+                "document_lengths": [
+                    len(document)
+                    for document in documents
+                ],
+                "sa_rows": len(sa),
+                "expected_sa_rows": sum(
+                    len(document) + 1
+                    for document in documents
+                ),
+                "bwt_rows": len(bwt),
+            }
         )
 
     if len(coordinates) != r - l:

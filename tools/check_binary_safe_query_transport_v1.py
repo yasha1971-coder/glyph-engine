@@ -528,10 +528,6 @@ def main() -> int:
                 clone_artifact(
                     base,
                     query_hex=b"A\x00".hex(),
-                    query_length_bytes=2,
-                    query_sha256=sha256_hex(
-                        b"A\x00"
-                    ),
                 ),
             ),
         ),

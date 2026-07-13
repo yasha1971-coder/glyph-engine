@@ -117,7 +117,7 @@ def canonical_suffix_array(
     coordinates = [
         Coordinate(doc_id, offset)
         for doc_id, document in enumerate(documents)
-        for offset in range(len(document))
+        for offset in range(len(document) + 1)
     ]
 
     return sorted(
@@ -139,7 +139,7 @@ def validate_suffix_array(
     expected = {
         Coordinate(doc_id, offset)
         for doc_id, document in enumerate(documents)
-        for offset in range(len(document))
+        for offset in range(len(document) + 1)
     }
 
     if len(suffix_array) != len(expected):
@@ -335,11 +335,7 @@ def validate_suffix_bwt(
                 ),
             )
 
-    non_empty_documents = {
-        doc_id
-        for doc_id, document in enumerate(documents)
-        if document
-    }
+    document_ids = set(range(len(documents)))
 
     sentinel_counts = {
         doc_id: 0
@@ -361,7 +357,7 @@ def validate_suffix_bwt(
             sentinel_counts[token.doc_id] += 1
 
     for doc_id, document in enumerate(documents):
-        expected_count = 1 if doc_id in non_empty_documents else 0
+        expected_count = 1
         actual_count = sentinel_counts[doc_id]
 
         if actual_count != expected_count:
@@ -378,7 +374,7 @@ def validate_suffix_bwt(
         "document_count": len(documents),
         "suffix_count": len(suffix_array),
         "bwt_token_count": len(candidate_bwt),
-        "non_empty_document_count": len(non_empty_documents),
+        "document_sentinel_count": len(document_ids),
         "virtual_sentinel_count": sum(
             sentinel_counts.values()
         ),

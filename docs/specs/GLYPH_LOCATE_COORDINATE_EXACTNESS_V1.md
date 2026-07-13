@@ -342,3 +342,28 @@ P7 is complete only when:
 8. cross-document results are absent;
 9. all mutation fixtures fail;
 10. top-level verification remains green.
+
+## Terminal suffix row correction
+
+For every document with byte length `n`, the generalized suffix array used by
+FM locate contains coordinates:
+
+    (doc_id, 0)
+    ...
+    (doc_id, n)
+
+The coordinate `(doc_id, n)` is the terminal suffix containing only the
+document's virtual sentinel.
+
+Therefore each document contributes `n + 1` suffix rows.
+
+The terminal suffix row participates in SA, BWT, C, rank, and LF construction,
+but it cannot be returned as a match coordinate for a non-empty byte query.
+
+Locate output remains restricted to document byte coordinates satisfying:
+
+    0 <= doc_offset
+    doc_offset + query_length <= document_length
+
+Omitting the terminal suffix row breaks correspondence between FM intervals and
+canonical locate coordinates.

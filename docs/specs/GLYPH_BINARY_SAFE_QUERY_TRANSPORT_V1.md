@@ -275,3 +275,30 @@ P8 is complete only when:
 7. mutation fixtures fail;
 8. JSON round trips preserve exact bytes;
 9. top-level verification remains green.
+
+## Coherent query replacement boundary
+
+P8 detects corruption when any authoritative query-binding field disagrees:
+
+    decoded_length(query_hex) != query_length_bytes
+
+or:
+
+    SHA256(decoded_query_bytes) != query_sha256
+
+A mutation that consistently replaces all of the following:
+
+- `query_hex`;
+- `query_length_bytes`;
+- `query_sha256`;
+- coordinates and match count when necessary;
+
+is not transport corruption. It is a newly constructed artifact for a different
+query.
+
+P8 cannot infer the prior intended query from a fully self-consistent
+replacement. Binding the complete authoritative artifact against replacement
+belongs to P10 replay determinism and artifact identity.
+
+Therefore the `trailing_byte_omitted` mutation truncates `query_hex` while
+retaining the original declared byte length and SHA256.
