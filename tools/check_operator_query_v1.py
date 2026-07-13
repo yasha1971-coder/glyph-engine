@@ -4,6 +4,7 @@ from __future__ import annotations
 import copy
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -46,6 +47,28 @@ OUT = (
 
 class GateError(RuntimeError):
     pass
+
+
+def stable_error_message(
+    error: BaseException,
+) -> str:
+    message = str(error)
+
+    # Result artifacts must not bind the checkout location.
+    message = message.replace(
+        str(ROOT),
+        "<GLYPH_ROOT>",
+    )
+
+    # tempfile creates a random suffix on every gate run.
+    message = re.sub(
+        r"/(?:tmp|var/tmp)/"
+        r"glyph-operator-o3-[^/\s]+",
+        "<GLYPH_O3_TMP>",
+        message,
+    )
+
+    return message
 
 
 def write_bytes(
@@ -269,7 +292,9 @@ def expect_failure(
         return {
             "mutation": name,
             "rejected": True,
-            "message": str(error),
+            "message": stable_error_message(
+                error
+            ),
         }
 
     raise GateError(

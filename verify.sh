@@ -90,6 +90,8 @@ echo "[verify] GLYPH proof graph P1-P12"
 echo "[verify] GLYPH runtime conformance graph"
 ./tools/run_glyph_runtime_conformance_graph_v1.sh
 
+echo "[verify] GLYPH operator conformance graph"
+./tools/run_glyph_operator_conformance_graph_v1.sh
 echo "VERIFY OK"
 
 echo ""
