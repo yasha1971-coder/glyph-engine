@@ -59,6 +59,186 @@ EXPECTED_LAYOUT = {
 }
 
 
+EXPECTED_PUBLIC_STRUCTS = {
+    "glyph_open_options_v1",
+    "glyph_query_options_v1",
+    "glyph_coordinate_v1",
+    "glyph_locate_result_v1",
+    "glyph_index_info_v1",
+    "glyph_document_info_v1",
+}
+
+ALLOWED_PUBLIC_FIELD_TYPES = {
+    "uint8_t",
+    "uint32_t",
+    "uint64_t",
+}
+
+ALLOWED_PUBLIC_RETURN_TYPES = {
+    "uint32_t",
+    "glyph_status_v1",
+}
+
+ALLOWED_PUBLIC_PARAMETER_TYPES = {
+    "const char*",
+    "const glyph_open_options_v1*",
+    "const glyph_query_options_v1*",
+    "const uint8_t*",
+    "glyph_coordinate_v1*",
+    "glyph_document_info_v1*",
+    "glyph_index_info_v1*",
+    "glyph_index_v1*",
+    "glyph_index_v1**",
+    "glyph_locate_result_v1*",
+    "uint64_t",
+    "uint64_t*",
+    "uint8_t*",
+}
+
+LAYOUT_ASSERTIONS = [
+    (
+        "pointer_bits",
+        "sizeof(void *) == 8",
+        "V1 supported profile requires 64-bit pointers",
+    ),
+    (
+        "open_options_size",
+        "sizeof(glyph_open_options_v1) == 72",
+        "glyph_open_options_v1 size",
+    ),
+    (
+        "open_options_struct_size",
+        "offsetof(glyph_open_options_v1, struct_size) == 0",
+        "glyph_open_options_v1.struct_size",
+    ),
+    (
+        "open_options_max_mapped_bytes",
+        "offsetof(glyph_open_options_v1, max_mapped_bytes) == 8",
+        "glyph_open_options_v1.max_mapped_bytes",
+    ),
+    (
+        "open_options_reserved",
+        "offsetof(glyph_open_options_v1, reserved) == 32",
+        "glyph_open_options_v1.reserved",
+    ),
+    (
+        "query_options_size",
+        "sizeof(glyph_query_options_v1) == 56",
+        "glyph_query_options_v1 size",
+    ),
+    (
+        "query_options_timeout",
+        "offsetof(glyph_query_options_v1, timeout_ns) == 8",
+        "glyph_query_options_v1.timeout_ns",
+    ),
+    (
+        "query_options_reserved",
+        "offsetof(glyph_query_options_v1, reserved) == 16",
+        "glyph_query_options_v1.reserved",
+    ),
+    (
+        "coordinate_size",
+        "sizeof(glyph_coordinate_v1) == 16",
+        "glyph_coordinate_v1 size",
+    ),
+    (
+        "coordinate_doc_id",
+        "offsetof(glyph_coordinate_v1, doc_id) == 0",
+        "glyph_coordinate_v1.doc_id",
+    ),
+    (
+        "coordinate_doc_offset",
+        "offsetof(glyph_coordinate_v1, doc_offset) == 8",
+        "glyph_coordinate_v1.doc_offset",
+    ),
+    (
+        "locate_result_size",
+        "sizeof(glyph_locate_result_v1) == 56",
+        "glyph_locate_result_v1 size",
+    ),
+    (
+        "locate_result_complete",
+        "offsetof(glyph_locate_result_v1, complete) == 4",
+        "glyph_locate_result_v1.complete",
+    ),
+    (
+        "locate_result_total",
+        "offsetof(glyph_locate_result_v1, total_matches) == 8",
+        "glyph_locate_result_v1.total_matches",
+    ),
+    (
+        "locate_result_returned",
+        "offsetof(glyph_locate_result_v1, returned_matches) == 16",
+        "glyph_locate_result_v1.returned_matches",
+    ),
+    (
+        "locate_result_reserved",
+        "offsetof(glyph_locate_result_v1, reserved) == 24",
+        "glyph_locate_result_v1.reserved",
+    ),
+    (
+        "index_info_size",
+        "sizeof(glyph_index_info_v1) == 120",
+        "glyph_index_info_v1 size",
+    ),
+    (
+        "index_info_document_count",
+        "offsetof(glyph_index_info_v1, document_count) == 8",
+        "glyph_index_info_v1.document_count",
+    ),
+    (
+        "index_info_corpus_id",
+        "offsetof(glyph_index_info_v1, corpus_id_sha256) == 24",
+        "glyph_index_info_v1.corpus_id_sha256",
+    ),
+    (
+        "index_info_runtime_id",
+        "offsetof(glyph_index_info_v1, runtime_index_id_sha256) == 56",
+        "glyph_index_info_v1.runtime_index_id_sha256",
+    ),
+    (
+        "index_info_format_version",
+        "offsetof(glyph_index_info_v1, index_format_version) == 88",
+        "glyph_index_info_v1.index_format_version",
+    ),
+    (
+        "index_info_runtime_profile",
+        "offsetof(glyph_index_info_v1, runtime_profile_id) == 92",
+        "glyph_index_info_v1.runtime_profile_id",
+    ),
+    (
+        "index_info_reserved",
+        "offsetof(glyph_index_info_v1, reserved) == 96",
+        "glyph_index_info_v1.reserved",
+    ),
+    (
+        "document_info_size",
+        "sizeof(glyph_document_info_v1) == 96",
+        "glyph_document_info_v1 size",
+    ),
+    (
+        "document_info_doc_id",
+        "offsetof(glyph_document_info_v1, doc_id) == 8",
+        "glyph_document_info_v1.doc_id",
+    ),
+    (
+        "document_info_source_hash",
+        "offsetof(glyph_document_info_v1, source_sha256) == 24",
+        "glyph_document_info_v1.source_sha256",
+    ),
+    (
+        "document_info_path_length",
+        "offsetof(glyph_document_info_v1, path_length_bytes) == 56",
+        "glyph_document_info_v1.path_length_bytes",
+    ),
+    (
+        "document_info_reserved",
+        "offsetof(glyph_document_info_v1, reserved) == 64",
+        "glyph_document_info_v1.reserved",
+    ),
+]
+
+
 class ContractError(RuntimeError):
     pass
 
@@ -90,7 +270,6 @@ def audit_header_text(
 ) -> dict[str, Any]:
     for forbidden in (
         "std::",
-        "size_t",
         "template<",
         "throw ",
         "new ",
@@ -156,6 +335,198 @@ def audit_header_text(
         "status-code map mismatch",
     )
 
+    struct_pattern = re.compile(
+        r"typedef\s+struct\s+"
+        r"(?P<tag>glyph_[a-z0-9_]+)"
+        r"\s*\{"
+        r"(?P<body>.*?)"
+        r"\}\s*"
+        r"(?P<alias>glyph_[a-z0-9_]+)"
+        r"\s*;",
+        flags=re.DOTALL,
+    )
+
+    struct_matches = list(
+        struct_pattern.finditer(text)
+    )
+
+    public_structs = {
+        match.group("alias")
+        for match in struct_matches
+    }
+
+    require(
+        public_structs
+        == EXPECTED_PUBLIC_STRUCTS,
+        "public structure set mismatch",
+    )
+
+    public_field_count = 0
+
+    for match in struct_matches:
+        tag = match.group("tag")
+        alias = match.group("alias")
+
+        require(
+            tag == alias,
+            f"struct tag/alias mismatch: {tag}/{alias}",
+        )
+
+        body = re.sub(
+            r"/\*.*?\*/",
+            "",
+            match.group("body"),
+            flags=re.DOTALL,
+        )
+
+        body = re.sub(
+            r"//[^\n]*",
+            "",
+            body,
+        )
+
+        declarations = [
+            item.strip()
+            for item in body.split(";")
+            if item.strip()
+        ]
+
+        for declaration in declarations:
+            field = re.fullmatch(
+                r"(?P<base>[A-Za-z_][A-Za-z0-9_]*)"
+                r"\s+"
+                r"(?P<name>[A-Za-z_][A-Za-z0-9_]*)"
+                r"(?:"
+                r"\s*\[\s*"
+                r"(?P<extent>[A-Za-z0-9_]+)"
+                r"\s*\]"
+                r")?",
+                declaration,
+            )
+
+            require(
+                field is not None,
+                "unparseable public structure field: "
+                + declaration,
+            )
+
+            base = field.group("base")
+
+            require(
+                base in ALLOWED_PUBLIC_FIELD_TYPES,
+                "forbidden public field type: "
+                + base,
+            )
+
+            public_field_count += 1
+
+    prototype_pattern = re.compile(
+        r"GLYPH_API"
+        r"\s+"
+        r"(?P<return_type>"
+        r"[A-Za-z_][A-Za-z0-9_]*"
+        r")"
+        r"\s+"
+        r"GLYPH_CALL"
+        r"\s+"
+        r"(?P<name>"
+        r"glyph_[a-z0-9_]+_v1"
+        r")"
+        r"\s*\("
+        r"(?P<parameters>.*?)"
+        r"\)"
+        r"\s*;",
+        flags=re.DOTALL,
+    )
+
+    prototypes = list(
+        prototype_pattern.finditer(text)
+    )
+
+    annotated_names = [
+        match.group("name")
+        for match in prototypes
+    ]
+
+    require(
+        len(annotated_names)
+        == len(set(annotated_names)),
+        "duplicate annotated exported function",
+    )
+
+    require(
+        set(annotated_names)
+        == EXPECTED_FUNCTIONS,
+        "GLYPH_API/GLYPH_CALL export annotation mismatch",
+    )
+
+    public_parameter_count = 0
+
+    for match in prototypes:
+        return_type = match.group(
+            "return_type"
+        )
+
+        require(
+            return_type
+            in ALLOWED_PUBLIC_RETURN_TYPES,
+            "forbidden public return type: "
+            + return_type,
+        )
+
+        raw_parameters = (
+            match.group("parameters").strip()
+        )
+
+        if raw_parameters == "void":
+            continue
+
+        require(
+            raw_parameters != "",
+            "empty C parameter list must use void",
+        )
+
+        for raw_parameter in raw_parameters.split(","):
+            parameter = " ".join(
+                raw_parameter.split()
+            )
+
+            name_match = re.search(
+                r"([A-Za-z_][A-Za-z0-9_]*)$",
+                parameter,
+            )
+
+            require(
+                name_match is not None,
+                "unparseable public parameter: "
+                + parameter,
+            )
+
+            type_expression = (
+                parameter[
+                    :name_match.start()
+                ].strip()
+            )
+
+            type_expression = re.sub(
+                r"\s*\*\s*",
+                "*",
+                type_expression,
+            )
+
+            type_expression = " ".join(
+                type_expression.split()
+            )
+
+            require(
+                type_expression
+                in ALLOWED_PUBLIC_PARAMETER_TYPES,
+                "forbidden public parameter type: "
+                + type_expression,
+            )
+
+            public_parameter_count += 1
+
     for structure in (
         "glyph_open_options_v1",
         "glyph_query_options_v1",
@@ -184,8 +555,15 @@ def audit_header_text(
         "typedef_count": len(typedef_names),
         "function_count": len(function_names),
         "status_count": len(status_map),
+        "public_struct_count":
+            len(public_structs),
+        "public_field_count":
+            public_field_count,
+        "public_parameter_count":
+            public_parameter_count,
         "identifier_namespace_ok": True,
         "fixed_width_public_types": True,
+        "export_annotations_verified": True,
     }
 
 
@@ -237,134 +615,53 @@ def run_compile(
         )
 
 
+def layout_assertion_source(
+    style: str,
+) -> str:
+    lines: list[str] = []
+
+    for identifier, expression, message in (
+        LAYOUT_ASSERTIONS
+    ):
+        if style == "c99":
+            lines.append(
+                "typedef char "
+                f"glyph_i0_assert_{identifier}"
+                f"[({expression}) ? 1 : -1];"
+            )
+        elif style == "c11":
+            lines.append(
+                "_Static_assert("
+                f"{expression}, "
+                f"\"{message}\""
+                ");"
+            )
+        elif style == "cpp17":
+            lines.append(
+                "static_assert("
+                f"{expression}, "
+                f"\"{message}\""
+                ");"
+            )
+        else:
+            raise ContractError(
+                "unknown layout assertion style: "
+                + style
+            )
+
+    return "\n".join(lines)
+
+
 def consumer_source(
     *,
     cpp: bool,
-    layout_asserts: bool,
+    layout_style: str,
 ) -> str:
-    assert_keyword = (
-        "static_assert"
-        if cpp
-        else "_Static_assert"
+    assertions = layout_assertion_source(
+        layout_style
     )
 
-    assertions = ""
-
-    if layout_asserts:
-        assertions = f'''
-{assert_keyword}(
-    sizeof(void *) == 8,
-    "V1 supported profile requires 64-bit pointers"
-);
-
-{assert_keyword}(
-    sizeof(glyph_open_options_v1) == 72,
-    "glyph_open_options_v1 size"
-);
-{assert_keyword}(
-    offsetof(glyph_open_options_v1, struct_size) == 0,
-    "glyph_open_options_v1.struct_size"
-);
-{assert_keyword}(
-    offsetof(glyph_open_options_v1, max_mapped_bytes) == 8,
-    "glyph_open_options_v1.max_mapped_bytes"
-);
-{assert_keyword}(
-    offsetof(glyph_open_options_v1, reserved) == 32,
-    "glyph_open_options_v1.reserved"
-);
-
-{assert_keyword}(
-    sizeof(glyph_query_options_v1) == 56,
-    "glyph_query_options_v1 size"
-);
-{assert_keyword}(
-    offsetof(glyph_query_options_v1, timeout_ns) == 8,
-    "glyph_query_options_v1.timeout_ns"
-);
-{assert_keyword}(
-    offsetof(glyph_query_options_v1, reserved) == 16,
-    "glyph_query_options_v1.reserved"
-);
-
-{assert_keyword}(
-    sizeof(glyph_coordinate_v1) == 16,
-    "glyph_coordinate_v1 size"
-);
-{assert_keyword}(
-    offsetof(glyph_coordinate_v1, doc_id) == 0,
-    "glyph_coordinate_v1.doc_id"
-);
-{assert_keyword}(
-    offsetof(glyph_coordinate_v1, doc_offset) == 8,
-    "glyph_coordinate_v1.doc_offset"
-);
-
-{assert_keyword}(
-    sizeof(glyph_locate_result_v1) == 56,
-    "glyph_locate_result_v1 size"
-);
-{assert_keyword}(
-    offsetof(glyph_locate_result_v1, complete) == 4,
-    "glyph_locate_result_v1.complete"
-);
-{assert_keyword}(
-    offsetof(glyph_locate_result_v1, total_matches) == 8,
-    "glyph_locate_result_v1.total_matches"
-);
-{assert_keyword}(
-    offsetof(glyph_locate_result_v1, returned_matches) == 16,
-    "glyph_locate_result_v1.returned_matches"
-);
-{assert_keyword}(
-    offsetof(glyph_locate_result_v1, reserved) == 24,
-    "glyph_locate_result_v1.reserved"
-);
-
-{assert_keyword}(
-    sizeof(glyph_index_info_v1) == 120,
-    "glyph_index_info_v1 size"
-);
-{assert_keyword}(
-    offsetof(glyph_index_info_v1, document_count) == 8,
-    "glyph_index_info_v1.document_count"
-);
-{assert_keyword}(
-    offsetof(glyph_index_info_v1, corpus_id_sha256) == 24,
-    "glyph_index_info_v1.corpus_id_sha256"
-);
-{assert_keyword}(
-    offsetof(glyph_index_info_v1, runtime_index_id_sha256) == 56,
-    "glyph_index_info_v1.runtime_index_id_sha256"
-);
-{assert_keyword}(
-    offsetof(glyph_index_info_v1, reserved) == 88,
-    "glyph_index_info_v1.reserved"
-);
-
-{assert_keyword}(
-    sizeof(glyph_document_info_v1) == 96,
-    "glyph_document_info_v1 size"
-);
-{assert_keyword}(
-    offsetof(glyph_document_info_v1, doc_id) == 8,
-    "glyph_document_info_v1.doc_id"
-);
-{assert_keyword}(
-    offsetof(glyph_document_info_v1, source_sha256) == 24,
-    "glyph_document_info_v1.source_sha256"
-);
-{assert_keyword}(
-    offsetof(glyph_document_info_v1, path_length_bytes) == 56,
-    "glyph_document_info_v1.path_length_bytes"
-);
-{assert_keyword}(
-    offsetof(glyph_document_info_v1, reserved) == 64,
-    "glyph_document_info_v1.reserved"
-);
-'''
-
-    return f'''
+    return f"""
 #include <stddef.h>
 #include <stdint.h>
 #include "glyph/glyph.h"
@@ -455,7 +752,7 @@ int main(void) {{
 
     return 0;
 }}
-'''
+"""
 
 
 def compile_contract() -> dict[str, Any]:
@@ -478,19 +775,21 @@ def compile_contract() -> dict[str, Any]:
         c99.write_text(
             consumer_source(
                 cpp=False,
-                layout_asserts=False,
+                layout_style="c99",
             )
         )
+
         c11.write_text(
             consumer_source(
                 cpp=False,
-                layout_asserts=True,
+                layout_style="c11",
             )
         )
+
         cpp.write_text(
             consumer_source(
                 cpp=True,
-                layout_asserts=True,
+                layout_style="cpp17",
             )
         )
 
@@ -534,6 +833,9 @@ def compile_contract() -> dict[str, Any]:
         "strict_c99_header": True,
         "strict_c11_header": True,
         "cpp17_consumer_header": True,
+        "c99_layout_assertions": True,
+        "c11_layout_assertions": True,
+        "cpp17_layout_assertions": True,
         "layout_static_assertions": True,
         "function_pointer_signatures": True,
     }
@@ -634,6 +936,26 @@ def main() -> int:
         header_text
     )
 
+    field_anchor = (
+        "uint32_t struct_size;\n"
+        "    uint32_t flags;"
+    )
+
+    export_anchor = (
+        "GLYPH_API uint32_t GLYPH_CALL\n"
+        "glyph_abi_version_v1"
+    )
+
+    require(
+        header_text.count(field_anchor) >= 1,
+        "field mutation anchor missing",
+    )
+
+    require(
+        header_text.count(export_anchor) == 1,
+        "export mutation anchor missing",
+    )
+
     mutations = [
         expect_header_rejection(
             "ordinary_identifier_collision",
@@ -652,8 +974,50 @@ def main() -> int:
             ),
         ),
         expect_header_rejection(
-            "forbidden_platform_width_type",
-            header_text + "\nsize_t forbidden;\n",
+            "forbidden_platform_width_long",
+            header_text.replace(
+                field_anchor,
+                (
+                    "uint32_t struct_size;\n"
+                    "    long forbidden_platform_width;\n"
+                    "    uint32_t flags;"
+                ),
+                1,
+            ),
+        ),
+        expect_header_rejection(
+            "forbidden_bool_type",
+            header_text.replace(
+                field_anchor,
+                (
+                    "uint32_t struct_size;\n"
+                    "    bool forbidden_boolean;\n"
+                    "    uint32_t flags;"
+                ),
+                1,
+            ),
+        ),
+        expect_header_rejection(
+            "missing_glyph_api_annotation",
+            header_text.replace(
+                export_anchor,
+                (
+                    "uint32_t GLYPH_CALL\n"
+                    "glyph_abi_version_v1"
+                ),
+                1,
+            ),
+        ),
+        expect_header_rejection(
+            "missing_glyph_call_annotation",
+            header_text.replace(
+                export_anchor,
+                (
+                    "GLYPH_API uint32_t\n"
+                    "glyph_abi_version_v1"
+                ),
+                1,
+            ),
         ),
         expect_header_rejection(
             "renumbered_status_code",
