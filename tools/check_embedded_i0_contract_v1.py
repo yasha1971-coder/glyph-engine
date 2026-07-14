@@ -1435,14 +1435,27 @@ def source_has_embedded_definition(
 
     return None
 
+def tracked_source_files() -> list[Path]:
+    completed = subprocess.run(
+        [
+            "git",
+            "ls-files",
+        ],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=True,
+    )
 
-def scan_runtime_implementation() -> dict[str, Any]:
-    hits: list[dict[str, str]] = []
-    scanned = 0
+    files: list[Path] = []
 
-    for path in sorted(
-        ROOT.rglob("*")
-    ):
+    for line in completed.stdout.splitlines():
+        if not line:
+            continue
+
+        path = ROOT / line
+
         if (
             not path.is_file()
             or path.suffix
@@ -1459,7 +1472,36 @@ def scan_runtime_implementation() -> dict[str, Any]:
         ):
             continue
 
-        scanned += 1
+        files.append(path)
+
+    return sorted(files)
+
+def scan_runtime_implementation() -> dict[str, Any]:
+    hits: list[dict[str, str]] = []
+    scanned = 0
+
+    tracked = tracked_source_files()
+
+    scanned = len(tracked)
+
+    for path in tracked:
+
+        if (
+            not path.is_file()
+            or path.suffix
+            not in SOURCE_SUFFIXES
+        ):
+            continue
+
+        relative = path.relative_to(ROOT)
+
+        if (
+            relative.parts
+            and relative.parts[0]
+            in SOURCE_SCAN_EXCLUDED_ROOTS
+        ):
+            continue
+
 
         text = path.read_text(
             errors="replace"
