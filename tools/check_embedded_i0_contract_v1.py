@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
 import os
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -237,6 +240,221 @@ LAYOUT_ASSERTIONS = [
         "glyph_document_info_v1.reserved",
     ),
 ]
+
+
+SPEC_PATHS = (
+    "docs/specs/GLYPH_C_ABI_V1.md",
+    "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md",
+    "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md",
+    "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md",
+    "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md",
+)
+
+CONTRACT_SOURCE_PATHS = (
+    "include/glyph/glyph.h",
+    *SPEC_PATHS,
+    "tools/check_embedded_i0_contract_v1.py",
+)
+
+REQUIRED_SPEC_HEADINGS = {
+    "docs/specs/GLYPH_C_ABI_V1.md": {
+        "## ABI version",
+        "## Close behavior",
+        "## Locate result semantics",
+        "## Document identity",
+        "## Document path semantics",
+        "## Structure versioning",
+        "## Status codes",
+        "## Open options",
+        "## Thread-safety contract",
+        "### Initial supported host profile",
+        "### Nullable option structures",
+        "### Exact output initialization",
+        "### Exact argument rules",
+        "### Document-path size probe",
+        "### Repeated close",
+        "### Close concurrency barrier",
+        "### Frozen V1 structure layout",
+    },
+    "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md": {
+        "## Hostile inputs",
+        "## Trusted assumptions",
+        "## Filesystem attacker boundary",
+        "## Concurrency boundary",
+        "## Resource boundary",
+    },
+    "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md": {
+        "## Required publication model",
+        "## Root directory anchoring",
+        "## Required open sequence",
+        "## Required structural checks",
+        "## Permitted integrity claim",
+        "## Forbidden integrity claim",
+        "## Post-open mutation",
+        "## File change during open",
+    },
+    "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md": {
+        "## Query-plane limits",
+        "## Checked arithmetic",
+        "## Bounded locate",
+        "## Open-time work boundary",
+        "## Timeout contract",
+        "## Partial-result rule",
+        "## Build-plane isolation",
+        "## Interrupted build",
+    },
+    "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md": {
+        "## Verifier-side policy",
+        "## Signed statement fields",
+        "## Signing preimage",
+        "## Canonical statement encoding",
+        "## Target algorithm",
+        "## Required rejection cases",
+    },
+}
+
+CROSS_FILE_REQUIREMENTS = {
+    "document_identity_dense": (
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Document identity",
+            "0 <= doc_id < document_count",
+        ),
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Document identity",
+            "committed canonical source-manifest order",
+        ),
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Document identity",
+            "out-of-range `doc_id` returns `GLYPH_E_ARG`",
+        ),
+    ),
+    "close_model_consistent": (
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "### Close concurrency barrier",
+            "no persistent library-side close barrier or closing latch",
+        ),
+        (
+            "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md",
+            "## Concurrency boundary",
+            "atomic active-operation count",
+        ),
+        (
+            "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md",
+            "## Partial-result rule",
+            "close/query race is not a recoverable query result class",
+        ),
+    ),
+    "mapped_bytes_validated": (
+        (
+            "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md",
+            "## Required open sequence",
+            "create the final read-only mapping",
+        ),
+        (
+            "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md",
+            "## Required open sequence",
+            "compute full SHA-256 through the final mapped region",
+        ),
+        (
+            "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md",
+            "## File change during open",
+            "size-preserving rewrite",
+        ),
+        (
+            "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md",
+            "## Filesystem attacker boundary",
+            "hostile local writer",
+        ),
+    ),
+    "path_validation_defined": (
+        (
+            "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md",
+            "## Required structural checks",
+            "free of `.` and `..` components",
+        ),
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Document path semantics",
+            "raw relative path bytes",
+        ),
+    ),
+    "signature_policy_defined": (
+        (
+            "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md",
+            "## Verifier-side policy",
+            "ALLOW_UNSIGNED",
+        ),
+        (
+            "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md",
+            "## Verifier-side policy",
+            "REQUIRE_TRUSTED_SIGNATURE",
+        ),
+        (
+            "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md",
+            "## Verifier-side policy",
+            "signature stripping",
+        ),
+        (
+            "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md",
+            "## Canonical statement encoding",
+            "mandatory pre-implementation gate",
+        ),
+    ),
+    "pointer_memory_directionality": (
+        (
+            "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md",
+            "## Trusted assumptions",
+            "valid readable caller memory for every input pointer",
+        ),
+        (
+            "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md",
+            "## Trusted assumptions",
+            "valid writable caller memory for every output pointer",
+        ),
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Query input lifetime",
+            "The runtime must not: - retain the query pointer; - write to query memory",
+        ),
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Locate output model",
+            "caller-owned storage",
+        ),
+    ),
+    "open_deadline_nonclaim": (
+        (
+            "docs/specs/GLYPH_C_ABI_V1.md",
+            "## Open options",
+            "no open deadline",
+        ),
+        (
+            "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md",
+            "## Open-time work boundary",
+            "no open deadline",
+        ),
+    ),
+}
+
+SOURCE_SUFFIXES = {
+    ".c",
+    ".cc",
+    ".cpp",
+    ".cxx",
+}
+
+SOURCE_SCAN_EXCLUDED_ROOTS = {
+    ".git",
+    "benchmarks",
+    "build",
+    "docs",
+    "include",
+    "tools",
+}
 
 
 class ContractError(RuntimeError):
@@ -841,80 +1059,310 @@ def compile_contract() -> dict[str, Any]:
     }
 
 
-def audit_specs() -> dict[str, Any]:
-    abi = (
-        ROOT
-        / "docs/specs/GLYPH_C_ABI_V1.md"
-    ).read_text()
+def sha256_bytes(
+    data: bytes,
+) -> str:
+    return hashlib.sha256(data).hexdigest()
 
-    threat = (
-        ROOT
-        / "docs/specs/"
-        / "GLYPH_EMBEDDED_THREAT_MODEL_V1.md"
-    ).read_text()
 
-    mmap_spec = (
-        ROOT
-        / "docs/specs/"
-        / "GLYPH_MMAP_TRUST_MODEL_V1.md"
-    ).read_text()
+def normalize_markdown(
+    text: str,
+) -> str:
+    return " ".join(text.split())
 
-    resource = (
-        ROOT
-        / "docs/specs/"
-        / "GLYPH_RESOURCE_FAILURE_MODEL_V1.md"
-    ).read_text()
 
-    signature = (
-        ROOT
-        / "docs/specs/"
-        / "GLYPH_SIGNED_STATEMENT_V1.md"
-    ).read_text()
+def load_spec_texts() -> dict[str, str]:
+    result: dict[str, str] = {}
 
-    required_abi_phrases = (
-        "64-bit little-endian Linux",
-        "options == NULL",
-        "*out_index = NULL",
-        "*out_count = 0",
-        "Document-path size probe",
-        "Repeated close",
-        "Close concurrency barrier",
-        "GLYPH_E_CLOSED",
-        "Frozen V1 structure layout",
+    for relative in SPEC_PATHS:
+        path = ROOT / relative
+
+        require(
+            path.is_file(),
+            f"specification missing: {relative}",
+        )
+
+        raw = path.read_bytes()
+
+        try:
+            value = raw.decode("utf-8")
+        except UnicodeDecodeError as error:
+            raise ContractError(
+                f"specification is not UTF-8: {relative}"
+            ) from error
+
+        result[relative] = value
+
+    return result
+
+
+def extract_spec_sections(
+    text: str,
+    relative: str,
+) -> dict[str, str]:
+    lines = text.splitlines(
+        keepends=True
     )
 
-    for phrase in required_abi_phrases:
-        require(
-            phrase in abi,
-            f"C ABI specification phrase missing: {phrase}",
+    headings: list[
+        tuple[int, str, int]
+    ] = []
+
+    for index, line in enumerate(lines):
+        candidate = line.rstrip("\r\n")
+
+        match = re.match(
+            r"^(#{2,3})\s+.+$",
+            candidate,
+        )
+
+        if match is None:
+            continue
+
+        headings.append(
+            (
+                index,
+                candidate,
+                len(match.group(1)),
+            )
         )
 
     require(
-        "no new operation may begin"
-        in threat,
-        "close barrier missing from threat model",
+        headings,
+        f"no normative headings found: {relative}",
     )
 
-    for phrase in (
-        "opened directory descriptor",
-        "descriptor-relative lookup",
-        "same opened file description",
+    names = [
+        heading
+        for _, heading, _ in headings
+    ]
+
+    require(
+        len(names) == len(set(names)),
+        f"duplicate normative heading: {relative}",
+    )
+
+    sections: dict[str, str] = {}
+
+    for position, (
+        start,
+        heading,
+        level,
+    ) in enumerate(headings):
+        end = len(lines)
+
+        for next_start, _, next_level in (
+            headings[position + 1:]
+        ):
+            if next_level <= level:
+                end = next_start
+                break
+
+        section = "".join(
+            lines[start:end]
+        )
+
+        if not section.endswith("\n"):
+            section += "\n"
+
+        sections[heading] = section
+
+    return sections
+
+
+def parse_layout_table(
+    section: str,
+) -> dict[str, int]:
+    pairs = re.findall(
+        r"\|\s*`(?P<name>glyph_[a-z0-9_]+)`"
+        r"\s*\|\s*(?P<size>[0-9]+)\s+bytes\s*\|",
+        section,
+    )
+
+    return {
+        name: int(size)
+        for name, size in pairs
+    }
+
+
+def expect_spec_rejection(
+    name: str,
+    spec_texts: dict[str, str],
+) -> dict[str, Any]:
+    try:
+        audit_specs(spec_texts)
+    except ContractError as error:
+        return {
+            "mutation": name,
+            "rejected": True,
+            "message": str(error),
+        }
+
+    raise ContractError(
+        f"spec mutation unexpectedly accepted: {name}"
+    )
+
+
+def audit_specs(
+    supplied_texts: dict[str, str] | None = None,
+) -> dict[str, Any]:
+    texts = (
+        load_spec_texts()
+        if supplied_texts is None
+        else dict(supplied_texts)
+    )
+
+    require(
+        set(texts) == set(SPEC_PATHS),
+        "specification file set mismatch",
+    )
+
+    section_texts: dict[
+        str,
+        dict[str, str],
+    ] = {}
+
+    section_records: dict[
+        str,
+        dict[str, dict[str, Any]],
+    ] = {}
+
+    file_hashes: dict[str, str] = {}
+
+    for relative in SPEC_PATHS:
+        text = texts[relative]
+
+        sections = extract_spec_sections(
+            text,
+            relative,
+        )
+
+        section_texts[relative] = sections
+
+        required = REQUIRED_SPEC_HEADINGS[
+            relative
+        ]
+
+        missing = sorted(
+            required - set(sections)
+        )
+
+        require(
+            not missing,
+            "required normative heading missing: "
+            + relative
+            + ": "
+            + ", ".join(missing),
+        )
+
+        file_hashes[relative] = sha256_bytes(
+            text.encode("utf-8")
+        )
+
+        section_records[relative] = {}
+
+        for heading, section in (
+            sections.items()
+        ):
+            encoded = section.encode("utf-8")
+
+            section_records[relative][
+                heading
+            ] = {
+                "sha256": sha256_bytes(
+                    encoded
+                ),
+                "size_bytes": len(encoded),
+            }
+
+    cross_file_invariants: dict[
+        str,
+        bool,
+    ] = {}
+
+    for invariant, requirements in (
+        CROSS_FILE_REQUIREMENTS.items()
     ):
-        require(
-            phrase in mmap_spec,
-            f"mmap trust phrase missing: {phrase}",
-        )
+        for relative, heading, marker in (
+            requirements
+        ):
+            section = section_texts[
+                relative
+            ][heading]
 
-    require(
-        "No hidden unbounded coordinate collection"
-        in resource,
-        "bounded-resource rule missing",
+            normalized = normalize_markdown(
+                section
+            )
+
+            require(
+                marker in normalized,
+                f"{invariant}: normative marker "
+                f"missing: {relative}: "
+                f"{heading}: {marker}",
+            )
+
+        cross_file_invariants[
+            invariant
+        ] = True
+
+    all_text = "\n".join(
+        texts[relative]
+        for relative in SPEC_PATHS
+    )
+
+    referenced_statuses = set(
+        re.findall(
+            r"\bGLYPH_(?:OK|E_[A-Z_]+)\b",
+            all_text,
+        )
+    )
+
+    expected_statuses = set(
+        EXPECTED_STATUS
     )
 
     require(
-        "REQUIRE_TRUSTED_SIGNATURE"
-        in signature,
-        "mandatory signature policy missing",
+        referenced_statuses
+        == expected_statuses,
+        "specification status registry mismatch",
+    )
+
+    status_section = section_texts[
+        "docs/specs/GLYPH_C_ABI_V1.md"
+    ]["## Status codes"]
+
+    status_section_names = set(
+        re.findall(
+            r"`(GLYPH_(?:OK|E_[A-Z_]+))`",
+            status_section,
+        )
+    )
+
+    require(
+        status_section_names
+        == expected_statuses,
+        "C ABI status section mismatch",
+    )
+
+    layout_section = section_texts[
+        "docs/specs/GLYPH_C_ABI_V1.md"
+    ]["### Frozen V1 structure layout"]
+
+    specification_layout = (
+        parse_layout_table(
+            layout_section
+        )
+    )
+
+    require(
+        specification_layout
+        == EXPECTED_LAYOUT,
+        "C ABI structure-layout table mismatch",
+    )
+
+    section_count = sum(
+        len(records)
+        for records in section_records.values()
     )
 
     return {
@@ -926,10 +1374,268 @@ def audit_specs() -> dict[str, Any]:
         "host_profile_defined": True,
         "root_directory_anchored": True,
         "signature_policy_defined": True,
+        "normative_section_hashes_verified":
+            True,
+        "normative_section_count":
+            section_count,
+        "normative_sections":
+            section_records,
+        "specification_file_sha256":
+            file_hashes,
+        "cross_file_invariants_verified":
+            True,
+        "cross_file_invariant_count":
+            len(cross_file_invariants),
+        "cross_file_invariants":
+            cross_file_invariants,
+        "spec_status_registry_verified":
+            True,
+        "spec_layout_table_verified":
+            True,
+        "referenced_statuses":
+            sorted(referenced_statuses),
     }
 
 
-def main() -> int:
+def source_has_embedded_definition(
+    text: str,
+) -> tuple[str, str] | None:
+    for name in sorted(
+        EXPECTED_FUNCTIONS
+    ):
+        pattern = (
+            r"\b"
+            + re.escape(name)
+            + r"\s*\("
+            + r"[^;{}]*"
+            + r"\)"
+            + r"\s*(?:noexcept\s*)?"
+            + r"\{"
+        )
+
+        if re.search(
+            pattern,
+            text,
+            flags=re.DOTALL,
+        ):
+            return (
+                "public_function_definition",
+                name,
+            )
+
+    if re.search(
+        r"#\s*include\s*"
+        r"[<\"]glyph/glyph\.h[>\"]",
+        text,
+    ):
+        return (
+            "public_header_include",
+            "glyph/glyph.h",
+        )
+
+    return None
+
+
+def scan_runtime_implementation() -> dict[str, Any]:
+    hits: list[dict[str, str]] = []
+    scanned = 0
+
+    for path in sorted(
+        ROOT.rglob("*")
+    ):
+        if (
+            not path.is_file()
+            or path.suffix
+            not in SOURCE_SUFFIXES
+        ):
+            continue
+
+        relative = path.relative_to(ROOT)
+
+        if (
+            relative.parts
+            and relative.parts[0]
+            in SOURCE_SCAN_EXCLUDED_ROOTS
+        ):
+            continue
+
+        scanned += 1
+
+        text = path.read_text(
+            errors="replace"
+        )
+
+        reason = (
+            source_has_embedded_definition(
+                text
+            )
+        )
+
+        if reason is None:
+            continue
+
+        kind, symbol = reason
+
+        hits.append(
+            {
+                "path": relative.as_posix(),
+                "reason": kind,
+                "symbol": symbol,
+            }
+        )
+
+    require(
+        not hits,
+        "runtime implementation exists "
+        "before I0 freeze: "
+        + json.dumps(
+            hits,
+            sort_keys=True,
+        ),
+    )
+
+    return {
+        "runtime_implementation_present":
+            False,
+        "implementation_source_files_scanned":
+            scanned,
+        "implementation_hits": hits,
+        "implementation_tree_scan_verified":
+            True,
+    }
+
+
+def expect_implementation_detection() -> dict[str, Any]:
+    synthetic = """
+#include "glyph/glyph.h"
+
+glyph_status_v1 glyph_query_count_v1(
+    glyph_index_v1 *index,
+    const uint8_t *query,
+    uint64_t query_size,
+    const glyph_query_options_v1 *options,
+    uint64_t *out_count
+) {
+    return GLYPH_E_UNSUPPORTED;
+}
+"""
+
+    detected = (
+        source_has_embedded_definition(
+            synthetic
+        )
+    )
+
+    require(
+        detected is not None,
+        "synthetic embedded implementation "
+        "was not detected",
+    )
+
+    return {
+        "mutation":
+            "premature_runtime_implementation",
+        "rejected": True,
+        "message":
+            "synthetic ABI implementation detected",
+    }
+
+
+def contract_source_commit() -> str:
+    command = [
+        "git",
+        "rev-list",
+        "-1",
+        "HEAD",
+        "--",
+        *CONTRACT_SOURCE_PATHS,
+    ]
+
+    completed = subprocess.run(
+        command,
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    require(
+        completed.returncode == 0,
+        "failed to resolve reviewed commit: "
+        + completed.stderr,
+    )
+
+    commit = completed.stdout.strip()
+
+    require(
+        re.fullmatch(
+            r"[0-9a-f]{40}",
+            commit,
+        )
+        is not None,
+        "invalid reviewed commit",
+    )
+
+    return commit
+
+
+def ensure_contract_sources_clean() -> None:
+    completed = subprocess.run(
+        [
+            "git",
+            "status",
+            "--porcelain",
+            "--",
+            *CONTRACT_SOURCE_PATHS,
+        ],
+        cwd=ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    require(
+        completed.returncode == 0,
+        "failed to inspect contract-source state",
+    )
+
+    require(
+        completed.stdout.strip() == "",
+        "contract sources are not committed:\n"
+        + completed.stdout,
+    )
+
+
+def contract_source_hashes() -> dict[str, str]:
+    result: dict[str, str] = {}
+
+    for relative in CONTRACT_SOURCE_PATHS:
+        path = ROOT / relative
+
+        require(
+            path.is_file(),
+            f"contract source missing: {relative}",
+        )
+
+        result[relative] = sha256_bytes(
+            path.read_bytes()
+        )
+
+    return result
+
+
+def build_output(
+    reviewed_commit: str,
+) -> dict[str, Any]:
+    require(
+        re.fullmatch(
+            r"[0-9a-f]{40}",
+            reviewed_commit,
+        )
+        is not None,
+        "reviewed_commit must be 40 lowercase hex",
+    )
+
     header_text = HEADER.read_text()
 
     header_summary = audit_header_text(
@@ -954,6 +1660,17 @@ def main() -> int:
     require(
         header_text.count(export_anchor) == 1,
         "export mutation anchor missing",
+    )
+
+    spec_texts = load_spec_texts()
+
+    abi_path = (
+        "docs/specs/GLYPH_C_ABI_V1.md"
+    )
+
+    threat_path = (
+        "docs/specs/"
+        "GLYPH_EMBEDDED_THREAT_MODEL_V1.md"
     )
 
     mutations = [
@@ -1029,39 +1746,174 @@ def main() -> int:
         ),
     ]
 
-    compile_summary = compile_contract()
-    specification_summary = audit_specs()
+    missing_heading = dict(spec_texts)
+    missing_heading[abi_path] = (
+        missing_heading[abi_path].replace(
+            "## Document identity",
+            "## Removed document identity",
+            1,
+        )
+    )
 
-    implementation_paths = [
-        ROOT / "src/glyph_c_api.cpp",
-        ROOT / "src/glyph_runtime.cpp",
-    ]
+    mutations.append(
+        expect_spec_rejection(
+            "missing_normative_heading",
+            missing_heading,
+        )
+    )
 
-    runtime_implementation_present = any(
-        path.exists()
-        for path in implementation_paths
+    unknown_status = dict(spec_texts)
+    unknown_status[abi_path] += (
+        "\nUnknown status `GLYPH_E_FAKE`.\n"
+    )
+
+    mutations.append(
+        expect_spec_rejection(
+            "unknown_status_reference",
+            unknown_status,
+        )
+    )
+
+    bad_layout = dict(spec_texts)
+
+    layout_anchor = (
+        "| `glyph_index_info_v1` | "
+        "120 bytes |"
     )
 
     require(
-        runtime_implementation_present is False,
-        "runtime implementation exists before I0 freeze",
+        bad_layout[abi_path].count(
+            layout_anchor
+        )
+        == 1,
+        "layout mutation anchor missing",
+    )
+
+    bad_layout[abi_path] = (
+        bad_layout[abi_path].replace(
+            layout_anchor,
+            (
+                "| `glyph_index_info_v1` | "
+                "121 bytes |"
+            ),
+            1,
+        )
+    )
+
+    mutations.append(
+        expect_spec_rejection(
+            "layout_table_mismatch",
+            bad_layout,
+        )
+    )
+
+    close_contradiction = dict(spec_texts)
+
+    close_anchor = (
+        "no persistent library-side "
+        "close barrier or\n"
+        "  closing latch"
+    )
+
+    require(
+        close_contradiction[
+            abi_path
+        ].count(close_anchor)
+        == 1,
+        "close-model mutation anchor missing",
+    )
+
+    close_contradiction[abi_path] = (
+        close_contradiction[
+            abi_path
+        ].replace(
+            close_anchor,
+            "persistent library-side closing latch",
+            1,
+        )
+    )
+
+    mutations.append(
+        expect_spec_rejection(
+            "close_model_contradiction",
+            close_contradiction,
+        )
+    )
+
+    pointer_assumption = dict(spec_texts)
+
+    pointer_anchor = (
+        "valid readable caller memory"
+    )
+
+    require(
+        pointer_assumption[
+            threat_path
+        ].count(pointer_anchor)
+        >= 1,
+        "pointer-model mutation anchor missing",
+    )
+
+    pointer_assumption[threat_path] = (
+        pointer_assumption[
+            threat_path
+        ].replace(
+            pointer_anchor,
+            "valid caller memory",
+            1,
+        )
+    )
+
+    mutations.append(
+        expect_spec_rejection(
+            "pointer_model_regression",
+            pointer_assumption,
+        )
+    )
+
+    mutations.append(
+        expect_implementation_detection()
+    )
+
+    compile_summary = compile_contract()
+    specification_summary = audit_specs(
+        spec_texts
+    )
+    implementation_summary = (
+        scan_runtime_implementation()
     )
 
     output = {
         "ok": True,
         "format": FORMAT,
-        "phase": "I0_CONTRACT_FREEZE_PREPARATION",
+        "phase":
+            "I0_CONTRACT_FREEZE_PREPARATION",
         "status": "DRAFT_NOT_FROZEN",
+        "reviewed_commit": reviewed_commit,
         "abi_version": 1,
         "supported_host_profile":
             "64-bit little-endian Linux",
-        "runtime_implementation_present": False,
         "public_header_present": True,
-        "contract_spec_count": 5,
+        "contract_spec_count":
+            len(SPEC_PATHS),
+        "contract_source_sha256":
+            contract_source_hashes(),
         "function_count":
             header_summary["function_count"],
         "status_code_count":
             header_summary["status_count"],
+        "public_struct_count":
+            header_summary[
+                "public_struct_count"
+            ],
+        "public_field_count":
+            header_summary[
+                "public_field_count"
+            ],
+        "public_parameter_count":
+            header_summary[
+                "public_parameter_count"
+            ],
         "identifier_namespace_verified":
             header_summary[
                 "identifier_namespace_ok"
@@ -1070,13 +1922,33 @@ def main() -> int:
             header_summary[
                 "fixed_width_public_types"
             ],
+        "export_annotations_verified":
+            header_summary[
+                "export_annotations_verified"
+            ],
         "strict_c99_header":
-            compile_summary["strict_c99_header"],
+            compile_summary[
+                "strict_c99_header"
+            ],
         "strict_c11_header":
-            compile_summary["strict_c11_header"],
+            compile_summary[
+                "strict_c11_header"
+            ],
         "cpp17_consumer_header":
             compile_summary[
                 "cpp17_consumer_header"
+            ],
+        "c99_layout_assertions":
+            compile_summary[
+                "c99_layout_assertions"
+            ],
+        "c11_layout_assertions":
+            compile_summary[
+                "c11_layout_assertions"
+            ],
+        "cpp17_layout_assertions":
+            compile_summary[
+                "cpp17_layout_assertions"
             ],
         "layout_static_assertions":
             compile_summary[
@@ -1087,31 +1959,167 @@ def main() -> int:
                 "function_pointer_signatures"
             ],
         "layout": EXPECTED_LAYOUT,
+        "write_mode_supported": True,
+        "verify_mode_supported": True,
+        "committed_result_byte_comparison":
+            True,
+        **implementation_summary,
         **specification_summary,
         "mutation_count": len(mutations),
         "mutations": mutations,
         "next":
-            "EXTERNAL_LINE_BY_LINE_PREFREEZE_REVIEW",
+            "SECOND_EXTERNAL_PREFREEZE_REVIEW",
     }
 
-    RESULT.parent.mkdir(
+    return output
+
+
+def atomic_write(
+    path: Path,
+    payload: bytes,
+) -> None:
+    path.parent.mkdir(
         parents=True,
         exist_ok=True,
     )
 
-    RESULT.write_bytes(
-        canonical_json_bytes(output)
+    temporary = path.with_name(
+        path.name + ".tmp"
     )
 
-    print(
-        canonical_json_bytes(output).decode(
-            "utf-8"
+    temporary.write_bytes(payload)
+    os.replace(temporary, path)
+
+
+def parse_args(
+    argv: list[str] | None,
+) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description=(
+            "Build or verify the GLYPH "
+            "Embedded I0 contract artifact."
+        )
+    )
+
+    mode = parser.add_mutually_exclusive_group(
+        required=True
+    )
+
+    mode.add_argument(
+        "--write",
+        action="store_true",
+        help="write the canonical result artifact",
+    )
+
+    mode.add_argument(
+        "--verify",
+        action="store_true",
+        help=(
+            "byte-compare the committed result "
+            "with a fresh checker run"
         ),
-        end="",
+    )
+
+    parser.add_argument(
+        "--result",
+        type=Path,
+        default=RESULT,
+        help="result artifact path",
+    )
+
+    return parser.parse_args(argv)
+
+
+def main(
+    argv: list[str] | None = None,
+) -> int:
+    args = parse_args(argv)
+
+    result_path = args.result
+
+    if not result_path.is_absolute():
+        result_path = ROOT / result_path
+
+    ensure_contract_sources_clean()
+
+    reviewed_commit = (
+        contract_source_commit()
+    )
+
+    output = build_output(
+        reviewed_commit
+    )
+
+    payload = canonical_json_bytes(
+        output
+    )
+
+    if args.write:
+        atomic_write(
+            result_path,
+            payload,
+        )
+
+        print(
+            "GLYPH EMBEDDED I0 CONTRACT WRITE PASS"
+        )
+    else:
+        require(
+            result_path.is_file(),
+            "committed result missing: "
+            + str(result_path),
+        )
+
+        committed = (
+            result_path.read_bytes()
+        )
+
+        require(
+            committed == payload,
+            "committed I0 result mismatch: "
+            f"expected_sha256="
+            f"{sha256_bytes(payload)} "
+            f"actual_sha256="
+            f"{sha256_bytes(committed)}",
+        )
+
+        print(
+            "GLYPH EMBEDDED I0 CONTRACT VERIFY PASS"
+        )
+
+    print(
+        "reviewed_commit =",
+        reviewed_commit,
+    )
+    print(
+        "normative_section_count =",
+        output["normative_section_count"],
+    )
+    print(
+        "cross_file_invariant_count =",
+        output[
+            "cross_file_invariant_count"
+        ],
+    )
+    print(
+        "mutation_count =",
+        output["mutation_count"],
+    )
+    print(
+        "result_sha256 =",
+        sha256_bytes(payload),
     )
 
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except ContractError as error:
+        print(
+            "ERROR:",
+            error,
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
