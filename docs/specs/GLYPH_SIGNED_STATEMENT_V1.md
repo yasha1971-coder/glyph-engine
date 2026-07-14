@@ -91,6 +91,13 @@ It must specify:
 
 The canonical encoding must be independently reproducible.
 
+Defining and freezing this encoding is a mandatory pre-implementation gate for
+the signature phase.
+
+No GLYPH implementation may produce a signature before canonicalization is
+frozen and covered by executable positive, mutation, and independent-replay
+fixtures.
+
 ## Target algorithm
 
 The target V1 signature algorithm is:

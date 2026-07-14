@@ -21,6 +21,9 @@ It does not cryptographically re-verify every page on every later access.
 
 A published runtime index is immutable.
 
+Publication immutability begins before the index becomes available to open and
+continues for the complete lifetime of every open handle.
+
 A new version must be created under new temporary inodes, fully written,
 verified, synchronized, and then published atomically.
 
@@ -33,6 +36,9 @@ A publisher must not:
 
 Replacing a directory entry with a new inode does not alter already-open file
 descriptors or mappings.
+
+The default V1 trust profile does not include an authorized writer that
+mutates a published inode.
 
 ## Root directory anchoring
 
@@ -61,14 +67,18 @@ For every declared runtime payload, open must conceptually perform:
 1. open a file descriptor for read-only access;
 2. reject symlink payloads and non-regular files;
 3. obtain file identity and size through `fstat`;
-4. enforce configured size and document limits;
-5. verify manifest path coverage;
-6. compute full SHA-256 through the same opened file description;
-7. compare the hash with the committed manifest value;
-8. parse and structurally validate all headers and section ranges;
-9. re-check file identity and size for change during verification;
-10. map the verified file read-only;
+4. enforce configured size, document, and address-space limits;
+5. verify manifest coverage and reject impossible mapping sizes;
+6. create the final read-only mapping from that opened file description;
+7. compute full SHA-256 through the final mapped region;
+8. compare the hash with the committed manifest value;
+9. parse and structurally validate all headers, sections, bindings, and source
+   paths through that same final mapped region;
+10. re-check descriptor identity and supported metadata as a best-effort
+    mutation check;
 11. expose the handle only after all payloads pass.
+
+No query may dereference a mapped field before structural validation succeeds.
 
 Failure at any step must prevent handle publication.
 
@@ -94,7 +104,20 @@ validate:
 - terminal-sentinel invariants;
 - document-count and source-manifest consistency.
 
-A correct hash does not waive any structural check.
+Every committed source path must also be validated as:
+
+- non-empty;
+- relative;
+- free of byte `0x00`;
+- encoded with byte `0x2F` as its component separator;
+- free of leading and trailing separators;
+- free of empty components;
+- free of `.` and `..` components;
+- unique as a raw byte sequence within the index.
+
+Invalid UTF-8 is permitted.
+
+A correct hash does not waive any structural or source-path check.
 
 ## mmap properties
 
@@ -110,8 +133,12 @@ The C ABI must not expose a pointer into a mapped region.
 
 After successful open, GLYPH may state:
 
-> The opened runtime payloads matched their committed SHA-256 values and passed
-> structural validation at open time.
+> Under `GLYPH_TRUSTED_IMMUTABLE_LOCAL_FILESYSTEM_V1`, the bytes observed
+> through the final runtime mappings during open matched their committed
+> SHA-256 values and passed structural validation before handle publication.
+
+This claim depends on the publication inode remaining immutable from before
+open through the complete handle lifetime.
 
 ## Forbidden integrity claim
 
@@ -122,23 +149,27 @@ GLYPH must not state:
 
 ## Post-open mutation
 
-Mutation or truncation of an already-open published inode violates the V1 trust
-model.
+Mutation or truncation of an already-open published inode violates the V1
+trust model.
+
+An ordinary read-only private mapping does not cryptographically authenticate
+every later page access and does not protect against a writer that is allowed
+to mutate the backing inode.
 
 On operating systems where truncating an active mapping can produce `SIGBUS`,
-the V1 runtime does not claim that such a privileged post-open mutation is
+the V1 runtime does not claim that such a post-open trust-model violation is
 recoverable in-process.
 
-Deployments requiring protection from privileged post-open mutation need a
-stronger profile, such as:
+Deployments requiring protection from hostile local mutation need a stronger
+profile, such as:
 
-- filesystem immutability controls;
+- filesystem immutability enforcement;
 - fs-verity;
 - dm-verity;
 - segmented or Merkle-verified runtime formats;
 - process isolation.
 
-These are not part of V1.
+These are not part of the default V1 profile.
 
 ## Replacement race
 
@@ -150,10 +181,11 @@ way that could select a different inode.
 
 ## File change during open
 
-The implementation must reject detectable mutation during open.
+The implementation must reject mutation detectable during open.
 
-At minimum, before and after hashing it must compare relevant identity and
-metadata obtained from the opened descriptor, including:
+Before mapping and after mapped hashing and validation, it must compare
+relevant identity and metadata obtained from the same opened descriptor,
+including:
 
 - device identity where available;
 - inode identity where available;
@@ -161,6 +193,19 @@ metadata obtained from the opened descriptor, including:
 - modification metadata supported by the platform.
 
 A changed value aborts open.
+
+This comparison is a best-effort check.
+
+It does not detect every size-preserving rewrite, including a rewrite for
+which modification metadata is restored.
+
+Mapping, hashing, and validation through one final mapping prevents parser and
+query code from intentionally using two different file paths or file
+descriptions, but it does not make mutable local storage cryptographically
+immutable.
+
+The publication discipline is therefore a required trust assumption, not a
+property inferred from metadata comparison.
 
 ## Platform scope
 

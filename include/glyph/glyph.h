@@ -30,6 +30,8 @@ extern "C" {
 #define GLYPH_FALSE_V1 UINT32_C(0)
 #define GLYPH_TRUE_V1 UINT32_C(1)
 
+#define GLYPH_RUNTIME_PROFILE_BINARY_V1 UINT32_C(1)
+
 typedef struct glyph_index_v1 glyph_index_v1;
 
 typedef int32_t glyph_status_v1;
@@ -130,7 +132,9 @@ typedef struct glyph_index_info_v1 {
     uint64_t total_source_bytes;
     uint8_t corpus_id_sha256[GLYPH_SHA256_SIZE_V1];
     uint8_t runtime_index_id_sha256[GLYPH_SHA256_SIZE_V1];
-    uint64_t reserved[4];
+    uint32_t index_format_version;
+    uint32_t runtime_profile_id;
+    uint64_t reserved[3];
 } glyph_index_info_v1;
 
 #define GLYPH_INDEX_INFO_V1_INIT \
@@ -141,9 +145,11 @@ typedef struct glyph_index_info_v1 {
         UINT64_C(0), \
         { UINT8_C(0) }, \
         { UINT8_C(0) }, \
+        UINT32_C(0), \
+        UINT32_C(0), \
         { \
             UINT64_C(0), UINT64_C(0), \
-            UINT64_C(0), UINT64_C(0) \
+            UINT64_C(0) \
         } \
     }
 

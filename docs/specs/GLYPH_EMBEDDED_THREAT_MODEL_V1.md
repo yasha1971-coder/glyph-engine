@@ -70,28 +70,40 @@ The implementation must treat the following as hostile:
 - internally inconsistent but correctly hashed files;
 - unsupported versions;
 - duplicate and overlapping sections;
-- files changed during open;
+- mutation detectable through the opened descriptor during open;
 - concurrent API call ordering.
 
 A valid SHA-256 value does not make a file structurally safe.
 
 The parser must be hardened as though integrity verification did not exist.
 
+A local writer capable of changing a published inode while it is being opened
+or while a handle is alive violates the default V1 immutable-filesystem trust
+profile.
+
+V1 provides best-effort detection of descriptor metadata change; it does not
+claim protection from an authorized hostile local writer.
+
 ## Trusted assumptions
 
 Embedded Runtime V1 assumes:
 
 - a compatible supported operating system and CPU architecture;
-- valid readable and writable caller memory for all pointers supplied to the
-  C ABI;
-- the caller obeys successful-close lifetime rules;
+- valid readable caller memory for every input pointer for the duration
+  required by the C ABI;
+- valid writable caller memory for every output pointer for the duration
+  required by the C ABI;
+- the caller obeys successful-close lifetime rules and the caller-side close
+  barrier;
 - the published index filesystem follows
   `GLYPH_TRUSTED_IMMUTABLE_LOCAL_FILESYSTEM_V1`;
+- publication immutability begins before the index is available to open and
+  continues for the complete lifetime of every open handle;
 - the process is not controlled by a privileged attacker;
 - executable code and loaded shared libraries are trusted.
 
 The C ABI cannot safely recover from an invalid caller pointer that refers to
-unmapped or inaccessible memory.
+unmapped, inaccessible, or incorrectly permissioned memory.
 
 Such caller-memory violations are outside the hostile-input guarantee.
 
@@ -99,20 +111,29 @@ Such caller-memory violations are outside the hostile-input guarantee.
 
 Before successful open, index bytes are untrusted.
 
-During open, the runtime must verify:
+During open, the runtime must:
 
-- regular-file type;
-- expected manifest coverage;
-- actual file sizes;
-- SHA-256 commitments;
-- structural format validity;
-- stable file identity during verification.
+- open payloads relative to one anchored root directory descriptor;
+- verify regular-file type;
+- verify expected manifest coverage;
+- verify actual file sizes;
+- create the final read-only mappings;
+- compute SHA-256 through those final mappings;
+- structurally validate through those final mappings;
+- perform a best-effort descriptor metadata re-check before publication.
 
-After successful open, the V1 trust model requires that published inodes are
-not modified or truncated.
+Descriptor metadata comparison does not detect every possible rewrite.
 
-A privileged local actor who mutates an already-open inode is outside the V1
-trust model.
+In particular, V1 does not claim detection of a size-preserving rewrite whose
+metadata is restored, nor does ordinary mmap pin file-backed bytes against a
+writer that violates the publication model.
+
+After successful open, published inodes must not be modified or truncated for
+the full handle lifetime.
+
+Deployments that require protection from a hostile local writer require a
+stronger profile such as fs-verity, dm-verity, process isolation, or a future
+verified-paging format.
 
 ## Query boundary
 
@@ -151,7 +172,11 @@ reported as successful bounded evidence.
 A successfully opened handle is intended to support concurrent read-only
 operations.
 
-The shared handle state must be immutable after open.
+All query-relevant shared handle state must be immutable after open.
+
+The only permitted mutable shared state is a data-race-free atomic active-operation count used for lifetime protection.
+
+That lifecycle state must never affect query results.
 
 Forbidden shared state includes:
 
@@ -159,15 +184,21 @@ Forbidden shared state includes:
 - lazy mutable lookup tables;
 - shared scratch buffers;
 - process-global mutable error records;
-- unsynchronized cached results.
+- unsynchronized cached results;
+- a persistent library-side closing latch in ABI V1.
 
 Closing a handle while operations are active must return `GLYPH_E_BUSY`.
 
 After a close attempt begins, no new operation may begin on that handle.
 
-The caller is responsible for establishing this close barrier. The raw C
-pointer does not provide automatic lifetime protection against a caller that
-begins a new operation concurrently with successful destruction.
+The caller is responsible for establishing this close barrier.
+
+An `GLYPH_E_BUSY` close has no lasting library-side effect.
+
+Exactly one thread may execute close for a given caller handle variable.
+
+The raw C pointer does not provide automatic lifetime protection against
+stale-pointer use or concurrent close calls.
 
 ## Resource boundary
 

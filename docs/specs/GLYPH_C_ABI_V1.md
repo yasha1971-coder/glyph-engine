@@ -74,6 +74,19 @@ The ABI version is independent of:
 
 A new incompatible ABI requires new symbol names.
 
+`glyph_index_info_v1.index_format_version` reports the validated on-disk
+runtime-index format version of the opened index.
+
+`glyph_index_info_v1.runtime_profile_id` reports the runtime profile used by
+the opened index.
+
+For Embedded Runtime V1, the binary-safe runtime profile identifier is:
+
+    GLYPH_RUNTIME_PROFILE_BINARY_V1
+
+The ABI version, index format version, and runtime profile identifier are
+separate values and must not be inferred from one another.
+
 ## Handle ownership
 
 `glyph_index_open_v1()` creates one opaque handle.
@@ -101,11 +114,18 @@ On success:
 - `*inout_index` is set to null;
 - the old handle value is invalid.
 
-If active operations exist:
+If operations that began before the caller's close barrier remain active:
 
 - close returns `GLYPH_E_BUSY`;
 - the handle remains valid;
-- `*inout_index` remains unchanged.
+- `*inout_index` remains unchanged;
+- no persistent library-side closing state remains after the call returns.
+
+Exactly one thread may execute `glyph_index_close_v1()` for a given caller
+handle variable.
+
+Concurrent close calls on the same handle variable are a caller contract
+violation and constitute a data race on that caller-owned variable.
 
 A null handle variable is rejected with `GLYPH_E_ARG`.
 
@@ -181,6 +201,31 @@ Coordinates use canonical global ordering:
     doc_id ascending
     then doc_offset ascending
 
+`doc_offset` is the zero-based byte offset of the first matched byte within
+document `doc_id`.
+
+This coordinate meaning is identical to the verified lower-layer canonical
+document-coordinate definition.
+
+## Document identity
+
+`doc_id` values form one dense domain:
+
+    0 <= doc_id < document_count
+
+Document identifiers are assigned exactly according to committed canonical
+source-manifest order.
+
+Identical corpus identity and source-manifest identity must produce identical
+`doc_id` assignment.
+
+A caller enumerates all documents by obtaining `document_count` from
+`glyph_index_get_info_v1()` and iterating:
+
+    0 .. document_count - 1
+
+An out-of-range `doc_id` returns `GLYPH_E_ARG`.
+
 ## Failure output semantics
 
 For valid output pointers, the runtime initializes scalar result structures
@@ -205,13 +250,41 @@ They are not required to be valid UTF-8.
 
 They are not null-terminated.
 
+The canonical path separator is byte `0x2F` (`/`).
+
+Every source path accepted at index open must be:
+
+- non-empty;
+- relative;
+- free of byte `0x00`;
+- free of a leading separator;
+- free of a trailing separator;
+- free of empty components;
+- free of `.` components;
+- free of `..` components;
+- unique as a raw byte sequence within the index.
+
+A backslash byte is an ordinary path byte in the initial Linux host profile;
+it is not a canonical separator.
+
+Violation of a source-path structural rule returns `GLYPH_E_FORMAT` and
+prevents handle publication.
+
 `glyph_document_path_v1()` first reports the exact required byte size.
+
+For every valid opened index, the authoritative required path size is greater
+than zero.
 
 If the caller buffer is too small:
 
 - the function returns `GLYPH_E_LIMIT`;
 - `out_required_size` is still authoritative;
 - no truncated path is reported as success.
+
+Returned path bytes are evidence metadata.
+
+A caller must not use them for filesystem access without preserving the
+canonical root and path-validation rules.
 
 ## Structure versioning
 
@@ -230,9 +303,18 @@ The implementation must:
 
 Reserved V1 fields must be zero when supplied by the caller.
 
+A future revision must not introduce a field whose presence changes
+safety-relevant or semantics-relevant behavior unless that field is enabled
+by a new flags bit that V1 rejects as unknown.
+
+Tail fields ignored by an older library must be advisory only.
+
 ## Status codes
 
-Status values are stable and append-only.
+Status codes form a single append-only registry shared by all ABI versions.
+
+A status value, once assigned, is never removed, renumbered, or reused by a
+future ABI version.
 
 V1 defines:
 
@@ -266,10 +348,19 @@ Open options may limit:
 
 Zero means implementation-defined safe default, not unlimited by implication.
 
-Index opening always performs the integrity and structural verification required
-by the mmap trust model.
+Index opening always performs the integrity and structural verification
+required by the mmap trust model.
 
 C ABI V1 has no flag that disables required verification.
+
+Open performs full-payload hashing and structural validation.
+
+Open duration therefore scales with total runtime payload size.
+
+C ABI V1 provides no open deadline.
+
+Callers requiring bounded open latency must constrain `max_mapped_bytes` or
+perform open outside a latency-critical serving thread.
 
 ## Query options
 
@@ -294,9 +385,20 @@ read-safe on one handle:
 - count;
 - locate.
 
+All query-relevant shared handle state must be immutable after successful
+open.
+
+The only permitted mutable shared handle state is a data-race-free atomic
+active-operation count used for lifetime protection.
+
+The active-operation count must not affect query results.
+
+Embedded ABI V1 uses no persistent library-side closing latch.
+
 Close is not concurrent-read-safe as a successful destructive operation.
 
-Concurrent close must return `GLYPH_E_BUSY` while any operation is active.
+The caller must establish the close barrier defined below before invoking
+close.
 
 ## CLI parity requirement
 
@@ -364,11 +466,25 @@ For metadata output structures, after validating `struct_size`:
 - all known reserved fields are zero on successful return;
 - `struct_size` remains the caller-supplied value.
 
+V1 sets metadata output `flags` to zero on success.
+
+Future ABI revisions may define additional metadata output flag bits.
+
+Callers must ignore output flag bits they do not recognize.
+
 Coordinate-buffer contents are unspecified after failure and must be ignored.
 
 ### Exact argument rules
 
 A null required output pointer returns `GLYPH_E_ARG`.
+
+A null `index_directory` passed to `glyph_index_open_v1()` returns
+`GLYPH_E_ARG`.
+
+A null index handle passed to any handle-taking metadata, path, count, or
+locate function returns `GLYPH_E_ARG`.
+
+An out-of-range `doc_id` returns `GLYPH_E_ARG`.
 
 A non-zero query size with a null query pointer returns `GLYPH_E_ARG`.
 
@@ -377,6 +493,7 @@ A zero query size returns `GLYPH_E_ARG`.
 For locate:
 
 - `max_results` must not exceed `coordinate_capacity`;
+- violation of that relation returns `GLYPH_E_ARG`;
 - when `max_results == 0`, `coordinates` may be null and
   `coordinate_capacity` must be zero;
 - when `max_results > 0`, `coordinates` must be non-null;
@@ -424,13 +541,20 @@ Read-only operations may execute concurrently on one handle.
 
 The caller must establish a close barrier:
 
-- after a thread begins `glyph_index_close_v1()`, no new operation may begin
-  on that handle;
-- operations that started before the close attempt may still be active;
+- exactly one thread owns the close path for a given caller handle variable;
+- after that thread begins a close attempt, no new operation may begin on the
+  handle;
+- operations that began before the close attempt may still be active;
 - if such operations are active, close returns `GLYPH_E_BUSY`;
 - on `GLYPH_E_BUSY`, the handle remains valid and unchanged;
-- the caller may retry only after those operations complete;
+- an `GLYPH_E_BUSY` return leaves no persistent library-side close barrier or
+  closing latch;
+- after `GLYPH_E_BUSY`, the caller may either resume ordinary operations or
+  drain readers and retry close;
 - successful close occurs only when there are no active operations.
+
+Concurrent close calls on the same caller-owned handle variable are a caller
+contract violation and constitute a data race on that variable.
 
 The raw C handle does not make stale-pointer use safe after successful close.
 

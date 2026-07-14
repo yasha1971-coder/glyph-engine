@@ -36,6 +36,17 @@ allocation or mapping.
 
 The status is `GLYPH_E_LIMIT`.
 
+## Open-time work boundary
+
+Open performs complete payload hashing and structural validation.
+
+Its work is proportional to total accepted runtime payload size.
+
+ABI V1 has no open deadline.
+
+Callers requiring bounded open latency must constrain configured index limits
+or run open outside a latency-critical serving thread.
+
 ## Checked arithmetic
 
 Every untrusted arithmetic operation involving:
@@ -124,21 +135,27 @@ The implementation must define and test polling points.
 
 ## Partial-result rule
 
-The following failures never return successful partial evidence:
+The following operation failures never return successful partial evidence:
 
 - timeout;
 - memory failure;
 - I/O failure;
 - verification failure;
 - unsupported feature;
-- internal failure;
-- close race.
+- internal failure.
 
 The only successful incomplete locate is an explicitly bounded locate with:
 
     complete == 0
 
 and otherwise valid exact count and canonical prefix coordinates.
+
+A close/query race is not a recoverable query result class in ABI V1.
+
+The caller must establish the documented close barrier.
+
+Concurrent close calls or a new operation begun after that barrier are caller
+contract violations rather than status-bearing partial-result cases.
 
 ## Build-plane isolation
 
