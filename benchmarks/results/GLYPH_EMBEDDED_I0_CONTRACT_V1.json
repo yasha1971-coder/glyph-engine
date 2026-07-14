@@ -1,8 +1,33 @@
 {
   "abi_version": 1,
+  "c11_layout_assertions": true,
+  "c99_layout_assertions": true,
   "close_barrier_defined": true,
+  "committed_result_byte_comparison": true,
+  "contract_source_sha256": {
+    "docs/specs/GLYPH_C_ABI_V1.md": "f3ebf251aa7334c4c5a91e690a651b45cd8a87b1191583e3241609234831a7a6",
+    "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md": "4b99e9de91659b2f82e13e9e316365628e380cab3d417127863bb0099573bbc4",
+    "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md": "5f3d714d831dd9cb46e9ee038af153d3a4bf6df9685ec887bd6c30d3f12d26f5",
+    "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md": "b156c92ef7bf23466612acea5318236f0d0eaa8c3720130b574df54a366df35d",
+    "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md": "e8eb1ea86fe8af930c05af81607e1e9a73f785c7bb9d0946ac8b51613ca550f8",
+    "include/glyph/glyph.h": "bd38c168728b3c938810604ef4a175fecf06cbb406007d84dc8cf432b53bd55f",
+    "tools/check_embedded_i0_contract_v1.py": "2fb73cfafeed4b9dad7fcee07e211f1e962db4d7998270558c4a9e313dfe2b10"
+  },
   "contract_spec_count": 5,
   "cpp17_consumer_header": true,
+  "cpp17_layout_assertions": true,
+  "cross_file_invariant_count": 7,
+  "cross_file_invariants": {
+    "close_model_consistent": true,
+    "document_identity_dense": true,
+    "mapped_bytes_validated": true,
+    "open_deadline_nonclaim": true,
+    "path_validation_defined": true,
+    "pointer_memory_directionality": true,
+    "signature_policy_defined": true
+  },
+  "cross_file_invariants_verified": true,
+  "export_annotations_verified": true,
   "failure_outputs_defined": true,
   "fixed_width_public_types": true,
   "format": "GLYPH_EMBEDDED_I0_CONTRACT_V1",
@@ -10,6 +35,9 @@
   "function_pointer_signatures": true,
   "host_profile_defined": true,
   "identifier_namespace_verified": true,
+  "implementation_hits": [],
+  "implementation_source_files_scanned": 42,
+  "implementation_tree_scan_verified": true,
   "layout": {
     "glyph_coordinate_v1": 16,
     "glyph_document_info_v1": 96,
@@ -19,7 +47,7 @@
     "glyph_query_options_v1": 56
   },
   "layout_static_assertions": true,
-  "mutation_count": 4,
+  "mutation_count": 13,
   "mutations": [
     {
       "message": "ordinary C identifier collision: glyph_index_info_v1",
@@ -32,29 +60,458 @@
       "rejected": true
     },
     {
-      "message": "forbidden public-header token: size_t",
-      "mutation": "forbidden_platform_width_type",
+      "message": "forbidden public field type: long",
+      "mutation": "forbidden_platform_width_long",
+      "rejected": true
+    },
+    {
+      "message": "forbidden public field type: bool",
+      "mutation": "forbidden_bool_type",
+      "rejected": true
+    },
+    {
+      "message": "GLYPH_API/GLYPH_CALL export annotation mismatch",
+      "mutation": "missing_glyph_api_annotation",
+      "rejected": true
+    },
+    {
+      "message": "GLYPH_API/GLYPH_CALL export annotation mismatch",
+      "mutation": "missing_glyph_call_annotation",
       "rejected": true
     },
     {
       "message": "status-code map mismatch",
       "mutation": "renumbered_status_code",
       "rejected": true
+    },
+    {
+      "message": "required normative heading missing: docs/specs/GLYPH_C_ABI_V1.md: ## Document identity",
+      "mutation": "missing_normative_heading",
+      "rejected": true
+    },
+    {
+      "message": "specification status registry mismatch",
+      "mutation": "unknown_status_reference",
+      "rejected": true
+    },
+    {
+      "message": "C ABI structure-layout table mismatch",
+      "mutation": "layout_table_mismatch",
+      "rejected": true
+    },
+    {
+      "message": "close_model_consistent: normative marker missing: docs/specs/GLYPH_C_ABI_V1.md: ### Close concurrency barrier: no persistent library-side close barrier or closing latch",
+      "mutation": "close_model_contradiction",
+      "rejected": true
+    },
+    {
+      "message": "pointer_memory_directionality: normative marker missing: docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md: ## Trusted assumptions: valid readable caller memory for every input pointer",
+      "mutation": "pointer_model_regression",
+      "rejected": true
+    },
+    {
+      "message": "synthetic ABI implementation detected",
+      "mutation": "premature_runtime_implementation",
+      "rejected": true
     }
   ],
-  "next": "EXTERNAL_LINE_BY_LINE_PREFREEZE_REVIEW",
+  "next": "SECOND_EXTERNAL_PREFREEZE_REVIEW",
+  "normative_section_count": 85,
+  "normative_section_hashes_verified": true,
+  "normative_sections": {
+    "docs/specs/GLYPH_C_ABI_V1.md": {
+      "## ABI version": {
+        "sha256": "90f4aa21a2c74f95737f5c509eb3185d6a89256065cecaa32574cee624f2511c",
+        "size_bytes": 732
+      },
+      "## Acceptance boundary": {
+        "sha256": "fe58da3718fac34ce56321a690572fc52e4c8b9136618ea8d0a89021299c273f",
+        "size_bytes": 330
+      },
+      "## CLI parity requirement": {
+        "sha256": "677579b93bccf9017546911826d5cfd5dd221c69ad14a7a5c423c51a64ef92f2",
+        "size_bytes": 275
+      },
+      "## Close behavior": {
+        "sha256": "0755315d5a25efcf57b109e0448a014dec627afed36cc8ddab6ec58b8242f9f3",
+        "size_bytes": 766
+      },
+      "## Document identity": {
+        "sha256": "a79bb5c27abecdfb3f505ea080f41357838b325f471f4cefe890fb5f1d8dd861",
+        "size_bytes": 486
+      },
+      "## Document path semantics": {
+        "sha256": "545b60def5e7bedc5a8f1f078928c67ed935692222a11986a3875092501ea6da",
+        "size_bytes": 1203
+      },
+      "## Failure output semantics": {
+        "sha256": "f2b3cdaf227cdded3add21198cacfebf6d0a79e5d6bd91cf51e05edcf7635194",
+        "size_bytes": 472
+      },
+      "## Handle ownership": {
+        "sha256": "5bb1ce8df5e42fdcac86637ad4556bed7b82b4f7bdd1b218af78486ae4523d05",
+        "size_bytes": 373
+      },
+      "## Language boundary": {
+        "sha256": "4d97cc73a88e0f8bfe42cb71853a45f2ec0b01dd3ada816500daa3ea34d37cde",
+        "size_bytes": 417
+      },
+      "## Locate output model": {
+        "sha256": "592a8ef39f56ebeeeda235a84d4155dace1502afe8a2a6291a3593574da8e777",
+        "size_bytes": 484
+      },
+      "## Locate result semantics": {
+        "sha256": "8008198c9532f5dd4c7da8933c4f5310daf3388809962b82f4aea666f9a0d313",
+        "size_bytes": 685
+      },
+      "## Open options": {
+        "sha256": "30767100395392b3eecff9d2118028ffa4f85299df7a88ae45cab02d785c35d9",
+        "size_bytes": 657
+      },
+      "## Pre-freeze exact semantics": {
+        "sha256": "566818953735065bbce63a02ca5cdb85942cffb34c4615d7c2894ccc0bd46766",
+        "size_bytes": 5026
+      },
+      "## Purpose": {
+        "sha256": "2f7eef37d5cf57e2e63217e034e0ca0b4eb27b87c88fd8195e61fef863c560b1",
+        "size_bytes": 210
+      },
+      "## Query input lifetime": {
+        "sha256": "91c3f9d52cc37a14597d1f8c4778898436129fd4873fb344a0480094d76f6342",
+        "size_bytes": 321
+      },
+      "## Query options": {
+        "sha256": "fcdfb7b3a07bc9ba22c2773fd0722ba1102a16f98fe8f28257aee8b29ebe6b94",
+        "size_bytes": 353
+      },
+      "## Scope": {
+        "sha256": "794f3f894f07f1792da030b1340edc860ca6969b97b37573092a6a0b55915086",
+        "size_bytes": 473
+      },
+      "## Status codes": {
+        "sha256": "6175360d5293ba7b5be6e687a36b86f4b3ea8dce79f84fe4773de7e582872b9c",
+        "size_bytes": 623
+      },
+      "## Structure versioning": {
+        "sha256": "8b9359d24bafaee9493eecd641a97a0a3271b0386045ca7486b2b3fc3f59c477",
+        "size_bytes": 649
+      },
+      "## Thread-safety contract": {
+        "sha256": "8f0c541efa0762669be67f497572e26c1d157f774154a337581658cb52fadb46",
+        "size_bytes": 689
+      },
+      "### Close concurrency barrier": {
+        "sha256": "07263cf09d80b4fd431eccc518e0325f958c28e76a26d1a7b0d0ab1dfa2df73b",
+        "size_bytes": 990
+      },
+      "### Document-path size probe": {
+        "sha256": "3863ff29cd0774b59a5db71629d85bca6763e1c57c7a88d1afd4e3592cce5c30",
+        "size_bytes": 609
+      },
+      "### Exact argument rules": {
+        "sha256": "a1006ddba76c927622024f0b9c7519a6687711a21b32f50275a111e4c32be2e2",
+        "size_bytes": 780
+      },
+      "### Exact output initialization": {
+        "sha256": "e5cbcc1ed4a7ed0d129272b1924e8edc8b25a12e0dd95f8ec3d438456f6bfa6b",
+        "size_bytes": 929
+      },
+      "### Frozen V1 structure layout": {
+        "sha256": "a14180a58d2f7d1d55ea85cf6629b7e6bd76e834e825c5767c9f8f6d4b50f1e4",
+        "size_bytes": 481
+      },
+      "### Initial supported host profile": {
+        "sha256": "3b7f9c1bcb34c53e3f04598d2ecf0df621fdd9de74fc26c91877a6b800982e2e",
+        "size_bytes": 391
+      },
+      "### Nullable option structures": {
+        "sha256": "d1ce004761168454eb3b82054cb62b9f12b0c8b62559a81cddf8c7f4bd5ac2e3",
+        "size_bytes": 527
+      },
+      "### Repeated close": {
+        "sha256": "1b2a68ba548827f14ff0cb3be4600a52675ea14fce2a5bc053e7c8afab0a8d5d",
+        "size_bytes": 288
+      }
+    },
+    "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md": {
+      "## Availability non-claims": {
+        "sha256": "93848ae158cbf81b2182f9b8ea5011dcddd00e6ce698be30bb233fe658385cd2",
+        "size_bytes": 333
+      },
+      "## Concurrency boundary": {
+        "sha256": "ac0c4213c6ab88c34888fbf6b811d20bf34926f6f0f9fc248597e93fb65de747",
+        "size_bytes": 1065
+      },
+      "## Filesystem attacker boundary": {
+        "sha256": "0ab8a6a6a393bf6433d5ca91488d9c136c7e47e7bb8d22635755753db4900a34",
+        "size_bytes": 1047
+      },
+      "## Hostile inputs": {
+        "sha256": "2bfff2ad84790497957ced4acb1d599ab49f15a9b89d83888b72041dd2c9cbcf",
+        "size_bytes": 1066
+      },
+      "## Out of scope for V1": {
+        "sha256": "8230a2c1382ba54df49f0aca1994eb708b172c014a8b4cd5e2391f3d0d6bd2db",
+        "size_bytes": 400
+      },
+      "## Protected properties": {
+        "sha256": "a03bc5a9ba897a95d519cfcd1700e095530573d604725f9b10a48383d1dd82b9",
+        "size_bytes": 455
+      },
+      "## Purpose": {
+        "sha256": "2653a44ba3da024a61ffc0a13820f3ba8774fc1b4fd6f4869d31c0c01e9bc113",
+        "size_bytes": 325
+      },
+      "## Query boundary": {
+        "sha256": "d49981d39b197bf2b112eb3964c65c5af578e375d43959e7b93373dbdbb6a87d",
+        "size_bytes": 387
+      },
+      "## Required future gates": {
+        "sha256": "d01e039fd4703a36222490fd2bd84106584a735e49ecec7febdb37c541d9c85b",
+        "size_bytes": 334
+      },
+      "## Resource boundary": {
+        "sha256": "19806208f9248e0f0b2cfba8c8111fac9847712aacbb7a636cf395cefe8e3c8d",
+        "size_bytes": 492
+      },
+      "## Result boundary": {
+        "sha256": "4fcebb63c29e74168746f5f7be65f27a7f59c823afb5c5b209c668a7bd1763fd",
+        "size_bytes": 385
+      },
+      "## Trusted assumptions": {
+        "sha256": "9c8c14ec6237ff63cfd17d2d0a12f98fbaa3171a4b48ecb3c4a7b7d783de8256",
+        "size_bytes": 956
+      },
+      "## Verified dependency": {
+        "sha256": "cb7e4ca2bb328e9af3efd4addeff67f98afabedc9319f3138439bad779e52016",
+        "size_bytes": 432
+      }
+    },
+    "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md": {
+      "## File change during open": {
+        "sha256": "9ab49ec0f686190ecdb04d8f7570ecd4d9850339b461aea1559cf7cdfdc711dd",
+        "size_bytes": 926
+      },
+      "## Forbidden integrity claim": {
+        "sha256": "454a372a13df2ae04e86b96d0db5fae31847894830aa046c9b363931c10e7ead",
+        "size_bytes": 143
+      },
+      "## Future stronger format": {
+        "sha256": "f315ae0d5f64870c885c2f53f6ce8cbb14bace33e89c76b16a92dcfc85cdff60",
+        "size_bytes": 236
+      },
+      "## Permitted integrity claim": {
+        "sha256": "f434686adde0027ff096229a97fc677945d802f4ae031afbdf6cee8e83b94df6",
+        "size_bytes": 416
+      },
+      "## Platform scope": {
+        "sha256": "312795649cbe1c79f23f7f3104faeaf8daf44420b17767b3d366c6ef16a91bb9",
+        "size_bytes": 237
+      },
+      "## Post-open mutation": {
+        "sha256": "0b1359053cd97855c5f46ae2160a06f36eb06c05489e74b7163fa80c22dd4cd9",
+        "size_bytes": 755
+      },
+      "## Purpose": {
+        "sha256": "2d23f9d1df1f21b3e40d859a90ad6dca5c090a768cdaef655d5824949f40d0df",
+        "size_bytes": 123
+      },
+      "## Replacement race": {
+        "sha256": "c350535cfbb0b1bb9a6b1a3b5fa04f118aa9acdead45635648dea1891c644239",
+        "size_bytes": 227
+      },
+      "## Required open sequence": {
+        "sha256": "3e8997cabf2316983d64fa8cfc8529a3fe1ab3648fc53e276f6d911c77506e33",
+        "size_bytes": 965
+      },
+      "## Required publication model": {
+        "sha256": "ce4d8f9c41d2b3653675024fb141e561ff2f49a47de98d929965b8937578c07b",
+        "size_bytes": 721
+      },
+      "## Required structural checks": {
+        "sha256": "cbbc04737ac15ee29bc4ee9519ad308f8ccc4d48e07326777952490d37605276",
+        "size_bytes": 998
+      },
+      "## Root directory anchoring": {
+        "sha256": "16254948666a37c7bdf0bdff840c8a5ad8698a03c4daa90cdcbf37d19b633f6f",
+        "size_bytes": 614
+      },
+      "## Selected V1 model": {
+        "sha256": "058031dfaab85970d4f652ce213dbef5e07931f727efb34c71dfe105f94180a9",
+        "size_bytes": 234
+      },
+      "## mmap properties": {
+        "sha256": "a816a0b01683db79344f034c994f96dc35532c41be8456b1c9650e96e200f571",
+        "size_bytes": 229
+      }
+    },
+    "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md": {
+      "## Allocation behavior": {
+        "sha256": "9b95017915afa1faae78989811fb26aae5a59f0045df3a43640c2045d5b66d2d",
+        "size_bytes": 330
+      },
+      "## Architectural separation": {
+        "sha256": "fdfc09a18740cdbb4a475e1b2ced921cca62f54558e168497d82ad17427f835c",
+        "size_bytes": 238
+      },
+      "## Bounded locate": {
+        "sha256": "31b5cea72835044bbe26d138c8e72033b699d55d631a199aaeef86202ac309ec",
+        "size_bytes": 272
+      },
+      "## Build-plane isolation": {
+        "sha256": "96bbd249ccb79d27c42e73eeb85919ca922cf899d786daec2326008a33610b33",
+        "size_bytes": 424
+      },
+      "## Checked arithmetic": {
+        "sha256": "2e97610d7dfe538b68ea9d2d704d31a0de3abfdf94ee3ada884125f91f2c80cc",
+        "size_bytes": 337
+      },
+      "## Disk-full behavior": {
+        "sha256": "662b0b8954dc6ab50f4034d49247fd7b3f23707f3dc02ddfbf8c7b7d76b688ac",
+        "size_bytes": 238
+      },
+      "## Interrupted build": {
+        "sha256": "d4d5821dbe5b49c4b34725de8dde99984040e48955de64d53ec534f275992266",
+        "size_bytes": 214
+      },
+      "## Open-time work boundary": {
+        "sha256": "6a60602d6508e2177dc691ee2669bb58f6202f8cabe80db09b979298ec3b2f79",
+        "size_bytes": 325
+      },
+      "## Operating-system OOM boundary": {
+        "sha256": "aa5bcb2b1764ef0783c9f8660663018323fba93fa26bdc69f5997edd60b2bd70",
+        "size_bytes": 440
+      },
+      "## Partial-result rule": {
+        "sha256": "18fb6855ef19d7e88f06c1f274faa5bc9dd1dd3650cb8f5eab3a2d3e93e92965",
+        "size_bytes": 651
+      },
+      "## Publication durability": {
+        "sha256": "bcbb68a3722f49ee214b289672d7076ad7e3460c50238da9685e07bb41885a8b",
+        "size_bytes": 447
+      },
+      "## Purpose": {
+        "sha256": "e3a4c518d25f3b50051da41f17ea8fe25202efbbb7bf3dd59abcfb6713df3c7d",
+        "size_bytes": 131
+      },
+      "## Query-plane limits": {
+        "sha256": "e6fc45c5a067001fad81a0df5d896181e9eb1ef214b3e7a3a5a646c5639add11",
+        "size_bytes": 313
+      },
+      "## Required testing": {
+        "sha256": "6ace3fcb3dd9586a2bae863db4c4053b8a215fb97857b3261d5b4ea6deebf27e",
+        "size_bytes": 446
+      },
+      "## Timeout contract": {
+        "sha256": "62573a22a9f1c7ebc173712cf4ca10d6a724ec459b9521a5322f9ac9055d0320",
+        "size_bytes": 531
+      }
+    },
+    "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md": {
+      "## Canonical statement encoding": {
+        "sha256": "3ee68133453c5ebd5d662183768e02c73e096bdf1c67de110f0f9bc09b0b8950",
+        "size_bytes": 639
+      },
+      "## Compatibility boundary": {
+        "sha256": "93f7a18ee96a00a63e3e874ff7e3197b7238bb5e376629f7b10f341bebbbd224",
+        "size_bytes": 178
+      },
+      "## Freshness and timestamps": {
+        "sha256": "8f10a0348d40f751f051cbf558fc081ef05e52cd6b38c1ec1733b3fce48f5751",
+        "size_bytes": 156
+      },
+      "## Integrity versus authenticity": {
+        "sha256": "720d92d3a9051baea51a9449eba510e5e3c234725ff607612030435e919ad967",
+        "size_bytes": 259
+      },
+      "## Purpose": {
+        "sha256": "69068735ff808798c8e9532f32b7b9b4c0d5ab32c6264503e2178cc682f03857",
+        "size_bytes": 149
+      },
+      "## Required rejection cases": {
+        "sha256": "a6457ebe39a0680e24e2f8b3c7b42a2cd0e1a8e1ca670283dce7518e9f3958ab",
+        "size_bytes": 457
+      },
+      "## Signature envelope": {
+        "sha256": "051c078a40ab70236d6683b3da98292f0d30e68d304a8d63b4947141428bd4c2",
+        "size_bytes": 268
+      },
+      "## Signed statement fields": {
+        "sha256": "7ad53b25d2f07d4160805616656b9062287192936d54254a9038fd0911db44b8",
+        "size_bytes": 356
+      },
+      "## Signing preimage": {
+        "sha256": "38d8abc6c95cb159439ac42fd2ac0bb74c099990530344b576ffd59a5d9c29c4",
+        "size_bytes": 257
+      },
+      "## Statement version": {
+        "sha256": "c5c30937e4cb52e490805f3e7cd57b16d4d86c8b0234dd56a0db02766e9141c9",
+        "size_bytes": 80
+      },
+      "## Target algorithm": {
+        "sha256": "4e578ba293c11970dc7db251957650fdc7c236a83f9887228f48d00613c3f6f6",
+        "size_bytes": 151
+      },
+      "## Trust store": {
+        "sha256": "0026685901e521c6d15f64b78e96b87d98f98e610794d1514c6e52a12c7f5a40",
+        "size_bytes": 328
+      },
+      "## Verifier-side policy": {
+        "sha256": "a9eadea7790ea1c517d81f581eace17f0a672e02e2ff98908686979867c70605",
+        "size_bytes": 329
+      },
+      "## What a valid signature does not prove": {
+        "sha256": "6d4b4e4c03bf09247131913a0aca9213e427bd87cdb7031c66431dd8caad0881",
+        "size_bytes": 294
+      },
+      "## What a valid signature proves": {
+        "sha256": "ed205971ec90d3bce494133f15cc37d9066c8f7143617ea777b9611168d255c0",
+        "size_bytes": 162
+      }
+    }
+  },
   "nullable_options_defined": true,
   "ok": true,
   "path_probe_defined": true,
   "phase": "I0_CONTRACT_FREEZE_PREPARATION",
+  "public_field_count": 33,
   "public_header_present": true,
+  "public_parameter_count": 27,
+  "public_struct_count": 6,
+  "referenced_statuses": [
+    "GLYPH_E_ARG",
+    "GLYPH_E_BUSY",
+    "GLYPH_E_CLOSED",
+    "GLYPH_E_FORMAT",
+    "GLYPH_E_INTERNAL",
+    "GLYPH_E_IO",
+    "GLYPH_E_LIMIT",
+    "GLYPH_E_NOMEM",
+    "GLYPH_E_TIMEOUT",
+    "GLYPH_E_UNSUPPORTED",
+    "GLYPH_E_VERIFY",
+    "GLYPH_E_VERSION",
+    "GLYPH_OK"
+  ],
   "repeated_close_defined": true,
+  "reviewed_commit": "b5686b36a2d3f608e57d5af6e24d6661149e22f8",
   "root_directory_anchored": true,
   "runtime_implementation_present": false,
   "signature_policy_defined": true,
+  "spec_layout_table_verified": true,
+  "spec_status_registry_verified": true,
+  "specification_file_sha256": {
+    "docs/specs/GLYPH_C_ABI_V1.md": "f3ebf251aa7334c4c5a91e690a651b45cd8a87b1191583e3241609234831a7a6",
+    "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md": "4b99e9de91659b2f82e13e9e316365628e380cab3d417127863bb0099573bbc4",
+    "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md": "5f3d714d831dd9cb46e9ee038af153d3a4bf6df9685ec887bd6c30d3f12d26f5",
+    "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md": "b156c92ef7bf23466612acea5318236f0d0eaa8c3720130b574df54a366df35d",
+    "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md": "e8eb1ea86fe8af930c05af81607e1e9a73f785c7bb9d0946ac8b51613ca550f8"
+  },
   "status": "DRAFT_NOT_FROZEN",
   "status_code_count": 13,
   "strict_c11_header": true,
   "strict_c99_header": true,
-  "supported_host_profile": "64-bit little-endian Linux"
+  "supported_host_profile": "64-bit little-endian Linux",
+  "verify_mode_supported": true,
+  "write_mode_supported": true
 }
