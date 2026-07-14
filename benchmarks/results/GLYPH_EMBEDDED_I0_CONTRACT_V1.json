@@ -11,7 +11,7 @@
     "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md": "b156c92ef7bf23466612acea5318236f0d0eaa8c3720130b574df54a366df35d",
     "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md": "e8eb1ea86fe8af930c05af81607e1e9a73f785c7bb9d0946ac8b51613ca550f8",
     "include/glyph/glyph.h": "bd38c168728b3c938810604ef4a175fecf06cbb406007d84dc8cf432b53bd55f",
-    "tools/check_embedded_i0_contract_v1.py": "2fb73cfafeed4b9dad7fcee07e211f1e962db4d7998270558c4a9e313dfe2b10"
+    "tools/check_embedded_i0_contract_v1.py": "2793b0a18990f384845f9885c28faeccbdb62474eb31ee4c427cd269411cae3a"
   },
   "contract_spec_count": 5,
   "cpp17_consumer_header": true,
@@ -36,7 +36,7 @@
   "host_profile_defined": true,
   "identifier_namespace_verified": true,
   "implementation_hits": [],
-  "implementation_source_files_scanned": 42,
+  "implementation_source_files_scanned": 38,
   "implementation_tree_scan_verified": true,
   "layout": {
     "glyph_coordinate_v1": 16,
@@ -494,7 +494,7 @@
     "GLYPH_OK"
   ],
   "repeated_close_defined": true,
-  "reviewed_commit": "b5686b36a2d3f608e57d5af6e24d6661149e22f8",
+  "reviewed_commit": "fe94eb0314cff76191a7eaba20347c234069a8f2",
   "root_directory_anchored": true,
   "runtime_implementation_present": false,
   "signature_policy_defined": true,
