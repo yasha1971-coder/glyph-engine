@@ -163,6 +163,12 @@ Forbidden shared state includes:
 
 Closing a handle while operations are active must return `GLYPH_E_BUSY`.
 
+After a close attempt begins, no new operation may begin on that handle.
+
+The caller is responsible for establishing this close barrier. The raw C
+pointer does not provide automatic lifetime protection against a caller that
+begins a new operation concurrently with successful destruction.
+
 ## Resource boundary
 
 The query plane is an in-process library and cannot guarantee survival from

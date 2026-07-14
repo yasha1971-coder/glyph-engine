@@ -34,6 +34,26 @@ A publisher must not:
 Replacing a directory entry with a new inode does not alter already-open file
 descriptors or mappings.
 
+## Root directory anchoring
+
+The index-directory path is resolved once to an opened directory descriptor.
+
+All manifest and payload files are then opened relative to that descriptor.
+
+The implementation must not repeatedly resolve the original path for each
+payload.
+
+Payload opens must:
+
+- reject symlink payloads;
+- remain beneath the opened index root;
+- use descriptor-relative lookup;
+- prevent path replacement from selecting a different runtime tree during the
+  same open operation.
+
+Integrity verification, structural validation, and mmap of one payload must
+operate on the same opened file description.
+
 ## Required open sequence
 
 For every declared runtime payload, open must conceptually perform:

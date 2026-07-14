@@ -11,7 +11,11 @@
   #endif
   #define GLYPH_CALL __cdecl
 #else
-  #define GLYPH_API __attribute__((visibility("default")))
+  #if defined(__GNUC__) || defined(__clang__)
+    #define GLYPH_API __attribute__((visibility("default")))
+  #else
+    #define GLYPH_API
+  #endif
   #define GLYPH_CALL
 #endif
 
@@ -21,6 +25,7 @@ extern "C" {
 
 #define GLYPH_ABI_VERSION_V1 UINT32_C(1)
 #define GLYPH_SHA256_SIZE_V1 UINT32_C(32)
+#define GLYPH_SUPPORTED_POINTER_BITS_MIN_V1 UINT32_C(64)
 
 #define GLYPH_FALSE_V1 UINT32_C(0)
 #define GLYPH_TRUE_V1 UINT32_C(1)

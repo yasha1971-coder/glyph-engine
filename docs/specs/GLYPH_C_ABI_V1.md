@@ -307,6 +307,151 @@ A separate CLI-only search implementation is forbidden.
 The full semantic baseline must be re-executed through a dynamically loaded
 public shared library and a pure-C harness.
 
+## Pre-freeze exact semantics
+
+### Initial supported host profile
+
+The first conformant implementation target is:
+
+    64-bit little-endian Linux
+
+The public header may compile on another host.
+
+A runtime build that cannot safely implement the V1 address-space or on-disk
+format requirements must return `GLYPH_E_UNSUPPORTED` or be excluded from the
+supported build matrix.
+
+A 32-bit runtime is not conformant during E1.
+
+### Nullable option structures
+
+For `glyph_index_open_v1()`:
+
+- `options == NULL` selects the library V1 default open policy;
+- a non-null options structure must contain a valid `struct_size`;
+- all unknown V1 flags and non-zero reserved fields are rejected.
+
+For count and locate:
+
+- `options == NULL` means zero flags and no ABI-level timeout;
+- a non-null query-options structure must contain a valid `struct_size`;
+- a non-zero timeout returns `GLYPH_E_UNSUPPORTED` until timeout support has
+  passed its executable gate.
+
+### Exact output initialization
+
+Before fallible work begins, valid scalar outputs are initialized.
+
+For `glyph_index_open_v1()`:
+
+    *out_index = NULL
+
+For count:
+
+    *out_count = 0
+
+For locate, after validating the output structure size:
+
+- `complete = 0`;
+- `total_matches = 0`;
+- `returned_matches = 0`;
+- all known reserved output fields are zeroed;
+- caller-supplied `struct_size` remains unchanged.
+
+For metadata output structures, after validating `struct_size`:
+
+- all known output fields except `struct_size` are zeroed before fallible work;
+- all known reserved fields are zero on successful return;
+- `struct_size` remains the caller-supplied value.
+
+Coordinate-buffer contents are unspecified after failure and must be ignored.
+
+### Exact argument rules
+
+A null required output pointer returns `GLYPH_E_ARG`.
+
+A non-zero query size with a null query pointer returns `GLYPH_E_ARG`.
+
+A zero query size returns `GLYPH_E_ARG`.
+
+For locate:
+
+- `max_results` must not exceed `coordinate_capacity`;
+- when `max_results == 0`, `coordinates` may be null and
+  `coordinate_capacity` must be zero;
+- when `max_results > 0`, `coordinates` must be non-null;
+- no coordinate beyond `returned_matches` is part of the result.
+
+### Document-path size probe
+
+`glyph_document_path_v1()` supports an exact size probe.
+
+When:
+
+    buffer == NULL
+    buffer_capacity == 0
+
+the function returns `GLYPH_OK` and writes the exact raw path-byte length to
+`out_required_size`.
+
+When capacity is insufficient:
+
+- the function returns `GLYPH_E_LIMIT`;
+- `out_required_size` contains the exact required size;
+- no truncated path is reported as success.
+
+When capacity is sufficient:
+
+- exactly the raw path bytes are copied;
+- no terminator is appended;
+- the function returns `GLYPH_OK`.
+
+A null buffer with non-zero capacity returns `GLYPH_E_ARG`.
+
+### Repeated close
+
+For `glyph_index_close_v1()`:
+
+- `inout_index == NULL` returns `GLYPH_E_ARG`;
+- `*inout_index == NULL` returns `GLYPH_E_CLOSED`;
+- successful close sets `*inout_index` to null;
+- a repeated close through the same handle variable therefore returns
+  `GLYPH_E_CLOSED`.
+
+### Close concurrency barrier
+
+Read-only operations may execute concurrently on one handle.
+
+The caller must establish a close barrier:
+
+- after a thread begins `glyph_index_close_v1()`, no new operation may begin
+  on that handle;
+- operations that started before the close attempt may still be active;
+- if such operations are active, close returns `GLYPH_E_BUSY`;
+- on `GLYPH_E_BUSY`, the handle remains valid and unchanged;
+- the caller may retry only after those operations complete;
+- successful close occurs only when there are no active operations.
+
+The raw C handle does not make stale-pointer use safe after successful close.
+
+### Frozen V1 structure layout
+
+For the initial supported host profile, the ABI requires these natural-layout
+sizes:
+
+| Type | Size |
+|---|---:|
+| `glyph_open_options_v1` | 72 bytes |
+| `glyph_query_options_v1` | 56 bytes |
+| `glyph_coordinate_v1` | 16 bytes |
+| `glyph_locate_result_v1` | 56 bytes |
+| `glyph_index_info_v1` | 120 bytes |
+| `glyph_document_info_v1` | 96 bytes |
+
+Packing pragmas are forbidden.
+
+The executable ABI gate must validate both sizes and field offsets.
+
 ## Acceptance boundary
 
 The header is only a contract during I0.

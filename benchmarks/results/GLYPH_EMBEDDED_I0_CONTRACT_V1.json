@@ -1,0 +1,60 @@
+{
+  "abi_version": 1,
+  "close_barrier_defined": true,
+  "contract_spec_count": 5,
+  "cpp17_consumer_header": true,
+  "failure_outputs_defined": true,
+  "fixed_width_public_types": true,
+  "format": "GLYPH_EMBEDDED_I0_CONTRACT_V1",
+  "function_count": 8,
+  "function_pointer_signatures": true,
+  "host_profile_defined": true,
+  "identifier_namespace_verified": true,
+  "layout": {
+    "glyph_coordinate_v1": 16,
+    "glyph_document_info_v1": 96,
+    "glyph_index_info_v1": 120,
+    "glyph_locate_result_v1": 56,
+    "glyph_open_options_v1": 72,
+    "glyph_query_options_v1": 56
+  },
+  "layout_static_assertions": true,
+  "mutation_count": 4,
+  "mutations": [
+    {
+      "message": "ordinary C identifier collision: glyph_index_info_v1",
+      "mutation": "ordinary_identifier_collision",
+      "rejected": true
+    },
+    {
+      "message": "exported function set mismatch",
+      "mutation": "missing_exported_function",
+      "rejected": true
+    },
+    {
+      "message": "forbidden public-header token: size_t",
+      "mutation": "forbidden_platform_width_type",
+      "rejected": true
+    },
+    {
+      "message": "status-code map mismatch",
+      "mutation": "renumbered_status_code",
+      "rejected": true
+    }
+  ],
+  "next": "EXTERNAL_LINE_BY_LINE_PREFREEZE_REVIEW",
+  "nullable_options_defined": true,
+  "ok": true,
+  "path_probe_defined": true,
+  "phase": "I0_CONTRACT_FREEZE_PREPARATION",
+  "public_header_present": true,
+  "repeated_close_defined": true,
+  "root_directory_anchored": true,
+  "runtime_implementation_present": false,
+  "signature_policy_defined": true,
+  "status": "DRAFT_NOT_FROZEN",
+  "status_code_count": 13,
+  "strict_c11_header": true,
+  "strict_c99_header": true,
+  "supported_host_profile": "64-bit little-endian Linux"
+}
