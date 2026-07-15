@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="GLYPH is a replayable exact-byte evidence layer for fixed corpora. Verify exact query/count/offset evidence with portable artifacts." />
-  <title>GLYPH — Replayable Exact-Byte Evidence</title>
+  <meta name="description" content="GLYPH provides verifiable exact-byte retrieval over committed corpora with deterministic evidence, portable bundles, and independent replay." />
+  <title>GLYPH — Verifiable Exact-Byte Retrieval</title>
   <style>
     :root {
       --bg: #080a0f;
       --panel: #111622;
       --panel2: #151c2b;
       --text: #f4f7fb;
-      --muted: #9da9ba;
+      --muted: #b0bac9;
       --line: rgba(255,255,255,.11);
       --blue: #6aa8ff;
       --cyan: #5df2d6;
@@ -84,7 +84,7 @@
       align-items: center;
       gap: 18px;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .navlinks a:hover { color: var(--text); }
@@ -365,37 +365,28 @@
       "@type": "WebSite",
       "name": "GLYPH",
       "url": "https://glyph.rs/",
-      "description": "Public reviewer portal for GLYPH, an experimental replayable exact-byte evidence layer for fixed corpora."
+      "description": "Verifiable exact-byte retrieval over committed corpora with deterministic evidence and independent replay."
     },
     {
       "@type": "SoftwareSourceCode",
       "name": "GLYPH Engine",
+      "url": "https://glyph.rs/",
       "codeRepository": "https://github.com/yasha1971-coder/glyph-engine",
       "programmingLanguage": [
+        "C",
         "C++",
         "Python",
         "Shell"
       ],
-      "runtimePlatform": [
-        "Linux",
-        "macOS"
-      ],
-      "description": "Experimental exact-byte retrieval and replayable bounded evidence artifacts over fixed corpora using FM-index/RLBWT runtime paths."
-    },
-    {
-      "@type": "SoftwareApplication",
-      "name": "GLYPH Engine",
-      "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Linux, macOS",
-      "softwareVersion": "rlbwt-bounded-evidence-v1",
-      "url": "https://glyph.rs/",
-      "codeRepository": "https://github.com/yasha1971-coder/glyph-engine",
-      "description": "Experimental replayable exact-byte evidence layer for fixed corpora. Current verified checkpoint supports exact query/count, bounded offsets, byte checks, portable artifacts, and replay verification.",
+      "runtimePlatform": "Linux",
+      "softwareVersion": "embedded-i0-pre-freeze",
+      "description": "Exact-byte retrieval and evidence system whose verified chain covers reference semantics, a binary-safe compiled runtime, a real-world operator workflow, and an executable pre-freeze C ABI contract.",
       "isAccessibleForFree": true
     }
   ]
 }
 </script>
+
 </head>
 
 <body>
@@ -408,7 +399,8 @@
     <nav class="navlinks">
       <a href="#verify">Verify</a>
       <a href="#chain">Evidence chain</a>
-      <a href="#state">Technical state</a>
+      <a href="#state">Current status</a>
+      <a href="#embedded">Embedded API</a>
       <a href="#boundaries">Boundaries</a>
       <a href="https://github.com/yasha1971-coder/glyph-engine">GitHub</a>
     </nav>
@@ -418,30 +410,48 @@
 <main>
   <section class="hero">
     <div class="wrap">
-      <div class="kicker">Experimental infrastructure · external review checkpoint available</div>
-      <h1><span class="gradient">Replayable exact-byte evidence</span> for fixed corpora.</h1>
+      <div class="kicker">
+        Verified semantics · compiled runtime · operator workflow · embedded API pre-freeze
+      </div>
+
+      <h1>
+        <span class="gradient">Verifiable exact-byte retrieval</span>
+        over committed corpora.
+      </h1>
+
       <p class="lead">
-        GLYPH is not another search UI. It is an engineering path for producing
-        reproducible exact-byte retrieval evidence: fixed corpus, exact query,
-        match count, bounded offsets, byte checks, portable artifacts, and replay verification.
+        GLYPH turns an exact binary query into deterministic coordinates,
+        byte checks, portable evidence, and independent replay. It is designed
+        for fixed corpora where reproducibility matters more than ranking,
+        tokenization, or semantic similarity.
       </p>
 
       <div class="hero-actions">
-        <a class="btn primary" href="https://github.com/yasha1971-coder/glyph-engine">Review on GitHub</a>
-        <a class="btn" href="#verify">Run the checkpoint</a>
+        <a class="btn primary"
+           href="https://github.com/yasha1971-coder/glyph-engine">
+          Review on GitHub
+        </a>
+        <a class="btn" href="#verify">Run the verified chain</a>
         <a class="btn" href="#boundaries">Read the boundaries</a>
       </div>
 
       <div class="terminal" id="verify">
-        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>review checkpoint</span></div>
+        <div class="bar">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span>one-command verification</span>
+        </div>
         <pre><code>git clone https://github.com/yasha1971-coder/glyph-engine.git
 cd glyph-engine
-git checkout rlbwt-bounded-evidence-v1
 ./verify.sh
 
-# expected:
-# [tiny-fixture] PASS
-# VERIFY OK</code></pre>
+# required closure:
+GLYPH PROOF GRAPH OK
+GLYPH RUNTIME CONFORMANCE OK
+GLYPH OPERATOR CONFORMANCE OK
+GLYPH EMBEDDED I0 CONTRACT VERIFY PASS
+VERIFY OK</code></pre>
       </div>
     </div>
   </section>
@@ -449,19 +459,30 @@ git checkout rlbwt-bounded-evidence-v1
   <section>
     <div class="wrap grid three">
       <div class="card">
-        <div class="status green">verified today</div>
-        <h3>RLBWT bounded evidence</h3>
-        <p>Artifact replay, portable bundle replay, schema smoke validation, and one-command verification over sentinel-safe fixed corpora.</p>
+        <div class="status green">verified</div>
+        <h3>Reference + runtime</h3>
+        <p>
+          P1–P12 define exact retrieval semantics. R0–R6 verify the
+          binary-safe compiled runtime against those semantics.
+        </p>
       </div>
+
       <div class="card">
-        <div class="status amber">reference only</div>
-        <h3>Binary-safe direction</h3>
-        <p>0x00 boundary documented. Virtual sentinel 256 selected. Tiny reference fixture proves target semantics, but production runtime is not binary-safe yet.</p>
+        <div class="status green">verified</div>
+        <h3>Operator workflow</h3>
+        <p>
+          O1–O6 verify the real filesystem-to-index-to-query-to-bundle
+          workflow and independent replay.
+        </p>
       </div>
+
       <div class="card">
-        <div class="status red">not claimed</div>
-        <h3>No overclaim layer</h3>
-        <p>Not a SIEM, not Elasticsearch, not Splunk, not YARA, not legal proof, not timestamped, not signed, not distributed.</p>
+        <div class="status amber">pre-freeze</div>
+        <h3>Embedded C ABI I0</h3>
+        <p>
+          The public C contract and executable gate exist. The shared-library
+          implementation has not started, and production readiness is not claimed.
+        </p>
       </div>
     </div>
   </section>
@@ -469,17 +490,43 @@ git checkout rlbwt-bounded-evidence-v1
   <section id="chain">
     <div class="wrap">
       <h2 class="section-title">Evidence chain, not search results.</h2>
+
       <p class="section-lead">
-        Search tools return matches. GLYPH’s current research target is different:
-        make exact-byte retrieval results replayable by another person from a fixed corpus.
+        Search tools return matches. GLYPH records the corpus identity,
+        exact query, deterministic coordinates, byte checks, and replay rules
+        needed to independently reproduce the evidence result.
       </p>
 
       <div class="chain">
-        <div class="step"><small>01</small><strong>Fixed corpus</strong><span>Corpus identity recorded by hash and manifest.</span></div>
-        <div class="step"><small>02</small><strong>Exact query</strong><span>Query bytes and hash are recorded.</span></div>
-        <div class="step"><small>03</small><strong>FM interval/count</strong><span>Exact match count from compressed runtime.</span></div>
-        <div class="step"><small>04</small><strong>Bounded offsets</strong><span>Deterministic returned offsets under max_offsets.</span></div>
-        <div class="step"><small>05</small><strong>Replay</strong><span>Artifact, bundle, schema, and verifier path.</span></div>
+        <div class="step">
+          <small>01</small>
+          <strong>Committed corpus</strong>
+          <span>Corpus and source identities are fixed and recorded.</span>
+        </div>
+
+        <div class="step">
+          <small>02</small>
+          <strong>Exact query bytes</strong>
+          <span>The binary query and its identity are authoritative.</span>
+        </div>
+
+        <div class="step">
+          <small>03</small>
+          <strong>Count + coordinates</strong>
+          <span>Exact match count and canonical document coordinates.</span>
+        </div>
+
+        <div class="step">
+          <small>04</small>
+          <strong>Byte checks</strong>
+          <span>Recorded coordinates are checked against source bytes.</span>
+        </div>
+
+        <div class="step">
+          <small>05</small>
+          <strong>Portable replay</strong>
+          <span>Evidence bundles can be independently inspected and replayed.</span>
+        </div>
       </div>
     </div>
   </section>
@@ -487,38 +534,86 @@ git checkout rlbwt-bounded-evidence-v1
   <section id="state">
     <div class="wrap grid two">
       <div>
-        <h2 class="section-title">Current verified checkpoint.</h2>
+        <h2 class="section-title">Current verification status.</h2>
+
         <p class="section-lead">
-          The public review checkpoint is intentionally tiny. It is designed to be fast,
-          reproducible, and easy to challenge.
+          GLYPH separates verified layers from pre-freeze contracts,
+          experimental paths, and properties that are not claimed.
         </p>
+
         <div class="card">
-          <div class="metric"><span>Tag</span><strong>rlbwt-bounded-evidence-v1</strong></div>
-          <div class="metric"><span>Artifact version</span><strong>RLBWT_BOUNDED_EVIDENCE_V1</strong></div>
-          <div class="metric"><span>Runtime profile</span><strong>RLBWT_FULL_RUNTIME_PROFILE_V1</strong></div>
-          <div class="metric"><span>Query</span><strong>the</strong></div>
-          <div class="metric"><span>FM interval</span><strong>[65, 68]</strong></div>
-          <div class="metric"><span>Match count</span><strong>3</strong></div>
-          <div class="metric"><span>Returned offsets</span><strong>[43, 55]</strong></div>
-          <div class="metric"><span>Byte check</span><strong>PASS</strong></div>
+          <div class="metric">
+            <span>Reference semantics P1–P12</span>
+            <strong>VERIFIED</strong>
+          </div>
+          <div class="metric">
+            <span>Compiled runtime R0–R6</span>
+            <strong>VERIFIED</strong>
+          </div>
+          <div class="metric">
+            <span>Operator workflow O1–O6</span>
+            <strong>VERIFIED</strong>
+          </div>
+          <div class="metric">
+            <span>Embedded C ABI I0</span>
+            <strong>PRE-FREEZE</strong>
+          </div>
+          <div class="metric">
+            <span>Shared-library implementation</span>
+            <strong>NOT IMPLEMENTED</strong>
+          </div>
+          <div class="metric">
+            <span>Second external review</span>
+            <strong>PENDING</strong>
+          </div>
+          <div class="metric">
+            <span>Production readiness</span>
+            <strong>NOT CLAIMED</strong>
+          </div>
         </div>
       </div>
 
-      <div>
-        <h2 class="section-title">Binary-safe status.</h2>
+      <div id="embedded">
+        <h2 class="section-title">Embedded API V1.</h2>
+
         <p class="section-lead">
-          Binary-safe is not claimed as production support. The current work documents the boundary
-          and fixes the reference semantics for future implementation.
+          Integration semantics are being frozen before implementation,
+          rather than discovered accidentally after third-party adoption.
         </p>
+
         <div class="card">
-          <div class="metric"><span>Current v0.x runtime</span><strong>sentinel-safe</strong></div>
-          <div class="metric"><span>0x00 in source corpus</span><strong>expected fail</strong></div>
-          <div class="metric"><span>Chosen design</span><strong>virtual sentinel 256</strong></div>
-          <div class="metric"><span>Reference corpus</span><strong>41 00 42 00 43 00 42</strong></div>
-          <div class="metric"><span>Reference query</span><strong>00 42</strong></div>
-          <div class="metric"><span>Reference count</span><strong>2</strong></div>
-          <div class="metric"><span>Reference offsets</span><strong>[1, 5]</strong></div>
-          <div class="metric"><span>Production binary-safe</span><strong>not claimed</strong></div>
+          <div class="metric">
+            <span>Public C header</span>
+            <strong>DEFINED</strong>
+          </div>
+          <div class="metric">
+            <span>Fixed-width ABI layouts</span>
+            <strong>CHECKED</strong>
+          </div>
+          <div class="metric">
+            <span>C99 / C11 / C++17 consumers</span>
+            <strong>CHECKED</strong>
+          </div>
+          <div class="metric">
+            <span>Lifetime + close semantics</span>
+            <strong>DEFINED</strong>
+          </div>
+          <div class="metric">
+            <span>mmap trust model</span>
+            <strong>DEFINED</strong>
+          </div>
+          <div class="metric">
+            <span>Resource failure model</span>
+            <strong>DEFINED</strong>
+          </div>
+          <div class="metric">
+            <span>Signed-statement policy</span>
+            <strong>SPECIFIED</strong>
+          </div>
+          <div class="metric">
+            <span>E1 implementation</span>
+            <strong>BLOCKED BY REVIEW</strong>
+          </div>
         </div>
       </div>
     </div>
@@ -527,62 +622,78 @@ git checkout rlbwt-bounded-evidence-v1
   <section>
     <div class="wrap">
       <h2 class="section-title">Where GLYPH sits.</h2>
+
       <p class="section-lead">
-        GLYPH should not be compared as a faster grep, a SIEM, or a malware scanner.
-        The relevant question is whether a system produces a portable, replayable exact-byte evidence artifact.
+        GLYPH is not positioned as a faster grep, a SIEM, or a semantic
+        retrieval platform. Its purpose is replayable exact-byte evidence
+        over a committed corpus state.
       </p>
 
       <table class="matrix">
         <thead>
           <tr>
             <th>System class</th>
-            <th>Main job</th>
-            <th>Exact bytes</th>
-            <th>Replay artifact</th>
-            <th>Portable bundle</th>
-            <th>GLYPH relation</th>
+            <th>Primary role</th>
+            <th>Exact-byte retrieval</th>
+            <th>Replayable evidence</th>
+            <th>Relation to GLYPH</th>
           </tr>
         </thead>
+
         <tbody>
           <tr>
             <td>grep / ripgrep</td>
             <td>Fast local text search</td>
             <td><span class="partial">partial</span></td>
             <td><span class="no">no</span></td>
-            <td><span class="no">no</span></td>
-            <td>GLYPH is not replacing grep; it records replayable evidence.</td>
+            <td>
+              GLYPH does not replace grep; it records a reproducible
+              evidence result.
+            </td>
           </tr>
+
           <tr>
             <td>Elastic / Splunk</td>
-            <td>Search, observability, security analytics</td>
+            <td>Search, observability, and security analytics</td>
             <td><span class="partial">contextual</span></td>
             <td><span class="no">no</span></td>
-            <td><span class="no">no</span></td>
-            <td>GLYPH is not a platform; it is a byte-evidence layer.</td>
+            <td>
+              GLYPH is a narrow evidence layer, not an analytics
+              platform.
+            </td>
           </tr>
+
           <tr>
             <td>YARA</td>
-            <td>Textual/binary pattern matching for malware research</td>
+            <td>Textual and binary pattern matching</td>
             <td><span class="yes">yes</span></td>
             <td><span class="no">no</span></td>
-            <td><span class="no">no</span></td>
-            <td>Future possible fit: evidence artifact for confirmed pattern hits.</td>
+            <td>
+              A possible upstream matcher for a future evidence
+              workflow.
+            </td>
           </tr>
+
           <tr>
-            <td>OpenTimestamps / CT / Sigstore</td>
-            <td>Time, transparency, signing, provenance</td>
+            <td>Sigstore / CT / OpenTimestamps</td>
+            <td>Signing, transparency, provenance, or time</td>
             <td><span class="no">no search</span></td>
             <td><span class="partial">different layer</span></td>
-            <td><span class="partial">different layer</span></td>
-            <td>Complementary trust layer, not exact retrieval.</td>
+            <td>
+              Potential complementary trust layers, not exact
+              retrieval systems.
+            </td>
           </tr>
+
           <tr>
-            <td>GLYPH current checkpoint</td>
-            <td>Replayable exact-byte bounded evidence</td>
+            <td>GLYPH verified path</td>
+            <td>Replayable exact-byte retrieval evidence</td>
             <td><span class="yes">yes</span></td>
             <td><span class="yes">yes</span></td>
-            <td><span class="yes">yes</span></td>
-            <td>Experimental reference path over fixed sentinel-safe corpora.</td>
+            <td>
+              Verified semantics, compiled runtime, operator workflow,
+              portable evidence, and replay.
+            </td>
           </tr>
         </tbody>
       </table>
@@ -592,72 +703,144 @@ git checkout rlbwt-bounded-evidence-v1
   <section id="boundaries">
     <div class="wrap">
       <h2 class="section-title">Boundaries are part of the design.</h2>
+
       <p class="section-lead">
-        GLYPH’s current public checkpoint is deliberately narrow. The goal is reviewable engineering,
-        not inflated claims.
+        GLYPH distinguishes exact retrieval evidence from source truth,
+        legal conclusions, host security, and production-readiness claims.
       </p>
 
       <div class="notice">
         <strong>Current strongest claim:</strong>
-        GLYPH has a reproducible review checkpoint for replayable exact-byte bounded evidence over fixed sentinel-safe corpora.
+        these exact query bytes occurred at these exact canonical coordinates
+        in this exact committed corpus state, under the verified retrieval and
+        replay rules.
       </div>
 
       <div class="grid three" style="margin-top:18px;">
         <div class="card">
-          <h3>Not binary-safe yet</h3>
-          <p>0x00 support is documented as a boundary. Reference semantics exist, but production C++ runtime support is not claimed.</p>
+          <h3>Not source truth or legal proof</h3>
+          <p>
+            Exact bytes do not establish authorship, intent, factual truth,
+            admissibility, or complete chain of custody.
+          </p>
         </div>
+
         <div class="card">
-          <h3>Not a legal proof</h3>
-          <p>No timestamp, signature, notarization, or chain-of-custody claim is made by the current checkpoint.</p>
+          <h3>Not production or distributed infrastructure</h3>
+          <p>
+            The verified path is an engineering verification chain, not a
+            production SLA or a petabyte-scale distributed deployment claim.
+          </p>
         </div>
+
         <div class="card">
-          <h3>Not distributed</h3>
-          <p>The current verified path is a single-repository review fixture, not petabyte-scale distributed infrastructure.</p>
+          <h3>Not privileged-host protection</h3>
+          <p>
+            The current trusted-filesystem profile does not protect against a
+            privileged writer mutating published inodes. Signing is specified
+            but not implemented.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-
-  <section id="portfolio">
+  <section id="review">
     <div class="wrap">
-      <h2 class="section-title">24-hour reviewer portal.</h2>
+      <h2 class="section-title">Independent reviewer path.</h2>
+
       <p class="section-lead">
-        GLYPH’s public page is designed to work without a meeting. A reviewer should be able to open the repository,
-        inspect the technical state, run the checkpoint, and see exactly what is verified and what is not claimed.
+        A reviewer can inspect the contract, run the complete verifier,
+        challenge the committed result, and distinguish verified behavior
+        from pending implementation.
       </p>
 
       <div class="grid three">
         <div class="card">
           <div class="status green">run now</div>
           <h3>One-command verification</h3>
-          <p><span class="mono">./verify.sh</span> rebuilds the tiny fixture, creates bounded evidence, replays the artifact, replays the bundle, and validates schemas.</p>
+          <p>
+            <span class="mono">./verify.sh</span> closes the proof,
+            runtime, operator, and Embedded I0 verification layers.
+          </p>
         </div>
+
         <div class="card">
-          <div class="status green">review now</div>
-          <h3>Technical state map</h3>
-          <p>The current state map separates verified working paths, reference-only work, known boundaries, non-claims, and implementation triggers.</p>
+          <div class="status green">inspect now</div>
+          <h3>Normative contract set</h3>
+          <p>
+            The ABI, threat, mmap, resource, and signed-statement documents
+            define the pre-freeze integration boundary.
+          </p>
         </div>
+
         <div class="card">
           <div class="status amber">challenge now</div>
-          <h3>Artifact portfolio</h3>
-          <p>The repository contains specs, replay reports, bundle format, tarball verifier, binary-safe boundary notes, and reference fixtures.</p>
+          <h3>Committed checker artifact</h3>
+          <p>
+            The I0 result is regenerated and byte-compared, with mutation
+            tests and implementation-tree guards.
+          </p>
         </div>
       </div>
 
       <div class="terminal" style="margin-top:18px;">
-        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>artifact portfolio</span></div>
-        <pre><code>docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md
-docs/review/RLBWT_BOUNDED_EVIDENCE_REVIEW_PATH_V1.md
+        <div class="bar">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span>review files</span>
+        </div>
+        <pre><code>README.md
+docs/specs/GLYPH_C_ABI_V1.md
+docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md
+docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md
+docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md
+docs/specs/GLYPH_SIGNED_STATEMENT_V1.md
+docs/reviews/GLYPH_EMBEDDED_I0_PREFREEZE_REVIEW_DISPOSITION_V1.md
+benchmarks/results/GLYPH_EMBEDDED_I0_CONTRACT_V1.json
 
-docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md
-docs/specs/RLBWT_BOUNDED_EVIDENCE_BUNDLE_SPEC_V1.md
-docs/specs/BINARY_SAFE_DESIGN_DECISION_V1.md
+./verify.sh</code></pre>
+      </div>
+    </div>
+  </section>
 
-benchmarks/results/RLBWT_BOUNDED_EVIDENCE_V1_REPLAY.md
-benchmarks/results/RLBWT_BOUNDED_EVIDENCE_BUNDLE_V1.md
-benchmarks/results/BINARY_SAFE_FM_TINY_FIXTURE_V1.md</code></pre>
+  <section id="research">
+    <div class="wrap">
+      <h2 class="section-title">Experimental and research paths.</h2>
+
+      <p class="section-lead">
+        These paths remain useful research artifacts, but they do not replace
+        the required P / R / O / I0 verification chain.
+      </p>
+
+      <div class="grid three">
+        <div class="card">
+          <div class="status amber">experimental</div>
+          <h3>Compressed RLBWT evidence</h3>
+          <p>
+            Bounded locate and portable evidence experiments over compressed
+            BWT runtime representations.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="status amber">experimental</div>
+          <h3>Structural Fingerprint replay</h3>
+          <p>
+            Deterministic corpus-structure artifacts and independent
+            regeneration experiments.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="status amber">prototype</div>
+          <h3>HTTP and segmented query paths</h3>
+          <p>
+            Persistent service and segmented retrieval explorations that are
+            not part of the Embedded V1 production claim.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -665,19 +848,30 @@ benchmarks/results/BINARY_SAFE_FM_TINY_FIXTURE_V1.md</code></pre>
   <section>
     <div class="wrap grid two">
       <div>
-        <h2 class="section-title">Reviewer path.</h2>
+        <h2 class="section-title">Next gate.</h2>
         <p class="section-lead">
-          Start with the current technical state map. Then run the verifier. Then challenge the artifact format.
+          The next project decision is not feature expansion. It is the second
+          independent line-by-line pre-freeze review of the Embedded I0 contract.
         </p>
       </div>
-      <div class="terminal">
-        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>files to inspect</span></div>
-        <pre><code>docs/review/GLYPH_CURRENT_TECHNICAL_STATE_V1.md
-docs/review/RLBWT_BOUNDED_EVIDENCE_REVIEW_PATH_V1.md
-docs/specs/RLBWT_BOUNDED_EVIDENCE_SPEC_V1.md
-docs/specs/RLBWT_BOUNDED_EVIDENCE_BUNDLE_SPEC_V1.md
 
-./verify.sh</code></pre>
+      <div class="card">
+        <div class="metric">
+          <span>Current phase</span>
+          <strong>I0 PRE-FREEZE</strong>
+        </div>
+        <div class="metric">
+          <span>Next action</span>
+          <strong>SECOND EXTERNAL REVIEW</strong>
+        </div>
+        <div class="metric">
+          <span>After accepted review</span>
+          <strong>FREEZE DECISION</strong>
+        </div>
+        <div class="metric">
+          <span>Implementation phase</span>
+          <strong>E1 — NOT STARTED</strong>
+        </div>
       </div>
     </div>
   </section>
@@ -689,14 +883,22 @@ docs/specs/RLBWT_BOUNDED_EVIDENCE_BUNDLE_SPEC_V1.md
       <span class="mark"></span>
       <span>GLYPH</span>
     </div>
+
     <p>
-      Experimental infrastructure for replayable exact-byte evidence over fixed corpora.
-      Current focus: external technical verification.
+      Verifiable exact-byte retrieval over committed corpora.
+      Verified semantics, compiled runtime, operator workflow, and
+      executable Embedded I0 pre-freeze contract.
     </p>
+
     <p>
-      <a class="mono" href="https://github.com/yasha1971-coder/glyph-engine">github.com/yasha1971-coder/glyph-engine</a>
+      <a class="mono"
+         href="https://github.com/yasha1971-coder/glyph-engine">
+        github.com/yasha1971-coder/glyph-engine
+      </a>
       ·
-      <a class="mono" href="mailto:contact@glyph.rs">contact@glyph.rs</a>
+      <a class="mono" href="mailto:contact@glyph.rs">
+        contact@glyph.rs
+      </a>
     </p>
   </div>
 </footer>
