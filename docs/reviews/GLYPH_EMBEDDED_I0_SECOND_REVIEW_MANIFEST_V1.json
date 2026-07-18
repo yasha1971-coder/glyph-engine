@@ -1,0 +1,132 @@
+{
+  "artifact_summary": {
+    "cross_file_invariant_count": 7,
+    "implementation_source_files_scanned": 38,
+    "mutation_count": 13,
+    "normative_section_count": 85,
+    "ok": true,
+    "reviewed_commit": "fe94eb0314cff76191a7eaba20347c234069a8f2",
+    "runtime_implementation_present": false
+  },
+  "baseline_repository_commit": "9f79fd5cf8f969ed46c2c1ad7945f6b5a2944edb",
+  "contract_next": "SECOND_EXTERNAL_PREFREEZE_REVIEW",
+  "contract_status": "DRAFT_NOT_FROZEN",
+  "embedded_e1_implementation_started": false,
+  "format": "GLYPH_EMBEDDED_I0_SECOND_REVIEW_MANIFEST_V1",
+  "freeze_barrier": {
+    "abi_frozen": false,
+    "e1_implementation_permitted": false,
+    "production_claim_permitted": false,
+    "shared_library_release_permitted": false
+  },
+  "manifest_payload_commit": "7df361eeed57b196a1dfa3541b675405d03c2688",
+  "manifest_self_reference_policy": "This manifest does not contain its own Git commit or its own SHA-256. Package content identity is the SHA-256 of the canonical manifest bytes; Git package identity is the annotated review_package_tag.",
+  "ok": true,
+  "production_readiness_claimed": false,
+  "required_review_file_count": 11,
+  "required_review_files": [
+    {
+      "git_blob_oid": "4fafa6e002704dda20cc6526a1eb954824e96a0e",
+      "line_count": 242,
+      "path": "include/glyph/glyph.h",
+      "role": "public_c_abi_header",
+      "sha256": "bd38c168728b3c938810604ef4a175fecf06cbb406007d84dc8cf432b53bd55f",
+      "size_bytes": 5533
+    },
+    {
+      "git_blob_oid": "e5e852a8cee5426832f3f53d376e1c8525651e92",
+      "line_count": 590,
+      "path": "docs/specs/GLYPH_C_ABI_V1.md",
+      "role": "normative_c_abi_specification",
+      "sha256": "f3ebf251aa7334c4c5a91e690a651b45cd8a87b1191583e3241609234831a7a6",
+      "size_bytes": 15345
+    },
+    {
+      "git_blob_oid": "5aa960112067a60b14d145595fc395d09ced8158",
+      "line_count": 259,
+      "path": "docs/specs/GLYPH_EMBEDDED_THREAT_MODEL_V1.md",
+      "role": "normative_threat_model",
+      "sha256": "4b99e9de91659b2f82e13e9e316365628e380cab3d417127863bb0099573bbc4",
+      "size_bytes": 7814
+    },
+    {
+      "git_blob_oid": "68c5f154733990254cd85141443a2ad342219dbd",
+      "line_count": 224,
+      "path": "docs/specs/GLYPH_MMAP_TRUST_MODEL_V1.md",
+      "role": "normative_mmap_trust_model",
+      "sha256": "5f3d714d831dd9cb46e9ee038af153d3a4bf6df9685ec887bd6c30d3f12d26f5",
+      "size_bytes": 6989
+    },
+    {
+      "git_blob_oid": "55ceaccfc8d4091596b6d089746e0d1fe77fde8a",
+      "line_count": 223,
+      "path": "docs/specs/GLYPH_RESOURCE_FAILURE_MODEL_V1.md",
+      "role": "normative_resource_failure_model",
+      "sha256": "b156c92ef7bf23466612acea5318236f0d0eaa8c3720130b574df54a366df35d",
+      "size_bytes": 5475
+    },
+    {
+      "git_blob_oid": "14ef504ea16abb6e890484bd94126fe3cfddaf56",
+      "line_count": 182,
+      "path": "docs/specs/GLYPH_SIGNED_STATEMENT_V1.md",
+      "role": "normative_signed_statement_specification",
+      "sha256": "e8eb1ea86fe8af930c05af81607e1e9a73f785c7bb9d0946ac8b51613ca550f8",
+      "size_bytes": 4200
+    },
+    {
+      "git_blob_oid": "80295be28e3ad2f1aea37120d6c10ee0726dbb4e",
+      "line_count": 241,
+      "path": "docs/reviews/GLYPH_EMBEDDED_I0_PREFREEZE_REVIEW_DISPOSITION_V1.md",
+      "role": "first_review_disposition",
+      "sha256": "da23e6185a1a046967b9ff65f1cb53d8a7979bbdd097d4330f10409864a73ca3",
+      "size_bytes": 7185
+    },
+    {
+      "git_blob_oid": "c8be28c9dd9ab41ffeca6cbf1f70644b06765a1b",
+      "line_count": 415,
+      "path": "docs/reviews/GLYPH_EMBEDDED_I0_SECOND_REVIEW_BRIEF_V1.md",
+      "role": "second_review_instructions",
+      "sha256": "be1299b6dbb1780b079190e0721e58549ae1d272750f38e20b51f36e3f61847d",
+      "size_bytes": 12824
+    },
+    {
+      "git_blob_oid": "62e0ca45db0ff028524cf95a0deb5f7819c26ca6",
+      "line_count": 2167,
+      "path": "tools/check_embedded_i0_contract_v1.py",
+      "role": "executable_contract_checker",
+      "sha256": "2793b0a18990f384845f9885c28faeccbdb62474eb31ee4c427cd269411cae3a",
+      "size_bytes": 49407
+    },
+    {
+      "git_blob_oid": "deab9a7ac84983e03fa19cf4a21eb5f658f8da40",
+      "line_count": 517,
+      "path": "benchmarks/results/GLYPH_EMBEDDED_I0_CONTRACT_V1.json",
+      "role": "committed_checker_result",
+      "sha256": "3f7cce1c03a4c409163f58131f77b1b04e9efd981fa4d3797acea82a45ead51c",
+      "size_bytes": 19683
+    },
+    {
+      "git_blob_oid": "a3ee8337526c737c98d312f93d2b569c99deb238",
+      "line_count": 108,
+      "path": "verify.sh",
+      "role": "repository_verification_entrypoint",
+      "sha256": "21c74add16ea4693e3b956d7bf87d3c8dbf84fa32a4bf9d237753f7d63c009cd",
+      "size_bytes": 2814
+    }
+  ],
+  "required_verdicts": [
+    "FREEZE_ACCEPTED",
+    "FREEZE_ACCEPTED_WITH_MINOR_CORRECTIONS",
+    "FREEZE_BLOCKED"
+  ],
+  "review_branch": "embedded-i0-second-review-v1",
+  "review_package_commit_resolution": "Resolve review_package_tag after the manifest commit is created. The tag must point to the commit containing this manifest.",
+  "review_package_tag": "glyph-embedded-i0-second-review-v1",
+  "review_phase": "SECOND_EXTERNAL_PREFREEZE_REVIEW",
+  "review_status": "READY_FOR_INDEPENDENT_REVIEW",
+  "reviewed_contract_commit": "fe94eb0314cff76191a7eaba20347c234069a8f2",
+  "verification_commands": [
+    "./verify.sh",
+    "PYTHONDONTWRITEBYTECODE=1 python3 -I tools/check_embedded_i0_contract_v1.py --verify"
+  ]
+}
