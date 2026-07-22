@@ -44,6 +44,27 @@ COVERAGE_POLICY = "ALL_ROOT_BLOCKS_REQUIRED_V1"
 BOUNDARY_POLICY = "DOCUMENT_LOCAL_MATCHES_ONLY_V1"
 
 
+ROOT_PUBLICATION_STATUS = "COMPLETE"
+
+ROOT_MANIFEST_KEYS = {
+    "format",
+    "publication_status",
+    "global_document_count",
+    "block_count",
+    "runtime_corpus_id",
+    "source_manifest_id",
+    "blocks",
+    "composition_root_id",
+}
+
+ROOT_BLOCK_RECORD_KEYS = {
+    "block_ordinal",
+    "block_document_count",
+    "runtime_index_id",
+    "runtime_manifest_sha256",
+}
+
+
 class CompositionError(RuntimeError):
     pass
 
@@ -355,6 +376,860 @@ def composition_root_id(
     return hashlib.sha256(
         preimage
     ).hexdigest()
+
+
+def make_root_manifest(
+    root: Root,
+) -> dict[str, Any]:
+    return {
+        "format": ROOT_VERSION,
+        "publication_status":
+            ROOT_PUBLICATION_STATUS,
+        "global_document_count":
+            root.document_count,
+        "block_count":
+            len(root.blocks),
+        "runtime_corpus_id":
+            root.corpus_id,
+        "source_manifest_id":
+            root.source_manifest_id,
+        "blocks": [
+            {
+                "block_ordinal":
+                    block.ordinal,
+                "block_document_count":
+                    block.document_count,
+                "runtime_index_id":
+                    block.runtime_index_id,
+                "runtime_manifest_sha256":
+                    block.runtime_manifest_sha256,
+            }
+            for block in root.blocks
+        ],
+        "composition_root_id":
+            root.composition_root_id,
+    }
+
+
+def recompute_root_identity_from_manifest(
+    manifest: dict[str, Any],
+) -> str:
+    preimage = bytearray(
+        ROOT_VERSION.encode("ascii")
+        + b"\x00"
+    )
+
+    preimage.extend(
+        raw_sha256(
+            manifest.get(
+                "runtime_corpus_id"
+            ),
+            "runtime_corpus_id",
+        )
+    )
+    preimage.extend(
+        raw_sha256(
+            manifest.get(
+                "source_manifest_id"
+            ),
+            "source_manifest_id",
+        )
+    )
+    preimage.extend(
+        u64_be(
+            manifest.get(
+                "global_document_count"
+            ),
+            "global_document_count",
+        )
+    )
+    preimage.extend(
+        u64_be(
+            manifest.get(
+                "block_count"
+            ),
+            "block_count",
+        )
+    )
+
+    blocks = manifest.get("blocks")
+
+    if not isinstance(blocks, list):
+        raise CompositionError(
+            "root blocks are not a list"
+        )
+
+    for expected, record in enumerate(
+        blocks
+    ):
+        if not isinstance(record, dict):
+            raise CompositionError(
+                "root block record "
+                "is not an object"
+            )
+
+        ordinal = u64(
+            record.get(
+                "block_ordinal"
+            ),
+            "block_ordinal",
+        )
+
+        if ordinal != expected:
+            raise CompositionError(
+                "non-canonical root "
+                "block ordinal"
+            )
+
+        preimage.extend(
+            u64_be(
+                ordinal,
+                "block_ordinal",
+            )
+        )
+        preimage.extend(
+            u64_be(
+                record.get(
+                    "block_document_count"
+                ),
+                "block_document_count",
+            )
+        )
+        preimage.extend(
+            raw_sha256(
+                record.get(
+                    "runtime_index_id"
+                ),
+                "runtime_index_id",
+            )
+        )
+        preimage.extend(
+            raw_sha256(
+                record.get(
+                    "runtime_manifest_sha256"
+                ),
+                "runtime_manifest_sha256",
+            )
+        )
+
+    return hashlib.sha256(
+        preimage
+    ).hexdigest()
+
+
+def runtime_corpus_id_from_records(
+    records: Sequence[dict[str, Any]],
+) -> str:
+    preimage = bytearray(
+        b"GLYPH_BINARY_RUNTIME_"
+        b"CORPUS_IDENTITY_V1\x00"
+    )
+
+    preimage.extend(
+        u64_be(
+            len(records),
+            "global_document_count",
+        )
+    )
+
+    for global_doc_id, record in enumerate(
+        records
+    ):
+        preimage.extend(
+            u64_be(
+                global_doc_id,
+                "global_doc_id",
+            )
+        )
+        preimage.extend(
+            u64_be(
+                record["byte_length"],
+                "byte_length",
+            )
+        )
+        preimage.extend(
+            raw_sha256(
+                record["sha256"],
+                "document_sha256",
+            )
+        )
+
+    return hashlib.sha256(
+        preimage
+    ).hexdigest()
+
+
+def source_manifest_id_from_records(
+    records: Sequence[dict[str, Any]],
+) -> str:
+    preimage = bytearray(
+        b"GLYPH_OPERATOR_"
+        b"CORPUS_MANIFEST_V1\x00"
+    )
+
+    preimage.extend(
+        u64_be(
+            len(records),
+            "global_document_count",
+        )
+    )
+
+    for global_doc_id, record in enumerate(
+        records
+    ):
+        path_bytes = record["path_bytes"]
+
+        if not isinstance(path_bytes, bytes):
+            raise CompositionError(
+                "path identity is not bytes"
+            )
+
+        preimage.extend(
+            u64_be(
+                global_doc_id,
+                "global_doc_id",
+            )
+        )
+        preimage.extend(
+            u64_be(
+                len(path_bytes),
+                "path_length",
+            )
+        )
+        preimage.extend(path_bytes)
+        preimage.extend(
+            u64_be(
+                record["byte_length"],
+                "byte_length",
+            )
+        )
+        preimage.extend(
+            raw_sha256(
+                record["sha256"],
+                "document_sha256",
+            )
+        )
+
+    return hashlib.sha256(
+        preimage
+    ).hexdigest()
+
+
+def flatten_verified_identity_records(
+    blocks: Sequence[Block],
+) -> list[dict[str, Any]]:
+    flattened: list[dict[str, Any]] = []
+    seen_paths: set[bytes] = set()
+
+    for block in blocks:
+        verify_runtime_index(
+            block.corpus,
+            require_current_binaries=True,
+            rebuild=False,
+        )
+
+        source_manifest_path = (
+            block.corpus
+            / SOURCE_MANIFEST_NAME
+        )
+
+        runtime_manifest_path = (
+            block.corpus
+            / RUNTIME_INDEX_DIRECTORY
+            / INDEX_MANIFEST_NAME
+        )
+
+        actual_runtime_sha256 = (
+            sha256_file(
+                runtime_manifest_path
+            )
+        )
+
+        if (
+            actual_runtime_sha256
+            != block.runtime_manifest_sha256
+        ):
+            raise CompositionError(
+                "runtime manifest hash "
+                "does not match root"
+            )
+
+        source_manifest = (
+            load_canonical_json(
+                source_manifest_path
+            )
+        )
+
+        runtime_manifest = (
+            load_canonical_json(
+                runtime_manifest_path
+            )
+        )
+
+        if (
+            runtime_manifest.get(
+                "runtime_index_id"
+            )
+            != block.runtime_index_id
+        ):
+            raise CompositionError(
+                "runtime index identity "
+                "does not match root"
+            )
+
+        for identity_field in (
+            "corpus_id",
+            "source_manifest_id",
+        ):
+            if (
+                source_manifest.get(
+                    identity_field
+                )
+                != runtime_manifest.get(
+                    identity_field
+                )
+            ):
+                raise CompositionError(
+                    "source/runtime identity "
+                    f"mismatch: {identity_field}"
+                )
+
+        source_records = (
+            source_manifest.get(
+                "documents"
+            )
+        )
+
+        runtime_records = (
+            runtime_manifest.get(
+                "documents"
+            )
+        )
+
+        if (
+            not isinstance(
+                source_records,
+                list,
+            )
+            or not isinstance(
+                runtime_records,
+                list,
+            )
+            or len(source_records)
+            != block.document_count
+            or len(runtime_records)
+            != block.document_count
+        ):
+            raise CompositionError(
+                "block document count "
+                "does not match root"
+            )
+
+        for local_doc_id, (
+            source_record,
+            runtime_record,
+        ) in enumerate(
+            zip(
+                source_records,
+                runtime_records,
+            )
+        ):
+            if (
+                not isinstance(
+                    source_record,
+                    dict,
+                )
+                or not isinstance(
+                    runtime_record,
+                    dict,
+                )
+            ):
+                raise CompositionError(
+                    "invalid document record"
+                )
+
+            if (
+                source_record.get(
+                    "doc_id"
+                )
+                != local_doc_id
+                or runtime_record.get(
+                    "doc_id"
+                )
+                != local_doc_id
+            ):
+                raise CompositionError(
+                    "non-canonical local doc_id"
+                )
+
+            path_hex = source_record.get(
+                "relative_path_bytes_hex"
+            )
+
+            if (
+                not isinstance(
+                    path_hex,
+                    str,
+                )
+                or path_hex
+                != path_hex.lower()
+            ):
+                raise CompositionError(
+                    "invalid relative path hex"
+                )
+
+            try:
+                path_bytes = bytes.fromhex(
+                    path_hex
+                )
+            except ValueError as error:
+                raise CompositionError(
+                    "invalid relative path hex"
+                ) from error
+
+            if path_bytes.hex() != path_hex:
+                raise CompositionError(
+                    "non-canonical path hex"
+                )
+
+            if path_bytes in seen_paths:
+                raise CompositionError(
+                    "duplicate global "
+                    "source path"
+                )
+
+            seen_paths.add(path_bytes)
+
+            byte_length = u64(
+                source_record.get(
+                    "byte_length"
+                ),
+                "source_byte_length",
+            )
+
+            source_sha256 = (
+                source_record.get(
+                    "sha256"
+                )
+            )
+
+            raw_sha256(
+                source_sha256,
+                "source_sha256",
+            )
+
+            if (
+                runtime_record.get(
+                    "source_byte_length"
+                )
+                != byte_length
+                or runtime_record.get(
+                    "source_sha256"
+                )
+                != source_sha256
+            ):
+                raise CompositionError(
+                    "source/runtime document "
+                    "commitment mismatch"
+                )
+
+            snapshot_relative = (
+                source_record.get(
+                    "snapshot_path"
+                )
+            )
+
+            if not isinstance(
+                snapshot_relative,
+                str,
+            ):
+                raise CompositionError(
+                    "invalid snapshot path"
+                )
+
+            snapshot_path = (
+                block.corpus
+                / snapshot_relative
+            )
+
+            payload = snapshot_path.read_bytes()
+
+            if (
+                len(payload) != byte_length
+                or hashlib.sha256(
+                    payload
+                ).hexdigest()
+                != source_sha256
+            ):
+                raise CompositionError(
+                    "snapshot commitment "
+                    "mismatch"
+                )
+
+            flattened.append({
+                "path_bytes":
+                    path_bytes,
+                "byte_length":
+                    byte_length,
+                "sha256":
+                    source_sha256,
+            })
+
+    return flattened
+
+
+def validate_root_manifest(
+    manifest: dict[str, Any],
+    available_blocks: Sequence[Block],
+    *,
+    name: str,
+) -> Root:
+    if not isinstance(manifest, dict):
+        raise CompositionError(
+            "root manifest is not an object"
+        )
+
+    if set(manifest) != ROOT_MANIFEST_KEYS:
+        raise CompositionError(
+            "root manifest key mismatch"
+        )
+
+    if manifest.get("format") != ROOT_VERSION:
+        raise CompositionError(
+            "unsupported root format"
+        )
+
+    if (
+        manifest.get(
+            "publication_status"
+        )
+        != ROOT_PUBLICATION_STATUS
+    ):
+        raise CompositionError(
+            "root is not complete"
+        )
+
+    document_count = u64(
+        manifest.get(
+            "global_document_count"
+        ),
+        "global_document_count",
+    )
+
+    block_count = u64(
+        manifest.get(
+            "block_count"
+        ),
+        "block_count",
+    )
+
+    if block_count == 0:
+        raise CompositionError(
+            "empty composition root"
+        )
+
+    runtime_id = manifest.get(
+        "runtime_corpus_id"
+    )
+    source_id = manifest.get(
+        "source_manifest_id"
+    )
+    committed_root_id = manifest.get(
+        "composition_root_id"
+    )
+
+    raw_sha256(
+        runtime_id,
+        "runtime_corpus_id",
+    )
+    raw_sha256(
+        source_id,
+        "source_manifest_id",
+    )
+    raw_sha256(
+        committed_root_id,
+        "composition_root_id",
+    )
+
+    records = manifest.get("blocks")
+
+    if (
+        not isinstance(records, list)
+        or len(records) != block_count
+    ):
+        raise CompositionError(
+            "root block_count mismatch"
+        )
+
+    available_by_id: dict[
+        str,
+        Block,
+    ] = {}
+
+    for block in available_blocks:
+        if (
+            block.runtime_index_id
+            in available_by_id
+        ):
+            raise CompositionError(
+                "duplicate available "
+                "runtime unit"
+            )
+
+        available_by_id[
+            block.runtime_index_id
+        ] = block
+
+    verified_blocks: list[Block] = []
+    seen_runtime_ids: set[str] = set()
+    global_doc_base = 0
+
+    for expected_ordinal, record in enumerate(
+        records
+    ):
+        if (
+            not isinstance(record, dict)
+            or set(record)
+            != ROOT_BLOCK_RECORD_KEYS
+        ):
+            raise CompositionError(
+                "root block record "
+                "key mismatch"
+            )
+
+        ordinal = u64(
+            record.get(
+                "block_ordinal"
+            ),
+            "block_ordinal",
+        )
+
+        if ordinal != expected_ordinal:
+            raise CompositionError(
+                "non-canonical root "
+                "block ordinal"
+            )
+
+        block_document_count = u64(
+            record.get(
+                "block_document_count"
+            ),
+            "block_document_count",
+        )
+
+        if block_document_count == 0:
+            raise CompositionError(
+                "empty runtime unit"
+            )
+
+        block_runtime_id = (
+            record.get(
+                "runtime_index_id"
+            )
+        )
+
+        block_manifest_sha256 = (
+            record.get(
+                "runtime_manifest_sha256"
+            )
+        )
+
+        raw_sha256(
+            block_runtime_id,
+            "runtime_index_id",
+        )
+        raw_sha256(
+            block_manifest_sha256,
+            "runtime_manifest_sha256",
+        )
+
+        if (
+            block_runtime_id
+            in seen_runtime_ids
+        ):
+            raise CompositionError(
+                "duplicate runtime_index_id "
+                "in root"
+            )
+
+        seen_runtime_ids.add(
+            block_runtime_id
+        )
+
+        physical = available_by_id.get(
+            block_runtime_id
+        )
+
+        if physical is None:
+            raise CompositionError(
+                "required runtime unit "
+                "is unavailable"
+            )
+
+        if (
+            physical.runtime_manifest_sha256
+            != block_manifest_sha256
+        ):
+            raise CompositionError(
+                "available runtime manifest "
+                "does not match root"
+            )
+
+        range_end = checked_add(
+            global_doc_base,
+            block_document_count,
+            "global_document_range_end",
+        )
+
+        verified_blocks.append(
+            Block(
+                ordinal=ordinal,
+                start=global_doc_base,
+                end=range_end,
+                corpus=physical.corpus,
+                runtime_index_id=(
+                    block_runtime_id
+                ),
+                runtime_manifest_sha256=(
+                    block_manifest_sha256
+                ),
+            )
+        )
+
+        global_doc_base = range_end
+
+    if global_doc_base != document_count:
+        raise CompositionError(
+            "global document coverage "
+            "mismatch"
+        )
+
+    recomputed_root_id = (
+        recompute_root_identity_from_manifest(
+            manifest
+        )
+    )
+
+    if recomputed_root_id != committed_root_id:
+        raise CompositionError(
+            "composition root identity "
+            "mismatch"
+        )
+
+    flattened = (
+        flatten_verified_identity_records(
+            verified_blocks
+        )
+    )
+
+    if len(flattened) != document_count:
+        raise CompositionError(
+            "flattened document count "
+            "mismatch"
+        )
+
+    recomputed_runtime_id = (
+        runtime_corpus_id_from_records(
+            flattened
+        )
+    )
+
+    if recomputed_runtime_id != runtime_id:
+        raise CompositionError(
+            "global runtime corpus "
+            "identity mismatch"
+        )
+
+    recomputed_source_id = (
+        source_manifest_id_from_records(
+            flattened
+        )
+    )
+
+    if recomputed_source_id != source_id:
+        raise CompositionError(
+            "global source manifest "
+            "identity mismatch"
+        )
+
+    return Root(
+        name=name,
+        blocks=tuple(
+            verified_blocks
+        ),
+        document_count=document_count,
+        corpus_id=runtime_id,
+        source_manifest_id=source_id,
+        composition_root_id=(
+            committed_root_id
+        ),
+    )
+
+
+def serialize_and_validate_root(
+    work: Path,
+    root: Root,
+) -> Root:
+    manifest = make_root_manifest(
+        root
+    )
+
+    if (
+        recompute_root_identity_from_manifest(
+            manifest
+        )
+        != root.composition_root_id
+    ):
+        raise CompositionError(
+            "builder root identity "
+            "self-check failed"
+        )
+
+    manifest_path = (
+        work
+        / (
+            f"{root.name}-"
+            "composition-root-v1.json"
+        )
+    )
+
+    serialized = canonical_json_bytes(
+        manifest
+    )
+
+    manifest_path.write_bytes(
+        serialized
+    )
+
+    loaded = json.loads(
+        manifest_path.read_text(
+            encoding="utf-8"
+        )
+    )
+
+    if canonical_json_bytes(
+        loaded
+    ) != serialized:
+        raise CompositionError(
+            "root manifest canonical "
+            "serialization mismatch"
+        )
+
+    verified = validate_root_manifest(
+        loaded,
+        root.blocks,
+        name=root.name,
+    )
+
+    if make_root_manifest(
+        verified
+    ) != loaded:
+        raise CompositionError(
+            "verified root view differs "
+            "from manifest"
+        )
+
+    return verified
 
 
 def fixture_documents() -> list[Document]:
@@ -710,13 +1585,18 @@ def build_root(
         blocks,
     )
 
-    return Root(
+    provisional = Root(
         name=name,
         blocks=tuple(blocks),
         document_count=len(documents),
         corpus_id=corpus_id,
         source_manifest_id=manifest_id,
         composition_root_id=root_id,
+    )
+
+    return serialize_and_validate_root(
+        work,
+        provisional,
     )
 
 
@@ -1701,6 +2581,8 @@ def main() -> int:
             "repartition_coordinates_stable":
                 True,
             "root_identity_layout_sensitive":
+                True,
+            "root_manifest_validation_verified":
                 True,
             "global_max_offsets_verified":
                 True,
