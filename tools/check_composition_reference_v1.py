@@ -69,6 +69,15 @@ class CompositionError(RuntimeError):
     pass
 
 
+def root_error(
+    error_class: str,
+    message: str,
+) -> CompositionError:
+    return CompositionError(
+        f"{error_class}: {message}"
+    )
+
+
 @dataclass(frozen=True)
 class Document:
     path: str
@@ -890,13 +899,15 @@ def validate_root_manifest(
         )
 
     if set(manifest) != ROOT_MANIFEST_KEYS:
-        raise CompositionError(
-            "root manifest key mismatch"
+        raise root_error(
+            "COMPOSITION_E_ROOT_INVALID",
+            "root manifest key mismatch",
         )
 
     if manifest.get("format") != ROOT_VERSION:
-        raise CompositionError(
-            "unsupported root format"
+        raise root_error(
+            "COMPOSITION_E_VERSION",
+            "unsupported root format",
         )
 
     if (
@@ -905,8 +916,9 @@ def validate_root_manifest(
         )
         != ROOT_PUBLICATION_STATUS
     ):
-        raise CompositionError(
-            "root is not complete"
+        raise root_error(
+            "COMPOSITION_E_ROOT_INVALID",
+            "root is not complete",
         )
 
     document_count = u64(
@@ -1005,9 +1017,9 @@ def validate_root_manifest(
         )
 
         if ordinal != expected_ordinal:
-            raise CompositionError(
-                "non-canonical root "
-                "block ordinal"
+            raise root_error(
+                "COMPOSITION_E_ROOT_INVALID",
+                "non-canonical root block ordinal",
             )
 
         block_document_count = u64(
@@ -1047,9 +1059,9 @@ def validate_root_manifest(
             block_runtime_id
             in seen_runtime_ids
         ):
-            raise CompositionError(
-                "duplicate runtime_index_id "
-                "in root"
+            raise root_error(
+                "COMPOSITION_E_ROOT_INVALID",
+                "duplicate runtime_index_id in root",
             )
 
         seen_runtime_ids.add(
@@ -1061,18 +1073,19 @@ def validate_root_manifest(
         )
 
         if physical is None:
-            raise CompositionError(
-                "required runtime unit "
-                "is unavailable"
+            raise root_error(
+                "COMPOSITION_E_COVERAGE",
+                "required runtime unit is unavailable",
             )
 
         if (
             physical.runtime_manifest_sha256
             != block_manifest_sha256
         ):
-            raise CompositionError(
+            raise root_error(
+                "COMPOSITION_E_IDENTITY",
                 "available runtime manifest "
-                "does not match root"
+                "does not match root",
             )
 
         range_end = checked_add(
@@ -1111,9 +1124,9 @@ def validate_root_manifest(
     )
 
     if recomputed_root_id != committed_root_id:
-        raise CompositionError(
-            "composition root identity "
-            "mismatch"
+        raise root_error(
+            "COMPOSITION_E_ROOT_MISMATCH",
+            "composition root identity mismatch",
         )
 
     flattened = (
@@ -1135,9 +1148,9 @@ def validate_root_manifest(
     )
 
     if recomputed_runtime_id != runtime_id:
-        raise CompositionError(
-            "global runtime corpus "
-            "identity mismatch"
+        raise root_error(
+            "COMPOSITION_E_IDENTITY",
+            "global runtime corpus identity mismatch",
         )
 
     recomputed_source_id = (
@@ -1147,9 +1160,9 @@ def validate_root_manifest(
     )
 
     if recomputed_source_id != source_id:
-        raise CompositionError(
-            "global source manifest "
-            "identity mismatch"
+        raise root_error(
+            "COMPOSITION_E_IDENTITY",
+            "global source manifest identity mismatch",
         )
 
     return Root(
@@ -1230,6 +1243,221 @@ def serialize_and_validate_root(
         )
 
     return verified
+
+
+def clone_json(
+    value: Any,
+) -> Any:
+    return json.loads(
+        json.dumps(value)
+    )
+
+
+def expect_root_failure(
+    name: str,
+    expected_error_class: str,
+    function,
+) -> dict[str, Any]:
+    try:
+        function()
+
+    except CompositionError as error:
+        message = str(error)
+        prefix = expected_error_class + ":"
+
+        if not message.startswith(prefix):
+            raise CompositionError(
+                f"{name}: expected "
+                f"{expected_error_class}, "
+                f"received {message}"
+            ) from error
+
+        return {
+            "mutation": name,
+            "expected_error_class":
+                expected_error_class,
+            "rejected": True,
+        }
+
+    raise CompositionError(
+        f"mutation unexpectedly accepted: {name}"
+    )
+
+
+def validate_root_mutations(
+    root: Root,
+) -> list[dict[str, Any]]:
+    baseline = make_root_manifest(root)
+    mutations: list[dict[str, Any]] = []
+
+    def validate(
+        manifest: dict[str, Any],
+        blocks: Sequence[Block] | None = None,
+    ) -> Root:
+        return validate_root_manifest(
+            manifest,
+            root.blocks
+            if blocks is None
+            else blocks,
+            name=root.name + "-mutation",
+        )
+
+    unsupported = clone_json(baseline)
+    unsupported["format"] = (
+        "GLYPH_COMPOSITION_ROOT_V2"
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "unsupported_root_format",
+            "COMPOSITION_E_VERSION",
+            lambda: validate(unsupported),
+        )
+    )
+
+    incomplete = clone_json(baseline)
+    incomplete["publication_status"] = (
+        "INCOMPLETE"
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "incomplete_publication",
+            "COMPOSITION_E_ROOT_INVALID",
+            lambda: validate(incomplete),
+        )
+    )
+
+    changed_root = clone_json(baseline)
+    changed_root["composition_root_id"] = (
+        "0" * 64
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "changed_composition_root_id",
+            "COMPOSITION_E_ROOT_MISMATCH",
+            lambda: validate(changed_root),
+        )
+    )
+
+    reordered = clone_json(baseline)
+
+    reordered["blocks"][0], reordered["blocks"][1] = (
+        reordered["blocks"][1],
+        reordered["blocks"][0],
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "reordered_block_records",
+            "COMPOSITION_E_ROOT_INVALID",
+            lambda: validate(reordered),
+        )
+    )
+
+    duplicated = clone_json(baseline)
+
+    duplicated_record = clone_json(
+        duplicated["blocks"][0]
+    )
+
+    duplicated_record["block_ordinal"] = 1
+    duplicated["blocks"][1] = duplicated_record
+
+    mutations.append(
+        expect_root_failure(
+            "duplicated_block_identity",
+            "COMPOSITION_E_ROOT_INVALID",
+            lambda: validate(duplicated),
+        )
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "missing_required_block",
+            "COMPOSITION_E_COVERAGE",
+            lambda: validate(
+                clone_json(baseline),
+                root.blocks[:-1],
+            ),
+        )
+    )
+
+    changed_manifest = clone_json(baseline)
+
+    changed_manifest["blocks"][1][
+        "runtime_manifest_sha256"
+    ] = "0" * 64
+
+    changed_manifest[
+        "composition_root_id"
+    ] = recompute_root_identity_from_manifest(
+        changed_manifest
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "changed_runtime_manifest_commitment",
+            "COMPOSITION_E_IDENTITY",
+            lambda: validate(changed_manifest),
+        )
+    )
+
+    changed_corpus = clone_json(baseline)
+
+    changed_corpus[
+        "runtime_corpus_id"
+    ] = "0" * 64
+
+    changed_corpus[
+        "composition_root_id"
+    ] = recompute_root_identity_from_manifest(
+        changed_corpus
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "changed_global_runtime_corpus_id",
+            "COMPOSITION_E_IDENTITY",
+            lambda: validate(changed_corpus),
+        )
+    )
+
+    changed_source = clone_json(baseline)
+
+    changed_source[
+        "source_manifest_id"
+    ] = "0" * 64
+
+    changed_source[
+        "composition_root_id"
+    ] = recompute_root_identity_from_manifest(
+        changed_source
+    )
+
+    mutations.append(
+        expect_root_failure(
+            "changed_global_source_manifest_id",
+            "COMPOSITION_E_IDENTITY",
+            lambda: validate(changed_source),
+        )
+    )
+
+    if len(mutations) != 9:
+        raise CompositionError(
+            "root mutation count mismatch"
+        )
+
+    if not all(
+        item["rejected"] is True
+        for item in mutations
+    ):
+        raise CompositionError(
+            "root mutation gate failed"
+        )
+
+    return mutations
 
 
 def fixture_documents() -> list[Document]:
@@ -2282,6 +2510,12 @@ def main() -> int:
             roots,
         )
 
+        root_mutations = (
+            validate_root_mutations(
+                root_a
+            )
+        )
+
         queries = [
             b"shared",
             b"dup",
@@ -2584,6 +2818,10 @@ def main() -> int:
                 True,
             "root_manifest_validation_verified":
                 True,
+            "root_identity_mutations_verified":
+                True,
+            "root_mutation_count":
+                len(root_mutations),
             "global_max_offsets_verified":
                 True,
             "completion_order_independent":
@@ -2602,6 +2840,8 @@ def main() -> int:
                 fixtures,
             "bounded_results":
                 bounded,
+            "root_mutations":
+                root_mutations,
         }
 
         print(
