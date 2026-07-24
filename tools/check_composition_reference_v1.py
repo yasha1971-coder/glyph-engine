@@ -2689,6 +2689,396 @@ def serialize_and_validate_result(
     return verified
 
 
+def refresh_composition_result_id(
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    result["composition_result_id"] = (
+        composition_result_id(result)
+    )
+
+    return result
+
+
+def expect_result_failure(
+    name: str,
+    expected_error_class: str,
+    function,
+) -> dict[str, Any]:
+    try:
+        function()
+
+    except CompositionError as error:
+        message = str(error)
+        prefix = expected_error_class + ":"
+
+        if not message.startswith(prefix):
+            raise CompositionError(
+                f"{name}: expected "
+                f"{expected_error_class}, "
+                f"received {message}"
+            ) from error
+
+        return {
+            "mutation": name,
+            "expected_error_class":
+                expected_error_class,
+            "rejected": True,
+        }
+
+    raise CompositionError(
+        f"mutation unexpectedly accepted: {name}"
+    )
+
+
+def validate_result_mutations(
+    root: Root,
+    positive_query: bytes,
+    positive_result: dict[str, Any],
+    zero_query: bytes,
+    zero_result: dict[str, Any],
+) -> list[dict[str, Any]]:
+    validate_composed_result(
+        root,
+        positive_query,
+        positive_result,
+    )
+
+    validate_composed_result(
+        root,
+        zero_query,
+        zero_result,
+    )
+
+    if (
+        positive_result.get("max_offsets")
+        is None
+        or positive_result.get(
+            "match_count"
+        ) <= positive_result.get(
+            "returned_count"
+        )
+    ):
+        raise CompositionError(
+            "positive mutation baseline "
+            "must be bounded"
+        )
+
+    if (
+        zero_result.get("match_count") != 0
+        or zero_result.get(
+            "returned_count"
+        ) != 0
+        or zero_result.get(
+            "coordinates"
+        ) != []
+    ):
+        raise CompositionError(
+            "zero mutation baseline "
+            "is not empty"
+        )
+
+    mutations: list[dict[str, Any]] = []
+
+    def validate_positive(
+        candidate: dict[str, Any],
+    ) -> dict[str, Any]:
+        return validate_composed_result(
+            root,
+            positive_query,
+            candidate,
+        )
+
+    def validate_zero(
+        candidate: dict[str, Any],
+    ) -> dict[str, Any]:
+        return validate_composed_result(
+            root,
+            zero_query,
+            candidate,
+        )
+
+    missing_verified = clone_json(
+        positive_result
+    )
+
+    missing_verified[
+        "verified_blocks"
+    ] = missing_verified[
+        "verified_blocks"
+    ][:-1]
+
+    refresh_composition_result_id(
+        missing_verified
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "missing_verified_block",
+            "COMPOSITION_E_COVERAGE",
+            lambda: validate_positive(
+                missing_verified
+            ),
+        )
+    )
+
+    missing_queried = clone_json(
+        positive_result
+    )
+
+    missing_queried[
+        "queried_blocks"
+    ] = missing_queried[
+        "queried_blocks"
+    ][:-1]
+
+    refresh_composition_result_id(
+        missing_queried
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "missing_queried_block",
+            "COMPOSITION_E_COVERAGE",
+            lambda: validate_positive(
+                missing_queried
+            ),
+        )
+    )
+
+    partial_zero = clone_json(
+        zero_result
+    )
+
+    partial_zero[
+        "verified_blocks"
+    ] = partial_zero[
+        "verified_blocks"
+    ][:-1]
+
+    partial_zero[
+        "queried_blocks"
+    ] = partial_zero[
+        "queried_blocks"
+    ][:-1]
+
+    refresh_composition_result_id(
+        partial_zero
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "partial_coverage_represented_as_zero",
+            "COMPOSITION_E_COVERAGE",
+            lambda: validate_zero(
+                partial_zero
+            ),
+        )
+    )
+
+    wrong_count = clone_json(
+        positive_result
+    )
+
+    wrong_count["match_count"] += 1
+
+    refresh_composition_result_id(
+        wrong_count
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "incorrect_complete_match_count",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_positive(
+                wrong_count
+            ),
+        )
+    )
+
+    reordered = clone_json(
+        positive_result
+    )
+
+    if len(reordered["coordinates"]) < 2:
+        raise CompositionError(
+            "insufficient coordinates "
+            "for reorder mutation"
+        )
+
+    (
+        reordered["coordinates"][0],
+        reordered["coordinates"][1],
+    ) = (
+        reordered["coordinates"][1],
+        reordered["coordinates"][0],
+    )
+
+    refresh_composition_result_id(
+        reordered
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "reordered_coordinates",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_positive(
+                reordered
+            ),
+        )
+    )
+
+    wrong_doc_id = clone_json(
+        positive_result
+    )
+
+    if not wrong_doc_id["coordinates"]:
+        raise CompositionError(
+            "missing coordinate for "
+            "doc_id mutation"
+        )
+
+    wrong_doc_id["coordinates"][0] = [
+        0,
+        0,
+    ]
+
+    refresh_composition_result_id(
+        wrong_doc_id
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "wrong_global_doc_id",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_positive(
+                wrong_doc_id
+            ),
+        )
+    )
+
+    wrong_prefix = clone_json(
+        positive_result
+    )
+
+    expected_coordinates = (
+        naive_coordinates_from_root(
+            root,
+            positive_query,
+        )
+    )
+
+    prefix_length = len(
+        positive_result["coordinates"]
+    )
+
+    if len(expected_coordinates) <= prefix_length:
+        raise CompositionError(
+            "insufficient oracle coordinates "
+            "for prefix mutation"
+        )
+
+    wrong_prefix["coordinates"] = (
+        expected_coordinates[
+            1:
+            1 + prefix_length
+        ]
+    )
+
+    wrong_prefix["returned_count"] = len(
+        wrong_prefix["coordinates"]
+    )
+
+    refresh_composition_result_id(
+        wrong_prefix
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "incorrect_global_max_offsets_prefix",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_positive(
+                wrong_prefix
+            ),
+        )
+    )
+
+    wrong_flags = clone_json(
+        positive_result
+    )
+
+    wrong_flags["bounded"] = False
+    wrong_flags["offsets_complete"] = True
+
+    refresh_composition_result_id(
+        wrong_flags
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "false_bounded_completeness_flags",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_positive(
+                wrong_flags
+            ),
+        )
+    )
+
+    wrong_returned_count = clone_json(
+        positive_result
+    )
+
+    wrong_returned_count[
+        "returned_count"
+    ] += 1
+
+    refresh_composition_result_id(
+        wrong_returned_count
+    )
+
+    mutations.append(
+        expect_result_failure(
+            "incorrect_returned_count",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_positive(
+                wrong_returned_count
+            ),
+        )
+    )
+
+    changed_result_id = clone_json(
+        positive_result
+    )
+
+    changed_result_id[
+        "composition_result_id"
+    ] = "0" * 64
+
+    mutations.append(
+        expect_result_failure(
+            "changed_composition_result_id",
+            "COMPOSITION_E_IDENTITY",
+            lambda: validate_positive(
+                changed_result_id
+            ),
+        )
+    )
+
+    if len(mutations) != 10:
+        raise CompositionError(
+            "result mutation count mismatch"
+        )
+
+    if not all(
+        item["rejected"] is True
+        for item in mutations
+    ):
+        raise CompositionError(
+            "result mutation gate failed"
+        )
+
+    return mutations
+
+
 def make_result(
     root: Root,
     query: bytes,
@@ -3451,6 +3841,56 @@ def main() -> int:
                 "coordinate mismatch"
             )
 
+        mutation_query = b"a"
+
+        mutation_full_results = (
+            run_full_results(
+                root_a,
+                mutation_query,
+                [0, 1, 2],
+            )
+        )
+
+        mutation_positive_result = (
+            compose_full(
+                root_a,
+                mutation_query,
+                mutation_full_results,
+                3,
+            )
+        )
+
+        mutation_zero_query = (
+            b"not-present"
+        )
+
+        mutation_zero_full_results = (
+            run_full_results(
+                root_a,
+                mutation_zero_query,
+                [0, 1, 2],
+            )
+        )
+
+        mutation_zero_result = (
+            compose_full(
+                root_a,
+                mutation_zero_query,
+                mutation_zero_full_results,
+                None,
+            )
+        )
+
+        result_mutations = (
+            validate_result_mutations(
+                root_a,
+                mutation_query,
+                mutation_positive_result,
+                mutation_zero_query,
+                mutation_zero_result,
+            )
+        )
+
         summary = {
             "ok": True,
             "format": (
@@ -3485,6 +3925,10 @@ def main() -> int:
                 True,
             "composition_result_validation_verified":
                 True,
+            "composition_result_mutations_verified":
+                True,
+            "result_mutation_count":
+                len(result_mutations),
             "root_identity_mutations_verified":
                 True,
             "root_mutation_count":
@@ -3509,6 +3953,8 @@ def main() -> int:
                 bounded,
             "root_mutations":
                 root_mutations,
+            "result_mutations":
+                result_mutations,
         }
 
         print(
