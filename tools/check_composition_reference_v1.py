@@ -43,6 +43,35 @@ COMPOSITION_POLICY = (
 COVERAGE_POLICY = "ALL_ROOT_BLOCKS_REQUIRED_V1"
 BOUNDARY_POLICY = "DOCUMENT_LOCAL_MATCHES_ONLY_V1"
 
+RESULT_IDENTITY_VERSION = (
+    "GLYPH_COMPOSITION_REFERENCE_"
+    "RESULT_IDENTITY_V1"
+)
+
+RESULT_KEYS = {
+    "ok",
+    "format",
+    "runtime_corpus_id",
+    "source_manifest_id",
+    "composition_root_id",
+    "query_hex",
+    "query_length_bytes",
+    "query_sha256",
+    "max_offsets",
+    "match_count",
+    "returned_count",
+    "bounded",
+    "offsets_complete",
+    "coordinates",
+    "expected_blocks",
+    "verified_blocks",
+    "queried_blocks",
+    "composition_policy",
+    "coverage_policy",
+    "document_boundary_policy",
+    "composition_result_id",
+}
+
 
 ROOT_PUBLICATION_STATUS = "COMPLETE"
 
@@ -70,6 +99,16 @@ class CompositionError(RuntimeError):
 
 
 def root_error(
+    error_class: str,
+    message: str,
+) -> CompositionError:
+    return CompositionError(
+        f"{error_class}: {message}"
+    )
+
+
+
+def result_error(
     error_class: str,
     message: str,
 ) -> CompositionError:
@@ -2050,6 +2089,606 @@ def run_full_results(
     return results
 
 
+def composition_result_id(
+    result: dict[str, Any],
+) -> str:
+    if not isinstance(result, dict):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "result is not an object",
+        )
+
+    payload = dict(result)
+
+    payload.pop(
+        "composition_result_id",
+        None,
+    )
+
+    preimage = (
+        RESULT_IDENTITY_VERSION.encode(
+            "ascii"
+        )
+        + b"\x00"
+        + canonical_json_bytes(payload)
+    )
+
+    return hashlib.sha256(
+        preimage
+    ).hexdigest()
+
+
+def require_result_u64(
+    value: Any,
+    field: str,
+) -> int:
+    try:
+        return u64(
+            value,
+            field,
+        )
+
+    except CompositionError as error:
+        raise result_error(
+            "COMPOSITION_E_LIMIT",
+            f"invalid result integer: {field}",
+        ) from error
+
+
+def validate_block_coverage_list(
+    value: Any,
+    field: str,
+    block_count: int,
+) -> list[int]:
+    if (
+        not isinstance(value, list)
+        or len(value) != block_count
+    ):
+        raise result_error(
+            "COMPOSITION_E_COVERAGE",
+            f"invalid coverage list: {field}",
+        )
+
+    for expected, item in enumerate(value):
+        if (
+            not isinstance(item, int)
+            or isinstance(item, bool)
+            or item != expected
+        ):
+            raise result_error(
+                "COMPOSITION_E_COVERAGE",
+                f"non-canonical coverage: {field}",
+            )
+
+    return list(value)
+
+
+def naive_coordinates_from_root(
+    root: Root,
+    query: bytes,
+) -> list[list[int]]:
+    if not query:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "empty query",
+        )
+
+    coordinates: list[list[int]] = []
+    next_global_doc_id = 0
+
+    for block in root.blocks:
+        if block.start != next_global_doc_id:
+            raise result_error(
+                "COMPOSITION_E_IDENTITY",
+                "non-contiguous verified root",
+            )
+
+        source_manifest = load_canonical_json(
+            block.corpus
+            / SOURCE_MANIFEST_NAME
+        )
+
+        records = source_manifest.get(
+            "documents"
+        )
+
+        if (
+            not isinstance(records, list)
+            or len(records)
+            != block.document_count
+        ):
+            raise result_error(
+                "COMPOSITION_E_IDENTITY",
+                "source-manifest document "
+                "count mismatch",
+            )
+
+        for local_doc_id, record in enumerate(
+            records
+        ):
+            if (
+                not isinstance(record, dict)
+                or record.get("doc_id")
+                != local_doc_id
+            ):
+                raise result_error(
+                    "COMPOSITION_E_IDENTITY",
+                    "non-canonical source doc_id",
+                )
+
+            snapshot_relative = record.get(
+                "snapshot_path"
+            )
+
+            if not isinstance(
+                snapshot_relative,
+                str,
+            ):
+                raise result_error(
+                    "COMPOSITION_E_IDENTITY",
+                    "invalid snapshot path",
+                )
+
+            payload = (
+                block.corpus
+                / snapshot_relative
+            ).read_bytes()
+
+            byte_length = require_result_u64(
+                record.get("byte_length"),
+                "source_byte_length",
+            )
+
+            source_sha256 = record.get(
+                "sha256"
+            )
+
+            try:
+                raw_sha256(
+                    source_sha256,
+                    "source_sha256",
+                )
+
+            except CompositionError as error:
+                raise result_error(
+                    "COMPOSITION_E_IDENTITY",
+                    "invalid source identity",
+                ) from error
+
+            if (
+                len(payload) != byte_length
+                or hashlib.sha256(
+                    payload
+                ).hexdigest()
+                != source_sha256
+            ):
+                raise result_error(
+                    "COMPOSITION_E_VERIFY",
+                    "source snapshot commitment "
+                    "mismatch",
+                )
+
+            global_doc_id = checked_add(
+                block.start,
+                local_doc_id,
+                "global_doc_id",
+            )
+
+            if global_doc_id != (
+                next_global_doc_id
+                + local_doc_id
+            ):
+                raise result_error(
+                    "COMPOSITION_E_IDENTITY",
+                    "global document mapping "
+                    "mismatch",
+                )
+
+            if len(query) <= len(payload):
+                for offset in range(
+                    len(payload)
+                    - len(query)
+                    + 1
+                ):
+                    if (
+                        payload[
+                            offset:
+                            offset + len(query)
+                        ]
+                        == query
+                    ):
+                        coordinates.append([
+                            global_doc_id,
+                            offset,
+                        ])
+
+        next_global_doc_id = block.end
+
+    if next_global_doc_id != (
+        root.document_count
+    ):
+        raise result_error(
+            "COMPOSITION_E_IDENTITY",
+            "verified root coverage mismatch",
+        )
+
+    return coordinates
+
+
+def validate_composed_result(
+    root: Root,
+    query: bytes,
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    if not isinstance(result, dict):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "composition result is not "
+            "an object",
+        )
+
+    if set(result) != RESULT_KEYS:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "composition result key "
+            "mismatch",
+        )
+
+    if result.get("ok") is not True:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "successful result must have "
+            "ok=true",
+        )
+
+    if result.get("format") != (
+        RESULT_VERSION
+    ):
+        raise result_error(
+            "COMPOSITION_E_VERSION",
+            "unsupported composition "
+            "result format",
+        )
+
+    identity_checks = {
+        "runtime_corpus_id":
+            root.corpus_id,
+        "source_manifest_id":
+            root.source_manifest_id,
+        "composition_root_id":
+            root.composition_root_id,
+    }
+
+    for field, expected in (
+        identity_checks.items()
+    ):
+        actual = result.get(field)
+
+        try:
+            raw_sha256(
+                actual,
+                field,
+            )
+
+        except CompositionError as error:
+            raise result_error(
+                "COMPOSITION_E_IDENTITY",
+                f"invalid identity field: {field}",
+            ) from error
+
+        if actual != expected:
+            raise result_error(
+                "COMPOSITION_E_IDENTITY",
+                f"result identity mismatch: {field}",
+            )
+
+    if not isinstance(query, bytes) or not query:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "invalid reference query",
+        )
+
+    expected_query_hex = query.hex()
+    expected_query_sha256 = hashlib.sha256(
+        query
+    ).hexdigest()
+
+    if (
+        result.get("query_hex")
+        != expected_query_hex
+        or result.get(
+            "query_length_bytes"
+        )
+        != len(query)
+        or result.get(
+            "query_sha256"
+        )
+        != expected_query_sha256
+    ):
+        raise result_error(
+            "COMPOSITION_E_IDENTITY",
+            "query identity mismatch",
+        )
+
+    max_offsets = result.get(
+        "max_offsets"
+    )
+
+    if max_offsets is not None:
+        max_offsets = require_result_u64(
+            max_offsets,
+            "max_offsets",
+        )
+
+    match_count = require_result_u64(
+        result.get("match_count"),
+        "match_count",
+    )
+
+    returned_count = require_result_u64(
+        result.get("returned_count"),
+        "returned_count",
+    )
+
+    coordinates_raw = result.get(
+        "coordinates"
+    )
+
+    if not isinstance(
+        coordinates_raw,
+        list,
+    ):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "coordinates are not a list",
+        )
+
+    coordinates: list[list[int]] = []
+
+    for item in coordinates_raw:
+        if (
+            not isinstance(item, list)
+            or len(item) != 2
+        ):
+            raise result_error(
+                "COMPOSITION_E_VERIFY",
+                "invalid coordinate shape",
+            )
+
+        doc_id = require_result_u64(
+            item[0],
+            "coordinate_doc_id",
+        )
+
+        doc_offset = require_result_u64(
+            item[1],
+            "coordinate_doc_offset",
+        )
+
+        if doc_id >= root.document_count:
+            raise result_error(
+                "COMPOSITION_E_VERIFY",
+                "coordinate doc_id out "
+                "of range",
+            )
+
+        coordinates.append([
+            doc_id,
+            doc_offset,
+        ])
+
+    if coordinates != sorted(
+        coordinates
+    ):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "coordinates are not canonical",
+        )
+
+    if len({
+        (item[0], item[1])
+        for item in coordinates
+    }) != len(coordinates):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "duplicate coordinate",
+        )
+
+    if returned_count != len(
+        coordinates
+    ):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "returned_count mismatch",
+        )
+
+    expected_coordinates = (
+        naive_coordinates_from_root(
+            root,
+            query,
+        )
+    )
+
+    if match_count != len(
+        expected_coordinates
+    ):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "complete match_count mismatch",
+        )
+
+    expected_returned = (
+        expected_coordinates
+        if max_offsets is None
+        else expected_coordinates[
+            :max_offsets
+        ]
+    )
+
+    if coordinates != expected_returned:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "result is not the canonical "
+            "global prefix",
+        )
+
+    expected_bounded = (
+        len(expected_returned)
+        < len(expected_coordinates)
+    )
+
+    expected_complete = (
+        not expected_bounded
+    )
+
+    if (
+        result.get("bounded")
+        is not expected_bounded
+        or result.get(
+            "offsets_complete"
+        )
+        is not expected_complete
+    ):
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "bounded/completeness flag "
+            "mismatch",
+        )
+
+    block_count = len(root.blocks)
+
+    expected_blocks = (
+        validate_block_coverage_list(
+            result.get(
+                "expected_blocks"
+            ),
+            "expected_blocks",
+            block_count,
+        )
+    )
+
+    verified_blocks = (
+        validate_block_coverage_list(
+            result.get(
+                "verified_blocks"
+            ),
+            "verified_blocks",
+            block_count,
+        )
+    )
+
+    queried_blocks = (
+        validate_block_coverage_list(
+            result.get(
+                "queried_blocks"
+            ),
+            "queried_blocks",
+            block_count,
+        )
+    )
+
+    if not (
+        expected_blocks
+        == verified_blocks
+        == queried_blocks
+    ):
+        raise result_error(
+            "COMPOSITION_E_COVERAGE",
+            "incomplete block coverage",
+        )
+
+    policy_checks = {
+        "composition_policy":
+            COMPOSITION_POLICY,
+        "coverage_policy":
+            COVERAGE_POLICY,
+        "document_boundary_policy":
+            BOUNDARY_POLICY,
+    }
+
+    for field, expected in (
+        policy_checks.items()
+    ):
+        if result.get(field) != expected:
+            raise result_error(
+                "COMPOSITION_E_VERIFY",
+                f"policy mismatch: {field}",
+            )
+
+    committed_result_id = result.get(
+        "composition_result_id"
+    )
+
+    try:
+        raw_sha256(
+            committed_result_id,
+            "composition_result_id",
+        )
+
+    except CompositionError as error:
+        raise result_error(
+            "COMPOSITION_E_IDENTITY",
+            "invalid composition result "
+            "identity",
+        ) from error
+
+    recomputed_result_id = (
+        composition_result_id(result)
+    )
+
+    if (
+        recomputed_result_id
+        != committed_result_id
+    ):
+        raise result_error(
+            "COMPOSITION_E_IDENTITY",
+            "composition result identity "
+            "mismatch",
+        )
+
+    return dict(result)
+
+
+def serialize_and_validate_result(
+    root: Root,
+    query: bytes,
+    result: dict[str, Any],
+) -> dict[str, Any]:
+    serialized = canonical_json_bytes(
+        result
+    )
+
+    loaded = json.loads(
+        serialized.decode("utf-8")
+    )
+
+    if canonical_json_bytes(
+        loaded
+    ) != serialized:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "composition result canonical "
+            "serialization mismatch",
+        )
+
+    verified = validate_composed_result(
+        root,
+        query,
+        loaded,
+    )
+
+    if canonical_json_bytes(
+        verified
+    ) != serialized:
+        raise result_error(
+            "COMPOSITION_E_VERIFY",
+            "verified result differs from "
+            "serialized result",
+        )
+
+    return verified
+
+
 def make_result(
     root: Root,
     query: bytes,
@@ -2063,7 +2702,7 @@ def make_result(
         range(len(root.blocks))
     )
 
-    return {
+    result = {
         "ok": True,
         "format": RESULT_VERSION,
         "runtime_corpus_id":
@@ -2076,6 +2715,10 @@ def make_result(
             query.hex(),
         "query_length_bytes":
             len(query),
+        "query_sha256":
+            hashlib.sha256(
+                query
+            ).hexdigest(),
         "max_offsets":
             max_offsets,
         "match_count":
@@ -2101,6 +2744,12 @@ def make_result(
         "document_boundary_policy":
             BOUNDARY_POLICY,
     }
+
+    result["composition_result_id"] = (
+        composition_result_id(result)
+    )
+
+    return result
 
 
 def compose_full(
@@ -2189,12 +2838,18 @@ def compose_full(
         else coordinates[:max_offsets]
     )
 
-    return make_result(
+    result = make_result(
         root,
         query,
         max_offsets,
         total,
         returned,
+    )
+
+    return serialize_and_validate_result(
+        root,
+        query,
+        result,
     )
 
 
@@ -2313,12 +2968,18 @@ def compose_two_phase(
             "mismatch"
         )
 
-    return make_result(
+    result = make_result(
         root,
         query,
         max_offsets,
         total,
         coordinates,
+    )
+
+    return serialize_and_validate_result(
+        root,
+        query,
+        result,
     )
 
 
@@ -2377,6 +3038,10 @@ def semantic_view(
 
     value.pop(
         "composition_root_id"
+    )
+
+    value.pop(
+        "composition_result_id"
     )
 
     return value
@@ -2817,6 +3482,8 @@ def main() -> int:
             "root_identity_layout_sensitive":
                 True,
             "root_manifest_validation_verified":
+                True,
+            "composition_result_validation_verified":
                 True,
             "root_identity_mutations_verified":
                 True,
