@@ -73,6 +73,227 @@ RESULT_KEYS = {
 }
 
 
+NORMATIVE_MUTATION_REQUIREMENTS = (
+    {
+        "id": "M01",
+        "description":
+            "one required block removed",
+        "status": "EXACT",
+        "tests": (
+            "missing_required_block",
+        ),
+    },
+    {
+        "id": "M02",
+        "description":
+            "one valid block substituted",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M03",
+        "description":
+            "block order changed without "
+            "updating the root",
+        "status": "EXACT",
+        "tests": (
+            "reordered_block_records",
+        ),
+    },
+    {
+        "id": "M04",
+        "description":
+            "one block entry duplicated",
+        "status": "EXACT",
+        "tests": (
+            "duplicated_block_identity",
+        ),
+    },
+    {
+        "id": "M05",
+        "description":
+            "one runtime manifest byte changed",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M06",
+        "description":
+            "one runtime manifest hash changed",
+        "status": "EXACT",
+        "tests": (
+            "changed_runtime_manifest_commitment",
+        ),
+    },
+    {
+        "id": "M07",
+        "description":
+            "one runtime_index_id changed",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M08",
+        "description":
+            "global runtime corpus ID changed",
+        "status": "EXACT",
+        "tests": (
+            "changed_global_runtime_corpus_id",
+        ),
+    },
+    {
+        "id": "M09",
+        "description":
+            "global source manifest ID changed",
+        "status": "EXACT",
+        "tests": (
+            "changed_global_source_manifest_id",
+        ),
+    },
+    {
+        "id": "M10",
+        "description":
+            "composition root ID changed",
+        "status": "EXACT",
+        "tests": (
+            "changed_composition_root_id",
+        ),
+    },
+    {
+        "id": "M11",
+        "description":
+            "one source document byte changed",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M12",
+        "description":
+            "one block result omitted while "
+            "coverage is claimed",
+        "status": "SUPPORTING",
+        "tests": (
+            "missing_verified_block",
+            "missing_queried_block",
+        ),
+    },
+    {
+        "id": "M13",
+        "description":
+            "incomplete coverage represented "
+            "as zero matches",
+        "status": "EXACT",
+        "tests": (
+            "partial_coverage_represented_as_zero",
+        ),
+    },
+    {
+        "id": "M14",
+        "description":
+            "merged coordinates reordered",
+        "status": "EXACT",
+        "tests": (
+            "reordered_coordinates",
+        ),
+    },
+    {
+        "id": "M15",
+        "description":
+            "local-to-global document base changed",
+        "status": "EXACT",
+        "tests": (
+            "wrong_global_doc_id",
+        ),
+    },
+    {
+        "id": "M16",
+        "description":
+            "integer overflow attempted",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M17",
+        "description":
+            "max_offsets applied independently "
+            "per block",
+        "status": "SUPPORTING",
+        "tests": (
+            "incorrect_global_max_offsets_prefix",
+        ),
+    },
+    {
+        "id": "M18",
+        "description":
+            "unsupported root version",
+        "status": "EXACT",
+        "tests": (
+            "unsupported_root_format",
+        ),
+    },
+    {
+        "id": "M19",
+        "description":
+            "unsupported runtime profile",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M20",
+        "description":
+            "replay attempted against "
+            "a different root",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M21",
+        "description":
+            "document order changed",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M22",
+        "description":
+            "empty document removed",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M23",
+        "description":
+            "duplicate document deduplicated",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M24",
+        "description":
+            "physical concatenation used "
+            "as the matching oracle",
+        "status": "OPEN",
+        "tests": (),
+    },
+    {
+        "id": "M25",
+        "description":
+            "stored byte-check success trusted "
+            "without recomputation",
+        "status": "OPEN",
+        "tests": (),
+    },
+)
+
+ADDITIONAL_MUTATION_TESTS = (
+    "incomplete_publication",
+    "incorrect_complete_match_count",
+    "false_bounded_completeness_flags",
+    "incorrect_returned_count",
+    "changed_composition_result_id",
+)
+
+
 ROOT_PUBLICATION_STATUS = "COMPLETE"
 
 ROOT_MANIFEST_KEYS = {
@@ -1497,6 +1718,292 @@ def validate_root_mutations(
         )
 
     return mutations
+
+
+def build_mutation_traceability(
+    root_mutations: Sequence[dict[str, Any]],
+    result_mutations: Sequence[dict[str, Any]],
+) -> dict[str, Any]:
+    implemented: dict[str, str] = {}
+
+    for item in (
+        list(root_mutations)
+        + list(result_mutations)
+    ):
+        if not isinstance(item, dict):
+            raise CompositionError(
+                "mutation result is not an object"
+            )
+
+        if set(item) != {
+            "mutation",
+            "expected_error_class",
+            "rejected",
+        }:
+            raise CompositionError(
+                "mutation result key mismatch"
+            )
+
+        name = item["mutation"]
+        error_class = item[
+            "expected_error_class"
+        ]
+
+        if (
+            not isinstance(name, str)
+            or not name
+            or not isinstance(
+                error_class,
+                str,
+            )
+            or not error_class
+            or item["rejected"] is not True
+        ):
+            raise CompositionError(
+                "invalid mutation result record"
+            )
+
+        if name in implemented:
+            raise CompositionError(
+                "duplicate implemented "
+                f"mutation test: {name}"
+            )
+
+        implemented[name] = error_class
+
+    expected_ids = [
+        f"M{number:02d}"
+        for number in range(1, 26)
+    ]
+
+    actual_ids = [
+        item["id"]
+        for item
+        in NORMATIVE_MUTATION_REQUIREMENTS
+    ]
+
+    if actual_ids != expected_ids:
+        raise CompositionError(
+            "normative mutation IDs are "
+            "not exactly M01 through M25"
+        )
+
+    allowed_statuses = {
+        "EXACT",
+        "SUPPORTING",
+        "OPEN",
+    }
+
+    referenced_tests: set[str] = set()
+    requirements: list[
+        dict[str, Any]
+    ] = []
+
+    for requirement in (
+        NORMATIVE_MUTATION_REQUIREMENTS
+    ):
+        if set(requirement) != {
+            "id",
+            "description",
+            "status",
+            "tests",
+        }:
+            raise CompositionError(
+                "traceability requirement "
+                "key mismatch"
+            )
+
+        requirement_id = requirement["id"]
+        description = requirement[
+            "description"
+        ]
+        status = requirement["status"]
+        tests = list(requirement["tests"])
+
+        if (
+            not isinstance(
+                description,
+                str,
+            )
+            or not description
+            or status not in allowed_statuses
+        ):
+            raise CompositionError(
+                "invalid traceability "
+                f"requirement: {requirement_id}"
+            )
+
+        if status in {
+            "EXACT",
+            "SUPPORTING",
+        } and not tests:
+            raise CompositionError(
+                f"{requirement_id}: "
+                "non-open requirement "
+                "has no tests"
+            )
+
+        if status == "OPEN" and tests:
+            raise CompositionError(
+                f"{requirement_id}: "
+                "open requirement has tests"
+            )
+
+        enriched_tests = []
+
+        for test_name in tests:
+            if test_name not in implemented:
+                raise CompositionError(
+                    f"{requirement_id}: "
+                    "unknown implemented test: "
+                    f"{test_name}"
+                )
+
+            if test_name in referenced_tests:
+                raise CompositionError(
+                    "mutation test mapped more "
+                    f"than once: {test_name}"
+                )
+
+            referenced_tests.add(
+                test_name
+            )
+
+            enriched_tests.append({
+                "name": test_name,
+                "expected_error_class":
+                    implemented[test_name],
+            })
+
+        requirements.append({
+            "id": requirement_id,
+            "description": description,
+            "status": status,
+            "tests": enriched_tests,
+        })
+
+    additional_tests = []
+
+    for test_name in (
+        ADDITIONAL_MUTATION_TESTS
+    ):
+        if test_name not in implemented:
+            raise CompositionError(
+                "unknown additional mutation "
+                f"test: {test_name}"
+            )
+
+        if test_name in referenced_tests:
+            raise CompositionError(
+                "additional mutation test also "
+                f"mapped normatively: {test_name}"
+            )
+
+        referenced_tests.add(test_name)
+
+        additional_tests.append({
+            "name": test_name,
+            "expected_error_class":
+                implemented[test_name],
+        })
+
+    if set(implemented) != referenced_tests:
+        missing = sorted(
+            set(implemented)
+            - referenced_tests
+        )
+
+        undeclared = sorted(
+            referenced_tests
+            - set(implemented)
+        )
+
+        raise CompositionError(
+            "mutation traceability coverage "
+            f"mismatch; missing={missing}; "
+            f"undeclared={undeclared}"
+        )
+
+    exact_ids = [
+        item["id"]
+        for item in requirements
+        if item["status"] == "EXACT"
+    ]
+
+    supporting_ids = [
+        item["id"]
+        for item in requirements
+        if item["status"] == "SUPPORTING"
+    ]
+
+    open_ids = [
+        item["id"]
+        for item in requirements
+        if item["status"] == "OPEN"
+    ]
+
+    exact_count = len(exact_ids)
+    supporting_count = len(
+        supporting_ids
+    )
+    open_count = len(open_ids)
+
+    if (
+        exact_count,
+        supporting_count,
+        open_count,
+    ) != (11, 2, 12):
+        raise CompositionError(
+            "unexpected traceability "
+            "baseline counts"
+        )
+
+    not_exact_count = (
+        supporting_count + open_count
+    )
+
+    closure_complete = (
+        exact_count
+        == len(requirements)
+    )
+
+    return {
+        "ok": True,
+        "format":
+            "GLYPH_COMPOSITION_"
+            "MUTATION_TRACEABILITY_V1",
+        "normative_requirement_count":
+            len(requirements),
+        "implemented_test_count":
+            len(implemented),
+        "normatively_mapped_test_count":
+            sum(
+                len(item["tests"])
+                for item in requirements
+            ),
+        "additional_test_count":
+            len(additional_tests),
+        "normative_exact_count":
+            exact_count,
+        "normative_supporting_count":
+            supporting_count,
+        "normative_open_count":
+            open_count,
+        "normative_not_exact_count":
+            not_exact_count,
+        "normative_closure_complete":
+            closure_complete,
+        "exact_requirement_ids":
+            exact_ids,
+        "supporting_requirement_ids":
+            supporting_ids,
+        "open_requirement_ids":
+            open_ids,
+        "requirements":
+            requirements,
+        "additional_tests":
+            additional_tests,
+    }
 
 
 def fixture_documents() -> list[Document]:
@@ -3891,6 +4398,13 @@ def main() -> int:
             )
         )
 
+        mutation_traceability = (
+            build_mutation_traceability(
+                root_mutations,
+                result_mutations,
+            )
+        )
+
         summary = {
             "ok": True,
             "format": (
@@ -3929,6 +4443,36 @@ def main() -> int:
                 True,
             "result_mutation_count":
                 len(result_mutations),
+            "mutation_traceability_verified":
+                True,
+            "normative_requirement_count":
+                mutation_traceability[
+                    "normative_requirement_count"
+                ],
+            "implemented_mutation_test_count":
+                mutation_traceability[
+                    "implemented_test_count"
+                ],
+            "normative_exact_count":
+                mutation_traceability[
+                    "normative_exact_count"
+                ],
+            "normative_supporting_count":
+                mutation_traceability[
+                    "normative_supporting_count"
+                ],
+            "normative_open_count":
+                mutation_traceability[
+                    "normative_open_count"
+                ],
+            "normative_not_exact_count":
+                mutation_traceability[
+                    "normative_not_exact_count"
+                ],
+            "normative_closure_complete":
+                mutation_traceability[
+                    "normative_closure_complete"
+                ],
             "root_identity_mutations_verified":
                 True,
             "root_mutation_count":
@@ -3955,6 +4499,8 @@ def main() -> int:
                 root_mutations,
             "result_mutations":
                 result_mutations,
+            "mutation_traceability":
+                mutation_traceability,
         }
 
         print(
