@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -87,8 +88,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M02",
         "description":
             "one valid block substituted",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "valid_block_substituted",
+        ),
     },
     {
         "id": "M03",
@@ -113,8 +116,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M05",
         "description":
             "one runtime manifest byte changed",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "runtime_manifest_byte_changed",
+        ),
     },
     {
         "id": "M06",
@@ -129,8 +134,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M07",
         "description":
             "one runtime_index_id changed",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "runtime_index_id_changed",
+        ),
     },
     {
         "id": "M08",
@@ -163,8 +170,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M11",
         "description":
             "one source document byte changed",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "source_document_byte_changed",
+        ),
     },
     {
         "id": "M12",
@@ -235,8 +244,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M19",
         "description":
             "unsupported runtime profile",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "unsupported_runtime_profile",
+        ),
     },
     {
         "id": "M20",
@@ -330,6 +341,16 @@ def root_error(
 
 
 def result_error(
+    error_class: str,
+    message: str,
+) -> CompositionError:
+    return CompositionError(
+        f"{error_class}: {message}"
+    )
+
+
+
+def artifact_error(
     error_class: str,
     message: str,
 ) -> CompositionError:
@@ -891,10 +912,8 @@ def flatten_verified_identity_records(
     seen_paths: set[bytes] = set()
 
     for block in blocks:
-        verify_runtime_index(
-            block.corpus,
-            require_current_binaries=True,
-            rebuild=False,
+        verify_physical_runtime_block(
+            block
         )
 
         source_manifest_path = (
@@ -918,9 +937,10 @@ def flatten_verified_identity_records(
             actual_runtime_sha256
             != block.runtime_manifest_sha256
         ):
-            raise CompositionError(
+            raise artifact_error(
+                "COMPOSITION_E_VERIFY",
                 "runtime manifest hash "
-                "does not match root"
+                "does not match root",
             )
 
         source_manifest = (
@@ -941,9 +961,10 @@ def flatten_verified_identity_records(
             )
             != block.runtime_index_id
         ):
-            raise CompositionError(
+            raise artifact_error(
+                "COMPOSITION_E_IDENTITY",
                 "runtime index identity "
-                "does not match root"
+                "does not match root",
             )
 
         for identity_field in (
@@ -1130,9 +1151,9 @@ def flatten_verified_identity_records(
                 ).hexdigest()
                 != source_sha256
             ):
-                raise CompositionError(
-                    "snapshot commitment "
-                    "mismatch"
+                raise artifact_error(
+                    "COMPOSITION_E_VERIFY",
+                    "snapshot commitment mismatch",
                 )
 
             flattened.append({
@@ -1720,15 +1741,646 @@ def validate_root_mutations(
     return mutations
 
 
+def verify_physical_runtime_block(
+    block: Block,
+) -> dict[str, Any]:
+    try:
+        return verify_runtime_index(
+            block.corpus,
+            require_current_binaries=True,
+            rebuild=False,
+        )
+
+    except Exception as error:
+        message = str(error)
+
+        if (
+            "runtime manifest constant "
+            "mismatch: runtime_profile"
+            in message
+        ):
+            error_class = (
+                "COMPOSITION_E_VERSION"
+            )
+
+        elif (
+            "runtime index identity mismatch"
+            in message
+        ):
+            error_class = (
+                "COMPOSITION_E_IDENTITY"
+            )
+
+        else:
+            error_class = (
+                "COMPOSITION_E_VERIFY"
+            )
+
+        raise artifact_error(
+            error_class,
+            "physical runtime verification "
+            f"failed: {message}",
+        ) from error
+
+
+def clone_block_for_mutation(
+    work: Path,
+    block: Block,
+    label: str,
+) -> Block:
+    destination = (
+        work
+        / (
+            "artifact-mutation-"
+            f"{label}-"
+            f"block-{block.ordinal:02d}"
+        )
+    )
+
+    if destination.exists():
+        raise CompositionError(
+            "artifact mutation destination "
+            "already exists"
+        )
+
+    shutil.copytree(
+        block.corpus,
+        destination,
+    )
+
+    return Block(
+        ordinal=block.ordinal,
+        start=block.start,
+        end=block.end,
+        corpus=destination,
+        runtime_index_id=(
+            block.runtime_index_id
+        ),
+        runtime_manifest_sha256=(
+            block.runtime_manifest_sha256
+        ),
+    )
+
+
+def replace_available_block(
+    root: Root,
+    ordinal: int,
+    replacement: Block,
+) -> tuple[Block, ...]:
+    if not (
+        0 <= ordinal < len(root.blocks)
+    ):
+        raise CompositionError(
+            "replacement ordinal out of range"
+        )
+
+    if replacement.ordinal != ordinal:
+        raise CompositionError(
+            "replacement ordinal mismatch"
+        )
+
+    blocks = list(root.blocks)
+    blocks[ordinal] = replacement
+
+    return tuple(blocks)
+
+
+def root_manifest_with_replacement(
+    root: Root,
+    replacement: Block,
+) -> dict[str, Any]:
+    manifest = make_root_manifest(
+        root
+    )
+
+    ordinal = replacement.ordinal
+
+    record = manifest["blocks"][
+        ordinal
+    ]
+
+    if (
+        record["block_document_count"]
+        != replacement.document_count
+    ):
+        raise CompositionError(
+            "replacement document count "
+            "mismatch"
+        )
+
+    record["runtime_index_id"] = (
+        replacement.runtime_index_id
+    )
+
+    record["runtime_manifest_sha256"] = (
+        replacement.runtime_manifest_sha256
+    )
+
+    manifest["composition_root_id"] = (
+        recompute_root_identity_from_manifest(
+            manifest
+        )
+    )
+
+    return manifest
+
+
+def block_view_from_mutated_corpus(
+    original: Block,
+    *,
+    corpus: Path,
+    runtime_index_id: str | None = None,
+    runtime_manifest_sha256: (
+        str | None
+    ) = None,
+) -> Block:
+    return Block(
+        ordinal=original.ordinal,
+        start=original.start,
+        end=original.end,
+        corpus=corpus,
+        runtime_index_id=(
+            original.runtime_index_id
+            if runtime_index_id is None
+            else runtime_index_id
+        ),
+        runtime_manifest_sha256=(
+            original.runtime_manifest_sha256
+            if runtime_manifest_sha256
+            is None
+            else runtime_manifest_sha256
+        ),
+    )
+
+
+def mutate_runtime_manifest_digit(
+    runtime_manifest_path: Path,
+) -> None:
+    original = runtime_manifest_path.read_bytes()
+    mutated = bytearray(original)
+
+    marker = b'"total_runtime_bytes":'
+
+    start = mutated.find(marker)
+
+    if start < 0:
+        raise CompositionError(
+            "total_runtime_bytes marker "
+            "not found"
+        )
+
+    cursor = start + len(marker)
+
+    while (
+        cursor < len(mutated)
+        and mutated[cursor]
+        in b" \t\r\n"
+    ):
+        cursor += 1
+
+    digit_start = cursor
+
+    while (
+        cursor < len(mutated)
+        and chr(mutated[cursor]).isdigit()
+    ):
+        cursor += 1
+
+    if cursor == digit_start:
+        raise CompositionError(
+            "total_runtime_bytes value "
+            "is not numeric"
+        )
+
+    digit_index = cursor - 1
+    current = mutated[digit_index]
+
+    mutated[digit_index] = (
+        ord("0")
+        if current != ord("0")
+        else ord("1")
+    )
+
+    changed = sum(
+        left != right
+        for left, right in zip(
+            original,
+            mutated,
+        )
+    )
+
+    if (
+        len(original) != len(mutated)
+        or changed != 1
+    ):
+        raise CompositionError(
+            "runtime manifest mutation "
+            "was not exactly one byte"
+        )
+
+    runtime_manifest_path.write_bytes(
+        mutated
+    )
+
+
+def expect_artifact_failure(
+    name: str,
+    expected_error_class: str,
+    function,
+) -> dict[str, Any]:
+    try:
+        function()
+
+    except CompositionError as error:
+        message = str(error)
+        prefix = expected_error_class + ":"
+
+        if not message.startswith(prefix):
+            raise CompositionError(
+                f"{name}: expected "
+                f"{expected_error_class}, "
+                f"received {message}"
+            ) from error
+
+        return {
+            "mutation": name,
+            "expected_error_class":
+                expected_error_class,
+            "rejected": True,
+        }
+
+    raise CompositionError(
+        "artifact mutation unexpectedly "
+        f"accepted: {name}"
+    )
+
+
+def validate_artifact_integrity_mutations(
+    work: Path,
+    root: Root,
+    documents: Sequence[Document],
+) -> list[dict[str, Any]]:
+    baseline_manifest = make_root_manifest(
+        root
+    )
+
+    validate_root_manifest(
+        clone_json(baseline_manifest),
+        root.blocks,
+        name=root.name + "-artifact-baseline",
+    )
+
+    target = root.blocks[1]
+
+    mutations: list[dict[str, Any]] = []
+
+    # M02 — substitute one complete, independently valid block.
+    alternative_documents = list(
+        documents
+    )
+
+    alternative_documents[3] = Document(
+        "31-substitute-a.bin",
+        b"substitute-A",
+    )
+
+    alternative_documents[4] = Document(
+        "41-substitute-b.bin",
+        b"substitute-B",
+    )
+
+    alternative_documents[5] = Document(
+        "51-substitute-c.bin",
+        b"substitute-C",
+    )
+
+    substitute = build_block(
+        work,
+        "artifact-valid-substitute",
+        target.ordinal,
+        target.start,
+        target.end,
+        alternative_documents,
+    )
+
+    substitute_manifest = (
+        root_manifest_with_replacement(
+            root,
+            substitute,
+        )
+    )
+
+    substitute_blocks = (
+        replace_available_block(
+            root,
+            target.ordinal,
+            substitute,
+        )
+    )
+
+    mutations.append(
+        expect_artifact_failure(
+            "valid_block_substituted",
+            "COMPOSITION_E_IDENTITY",
+            lambda: validate_root_manifest(
+                substitute_manifest,
+                substitute_blocks,
+                name=(
+                    root.name
+                    + "-valid-substitute"
+                ),
+            ),
+        )
+    )
+
+    # M05 — alter exactly one raw byte in the runtime manifest.
+    byte_changed = clone_block_for_mutation(
+        work,
+        target,
+        "runtime-manifest-byte",
+    )
+
+    byte_changed_runtime_path = (
+        byte_changed.corpus
+        / RUNTIME_INDEX_DIRECTORY
+        / INDEX_MANIFEST_NAME
+    )
+
+    mutate_runtime_manifest_digit(
+        byte_changed_runtime_path
+    )
+
+    mutations.append(
+        expect_artifact_failure(
+            "runtime_manifest_byte_changed",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_root_manifest(
+                clone_json(
+                    baseline_manifest
+                ),
+                replace_available_block(
+                    root,
+                    target.ordinal,
+                    byte_changed,
+                ),
+                name=(
+                    root.name
+                    + "-manifest-byte"
+                ),
+            ),
+        )
+    )
+
+    # M07 — forge only runtime_index_id in the physical manifest.
+    runtime_id_changed = (
+        clone_block_for_mutation(
+            work,
+            target,
+            "runtime-index-id",
+        )
+    )
+
+    runtime_id_path = (
+        runtime_id_changed.corpus
+        / RUNTIME_INDEX_DIRECTORY
+        / INDEX_MANIFEST_NAME
+    )
+
+    runtime_id_manifest = (
+        load_canonical_json(
+            runtime_id_path
+        )
+    )
+
+    forged_runtime_id = (
+        "0" * 64
+        if runtime_id_manifest[
+            "runtime_index_id"
+        ] != "0" * 64
+        else "1" * 64
+    )
+
+    runtime_id_manifest[
+        "runtime_index_id"
+    ] = forged_runtime_id
+
+    runtime_id_path.write_bytes(
+        canonical_json_bytes(
+            runtime_id_manifest
+        )
+    )
+
+    runtime_id_changed = (
+        block_view_from_mutated_corpus(
+            target,
+            corpus=(
+                runtime_id_changed.corpus
+            ),
+            runtime_index_id=(
+                forged_runtime_id
+            ),
+            runtime_manifest_sha256=(
+                sha256_file(
+                    runtime_id_path
+                )
+            ),
+        )
+    )
+
+    runtime_id_root_manifest = (
+        root_manifest_with_replacement(
+            root,
+            runtime_id_changed,
+        )
+    )
+
+    mutations.append(
+        expect_artifact_failure(
+            "runtime_index_id_changed",
+            "COMPOSITION_E_IDENTITY",
+            lambda: validate_root_manifest(
+                runtime_id_root_manifest,
+                replace_available_block(
+                    root,
+                    target.ordinal,
+                    runtime_id_changed,
+                ),
+                name=(
+                    root.name
+                    + "-runtime-id"
+                ),
+            ),
+        )
+    )
+
+    # M11 — mutate one byte in a committed source snapshot.
+    source_changed = clone_block_for_mutation(
+        work,
+        target,
+        "source-document-byte",
+    )
+
+    source_manifest = load_canonical_json(
+        source_changed.corpus
+        / SOURCE_MANIFEST_NAME
+    )
+
+    source_path: Path | None = None
+
+    for record in source_manifest[
+        "documents"
+    ]:
+        if record["byte_length"] > 0:
+            source_path = (
+                source_changed.corpus
+                / record["snapshot_path"]
+            )
+            break
+
+    if source_path is None:
+        raise CompositionError(
+            "no non-empty source document "
+            "available for mutation"
+        )
+
+    source_payload = bytearray(
+        source_path.read_bytes()
+    )
+
+    source_payload[0] ^= 0x01
+
+    source_path.write_bytes(
+        source_payload
+    )
+
+    mutations.append(
+        expect_artifact_failure(
+            "source_document_byte_changed",
+            "COMPOSITION_E_VERIFY",
+            lambda: validate_root_manifest(
+                clone_json(
+                    baseline_manifest
+                ),
+                replace_available_block(
+                    root,
+                    target.ordinal,
+                    source_changed,
+                ),
+                name=(
+                    root.name
+                    + "-source-byte"
+                ),
+            ),
+        )
+    )
+
+    # M19 — change the actual runtime profile.
+    unsupported_profile = (
+        clone_block_for_mutation(
+            work,
+            target,
+            "unsupported-runtime-profile",
+        )
+    )
+
+    unsupported_runtime_path = (
+        unsupported_profile.corpus
+        / RUNTIME_INDEX_DIRECTORY
+        / INDEX_MANIFEST_NAME
+    )
+
+    unsupported_manifest = (
+        load_canonical_json(
+            unsupported_runtime_path
+        )
+    )
+
+    unsupported_manifest[
+        "runtime_profile"
+    ] = "GLYPH_BINARY_RUNTIME_V2"
+
+    unsupported_runtime_path.write_bytes(
+        canonical_json_bytes(
+            unsupported_manifest
+        )
+    )
+
+    unsupported_profile = (
+        block_view_from_mutated_corpus(
+            target,
+            corpus=(
+                unsupported_profile.corpus
+            ),
+            runtime_manifest_sha256=(
+                sha256_file(
+                    unsupported_runtime_path
+                )
+            ),
+        )
+    )
+
+    unsupported_root_manifest = (
+        root_manifest_with_replacement(
+            root,
+            unsupported_profile,
+        )
+    )
+
+    mutations.append(
+        expect_artifact_failure(
+            "unsupported_runtime_profile",
+            "COMPOSITION_E_VERSION",
+            lambda: validate_root_manifest(
+                unsupported_root_manifest,
+                replace_available_block(
+                    root,
+                    target.ordinal,
+                    unsupported_profile,
+                ),
+                name=(
+                    root.name
+                    + "-runtime-profile"
+                ),
+            ),
+        )
+    )
+
+    if len(mutations) != 5:
+        raise CompositionError(
+            "artifact mutation count mismatch"
+        )
+
+    if not all(
+        item["rejected"] is True
+        for item in mutations
+    ):
+        raise CompositionError(
+            "artifact mutation gate failed"
+        )
+
+    # Prove that mutation copies did not alter the baseline root.
+    validate_root_manifest(
+        clone_json(baseline_manifest),
+        root.blocks,
+        name=root.name + "-artifact-postcheck",
+    )
+
+    return mutations
+
+
 def build_mutation_traceability(
     root_mutations: Sequence[dict[str, Any]],
     result_mutations: Sequence[dict[str, Any]],
+    artifact_mutations: Sequence[
+        dict[str, Any]
+    ],
 ) -> dict[str, Any]:
     implemented: dict[str, str] = {}
 
     for item in (
         list(root_mutations)
         + list(result_mutations)
+        + list(artifact_mutations)
     ):
         if not isinstance(item, dict):
             raise CompositionError(
@@ -1952,7 +2604,7 @@ def build_mutation_traceability(
         exact_count,
         supporting_count,
         open_count,
-    ) != (11, 2, 12):
+    ) != (16, 2, 7):
         raise CompositionError(
             "unexpected traceability "
             "baseline counts"
@@ -4078,6 +4730,14 @@ def main() -> int:
             )
         )
 
+        artifact_mutations = (
+            validate_artifact_integrity_mutations(
+                work,
+                root_a,
+                documents,
+            )
+        )
+
         queries = [
             b"shared",
             b"dup",
@@ -4402,6 +5062,7 @@ def main() -> int:
             build_mutation_traceability(
                 root_mutations,
                 result_mutations,
+                artifact_mutations,
             )
         )
 
@@ -4443,6 +5104,10 @@ def main() -> int:
                 True,
             "result_mutation_count":
                 len(result_mutations),
+            "artifact_integrity_mutations_verified":
+                True,
+            "artifact_mutation_count":
+                len(artifact_mutations),
             "mutation_traceability_verified":
                 True,
             "normative_requirement_count":
@@ -4499,6 +5164,8 @@ def main() -> int:
                 root_mutations,
             "result_mutations":
                 result_mutations,
+            "artifact_mutations":
+                artifact_mutations,
             "mutation_traceability":
                 mutation_traceability,
         }
