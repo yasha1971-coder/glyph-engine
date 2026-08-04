@@ -180,10 +180,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "description":
             "one block result omitted while "
             "coverage is claimed",
-        "status": "SUPPORTING",
+        "status": "EXACT",
         "tests": (
-            "missing_verified_block",
-            "missing_queried_block",
+            "block_result_omitted_with_"
+            "claimed_coverage",
         ),
     },
     {
@@ -218,17 +218,21 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M16",
         "description":
             "integer overflow attempted",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "global_match_count_"
+            "overflow_attempted",
+        ),
     },
     {
         "id": "M17",
         "description":
             "max_offsets applied independently "
             "per block",
-        "status": "SUPPORTING",
+        "status": "EXACT",
         "tests": (
-            "incorrect_global_max_offsets_prefix",
+            "max_offsets_applied_"
+            "independently_per_block",
         ),
     },
     {
@@ -298,7 +302,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
 
 ADDITIONAL_MUTATION_TESTS = (
     "incomplete_publication",
+    "missing_verified_block",
+    "missing_queried_block",
     "incorrect_complete_match_count",
+    "incorrect_global_max_offsets_prefix",
     "false_bounded_completeness_flags",
     "incorrect_returned_count",
     "changed_composition_result_id",
@@ -351,6 +358,16 @@ def result_error(
 
 
 def artifact_error(
+    error_class: str,
+    message: str,
+) -> CompositionError:
+    return CompositionError(
+        f"{error_class}: {message}"
+    )
+
+
+
+def aggregation_error(
     error_class: str,
     message: str,
 ) -> CompositionError:
@@ -452,6 +469,27 @@ def checked_add(
         left + right,
         field,
     )
+
+
+
+def checked_add_aggregation(
+    left: int,
+    right: int,
+    field: str,
+) -> int:
+    try:
+        return checked_add(
+            left,
+            right,
+            field,
+        )
+
+    except CompositionError as error:
+        raise aggregation_error(
+            "COMPOSITION_E_LIMIT",
+            f"aggregation integer overflow "
+            f"or invalid value: {field}",
+        ) from error
 
 
 def raw_sha256(
@@ -2368,10 +2406,333 @@ def validate_artifact_integrity_mutations(
     return mutations
 
 
+def require_claimed_complete_results(
+    root: Root,
+    results: dict[int, dict[str, Any]],
+    claimed_blocks: Sequence[int],
+) -> None:
+    expected = list(
+        range(len(root.blocks))
+    )
+
+    claimed = list(
+        claimed_blocks
+    )
+
+    if claimed != expected:
+        raise aggregation_error(
+            "COMPOSITION_E_COVERAGE",
+            "claimed block coverage is not "
+            "canonical and complete",
+        )
+
+    actual = sorted(
+        results
+    )
+
+    if actual != expected:
+        missing = [
+            ordinal
+            for ordinal in expected
+            if ordinal not in results
+        ]
+
+        unexpected = [
+            ordinal
+            for ordinal in actual
+            if ordinal not in expected
+        ]
+
+        raise aggregation_error(
+            "COMPOSITION_E_COVERAGE",
+            "claimed complete coverage differs "
+            "from actual block results; "
+            f"missing={missing}; "
+            f"unexpected={unexpected}",
+        )
+
+
+def compose_from_claimed_coverage(
+    root: Root,
+    query: bytes,
+    results: dict[int, dict[str, Any]],
+    claimed_blocks: Sequence[int],
+    max_offsets: int | None,
+) -> dict[str, Any]:
+    require_claimed_complete_results(
+        root,
+        results,
+        claimed_blocks,
+    )
+
+    return compose_full(
+        root,
+        query,
+        results,
+        max_offsets,
+    )
+
+
+def compose_with_independent_block_limits(
+    root: Root,
+    query: bytes,
+    max_offsets: int,
+) -> dict[str, Any]:
+    u64(
+        max_offsets,
+        "max_offsets",
+    )
+
+    total = 0
+    coordinates: list[list[int]] = []
+
+    for block in root.blocks:
+        # Deliberately reproduce the forbidden
+        # algorithm: each block receives the full
+        # global limit instead of a shrinking
+        # remaining budget.
+        local = execute_operator_query(
+            block.corpus,
+            query,
+            max_offsets=max_offsets,
+        )
+
+        local_count = u64(
+            local["match_count"],
+            "block_match_count",
+        )
+
+        total = checked_add_aggregation(
+            total,
+            local_count,
+            "global_match_count",
+        )
+
+        for item in local["coordinates"]:
+            local_doc_id, doc_offset = (
+                item["coordinate"]
+            )
+
+            coordinates.append([
+                checked_add(
+                    block.start,
+                    local_doc_id,
+                    "global_doc_id",
+                ),
+                doc_offset,
+            ])
+
+    if len(coordinates) <= max_offsets:
+        raise CompositionError(
+            "independent-limit fixture did "
+            "not exceed the global limit"
+        )
+
+    candidate = make_result(
+        root,
+        query,
+        max_offsets,
+        total,
+        coordinates,
+    )
+
+    # The strict validator must reject this candidate
+    # because it is not the canonical global prefix.
+    return serialize_and_validate_result(
+        root,
+        query,
+        candidate,
+    )
+
+
+def expect_aggregation_failure(
+    name: str,
+    expected_error_class: str,
+    function,
+) -> dict[str, Any]:
+    try:
+        function()
+
+    except CompositionError as error:
+        message = str(error)
+        prefix = expected_error_class + ":"
+
+        if not message.startswith(prefix):
+            raise CompositionError(
+                f"{name}: expected "
+                f"{expected_error_class}, "
+                f"received {message}"
+            ) from error
+
+        return {
+            "mutation": name,
+            "expected_error_class":
+                expected_error_class,
+            "rejected": True,
+        }
+
+    raise CompositionError(
+        "aggregation mutation unexpectedly "
+        f"accepted: {name}"
+    )
+
+
+def validate_aggregation_limit_mutations(
+    root: Root,
+) -> list[dict[str, Any]]:
+    query = b"a"
+
+    expected_ordinals = list(
+        range(len(root.blocks))
+    )
+
+    complete_results = run_full_results(
+        root,
+        query,
+        expected_ordinals,
+    )
+
+    mutations: list[dict[str, Any]] = []
+
+    # M12 — claim complete coverage while one actual
+    # block result is absent.
+    omitted_results = dict(
+        complete_results
+    )
+
+    omitted_ordinal = 1
+
+    if omitted_ordinal not in omitted_results:
+        raise CompositionError(
+            "M12 fixture block result missing "
+            "before mutation"
+        )
+
+    omitted_results.pop(
+        omitted_ordinal
+    )
+
+    mutations.append(
+        expect_aggregation_failure(
+            "block_result_omitted_with_"
+            "claimed_coverage",
+            "COMPOSITION_E_COVERAGE",
+            lambda: compose_from_claimed_coverage(
+                root,
+                query,
+                omitted_results,
+                expected_ordinals,
+                None,
+            ),
+        )
+    )
+
+    # M16 — overflow the real global count
+    # aggregation path before coordinate validation.
+    overflow_results: dict[
+        int,
+        dict[str, Any],
+    ] = {}
+
+    overflow_counts = [
+        MAX_U64,
+        1,
+    ] + [
+        0
+        for _ in range(
+            max(
+                0,
+                len(root.blocks) - 2,
+            )
+        )
+    ]
+
+    if len(overflow_counts) != len(
+        root.blocks
+    ):
+        raise CompositionError(
+            "overflow fixture block-count "
+            "mismatch"
+        )
+
+    for ordinal, count in enumerate(
+        overflow_counts
+    ):
+        overflow_results[ordinal] = {
+            "match_count": count,
+            "coordinates": [],
+        }
+
+    mutations.append(
+        expect_aggregation_failure(
+            "global_match_count_"
+            "overflow_attempted",
+            "COMPOSITION_E_LIMIT",
+            lambda: compose_full(
+                root,
+                query,
+                overflow_results,
+                None,
+            ),
+        )
+    )
+
+    # M17 — apply the same full max_offsets value
+    # independently to every block.
+    mutations.append(
+        expect_aggregation_failure(
+            "max_offsets_applied_"
+            "independently_per_block",
+            "COMPOSITION_E_VERIFY",
+            lambda:
+                compose_with_independent_block_limits(
+                    root,
+                    query,
+                    1,
+                ),
+        )
+    )
+
+    if len(mutations) != 3:
+        raise CompositionError(
+            "aggregation mutation count mismatch"
+        )
+
+    if not all(
+        item["rejected"] is True
+        for item in mutations
+    ):
+        raise CompositionError(
+            "aggregation mutation gate failed"
+        )
+
+    # Positive control: the correct remaining-budget
+    # implementation must still succeed.
+    correct = compose_two_phase(
+        root,
+        query,
+        1,
+    )
+
+    if (
+        correct["returned_count"] != 1
+        or correct["max_offsets"] != 1
+        or correct["bounded"] is not True
+    ):
+        raise CompositionError(
+            "correct global-budget control failed"
+        )
+
+    return mutations
+
+
 def build_mutation_traceability(
     root_mutations: Sequence[dict[str, Any]],
     result_mutations: Sequence[dict[str, Any]],
     artifact_mutations: Sequence[
+        dict[str, Any]
+    ],
+    aggregation_mutations: Sequence[
         dict[str, Any]
     ],
 ) -> dict[str, Any]:
@@ -2381,6 +2742,7 @@ def build_mutation_traceability(
         list(root_mutations)
         + list(result_mutations)
         + list(artifact_mutations)
+        + list(aggregation_mutations)
     ):
         if not isinstance(item, dict):
             raise CompositionError(
@@ -2604,7 +2966,7 @@ def build_mutation_traceability(
         exact_count,
         supporting_count,
         open_count,
-    ) != (16, 2, 7):
+    ) != (19, 0, 6):
         raise CompositionError(
             "unexpected traceability "
             "baseline counts"
@@ -4333,7 +4695,7 @@ def compose_full(
             block.ordinal
         ]
 
-        total = checked_add(
+        total = checked_add_aggregation(
             total,
             result["match_count"],
             "global_match_count",
@@ -4446,7 +4808,7 @@ def compose_two_phase(
             block.ordinal
         ] = count
 
-        total = checked_add(
+        total = checked_add_aggregation(
             total,
             count,
             "global_match_count",
@@ -5058,11 +5420,18 @@ def main() -> int:
             )
         )
 
+        aggregation_mutations = (
+            validate_aggregation_limit_mutations(
+                root_a
+            )
+        )
+
         mutation_traceability = (
             build_mutation_traceability(
                 root_mutations,
                 result_mutations,
                 artifact_mutations,
+                aggregation_mutations,
             )
         )
 
@@ -5108,6 +5477,10 @@ def main() -> int:
                 True,
             "artifact_mutation_count":
                 len(artifact_mutations),
+            "aggregation_limit_mutations_verified":
+                True,
+            "aggregation_mutation_count":
+                len(aggregation_mutations),
             "mutation_traceability_verified":
                 True,
             "normative_requirement_count":
@@ -5166,6 +5539,8 @@ def main() -> int:
                 result_mutations,
             "artifact_mutations":
                 artifact_mutations,
+            "aggregation_mutations":
+                aggregation_mutations,
             "mutation_traceability":
                 mutation_traceability,
         }
