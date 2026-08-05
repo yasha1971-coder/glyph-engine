@@ -265,30 +265,41 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "id": "M21",
         "description":
             "document order changed",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "document_order_changed",
+        ),
     },
     {
         "id": "M22",
         "description":
             "empty document removed",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "empty_document_removed",
+        ),
     },
     {
         "id": "M23",
         "description":
             "duplicate document deduplicated",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "duplicate_document_deduplicated",
+        ),
     },
     {
         "id": "M24",
         "description":
             "physical concatenation used "
             "as the matching oracle",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "physical_concatenation_"
+            "cross_document",
+            "physical_concatenation_"
+            "cross_block",
+        ),
     },
     {
         "id": "M25",
@@ -2735,6 +2746,9 @@ def build_mutation_traceability(
     aggregation_mutations: Sequence[
         dict[str, Any]
     ],
+    document_model_mutations: Sequence[
+        dict[str, Any]
+    ],
 ) -> dict[str, Any]:
     implemented: dict[str, str] = {}
 
@@ -2743,6 +2757,7 @@ def build_mutation_traceability(
         + list(result_mutations)
         + list(artifact_mutations)
         + list(aggregation_mutations)
+        + list(document_model_mutations)
     ):
         if not isinstance(item, dict):
             raise CompositionError(
@@ -2966,7 +2981,7 @@ def build_mutation_traceability(
         exact_count,
         supporting_count,
         open_count,
-    ) != (19, 0, 6):
+    ) != (23, 0, 2):
         raise CompositionError(
             "unexpected traceability "
             "baseline counts"
@@ -3499,6 +3514,360 @@ def validate_straddles(
                 "cross-block control "
                 "not at block boundary"
             )
+
+
+def changed_document_model_result(
+    root: Root,
+    documents: Sequence[Document],
+    query: bytes,
+) -> dict[str, Any]:
+    coordinates = naive_coordinates(
+        documents,
+        query,
+    )
+
+    candidate = make_result(
+        root,
+        query,
+        None,
+        len(coordinates),
+        coordinates,
+    )
+
+    candidate["runtime_corpus_id"] = (
+        runtime_corpus_id(documents)
+    )
+
+    candidate["source_manifest_id"] = (
+        source_manifest_id(documents)
+    )
+
+    refresh_composition_result_id(
+        candidate
+    )
+
+    return serialize_and_validate_result(
+        root,
+        query,
+        candidate,
+    )
+
+
+def physical_concatenation_coordinates(
+    documents: Sequence[Document],
+    query: bytes,
+) -> list[list[int]]:
+    if not query:
+        raise CompositionError(
+            "empty physical oracle query"
+        )
+
+    payload = b"".join(
+        document.data
+        for document in documents
+    )
+
+    offsets = [
+        offset
+        for offset in range(
+            max(
+                0,
+                len(payload) - len(query) + 1,
+            )
+        )
+        if payload[
+            offset:
+            offset + len(query)
+        ] == query
+    ]
+
+    coordinates: list[list[int]] = []
+
+    for offset in offsets:
+        document_start = 0
+
+        for doc_id, document in enumerate(
+            documents
+        ):
+            document_end = (
+                document_start
+                + len(document.data)
+            )
+
+            if (
+                document_start
+                <= offset
+                < document_end
+            ):
+                coordinates.append([
+                    doc_id,
+                    offset - document_start,
+                ])
+                break
+
+            document_start = document_end
+
+        else:
+            raise CompositionError(
+                "physical oracle offset "
+                "has no starting document"
+            )
+
+    return coordinates
+
+
+def validate_document_model_mutations(
+    root: Root,
+    documents: Sequence[Document],
+) -> list[dict[str, Any]]:
+    baseline = list(documents)
+
+    if len(baseline) != 9:
+        raise CompositionError(
+            "document-model fixture count mismatch"
+        )
+
+    baseline_runtime_id = runtime_corpus_id(
+        baseline
+    )
+
+    baseline_manifest_id = source_manifest_id(
+        baseline
+    )
+
+    mutations: list[dict[str, Any]] = []
+
+    # M21 — reorder the same document objects.
+    reordered = list(baseline)
+
+    reordered[1], reordered[2] = (
+        reordered[2],
+        reordered[1],
+    )
+
+    order_query = b"alpha LEFT"
+
+    if (
+        reordered[1] is not baseline[2]
+        or reordered[2] is not baseline[1]
+        or runtime_corpus_id(reordered)
+        == baseline_runtime_id
+        or source_manifest_id(reordered)
+        == baseline_manifest_id
+        or naive_coordinates(
+            baseline,
+            order_query,
+        ) != [[1, 0]]
+        or naive_coordinates(
+            reordered,
+            order_query,
+        ) != [[2, 0]]
+    ):
+        raise CompositionError(
+            "document-order mutation control failed"
+        )
+
+    mutations.append(
+        expect_result_failure(
+            "document_order_changed",
+            "COMPOSITION_E_IDENTITY",
+            lambda: changed_document_model_result(
+                root,
+                reordered,
+                order_query,
+            ),
+        )
+    )
+
+    # M22 — removing an empty document leaves the
+    # physical bytes unchanged but renumbers documents.
+    empty_removed = baseline[1:]
+
+    if (
+        baseline[0].data != b""
+        or len(empty_removed)
+        != len(baseline) - 1
+        or b"".join(
+            document.data
+            for document in empty_removed
+        )
+        != b"".join(
+            document.data
+            for document in baseline
+        )
+        or runtime_corpus_id(empty_removed)
+        == baseline_runtime_id
+        or source_manifest_id(empty_removed)
+        == baseline_manifest_id
+        or naive_coordinates(
+            empty_removed,
+            order_query,
+        ) != [[0, 0]]
+    ):
+        raise CompositionError(
+            "empty-document mutation control failed"
+        )
+
+    mutations.append(
+        expect_result_failure(
+            "empty_document_removed",
+            "COMPOSITION_E_IDENTITY",
+            lambda: changed_document_model_result(
+                root,
+                empty_removed,
+                order_query,
+            ),
+        )
+    )
+
+    # M23 — byte-identical documents remain distinct
+    # occurrences and later doc_ids must not collapse.
+    deduplicated = (
+        baseline[:6]
+        + baseline[7:]
+    )
+
+    duplicate_query = b"dup"
+    later_query = b"tail shared"
+
+    if (
+        baseline[5].data
+        != baseline[6].data
+        or baseline[5].path
+        == baseline[6].path
+        or len(deduplicated)
+        != len(baseline) - 1
+        or runtime_corpus_id(deduplicated)
+        == baseline_runtime_id
+        or source_manifest_id(deduplicated)
+        == baseline_manifest_id
+        or naive_coordinates(
+            baseline,
+            duplicate_query,
+        ) != [
+            [5, 0],
+            [6, 0],
+        ]
+        or naive_coordinates(
+            deduplicated,
+            duplicate_query,
+        ) != [[5, 0]]
+        or naive_coordinates(
+            baseline,
+            later_query,
+        ) != [[7, 0]]
+        or naive_coordinates(
+            deduplicated,
+            later_query,
+        ) != [[6, 0]]
+    ):
+        raise CompositionError(
+            "duplicate-document mutation control failed"
+        )
+
+    mutations.append(
+        expect_result_failure(
+            "duplicate_document_deduplicated",
+            "COMPOSITION_E_IDENTITY",
+            lambda: changed_document_model_result(
+                root,
+                deduplicated,
+                duplicate_query,
+            ),
+        )
+    )
+
+    # M24 — deliberately use the forbidden physical
+    # concatenation oracle for both boundary classes.
+    boundary_cases = (
+        (
+            "physical_concatenation_"
+            "cross_document",
+            b"\x00\xffshared",
+            [[3, 13]],
+        ),
+        (
+            "physical_concatenation_"
+            "cross_block",
+            b"dupdup",
+            [[5, 0]],
+        ),
+    )
+
+    for name, query, wrong_coordinates in (
+        boundary_cases
+    ):
+        actual_wrong = (
+            physical_concatenation_coordinates(
+                baseline,
+                query,
+            )
+        )
+
+        correct = compose_full(
+            root,
+            query,
+            run_full_results(
+                root,
+                query,
+                list(
+                    range(len(root.blocks))
+                ),
+            ),
+            None,
+        )
+
+        if (
+            actual_wrong != wrong_coordinates
+            or naive_coordinates(
+                baseline,
+                query,
+            ) != []
+            or correct["match_count"] != 0
+            or correct["returned_count"] != 0
+            or correct["coordinates"] != []
+        ):
+            raise CompositionError(
+                "physical-concatenation mutation "
+                "control failed"
+            )
+
+        candidate = make_result(
+            root,
+            query,
+            None,
+            len(actual_wrong),
+            actual_wrong,
+        )
+
+        mutations.append(
+            expect_result_failure(
+                name,
+                "COMPOSITION_E_VERIFY",
+                lambda candidate=candidate,
+                query=query:
+                    serialize_and_validate_result(
+                        root,
+                        query,
+                        candidate,
+                    ),
+            )
+        )
+
+    if len(mutations) != 5:
+        raise CompositionError(
+            "document-model mutation count mismatch"
+        )
+
+    if not all(
+        item["rejected"] is True
+        for item in mutations
+    ):
+        raise CompositionError(
+            "document-model mutation gate failed"
+        )
+
+    return mutations
 
 
 def validate_full_block_result(
@@ -5420,6 +5789,13 @@ def main() -> int:
             )
         )
 
+        document_model_mutations = (
+            validate_document_model_mutations(
+                root_a,
+                documents,
+            )
+        )
+
         aggregation_mutations = (
             validate_aggregation_limit_mutations(
                 root_a
@@ -5432,6 +5808,7 @@ def main() -> int:
                 result_mutations,
                 artifact_mutations,
                 aggregation_mutations,
+                document_model_mutations,
             )
         )
 
@@ -5481,6 +5858,10 @@ def main() -> int:
                 True,
             "aggregation_mutation_count":
                 len(aggregation_mutations),
+            "document_model_mutations_verified":
+                True,
+            "document_model_mutation_count":
+                len(document_model_mutations),
             "mutation_traceability_verified":
                 True,
             "normative_requirement_count":
@@ -5541,6 +5922,8 @@ def main() -> int:
                 artifact_mutations,
             "aggregation_mutations":
                 aggregation_mutations,
+            "document_model_mutations":
+                document_model_mutations,
             "mutation_traceability":
                 mutation_traceability,
         }
