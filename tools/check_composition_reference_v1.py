@@ -258,8 +258,10 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "description":
             "replay attempted against "
             "a different root",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "replay_against_different_root",
+        ),
     },
     {
         "id": "M21",
@@ -2749,6 +2751,9 @@ def build_mutation_traceability(
     document_model_mutations: Sequence[
         dict[str, Any]
     ],
+    replay_mutations: Sequence[
+        dict[str, Any]
+    ],
 ) -> dict[str, Any]:
     implemented: dict[str, str] = {}
 
@@ -2758,6 +2763,7 @@ def build_mutation_traceability(
         + list(artifact_mutations)
         + list(aggregation_mutations)
         + list(document_model_mutations)
+        + list(replay_mutations)
     ):
         if not isinstance(item, dict):
             raise CompositionError(
@@ -2981,7 +2987,7 @@ def build_mutation_traceability(
         exact_count,
         supporting_count,
         open_count,
-    ) != (23, 0, 2):
+    ) != (24, 0, 1):
         raise CompositionError(
             "unexpected traceability "
             "baseline counts"
@@ -5327,6 +5333,150 @@ def semantic_view(
     return value
 
 
+def validate_replay_mutations(
+    source_root: Root,
+    replay_root: Root,
+) -> list[dict[str, Any]]:
+    query = b"shared"
+
+    if (
+        source_root is replay_root
+        or source_root.corpus_id
+        != replay_root.corpus_id
+        or source_root.source_manifest_id
+        != replay_root.source_manifest_id
+        or source_root.document_count
+        != replay_root.document_count
+        or source_root.composition_root_id
+        == replay_root.composition_root_id
+    ):
+        raise CompositionError(
+            "different-root replay fixture "
+            "identity control failed"
+        )
+
+    source_result = compose_full(
+        source_root,
+        query,
+        run_full_results(
+            source_root,
+            query,
+            list(
+                range(len(source_root.blocks))
+            ),
+        ),
+        None,
+    )
+
+    replay_root_result = compose_full(
+        replay_root,
+        query,
+        run_full_results(
+            replay_root,
+            query,
+            list(
+                range(len(replay_root.blocks))
+            ),
+        ),
+        None,
+    )
+
+    source_artifact = canonical_json_bytes(
+        source_result
+    )
+
+    replay_root_artifact = (
+        canonical_json_bytes(
+            replay_root_result
+        )
+    )
+
+    if (
+        source_result.get(
+            "composition_root_id"
+        )
+        != source_root.composition_root_id
+        or replay_root_result.get(
+            "composition_root_id"
+        )
+        != replay_root.composition_root_id
+        or source_result.get(
+            "composition_result_id"
+        )
+        == replay_root_result.get(
+            "composition_result_id"
+        )
+        or source_artifact
+        == replay_root_artifact
+        or canonical_json_bytes(
+            semantic_view(source_result)
+        )
+        != canonical_json_bytes(
+            semantic_view(
+                replay_root_result
+            )
+        )
+    ):
+        raise CompositionError(
+            "different-root replay fixture "
+            "semantic control failed"
+        )
+
+    replay_candidate = json.loads(
+        source_artifact.decode("utf-8")
+    )
+
+    if canonical_json_bytes(
+        replay_candidate
+    ) != source_artifact:
+        raise CompositionError(
+            "different-root replay artifact "
+            "is not canonical"
+        )
+
+    positive = serialize_and_validate_result(
+        source_root,
+        query,
+        replay_candidate,
+    )
+
+    if canonical_json_bytes(
+        positive
+    ) != source_artifact:
+        raise CompositionError(
+            "same-root replay positive "
+            "control failed"
+        )
+
+    mutations = [
+        expect_result_failure(
+            "replay_against_different_root",
+            "COMPOSITION_E_IDENTITY",
+            lambda: serialize_and_validate_result(
+                replay_root,
+                query,
+                replay_candidate,
+            ),
+        )
+    ]
+
+    if (
+        len(mutations) != 1
+        or mutations[0]["rejected"]
+        is not True
+        or canonical_json_bytes(
+            replay_candidate
+        )
+        != source_artifact
+    ):
+        raise CompositionError(
+            "different-root replay mutation "
+            "gate failed"
+        )
+
+    return mutations
+
+
 def validate_global_manifest(
     work: Path,
     documents: Sequence[Document],
@@ -5789,6 +5939,13 @@ def main() -> int:
             )
         )
 
+        replay_mutations = (
+            validate_replay_mutations(
+                root_a,
+                root_b,
+            )
+        )
+
         document_model_mutations = (
             validate_document_model_mutations(
                 root_a,
@@ -5809,6 +5966,7 @@ def main() -> int:
                 artifact_mutations,
                 aggregation_mutations,
                 document_model_mutations,
+                replay_mutations,
             )
         )
 
@@ -5850,6 +6008,10 @@ def main() -> int:
                 True,
             "result_mutation_count":
                 len(result_mutations),
+            "different_root_replay_verified":
+                True,
+            "replay_mutation_count":
+                len(replay_mutations),
             "artifact_integrity_mutations_verified":
                 True,
             "artifact_mutation_count":
@@ -5918,6 +6080,8 @@ def main() -> int:
                 root_mutations,
             "result_mutations":
                 result_mutations,
+            "replay_mutations":
+                replay_mutations,
             "artifact_mutations":
                 artifact_mutations,
             "aggregation_mutations":
