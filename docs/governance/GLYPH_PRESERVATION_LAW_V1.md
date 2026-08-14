@@ -60,3 +60,25 @@ A future `V2` may supersede this law only through a new, additive document
 approved by the Owner. `V1` remains in history. The superseding document must
 name this document, state the effective date, and enumerate every changed rule.
 
+## 7. Object identity and dependent relations
+
+This law governs identified logical objects and their immutable revisions, not
+pathnames alone. The normative identity and relationship model is
+`GLYPH_OBJECT_IDENTITY_AND_DEPENDENCY_V1.md`.
+
+Before an important move, supersession, destructive replacement, or proposed
+deletion, the exact target identity and its transitive incoming dependency
+closure must be recorded. Unknown registry coverage means `UNKNOWN`, not “no
+dependents.” Any unresolved dependent blocks deletion. Pure movement preserves
+the logical object identity and records a new location binding; normative byte
+changes create a new immutable revision identity.
+
+The logical identity of this law is:
+
+    glyph-object:governance:preservation-law:v1
+
+Its first published revision is bound to Git commit
+`dbc16e72a96f664301499b5fad53a0aa7f170895` and the original SHA-256 digest is
+`55550dc429f0a5d514472969682a7fd5a165c9c707a9dcd9d2a60a0000200a1e`.
+Later revisions must remain linked in the object graph.
+
