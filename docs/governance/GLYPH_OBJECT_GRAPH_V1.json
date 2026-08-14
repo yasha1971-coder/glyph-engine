@@ -1,0 +1,254 @@
+{
+  "format": "GLYPH_OBJECT_GRAPH_V1",
+  "registry_id": "glyph-object:governance:object-graph:v1",
+  "established": "2026-08-14",
+  "authority": "yasha1971-coder",
+  "repository": "yasha1971-coder/glyph-engine",
+  "branch": "centenary-247-v1",
+  "completeness": "PARTIAL_EXPLICIT_UNKNOWN_OUTSIDE_LIST",
+  "unknown_policy": "FAIL_CLOSED",
+  "objects": [
+    {
+      "object_id": "glyph-object:governance:preservation-law:v1",
+      "kind": "governance_law",
+      "title": "GLYPH Preservation Law V1",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "OWNER_DIRECTIVE_ACTIVE",
+      "locations": [
+        "docs/governance/GLYPH_PRESERVATION_LAW_V1.md"
+      ],
+      "revisions": [
+        {
+          "revision_id": "sha256:cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+          "content_sha256": "cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+          "commit": "033356a2291f2af36cf2afc05093e32ad421cf2c",
+          "git_blob_sha1": "9b53434a8ed3925612718b0b7356a87e7cb55bd6",
+          "path": "docs/governance/GLYPH_PRESERVATION_LAW_V1.md",
+          "byte_length": 3625
+        }
+      ],
+      "revision_history": [
+        {
+          "revision_id": "sha256:55550dc429f0a5d514472969682a7fd5a165c9c707a9dcd9d2a60a0000200a1e",
+          "commit": "dbc16e72a96f664301499b5fad53a0aa7f170895",
+          "git_blob_sha1": "6cbf3b539bfe09d26a286b354eeeb93f756d8eb7",
+          "path": "docs/governance/GLYPH_PRESERVATION_LAW_V1.md",
+          "byte_length": 2602,
+          "state": "PRESERVED_PREVIOUS_REVISION"
+        }
+      ]
+    },
+    {
+      "object_id": "glyph-object:governance:movement-ledger:v1",
+      "kind": "append_only_ledger",
+      "title": "GLYPH Movement Ledger",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "ACTIVE_APPEND_ONLY",
+      "locations": [
+        "docs/governance/GLYPH_MOVEMENT_LEDGER.md"
+      ],
+      "revisions": [
+        {
+          "revision_id": "sha256:20e14fa67437a276ccba444be510d7d83d0200f25fe55737a92cfca86896dbe4",
+          "content_sha256": "20e14fa67437a276ccba444be510d7d83d0200f25fe55737a92cfca86896dbe4",
+          "commit": "c22c090c24b8bbd1ce347660db12594d389983b1",
+          "git_blob_sha1": "f9285efd6b82a1626cc4ddb472a63b663973e964",
+          "path": "docs/governance/GLYPH_MOVEMENT_LEDGER.md",
+          "byte_length": 1179
+        }
+      ],
+      "revision_history": [
+        {
+          "revision_id": "sha256:cb66b60b282d91cb05bb448620ad5deab2da412fd0c97055ae1b831009960057",
+          "commit": "f6f2bf0a18d3d2f0a63a4d57388c84ff9e3175da",
+          "git_blob_sha1": "ad9302e6f6e74d160373ba8f090c0b9f3936d703",
+          "path": "docs/governance/GLYPH_MOVEMENT_LEDGER.md",
+          "byte_length": 633,
+          "state": "PRESERVED_PREVIOUS_REVISION"
+        }
+      ]
+    },
+    {
+      "object_id": "glyph-object:governance:centenary-247:v1",
+      "kind": "quality_standard",
+      "title": "GLYPH Centenary 247 — Facet Standard V1",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "DRAFT_STANDARD",
+      "locations": [
+        "docs/governance/GLYPH_CENTENARY_247_V1.md"
+      ],
+      "revisions": [
+        {
+          "revision_id": "sha256:8b4067bdd38f22c62e572bd345d94bfb37aaa04f50c3809655320646fec4bbd3",
+          "content_sha256": "8b4067bdd38f22c62e572bd345d94bfb37aaa04f50c3809655320646fec4bbd3",
+          "commit": "31509df54f4b4773e05b08751acd6efe508c6502",
+          "git_blob_sha1": "fe9c74bd5c5d28ca192845b13d566cd15d329ae5",
+          "path": "docs/governance/GLYPH_CENTENARY_247_V1.md",
+          "byte_length": 43890
+        }
+      ],
+      "revision_history": [
+        {
+          "revision_id": "sha256:d6a546dfd97fbecb6759a3eac52e74e46900f226284366d98db7ce58f6a9ed2b",
+          "commit": "a531431f6605c0b7b46a2394467f7361f2bdfd23",
+          "git_blob_sha1": "495848dfcb1b9b3910e15165f721f9165116a953",
+          "path": "docs/governance/GLYPH_CENTENARY_247_V1.md",
+          "byte_length": 43180,
+          "state": "PRESERVED_PREVIOUS_REVISION"
+        }
+      ]
+    },
+    {
+      "object_id": "glyph-object:governance:object-identity-dependency:v1",
+      "kind": "identity_dependency_model",
+      "title": "GLYPH Object Identity and Dependency Model V1",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "NORMATIVE_DRAFT",
+      "locations": [
+        "docs/governance/GLYPH_OBJECT_IDENTITY_AND_DEPENDENCY_V1.md"
+      ],
+      "revisions": [
+        {
+          "revision_id": "sha256:2558ceba6526ca6c713424cebabdb2555311e3a79e56a92584abb0df18b424a8",
+          "content_sha256": "2558ceba6526ca6c713424cebabdb2555311e3a79e56a92584abb0df18b424a8",
+          "commit": "bf3ae4865a74fc72ced215b479f949d8722bf79a",
+          "git_blob_sha1": "7588986c0e8a358af3c7b77d104f157b9cf0cbe8",
+          "path": "docs/governance/GLYPH_OBJECT_IDENTITY_AND_DEPENDENCY_V1.md",
+          "byte_length": 5620
+        }
+      ]
+    },
+    {
+      "object_id": "glyph-object:governance:object-graph:v1",
+      "kind": "object_relation_registry",
+      "title": "GLYPH Object Graph V1",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "NORMATIVE_DRAFT",
+      "locations": [
+        "docs/governance/GLYPH_OBJECT_GRAPH_V1.json"
+      ],
+      "revisions": [],
+      "revision_identity_note": "The graph cannot contain its own digest without recursion; its exact revision is bound by the publication commit and external closure manifest."
+    },
+    {
+      "object_id": "glyph-object:tool:check-centenary-247:v1",
+      "kind": "verification_tool",
+      "title": "GLYPH Centenary 247 structural checker",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "ACTIVE_GATE",
+      "locations": [
+        "tools/check_centenary_247_v1.py"
+      ],
+      "revisions": [
+        {
+          "revision_id": "sha256:e47ff0a8a74c40c504fa2d41fc6f6339657e568ba218f7f8718829b0f13122dc",
+          "content_sha256": "e47ff0a8a74c40c504fa2d41fc6f6339657e568ba218f7f8718829b0f13122dc",
+          "commit": "2721fa142b99cac4b55edf1190c54e2cba03fbdf",
+          "git_blob_sha1": "52973a65c98cb98ece2e646f8e9d7bf69dd92606",
+          "path": "tools/check_centenary_247_v1.py",
+          "byte_length": 9543
+        }
+      ],
+      "revision_history": [
+        {
+          "revision_id": "sha256:7d2b115c119e1cc5cb1f21f42afb6f7d8836bebbe5be97a68c2784a9fc250d5b",
+          "commit": "0122c2ab22b6d2380f954db0de69879b23915337",
+          "git_blob_sha1": "55836666bf87606316068aac75cc7ff65deac434",
+          "path": "tools/check_centenary_247_v1.py",
+          "byte_length": 3087,
+          "state": "PRESERVED_PREVIOUS_REVISION"
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "relation_id": "glyph-relation:centenary-depends-preservation:001",
+      "source": "glyph-object:governance:centenary-247:v1",
+      "source_revision": "sha256:8b4067bdd38f22c62e572bd345d94bfb37aaa04f50c3809655320646fec4bbd3",
+      "type": "DEPENDS_ON",
+      "target": "glyph-object:governance:preservation-law:v1",
+      "target_revision": "sha256:cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+      "binds": "exact_revision",
+      "strength": "NORMATIVE"
+    },
+    {
+      "relation_id": "glyph-relation:preservation-depends-identity:002",
+      "source": "glyph-object:governance:preservation-law:v1",
+      "source_revision": "sha256:cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+      "type": "DEPENDS_ON",
+      "target": "glyph-object:governance:object-identity-dependency:v1",
+      "target_revision": "sha256:2558ceba6526ca6c713424cebabdb2555311e3a79e56a92584abb0df18b424a8",
+      "binds": "exact_revision",
+      "strength": "NORMATIVE"
+    },
+    {
+      "relation_id": "glyph-relation:ledger-implements-preservation:003",
+      "source": "glyph-object:governance:movement-ledger:v1",
+      "source_revision": "sha256:20e14fa67437a276ccba444be510d7d83d0200f25fe55737a92cfca86896dbe4",
+      "type": "IMPLEMENTS",
+      "target": "glyph-object:governance:preservation-law:v1",
+      "target_revision": "sha256:cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+      "binds": "exact_revision",
+      "strength": "NORMATIVE"
+    },
+    {
+      "relation_id": "glyph-relation:checker-verifies-centenary:004",
+      "source": "glyph-object:tool:check-centenary-247:v1",
+      "source_revision": "sha256:e47ff0a8a74c40c504fa2d41fc6f6339657e568ba218f7f8718829b0f13122dc",
+      "type": "VERIFIES",
+      "target": "glyph-object:governance:centenary-247:v1",
+      "target_revision": "sha256:8b4067bdd38f22c62e572bd345d94bfb37aaa04f50c3809655320646fec4bbd3",
+      "binds": "exact_revision",
+      "strength": "STRUCTURAL_ONLY"
+    },
+    {
+      "relation_id": "glyph-relation:checker-verifies-preservation:005",
+      "source": "glyph-object:tool:check-centenary-247:v1",
+      "source_revision": "sha256:e47ff0a8a74c40c504fa2d41fc6f6339657e568ba218f7f8718829b0f13122dc",
+      "type": "VERIFIES",
+      "target": "glyph-object:governance:preservation-law:v1",
+      "target_revision": "sha256:cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+      "binds": "exact_revision",
+      "strength": "STRUCTURAL_ONLY"
+    },
+    {
+      "relation_id": "glyph-relation:checker-verifies-identity:006",
+      "source": "glyph-object:tool:check-centenary-247:v1",
+      "source_revision": "sha256:e47ff0a8a74c40c504fa2d41fc6f6339657e568ba218f7f8718829b0f13122dc",
+      "type": "VERIFIES",
+      "target": "glyph-object:governance:object-identity-dependency:v1",
+      "target_revision": "sha256:2558ceba6526ca6c713424cebabdb2555311e3a79e56a92584abb0df18b424a8",
+      "binds": "exact_revision",
+      "strength": "STRUCTURAL_ONLY"
+    },
+    {
+      "relation_id": "glyph-relation:checker-verifies-graph:007",
+      "source": "glyph-object:tool:check-centenary-247:v1",
+      "type": "VERIFIES",
+      "target": "glyph-object:governance:object-graph:v1",
+      "binds": "logical_object",
+      "strength": "STRUCTURAL_ONLY"
+    },
+    {
+      "relation_id": "glyph-relation:graph-implements-identity:008",
+      "source": "glyph-object:governance:object-graph:v1",
+      "type": "IMPLEMENTS",
+      "target": "glyph-object:governance:object-identity-dependency:v1",
+      "binds": "logical_object",
+      "strength": "NORMATIVE_DRAFT"
+    }
+  ]
+}
