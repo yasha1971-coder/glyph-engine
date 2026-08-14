@@ -103,6 +103,7 @@ def validate_object_graph() -> tuple[int, int]:
         fail("object graph objects/relations must be arrays")
 
     object_ids: list[str] = []
+    revision_ids_by_object: dict[str, set[str]] = {}
     for item in objects:
         if not isinstance(item, dict):
             fail("object entry must be an object")
@@ -110,6 +111,7 @@ def validate_object_graph() -> tuple[int, int]:
         if not isinstance(object_id, str) or not object_id:
             fail("object entry missing object_id")
         object_ids.append(object_id)
+        revision_ids_by_object[object_id] = set()
 
         revisions = item.get("revisions", [])
         if not isinstance(revisions, list):
@@ -119,8 +121,11 @@ def validate_object_graph() -> tuple[int, int]:
                 fail(f"{object_id} revision must be an object")
             content_sha256 = revision.get("content_sha256")
             path_value = revision.get("path")
+            revision_id = revision.get("revision_id")
             if content_sha256 is None and path_value is None:
                 continue
+            if revision_id != f"sha256:{content_sha256}":
+                fail(f"{object_id} revision_id/content digest mismatch")
             if not isinstance(content_sha256, str) or not SHA256_RE.fullmatch(
                 content_sha256
             ):
@@ -132,6 +137,7 @@ def validate_object_graph() -> tuple[int, int]:
                 fail(f"registered path missing: {path_value}")
             if sha256_file(local_path) != content_sha256:
                 fail(f"registered digest mismatch: {path_value}")
+            revision_ids_by_object[object_id].add(revision_id)
 
     if len(object_ids) != len(set(object_ids)):
         fail("duplicate object_id")
@@ -157,6 +163,13 @@ def validate_object_graph() -> tuple[int, int]:
             fail(f"unknown relation type: {relation_id}")
         if binds not in {"logical_object", "exact_revision"}:
             fail(f"invalid relation binding: {relation_id}")
+        if binds == "exact_revision":
+            source_revision = relation.get("source_revision")
+            target_revision = relation.get("target_revision")
+            if source_revision not in revision_ids_by_object[source]:
+                fail(f"unknown source revision: {relation_id}")
+            if target_revision not in revision_ids_by_object[target]:
+                fail(f"unknown target revision: {relation_id}")
         relation_tuples.add((source, relation_type, target))
 
     if len(relation_ids) != len(set(relation_ids)):
