@@ -171,6 +171,32 @@
           "state": "PRESERVED_PREVIOUS_REVISION"
         }
       ]
+    },
+    {
+      "object_id": "glyph-object:governance:preservation-register:v1",
+      "kind": "preservation_inventory",
+      "title": "GLYPH Preservation Register V1",
+      "major_version": 1,
+      "authority": "yasha1971-coder",
+      "created_at": "2026-08-14",
+      "lifecycle_state": "DRAFT_INVENTORY_FAIL_CLOSED",
+      "locations": [
+        "docs/governance/GLYPH_PRESERVATION_REGISTER_V1.md"
+      ],
+      "revisions": [
+        {
+          "revision_id": "sha256:4125aa550163381f766bc885c31344b25cc2ec9f67854f1e2866ad213f609d99",
+          "content_sha256": "4125aa550163381f766bc885c31344b25cc2ec9f67854f1e2866ad213f609d99",
+          "repository": "yasha1971-coder/glyph-engine",
+          "commit": "7445592dac07a25bab06c45ea3db87e3ffd3e7bb",
+          "git_blob_sha1": "d636666ceb0ce25ee7e88ad453286399af5b4108",
+          "path": "docs/governance/GLYPH_PRESERVATION_REGISTER_V1.md",
+          "byte_length": 14172,
+          "schema_or_format_version": "GLYPH_PRESERVATION_REGISTER_V1",
+          "publication_timestamp": "2026-08-14T14:48:38Z",
+          "publication_authority": "yasha1971-coder"
+        }
+      ]
     }
   ],
   "relations": [
@@ -248,6 +274,26 @@
       "type": "IMPLEMENTS",
       "target": "glyph-object:governance:object-identity-dependency:v1",
       "binds": "logical_object",
+      "strength": "NORMATIVE_DRAFT"
+    },
+    {
+      "relation_id": "glyph-relation:register-implements-preservation:009",
+      "source": "glyph-object:governance:preservation-register:v1",
+      "source_revision": "sha256:4125aa550163381f766bc885c31344b25cc2ec9f67854f1e2866ad213f609d99",
+      "type": "IMPLEMENTS",
+      "target": "glyph-object:governance:preservation-law:v1",
+      "target_revision": "sha256:cc812924d911de047ded3f6eec8745886087aef140c44cbf5eae485617660239",
+      "binds": "exact_revision",
+      "strength": "NORMATIVE_DRAFT"
+    },
+    {
+      "relation_id": "glyph-relation:register-depends-identity:010",
+      "source": "glyph-object:governance:preservation-register:v1",
+      "source_revision": "sha256:4125aa550163381f766bc885c31344b25cc2ec9f67854f1e2866ad213f609d99",
+      "type": "DEPENDS_ON",
+      "target": "glyph-object:governance:object-identity-dependency:v1",
+      "target_revision": "sha256:2558ceba6526ca6c713424cebabdb2555311e3a79e56a92584abb0df18b424a8",
+      "binds": "exact_revision",
       "strength": "NORMATIVE_DRAFT"
     }
   ]
