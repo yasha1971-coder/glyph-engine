@@ -440,3 +440,19 @@ A GitHub star, fork, issue, discussion, or reaction is never counted as an
 approval. Valid approval requires the record defined by F236. Valid independent
 replay requires the record defined by F088–F090. The project may publish dynamic
 counts for visibility, but must show the measurement date and source.
+
+## 10. Identity and dependency refinement — 2026-08-14
+
+Facets F006–F010 and F229 govern identified objects, not filenames in
+isolation. Their normative refinement is
+`GLYPH_OBJECT_IDENTITY_AND_DEPENDENCY_V1.md` and the initial registry is
+`GLYPH_OBJECT_GRAPH_V1.json`.
+
+For these facets, closure now requires both a stable logical `object_id` and an
+immutable revision identity. Before movement, supersession, destructive
+replacement, or proposed deletion, the transitive incoming dependency closure
+must be computed. Missing graph coverage is `UNKNOWN` and cannot satisfy a
+no-dependent precondition.
+
+This refinement adds no facet and changes no cardinality: the invariant remains
+exactly F001–F247.
