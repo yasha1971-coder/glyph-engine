@@ -575,6 +575,49 @@ physical root to replay against another root without explicit new verification.
 A stored `ok=true` is not a premise of correctness. If source bytes have changed,
 direct span recomputation must reject the artifact.
 
+### 13.12 Full M01–M25 obligation map
+
+The executable mutations do not all test the pure set theorem. They span three
+layers:
+
+- mathematical model and theorem assumptions;
+- artifact-to-model refinement and identity binding;
+- evidence-to-recomputed-result comparison.
+
+The complete mapping is:
+
+| ID | Mutation | Violated obligation |
+|---|---|---|
+| M01 | required block removed | complete coverage and complete partition realization |
+| M02 | valid block substituted | committed-root binding and artifact-to-model refinement |
+| M03 | block order changed without root update | canonical partition order and root-preimage consistency |
+| M04 | block entry duplicated | unique block/document ownership and exact-once coverage |
+| M05 | runtime manifest byte changed | artifact integrity before mathematical interpretation |
+| M06 | runtime manifest commitment changed | digest/preimage consistency under the selected identity profile |
+| M07 | `runtime_index_id` changed | physical runtime identity binding |
+| M08 | global runtime corpus ID changed | partition-independent logical corpus commitment |
+| M09 | global source manifest ID changed | reconstructed source-manifest commitment |
+| M10 | composition root ID changed | physical layout commitment |
+| M11 | source document byte changed | artifact interpretation and direct byte-match relation |
+| M12 | block result omitted while coverage claimed | result completeness and `E = V = Q` |
+| M13 | incomplete coverage represented as zero | fail-closed result-existence rule |
+| M14 | merged coordinates reordered | T4 canonical order invariance |
+| M15 | local-to-global base changed | definition and recomputation of `Lift` |
+| M16 | integer overflow attempted | checked finite-domain refinement of T2 |
+| M17 | `max_offsets` applied per block | T5 global canonical bounded prefix |
+| M18 | unsupported root version | artifact refinement domain and explicit version acceptance |
+| M19 | unsupported runtime profile | artifact refinement domain and profile compatibility |
+| M20 | replay against a different root | evidence-to-root binding |
+| M21 | document order changed | fixed ordered-corpus premise of T3 |
+| M22 | empty document removed | corpus sequence and positional identity |
+| M23 | duplicate document deduplicated | positional multiplicity and unique document ownership |
+| M24 | physical concatenation oracle | document-local definition of `Matches(C, q)` |
+| M25 | stored byte-check success trusted | independent evidence comparison and source-span recomputation |
+
+Passing M01–M25 supports executable conformance of the reference checker. It
+does not convert artifact or cryptographic obligations into unconditional
+mathematical theorems.
+
 ## 14. Formalization plan
 
 ### F1 — Pure finite model
