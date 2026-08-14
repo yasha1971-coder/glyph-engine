@@ -308,8 +308,11 @@ NORMATIVE_MUTATION_REQUIREMENTS = (
         "description":
             "stored byte-check success trusted "
             "without recomputation",
-        "status": "OPEN",
-        "tests": (),
+        "status": "EXACT",
+        "tests": (
+            "stored_byte_check_success_"
+            "without_recomputation",
+        ),
     },
 )
 
@@ -2754,6 +2757,9 @@ def build_mutation_traceability(
     replay_mutations: Sequence[
         dict[str, Any]
     ],
+    byte_check_replay_mutations: Sequence[
+        dict[str, Any]
+    ],
 ) -> dict[str, Any]:
     implemented: dict[str, str] = {}
 
@@ -2764,6 +2770,7 @@ def build_mutation_traceability(
         + list(aggregation_mutations)
         + list(document_model_mutations)
         + list(replay_mutations)
+        + list(byte_check_replay_mutations)
     ):
         if not isinstance(item, dict):
             raise CompositionError(
@@ -2987,7 +2994,7 @@ def build_mutation_traceability(
         exact_count,
         supporting_count,
         open_count,
-    ) != (24, 0, 1):
+    ) != (25, 0, 0):
         raise CompositionError(
             "unexpected traceability "
             "baseline counts"
@@ -5477,6 +5484,232 @@ def validate_replay_mutations(
     return mutations
 
 
+def validate_byte_check_replay_mutations(
+    work: Path,
+    source_root: Root,
+    query: bytes,
+    stored_result: dict[str, Any],
+) -> list[dict[str, Any]]:
+    if not query:
+        raise CompositionError(
+            "byte-check replay query is empty"
+        )
+
+    stored_artifact = canonical_json_bytes(
+        stored_result
+    )
+
+    replay_candidate = json.loads(
+        stored_artifact.decode("utf-8")
+    )
+
+    if (
+        canonical_json_bytes(replay_candidate)
+        != stored_artifact
+        or replay_candidate.get("ok")
+        is not True
+        or replay_candidate.get(
+            "verified_blocks"
+        ) != list(
+            range(len(source_root.blocks))
+        )
+        or not replay_candidate.get(
+            "coordinates"
+        )
+    ):
+        raise CompositionError(
+            "stored byte-check replay fixture "
+            "control failed"
+        )
+
+    positive = serialize_and_validate_result(
+        source_root,
+        query,
+        replay_candidate,
+    )
+
+    if canonical_json_bytes(
+        positive
+    ) != stored_artifact:
+        raise CompositionError(
+            "stored byte-check positive replay "
+            "control failed"
+        )
+
+    global_doc_id, doc_offset = (
+        replay_candidate["coordinates"][0]
+    )
+
+    target_block = next(
+        (
+            block
+            for block in source_root.blocks
+            if block.start
+            <= global_doc_id
+            < block.end
+        ),
+        None,
+    )
+
+    if target_block is None:
+        raise CompositionError(
+            "stored byte-check coordinate has "
+            "no source block"
+        )
+
+    cloned_block = clone_block_for_mutation(
+        work,
+        target_block,
+        "stored-byte-check-success",
+    )
+
+    source_manifest = load_canonical_json(
+        cloned_block.corpus
+        / SOURCE_MANIFEST_NAME
+    )
+
+    records = source_manifest.get(
+        "documents"
+    )
+
+    local_doc_id = (
+        global_doc_id - cloned_block.start
+    )
+
+    if (
+        not isinstance(records, list)
+        or local_doc_id < 0
+        or local_doc_id >= len(records)
+        or not isinstance(
+            records[local_doc_id],
+            dict,
+        )
+    ):
+        raise CompositionError(
+            "stored byte-check source record "
+            "control failed"
+        )
+
+    snapshot_relative = records[
+        local_doc_id
+    ].get("snapshot_path")
+
+    if not isinstance(
+        snapshot_relative,
+        str,
+    ):
+        raise CompositionError(
+            "stored byte-check snapshot path "
+            "control failed"
+        )
+
+    snapshot_path = (
+        cloned_block.corpus
+        / snapshot_relative
+    )
+
+    payload = bytearray(
+        snapshot_path.read_bytes()
+    )
+
+    span_end = doc_offset + len(query)
+
+    if (
+        doc_offset < 0
+        or span_end > len(payload)
+        or bytes(
+            payload[doc_offset:span_end]
+        ) != query
+    ):
+        raise CompositionError(
+            "stored byte-check source span "
+            "control failed"
+        )
+
+    payload[doc_offset] ^= 0x01
+    snapshot_path.write_bytes(payload)
+
+    if bytes(
+        payload[doc_offset:span_end]
+    ) == query:
+        raise CompositionError(
+            "stored byte-check source mutation "
+            "did not invalidate span"
+        )
+
+    replay_blocks = tuple(
+        cloned_block
+        if block.ordinal
+        == target_block.ordinal
+        else block
+        for block in source_root.blocks
+    )
+
+    mutated_root = Root(
+        name=(
+            source_root.name
+            + "-stored-byte-check-mutation"
+        ),
+        blocks=replay_blocks,
+        document_count=(
+            source_root.document_count
+        ),
+        corpus_id=source_root.corpus_id,
+        source_manifest_id=(
+            source_root.source_manifest_id
+        ),
+        composition_root_id=(
+            source_root.composition_root_id
+        ),
+    )
+
+    if (
+        mutated_root.corpus_id
+        != source_root.corpus_id
+        or mutated_root.source_manifest_id
+        != source_root.source_manifest_id
+        or mutated_root.composition_root_id
+        != source_root.composition_root_id
+        or replay_candidate.get(
+            "composition_result_id"
+        ) != stored_result.get(
+            "composition_result_id"
+        )
+    ):
+        raise CompositionError(
+            "stored byte-check replay identity "
+            "control failed"
+        )
+
+    mutations = [
+        expect_result_failure(
+            "stored_byte_check_success_"
+            "without_recomputation",
+            "COMPOSITION_E_VERIFY",
+            lambda: serialize_and_validate_result(
+                mutated_root,
+                query,
+                replay_candidate,
+            ),
+        )
+    ]
+
+    if (
+        len(mutations) != 1
+        or mutations[0]["rejected"]
+        is not True
+        or canonical_json_bytes(
+            replay_candidate
+        ) != stored_artifact
+    ):
+        raise CompositionError(
+            "stored byte-check replay mutation "
+            "gate failed"
+        )
+
+    return mutations
+
+
 def validate_global_manifest(
     work: Path,
     documents: Sequence[Document],
@@ -5946,6 +6179,15 @@ def main() -> int:
             )
         )
 
+        byte_check_replay_mutations = (
+            validate_byte_check_replay_mutations(
+                work,
+                root_a,
+                mutation_query,
+                mutation_positive_result,
+            )
+        )
+
         document_model_mutations = (
             validate_document_model_mutations(
                 root_a,
@@ -5967,6 +6209,7 @@ def main() -> int:
                 aggregation_mutations,
                 document_model_mutations,
                 replay_mutations,
+                byte_check_replay_mutations,
             )
         )
 
@@ -6012,6 +6255,12 @@ def main() -> int:
                 True,
             "replay_mutation_count":
                 len(replay_mutations),
+            "stored_byte_check_recomputation_verified":
+                True,
+            "byte_check_replay_mutation_count":
+                len(
+                    byte_check_replay_mutations
+                ),
             "artifact_integrity_mutations_verified":
                 True,
             "artifact_mutation_count":
@@ -6082,6 +6331,8 @@ def main() -> int:
                 result_mutations,
             "replay_mutations":
                 replay_mutations,
+            "byte_check_replay_mutations":
+                byte_check_replay_mutations,
             "artifact_mutations":
                 artifact_mutations,
             "aggregation_mutations":
