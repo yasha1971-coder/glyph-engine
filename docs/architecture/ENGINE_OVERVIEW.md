@@ -294,10 +294,10 @@ documents as independent matching domains.
 Legacy segmented behavior must not be treated as authoritative for the
 binary-safe runtime or for future composition semantics.
 
-## Composition research direction
+## Composition reference semantics
 
-A future composition layer may combine multiple already verified runtime
-units.
+Composition V1 defines and executable-tests the combination of multiple
+already verified runtime units.
 
 Possible concerns include:
 
@@ -309,10 +309,13 @@ Possible concerns include:
 - fail-closed missing-unit behavior;
 - independent composition replay.
 
-This layer is not currently implemented or verified.
+The research-tier reference checker verifies committed composition identity,
+stable global document coordinates, complete all-block coverage,
+deterministic merge, global bounded locate and independent replay.
 
-No current required verification claim includes an Index Forest,
-field-aware routing or multi-block composition.
+It is not part of the required top-level `VERIFY OK` closure. No current
+required verification claim includes a production Index Forest,
+field-aware routing or distributed multi-block composition.
 
 Any future composition work must be defined above the verified runtime and
 operator layers without weakening P1-P12, R0-R6 or O1-O6.

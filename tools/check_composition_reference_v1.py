@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
+import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -12,6 +14,14 @@ from typing import Any, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+INDEPENDENT_REPLAY = (
+    TOOLS
+    / "replay_composition_reference_v1.py"
+)
+INDEPENDENT_REPLAY_MARKER = (
+    "GLYPH COMPOSITION INDEPENDENT "
+    "REPLAY OK"
+)
 
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
@@ -5710,6 +5720,307 @@ def validate_byte_check_replay_mutations(
     return mutations
 
 
+def independent_replay_command(
+    root: Root,
+    result_path: Path,
+    block_paths: Sequence[Path],
+) -> list[str]:
+    command = [
+        sys.executable,
+        "-I",
+        str(INDEPENDENT_REPLAY),
+        "--root",
+        str(
+            result_path.parent
+            / (
+                f"{root.name}-"
+                "composition-root-v1.json"
+            )
+        ),
+        "--result",
+        str(result_path),
+    ]
+
+    for block_path in block_paths:
+        command.extend([
+            "--block",
+            str(block_path),
+        ])
+
+    return command
+
+
+def run_independent_replay_process(
+    command: Sequence[str],
+    cwd: Path,
+) -> subprocess.CompletedProcess[str]:
+    cwd.mkdir(parents=True, exist_ok=False)
+    environment = dict(os.environ)
+    environment.pop("PYTHONPATH", None)
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+
+    return subprocess.run(
+        list(command),
+        cwd=cwd,
+        env=environment,
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        timeout=300,
+        check=False,
+    )
+
+
+def require_independent_replay_failure(
+    name: str,
+    expected_error_class: str,
+    command: Sequence[str],
+    cwd: Path,
+) -> dict[str, Any]:
+    replay = run_independent_replay_process(
+        command,
+        cwd,
+    )
+
+    if (
+        replay.returncode == 0
+        or expected_error_class
+        not in replay.stderr
+        or INDEPENDENT_REPLAY_MARKER
+        in replay.stdout
+    ):
+        raise CompositionError(
+            "independent replay mutation "
+            f"did not fail closed: {name}; "
+            f"stdout={replay.stdout[-1000:]!r}; "
+            f"stderr={replay.stderr[-1000:]!r}"
+        )
+
+    return {
+        "mutation": name,
+        "expected_error_class":
+            expected_error_class,
+        "rejected": True,
+    }
+
+
+def validate_independent_replay(
+    work: Path,
+    source_root: Root,
+    different_root: Root,
+    source_result: dict[str, Any],
+) -> dict[str, Any]:
+    if not INDEPENDENT_REPLAY.is_file():
+        raise CompositionError(
+            "independent replay entrypoint "
+            "is unavailable"
+        )
+
+    result_path = (
+        work
+        / "composition-reference-"
+        "result-v1.json"
+    )
+    result_payload = canonical_json_bytes(
+        source_result
+    )
+    result_path.write_bytes(result_payload)
+
+    if (
+        canonical_json_bytes(
+            json.loads(
+                result_path.read_text(
+                    encoding="utf-8"
+                )
+            )
+        )
+        != result_payload
+    ):
+        raise CompositionError(
+            "independent replay result "
+            "serialization mismatch"
+        )
+
+    source_blocks = [
+        block.corpus
+        for block in source_root.blocks
+    ]
+    command = independent_replay_command(
+        source_root,
+        result_path,
+        source_blocks,
+    )
+
+    replay_a = run_independent_replay_process(
+        command,
+        work / "independent-replay-cwd-a",
+    )
+    replay_b = run_independent_replay_process(
+        command,
+        work / "independent-replay-cwd-b",
+    )
+
+    for label, replay in (
+        ("a", replay_a),
+        ("b", replay_b),
+    ):
+        if (
+            replay.returncode != 0
+            or replay.stderr != ""
+            or INDEPENDENT_REPLAY_MARKER
+            not in replay.stdout
+        ):
+            raise CompositionError(
+                "independent replay positive "
+                f"run failed: {label}; "
+                f"stdout={replay.stdout[-1000:]!r}; "
+                f"stderr={replay.stderr[-1000:]!r}"
+            )
+
+    if replay_a.stdout != replay_b.stdout:
+        raise CompositionError(
+            "independent replay output depends "
+            "on working directory"
+        )
+
+    negative_cases = []
+
+    negative_cases.append(
+        require_independent_replay_failure(
+            "replay_against_different_root",
+            "COMPOSITION_E_IDENTITY",
+            independent_replay_command(
+                different_root,
+                result_path,
+                [
+                    block.corpus
+                    for block
+                    in different_root.blocks
+                ],
+            ),
+            work / (
+                "independent-replay-"
+                "different-root"
+            ),
+        )
+    )
+
+    negative_cases.append(
+        require_independent_replay_failure(
+            "required_runtime_unit_missing",
+            "COMPOSITION_E_COVERAGE",
+            independent_replay_command(
+                source_root,
+                result_path,
+                source_blocks[:-1],
+            ),
+            work / (
+                "independent-replay-"
+                "missing-block"
+            ),
+        )
+    )
+
+    mutated_block = (
+        work
+        / "independent-replay-"
+        "mutated-block"
+    )
+    shutil.copytree(
+        source_root.blocks[0].corpus,
+        mutated_block,
+    )
+    source_manifest = load_canonical_json(
+        mutated_block / SOURCE_MANIFEST_NAME
+    )
+    source_records = source_manifest.get(
+        "documents"
+    )
+
+    if not isinstance(source_records, list):
+        raise CompositionError(
+            "independent replay mutation "
+            "source manifest is invalid"
+        )
+
+    mutable_record = next(
+        (
+            record
+            for record in source_records
+            if (
+                isinstance(record, dict)
+                and record.get("byte_length", 0)
+                > 0
+            )
+        ),
+        None,
+    )
+
+    if mutable_record is None:
+        raise CompositionError(
+            "independent replay mutation has "
+            "no non-empty source document"
+        )
+
+    snapshot_path = (
+        mutated_block
+        / mutable_record["snapshot_path"]
+    )
+    snapshot_payload = bytearray(
+        snapshot_path.read_bytes()
+    )
+    snapshot_payload[0] ^= 0x01
+    snapshot_path.write_bytes(snapshot_payload)
+
+    mutated_blocks = [
+        mutated_block,
+        *source_blocks[1:],
+    ]
+
+    negative_cases.append(
+        require_independent_replay_failure(
+            "stored_success_with_changed_source",
+            "COMPOSITION_E_VERIFY",
+            independent_replay_command(
+                source_root,
+                result_path,
+                mutated_blocks,
+            ),
+            work / (
+                "independent-replay-"
+                "changed-source"
+            ),
+        )
+    )
+
+    return {
+        "ok": True,
+        "format": (
+            "GLYPH_COMPOSITION_"
+            "INDEPENDENT_REPLAY_GATE_V1"
+        ),
+        "entrypoint": (
+            "tools/"
+            "replay_composition_reference_v1.py"
+        ),
+        "marker": INDEPENDENT_REPLAY_MARKER,
+        "different_working_directory_verified":
+            True,
+        "deterministic_stdout_verified": True,
+        "stdout_sha256": hashlib.sha256(
+            replay_a.stdout.encode("utf-8")
+        ).hexdigest(),
+        "complete_block_coverage_verified": True,
+        "runtime_query_replay_verified": True,
+        "independent_source_oracle_verified": True,
+        "returned_byte_check_recomputed": True,
+        "negative_case_count":
+            len(negative_cases),
+        "negative_cases": negative_cases,
+    }
+
+
 def validate_global_manifest(
     work: Path,
     documents: Sequence[Document],
@@ -6188,6 +6499,15 @@ def main() -> int:
             )
         )
 
+        independent_replay = (
+            validate_independent_replay(
+                work,
+                root_a,
+                root_b,
+                mutation_positive_result,
+            )
+        )
+
         document_model_mutations = (
             validate_document_model_mutations(
                 root_a,
@@ -6257,6 +6577,20 @@ def main() -> int:
                 len(replay_mutations),
             "stored_byte_check_recomputation_verified":
                 True,
+            "independent_composition_replay_verified":
+                True,
+            "independent_replay_different_cwd_verified":
+                independent_replay[
+                    "different_working_directory_verified"
+                ],
+            "independent_replay_deterministic":
+                independent_replay[
+                    "deterministic_stdout_verified"
+                ],
+            "independent_replay_negative_case_count":
+                independent_replay[
+                    "negative_case_count"
+                ],
             "byte_check_replay_mutation_count":
                 len(
                     byte_check_replay_mutations
@@ -6333,6 +6667,8 @@ def main() -> int:
                 replay_mutations,
             "byte_check_replay_mutations":
                 byte_check_replay_mutations,
+            "independent_replay":
+                independent_replay,
             "artifact_mutations":
                 artifact_mutations,
             "aggregation_mutations":
@@ -6354,6 +6690,10 @@ def main() -> int:
         print(
             "GLYPH COMPOSITION REFERENCE "
             "NORMAL PATH OK"
+        )
+
+        print(
+            "GLYPH COMPOSITION REFERENCE OK"
         )
 
     return 0

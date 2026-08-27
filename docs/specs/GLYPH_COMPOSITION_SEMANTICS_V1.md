@@ -1,6 +1,6 @@
 # GLYPH_COMPOSITION_SEMANTICS_V1
 
-Status: normative draft  
+Status: executable reference complete; research-tier
 Version: 1  
 Phase: composition precondition  
 Date: 2026-07-20
@@ -1061,5 +1061,7 @@ Composition V1 does not define:
 
         GLYPH COMPOSITION REFERENCE OK
 
-Until those conditions are satisfied, Composition V1 remains a normative
-draft and no implementation claim is permitted.
+The executable reference implementation satisfies these conditions when its
+standalone checker prints the final marker and the unchanged P/R/O/I0 chain
+remains green. Composition V1 remains research-tier until a separate project
+decision promotes it into required top-level verification.
