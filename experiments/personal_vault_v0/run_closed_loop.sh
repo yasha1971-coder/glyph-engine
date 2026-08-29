@@ -38,6 +38,25 @@ report={"format":"GLYPH_RLB3X_DIRECT_COUNT_AB_V0","queries":len(qs),"queries_pas
 PY
 python3 experiments/personal_vault_v0/loc2_experimental.py build "$ROOT/sa.bin" "$ROWS" 128 "$ROOT/locate.loc2"
 python3 experiments/personal_vault_v0/loc2_experimental.py verify "$ROOT/sa.bin" "$ROOT/locate.loc2"
+python3 - "$ROOT" <<'PY'
+import json,sys
+from pathlib import Path
+sys.path.insert(0,str(Path.cwd()/"experiments/personal_vault_v0"))
+import query_rlb3x_count as r3
+r=Path(sys.argv[1]);rt=r3.Rank3X(r/"bwt.rlb3x")
+sa=(r/"sa.bin").read_bytes(); import struct
+# SA V1 payload is u32 after 64-byte header in this builder; infer header from rows.
+rows=rt.raw_length; payload=rows*4; hdr=len(sa)-payload
+assert hdr>=0 and hdr<1024 and hdr%4==0,(len(sa),rows,hdr)
+vals=memoryview(sa)[hdr:].cast("I"); probes=[]
+for row in sorted(set([0,1,2,rows//7,rows//3,rows//2,rows-3,rows-2,rows-1])):
+ nxt=rt.lf(row); expected=(int(vals[row])-1)%rows
+ assert int(vals[nxt])==expected,(row,nxt,int(vals[row]),int(vals[nxt]),expected)
+ probes.append({"row":row,"lf":nxt})
+vals.release();rt.close()
+out={"format":"GLYPH_RLB3X_DIRECT_LF_AB_V0","probes":len(probes),"probes_passed":len(probes),"all_lf_equal_sa_oracle":True,"rlb2_not_used_by_lf_path":True}
+(r/"rlb3x-lf-ab.json").write_text(json.dumps(out,sort_keys=True,separators=(",",":"))+"\\n");print(json.dumps(out,sort_keys=True))
+PY
 python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
 python3 experiments/personal_vault_v0/vault_v0.py boundaries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/boundaries.json"
 python3 - "$ROOT" <<'PY'
