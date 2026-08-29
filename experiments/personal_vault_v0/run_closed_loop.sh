@@ -22,6 +22,20 @@ python3 experiments/personal_vault_v0/aux_frontier_probe.py "$ROOT/corpus.bin" "
 python3 experiments/personal_vault_v0/block_entropy_frontier.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/block-entropy-frontier.json"
 python3 experiments/personal_vault_v0/vlb_inspired_frontier.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/vlb-inspired-frontier.json"
 python3 experiments/personal_vault_v0/rlb3x_fixed.py "$ROOT/bwt.bin" "$ROOT/bwt.rlb3x" "$ROOT/rlb3x-report.json" --block-runs 8192
+python3 - "$ROOT" <<'PY'
+import json,subprocess,sys
+from pathlib import Path
+r=Path(sys.argv[1]);qs=json.loads((r/"queries.json").read_text())["queries"] if (r/"queries.json").exists() else []
+if not qs:
+ subprocess.check_call(["python3","experiments/personal_vault_v0/vault_v0.py","queries",str(r/"corpus.bin"),str(r/"objects.json"),str(r/"queries.json")])
+ qs=json.loads((r/"queries.json").read_text())["queries"]
+passed=0
+for item in qs:
+ out=subprocess.check_output(["python3","experiments/personal_vault_v0/query_rlb3x_count.py","--rlb3x",str(r/"bwt.rlb3x"),"--pattern-hex",item["pattern_hex"]],text=True)
+ got=json.loads(out); assert got["count"]==1,(item,got); passed+=1
+report={"format":"GLYPH_RLB3X_DIRECT_COUNT_AB_V0","queries":len(qs),"queries_passed":passed,"all_exact_counts_equal":passed==len(qs),"rlb2_not_used_by_count_path":True}
+(r/"rlb3x-count-ab.json").write_text(json.dumps(report,sort_keys=True,separators=(",",":"))+"\\n");print(json.dumps(report,sort_keys=True))
+PY
 python3 experiments/personal_vault_v0/loc2_experimental.py build "$ROOT/sa.bin" "$ROWS" 128 "$ROOT/locate.loc2"
 python3 experiments/personal_vault_v0/loc2_experimental.py verify "$ROOT/sa.bin" "$ROOT/locate.loc2"
 python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
