@@ -5,7 +5,7 @@ from pathlib import Path
 
 BWT_HEADER = struct.Struct("<8sIQQIIIQQ")
 BWT_MAGIC=b"GLYBWT1\0"
-SA_HEADER_BYTES=64
+SA_HEADER_BYTES=60
 
 def sha(p):
     h=hashlib.sha256()
