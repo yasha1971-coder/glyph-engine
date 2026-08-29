@@ -19,6 +19,7 @@ python3 experiments/personal_vault_v0/vault_v0.py restore-bwt "$ROOT/bwt.bin" "$
 cmp "$ROOT/corpus.bin" "$ROOT/restored.bin"
 python3 experiments/personal_vault_v0/space_frontier_probe.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/bwt.rlb2" "$ROOT/bwt.rlr2" "$ROOT/locate.bin" "$ROOT/space-frontier.json"
 python3 experiments/personal_vault_v0/aux_frontier_probe.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/aux-frontier.json"
+python3 experiments/personal_vault_v0/block_entropy_frontier.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/block-entropy-frontier.json"
 python3 experiments/personal_vault_v0/loc2_experimental.py build "$ROOT/sa.bin" "$ROWS" 128 "$ROOT/locate.loc2"
 python3 experiments/personal_vault_v0/loc2_experimental.py verify "$ROOT/sa.bin" "$ROOT/locate.loc2"
 python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
