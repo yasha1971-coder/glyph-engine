@@ -21,6 +21,8 @@ python3 experiments/personal_vault_v0/space_frontier_probe.py "$ROOT/corpus.bin"
 python3 experiments/personal_vault_v0/aux_frontier_probe.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/aux-frontier.json"
 python3 experiments/personal_vault_v0/loc2_experimental.py build "$ROOT/sa.bin" "$ROWS" 128 "$ROOT/locate.loc2"
 python3 experiments/personal_vault_v0/loc2_experimental.py verify "$ROOT/sa.bin" "$ROOT/locate.loc2"
+python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
+python3 experiments/personal_vault_v0/vault_v0.py boundaries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/boundaries.json"
 python3 - "$ROOT" <<'PY'
 import json,subprocess,sys
 from pathlib import Path
@@ -42,8 +44,6 @@ report={"format":"GLYPH_PERSONAL_VAULT_LOC2_AB_V0","queries":len(qs),"queries_pa
 print(json.dumps(report,sort_keys=True))
 PY
 python3 experiments/personal_vault_v0/vault_v0.py verify-objects "$ROOT/restored.bin" "$ROOT/objects.json" "$ROOT/input"
-python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
-python3 experiments/personal_vault_v0/vault_v0.py boundaries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/boundaries.json"
 python3 - "$ROOT" <<'PY'
 import hashlib,json,sys
 from pathlib import Path
