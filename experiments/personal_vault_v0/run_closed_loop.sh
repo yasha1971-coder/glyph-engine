@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -Eeuo pipefail
+export PS4='+ [PV0 ${LINENO}] '
+trap 'rc=$?; echo "PV0_FAIL rc=$rc line=$LINENO command=$BASH_COMMAND" >&2; exit $rc' ERR
+set -x
 ROOT="${1:-/tmp/pv0}"
 rm -rf "$ROOT"; mkdir -p "$ROOT"
 bash experiments/personal_vault_v0/fetch_corpora.sh "$ROOT/input"
