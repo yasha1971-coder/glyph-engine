@@ -10,7 +10,7 @@ class Rank3X:
   magic,ver,self.raw_length,self.run_count,self.block_runs,self.escape_symbol,self.blocks=HDR.unpack_from(self.mm,0)
   q.require(magic==MAGIC and ver==1,"bad RLB3X header");q.require(self.blocks>0,"zero blocks")
   self.dir=[REC.unpack_from(self.mm,HDR.size+i*REC.size) for i in range(self.blocks)]
-  self.row_starts=[x[1] for x in self.dir];self.cache={};self.decoded_blocks=0;self.decoded_runs=0;self.scanned_symbols=0;self.rank_calls=0
+  self.row_starts=[x[1] for x in self.dir];self.cache={};self.decoded_blocks=0;self.decoded_runs=0;self.scanned_symbols=0;self.rank_calls=0;self.lf_calls=0
   self.block_prefix=[]; counts=[0]*257
   for i in range(self.blocks):
    self.block_prefix.append(tuple(counts))
@@ -49,6 +49,14 @@ class Rank3X:
    self.scanned_symbols+=take;cur+=take
    if cur>=position:break
   q.require(cur==position,"rank scan");return ans
+ def symbol_and_rank(self,position):
+  q.require(0<=position<self.raw_length,"symbol range");i=max(0,bisect.bisect_right(self.row_starts,position)-1);cur=self.row_starts[i];local=[0]*257
+  for h,l in self._decode(i):
+   if position<cur+l:self.scanned_symbols+=position-cur;return h,self.block_prefix[i][h]+local[h]+(position-cur)
+   local[h]+=l;cur+=l;self.scanned_symbols+=l
+  raise q.QueryError("symbol scan")
+ def lf(self,row):
+  h,r=self.symbol_and_rank(row);self.lf_calls+=1;return self.C[h]+r
  def backward_search(self,pattern):
   q.require(pattern,"empty pattern");l=0;r=self.raw_length
   for s in reversed(pattern):
