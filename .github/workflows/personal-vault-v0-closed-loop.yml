@@ -1,0 +1,25 @@
+name: personal-vault-v0-closed-loop
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'experiments/personal_vault_v0/**'
+      - '.github/workflows/personal-vault-v0-closed-loop.yml'
+permissions:
+  contents: read
+jobs:
+  closed-loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run GLYPH Personal Vault V0 closed loop
+        run: bash experiments/personal_vault_v0/run_closed_loop.sh /tmp/pv0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: personal-vault-v0-report
+          path: |
+            /tmp/pv0/report.json
+            /tmp/pv0/runtime.json
+            /tmp/pv0/objects.json
+            /tmp/pv0/queries.json
+            /tmp/pv0/boundaries.json
