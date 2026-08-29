@@ -17,6 +17,7 @@ N="$(stat -c %s "$ROOT/corpus.bin")"; ROWS=$((N+1))
 python3 experiments/personal_vault_v0/vault_v0.py locate "$ROOT/sa.bin" "$ROWS" 128 "$ROOT/locate.bin"
 python3 experiments/personal_vault_v0/vault_v0.py restore-bwt "$ROOT/bwt.bin" "$ROOT/restored.bin"
 cmp "$ROOT/corpus.bin" "$ROOT/restored.bin"
+python3 experiments/personal_vault_v0/space_frontier_probe.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/bwt.rlb2" "$ROOT/bwt.rlr2" "$ROOT/locate.bin" "$ROOT/space-frontier.json"
 python3 experiments/personal_vault_v0/vault_v0.py verify-objects "$ROOT/restored.bin" "$ROOT/objects.json" "$ROOT/input"
 python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
 python3 experiments/personal_vault_v0/vault_v0.py boundaries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/boundaries.json"
