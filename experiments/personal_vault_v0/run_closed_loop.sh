@@ -19,6 +19,28 @@ python3 experiments/personal_vault_v0/vault_v0.py restore-bwt "$ROOT/bwt.bin" "$
 cmp "$ROOT/corpus.bin" "$ROOT/restored.bin"
 python3 experiments/personal_vault_v0/space_frontier_probe.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/bwt.rlb2" "$ROOT/bwt.rlr2" "$ROOT/locate.bin" "$ROOT/space-frontier.json"
 python3 experiments/personal_vault_v0/aux_frontier_probe.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/aux-frontier.json"
+python3 experiments/personal_vault_v0/loc2_experimental.py build "$ROOT/sa.bin" "$ROWS" 128 "$ROOT/locate.loc2"
+python3 experiments/personal_vault_v0/loc2_experimental.py verify "$ROOT/sa.bin" "$ROOT/locate.loc2"
+python3 - "$ROOT" <<'PY'
+import json,subprocess,sys
+from pathlib import Path
+r=Path(sys.argv[1]); qs=json.loads((r/"queries.json").read_text())["queries"]
+max_steps=0
+for q in qs:
+    out=subprocess.check_output(["python3","experiments/personal_vault_v0/query_loc2_experimental.py",
+      "--rlb2",str(r/"bwt.rlb2"),"--rank-index",str(r/"bwt.rlr2"),"--locate-core",str(r/"locate.loc2"),
+      "--pattern-hex",q["pattern_hex"],"--max-offsets","-1"],text=True)
+    result=json.loads(out.splitlines()[0])
+    assert result["count"]==1 and result["locate_offsets"]==[q["expected_offset"]],(q,result)
+    max_steps=max(max_steps,result.get("maximum_lf_steps",0))
+n=(r/"corpus.bin").stat().st_size
+total=(r/"bwt.rlb2").stat().st_size+(r/"bwt.rlr2").stat().st_size+(r/"locate.loc2").stat().st_size
+report={"format":"GLYPH_PERSONAL_VAULT_LOC2_AB_V0","queries":len(qs),"queries_passed":len(qs),
+"loc2_bytes":(r/"locate.loc2").stat().st_size,"runtime_bytes":total,"runtime_ratio":total/n,
+"maximum_lf_steps_observed":max_steps,"rlb2_unchanged":True,"rlr2_unchanged":True}
+(r/"loc2-ab.json").write_text(json.dumps(report,sort_keys=True,separators=(",",":"))+"\n")
+print(json.dumps(report,sort_keys=True))
+PY
 python3 experiments/personal_vault_v0/vault_v0.py verify-objects "$ROOT/restored.bin" "$ROOT/objects.json" "$ROOT/input"
 python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
 python3 experiments/personal_vault_v0/vault_v0.py boundaries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/boundaries.json"
