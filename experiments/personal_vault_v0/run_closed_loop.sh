@@ -38,7 +38,7 @@ assert len(qs)>=20, len(qs)
 for i,q in enumerate(qs):
     out=subprocess.check_output(["python3","tools/rlbwt_query_v2.py","--runtime-manifest",str(r/"runtime.json"),"--pattern-hex",q["pattern_hex"],"--max-offsets","-1"],text=True)
     result=json.loads(out.splitlines()[0])
-    assert result["count"]==1 and result["offsets"]==[q["expected_offset"]], (q,result)
+    assert result["count"]==1 and result["locate_offsets"]==[q["expected_offset"]], (q,result)
 bounds=json.loads((r/"boundaries.json").read_text())["cases"]
 assert len(bounds)>=20, len(bounds)
 rejected=0
@@ -46,7 +46,7 @@ for q in bounds:
     out=subprocess.check_output(["python3","tools/rlbwt_query_v2.py","--runtime-manifest",str(r/"runtime.json"),"--pattern-hex",q["pattern_hex"],"--max-offsets","-1"],text=True)
     result=json.loads(out.splitlines()[0])
     # Raw concatenation MUST see the cross-object byte string. Vault semantics must reject it.
-    if q["forbidden_offset"] in result["offsets"]: rejected+=1
+    if q["forbidden_offset"] in result["locate_offsets"]: rejected+=1
 assert rejected==len(bounds)
 runtime=json.loads((r/"runtime.json").read_text())
 report={"format":"GLYPH_PERSONAL_VAULT_V0_CLOSED_LOOP","objects":len(json.loads((r/"objects.json").read_text())["objects"]),"source_bytes":runtime["corpus_identity"]["bytes"],"runtime_data_bytes":runtime["runtime_data_bytes"],"runtime_ratio":runtime["runtime_data_bytes"]/runtime["corpus_identity"]["bytes"],"restore_sha256_equal":True,"object_restore_equal":True,"exact_unique_queries":len(qs),"exact_unique_queries_passed":len(qs),"cross_object_boundary_candidates":len(bounds),"cross_object_boundary_candidates_seen_by_raw_glyph":rejected,"vault_boundary_filter_required":True}
