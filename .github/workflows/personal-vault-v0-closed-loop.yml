@@ -26,6 +26,8 @@ jobs:
         run: python3 experiments/personal_vault_v0/external_llm_planner_gate.py /tmp/pv0
       - name: Gate oracle-free AI to GLYPH bridge contract
         run: python3 experiments/personal_vault_v0/ai_glyph_bridge_gate_v0.py /tmp/pv0
+      - name: Gate two-turn clarification dialogue
+        run: python3 experiments/personal_vault_v0/dialogue_clarification_gate_v0.py
       - uses: actions/upload-artifact@v4
         with:
           name: personal-vault-v0-report
@@ -40,3 +42,4 @@ jobs:
             /tmp/pv0/human-intent-gate.json
             /tmp/pv0/external-llm-planner-gate.json
             /tmp/pv0/ai-glyph-bridge-gate.json
+            /tmp/pv0/dialogue-clarification-gate.json
