@@ -20,8 +20,10 @@ jobs:
         run: bash experiments/personal_vault_v0/run_kernel_v0_fast.sh /tmp/pv0
       - name: Gate object-aware RLB3X query semantics
         run: python3 experiments/personal_vault_v0/object_aware_gate.py /tmp/pv0
-      - name: Gate Human Intent V0 AI-plan to GLYPH evidence
+      - name: Gate Human Intent V0 fixed-plan evidence
         run: python3 experiments/personal_vault_v0/human_intent_gate.py /tmp/pv0
+      - name: Gate external LLM planner replay without oracle leakage
+        run: python3 experiments/personal_vault_v0/external_llm_planner_gate.py /tmp/pv0
       - uses: actions/upload-artifact@v4
         with:
           name: personal-vault-v0-report
@@ -34,3 +36,4 @@ jobs:
             /tmp/pv0/boundaries.json
             /tmp/pv0/object-aware-gate.json
             /tmp/pv0/human-intent-gate.json
+            /tmp/pv0/external-llm-planner-gate.json
