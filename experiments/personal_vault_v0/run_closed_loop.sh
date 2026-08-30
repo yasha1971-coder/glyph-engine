@@ -44,7 +44,7 @@ from pathlib import Path
 r=Path(sys.argv[1]); qs=json.loads((r/"queries.json").read_text())["queries"]; passed=0; mx=0; total=0
 for item in qs:
  out=subprocess.check_output(["python3","experiments/personal_vault_v0/query_rlb3x_loc2.py","--rlb3x",str(r/"bwt.rlb3x"),"--locate-core",str(r/"locate.loc2"),"--pattern-hex",item["pattern_hex"]],text=True)
- got=json.loads(out); expected=item["offset"]; assert got["count"]==1,(item,got); assert got["locate_offsets"]==[expected],(item,got); assert got["rlb2_not_used"] is True
+ got=json.loads(out); expected=item["expected_offset"]; assert got["count"]==1,(item,got); assert got["locate_offsets"]==[expected],(item,got); assert got["rlb2_not_used"] is True
  passed+=1; mx=max(mx,got["maximum_lf_steps"]); total+=got["total_lf_steps"]
 report={"format":"GLYPH_RLB3X_LOC2_AB_V0","queries":len(qs),"queries_passed":passed,"all_exact_counts_equal":passed==len(qs),"all_exact_offsets_equal":passed==len(qs),"maximum_lf_steps_observed":mx,"total_lf_steps":total,"rlb2_not_used_by_query_path":True}
 (r/"rlb3x-loc2-ab.json").write_text(json.dumps(report,sort_keys=True,separators=(",",":"))+"\\n"); print(json.dumps(report,sort_keys=True))
