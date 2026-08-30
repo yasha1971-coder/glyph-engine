@@ -27,6 +27,7 @@ def main():
     results=[]; passed=0; total_probes=0; glyph_calls=0
     for case in cases_doc["cases"]:
         expected=case.get("expected_path")
+        expected_action=case.get("expected_action","found")
         if expected is not None:
             assert expected in known_paths,(case["id"],expected)
         scores=collections.Counter()
@@ -61,10 +62,14 @@ def main():
         action="found" if selected_path is not None else "not_found" if not ranked else "ambiguous"
         matched_fraction=(top_score/len(case["probes"])) if case["probes"] else 0.0
 
-        if case.get("expected_action")=="not_found":
+        if expected_action=="not_found":
             ok=(not ranked and action=="not_found")
-        else:
+        elif expected_action=="ambiguous":
+            ok=(action=="ambiguous" and len(top)>1)
+        elif expected_action=="found":
             ok=(action=="found" and selected_path==expected and top_score==len(case["probes"]))
+        else:
+            raise AssertionError((case["id"],"unsupported expected_action",expected_action))
         assert ok,(case,{"action":action,"selected_path":selected_path,"top_score":top_score,"ranked":ranked,"probes":probe_reports})
         passed+=1
 
@@ -80,6 +85,7 @@ def main():
             "id":case["id"],
             "human_query":case["human_query"],
             "ai_search_plan":{"probes":case["probes"],"source":"fixed assistant-authored plan"},
+            "expected_action":expected_action,
             "expected_path":expected,
             "action":action,
             "selected_path":selected_path,
@@ -98,7 +104,7 @@ def main():
         "glyph_calls":glyph_calls,
         "retrieval_substrate":"RLB3X+LOC2+object-boundary-filter",
         "runtime_llm_used":False,
-        "important_non_claim":"This gate validates AI-authored search plans against GLYPH exact evidence; it does not yet validate an on-device LLM generating those plans autonomously.",
+        "important_non_claim":"This gate validates assistant-authored search plans and honest found/ambiguous/not_found behavior against GLYPH exact evidence; it does not yet validate an on-device LLM generating those plans autonomously.",
         "results":results,
     }
     (root/"human-intent-gate.json").write_text(json.dumps(report,sort_keys=True,separators=(",",":"))+"\n")
