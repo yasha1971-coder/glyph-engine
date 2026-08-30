@@ -14,6 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run GLYPH Personal Vault V0 closed loop
         run: bash experiments/personal_vault_v0/run_closed_loop.sh /tmp/pv0
+      - name: Gate object-aware RLB3X query semantics
+        run: python3 experiments/personal_vault_v0/object_aware_gate.py /tmp/pv0
       - uses: actions/upload-artifact@v4
         with:
           name: personal-vault-v0-report
@@ -23,3 +25,4 @@ jobs:
             /tmp/pv0/objects.json
             /tmp/pv0/queries.json
             /tmp/pv0/boundaries.json
+            /tmp/pv0/object-aware-gate.json
