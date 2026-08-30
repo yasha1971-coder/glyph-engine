@@ -32,8 +32,10 @@ jobs:
         run: python3 experiments/personal_vault_v0/dialogue_llm_replay_gate_v1.py
       - name: Gate strict planner protocol and oracle boundary
         run: python3 experiments/personal_vault_v0/planner_protocol_gate_v0.py
-      - name: Gate 50-question Blind Memory V1
+      - name: Gate frozen 50-question Blind Memory V1 baseline
         run: python3 experiments/personal_vault_v0/blind_memory_gate_v1.py /tmp/pv0
+      - name: Gate second-pass resolution of frozen Blind Memory V1 unresolved cases
+        run: python3 experiments/personal_vault_v0/blind_memory_resolution_gate_v1.py
       - uses: actions/upload-artifact@v4
         with:
           name: personal-vault-v0-report
@@ -52,3 +54,4 @@ jobs:
             /tmp/pv0/dialogue-llm-replay-gate.json
             /tmp/pv0/planner-protocol-gate.json
             /tmp/pv0/blind-memory-gate-v1.json
+            /tmp/pv0/blind-memory-resolution-gate.json
