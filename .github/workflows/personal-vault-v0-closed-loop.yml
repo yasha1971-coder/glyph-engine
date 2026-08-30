@@ -12,6 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Fast Human Intent preflight
+        run: |
+          bash experiments/personal_vault_v0/fetch_corpora.sh /tmp/pv0-preflight-input
+          python3 experiments/personal_vault_v0/human_intent_preflight.py /tmp/pv0-preflight-input --out /tmp/human-intent-preflight.json
       - name: Run GLYPH Personal Vault V0 closed loop
         run: bash experiments/personal_vault_v0/run_closed_loop.sh /tmp/pv0
       - name: Gate object-aware RLB3X query semantics
@@ -22,6 +26,7 @@ jobs:
         with:
           name: personal-vault-v0-report
           path: |
+            /tmp/human-intent-preflight.json
             /tmp/pv0/report.json
             /tmp/pv0/runtime.json
             /tmp/pv0/objects.json
