@@ -22,6 +22,9 @@ python3 experiments/personal_vault_v0/aux_frontier_probe.py "$ROOT/corpus.bin" "
 python3 experiments/personal_vault_v0/block_entropy_frontier.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/block-entropy-frontier.json"
 python3 experiments/personal_vault_v0/vlb_inspired_frontier.py "$ROOT/corpus.bin" "$ROOT/bwt.bin" "$ROOT/vlb-inspired-frontier.json"
 python3 experiments/personal_vault_v0/rlb3x_fixed.py "$ROOT/bwt.bin" "$ROOT/bwt.rlb3x" "$ROOT/rlb3x-report.json" --block-runs 8192
+python3 experiments/personal_vault_v0/restore_rlb3x.py "$ROOT/bwt.rlb3x" "$ROOT/restored-rlb3x.bin" "$ROOT/rlb3x-restore.json"
+cmp "$ROOT/corpus.bin" "$ROOT/restored-rlb3x.bin"
+python3 experiments/personal_vault_v0/vault_v0.py verify-objects "$ROOT/restored-rlb3x.bin" "$ROOT/objects.json" "$ROOT/input"
 python3 - "$ROOT" <<'PY'
 import json,subprocess,sys
 from pathlib import Path
@@ -56,7 +59,6 @@ sys.path.insert(0,str(Path.cwd()/"experiments/personal_vault_v0"))
 import query_rlb3x_count as r3
 r=Path(sys.argv[1]);rt=r3.Rank3X(r/"bwt.rlb3x")
 sa=(r/"sa.bin").read_bytes(); import struct
-# SA V1 payload is u32 after 64-byte header in this builder; infer header from rows.
 rows=rt.raw_length; payload=rows*4; hdr=len(sa)-payload
 assert hdr>=0 and hdr<1024 and hdr%4==0,(len(sa),rows,hdr)
 vals=memoryview(sa)[hdr:].cast("I"); probes=[]
@@ -68,6 +70,19 @@ vals.release();rt.close()
 out={"format":"GLYPH_RLB3X_DIRECT_LF_AB_V0","probes":len(probes),"probes_passed":len(probes),"all_lf_equal_sa_oracle":True,"rlb2_not_used_by_lf_path":True}
 (r/"rlb3x-lf-ab.json").write_text(json.dumps(out,sort_keys=True,separators=(",",":"))+"\\n");print(json.dumps(out,sort_keys=True))
 PY
+python3 - "$ROOT" <<'PY'
+import hashlib,json,sys
+from pathlib import Path
+r=Path(sys.argv[1]); source=(r/"corpus.bin").stat().st_size
+files={"rlb3x":r/"bwt.rlb3x","loc2":r/"locate.loc2","objects":r/"objects.json"}
+parts={k:p.stat().st_size for k,p in files.items()}
+manifest={"format":"GLYPH_PERSONAL_VAULT_KERNEL_V0_MEASURED","version":0,"source_bytes":source,"parts":{},"runtime_bytes_without_manifest":sum(parts.values())}
+for k,p in files.items(): manifest["parts"][k]={"bytes":p.stat().st_size,"sha256":hashlib.sha256(p.read_bytes()).hexdigest()}
+raw=(json.dumps(manifest,sort_keys=True,separators=(",",":"))+"\n").encode(); (r/"kernel-v0-manifest.json").write_bytes(raw)
+total=sum(parts.values())+len(raw)
+report={"format":"GLYPH_PERSONAL_VAULT_KERNEL_V0_SIZE","source_bytes":source,"rlb3x_bytes":parts["rlb3x"],"loc2_bytes":parts["loc2"],"object_map_bytes":parts["objects"],"manifest_bytes":len(raw),"total_runtime_bytes":total,"runtime_ratio":total/source,"direct_restore_from_rlb3x":True,"direct_count_from_rlb3x":True,"direct_locate_from_rlb3x_plus_loc2":True,"persistent_rank_sidecar_bytes":0,"important_limitation":"current Rank3X rebuilds block-prefix rank state by scanning/decompressing all RLB3X blocks at process startup; size result is measured but query/startup performance is not production-ready"}
+(r/"kernel-v0-size.json").write_text(json.dumps(report,sort_keys=True,separators=(",",":"))+"\n");print(json.dumps(report,sort_keys=True))
+PY
 python3 experiments/personal_vault_v0/vault_v0.py queries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/queries.json"
 python3 experiments/personal_vault_v0/vault_v0.py boundaries "$ROOT/corpus.bin" "$ROOT/objects.json" "$ROOT/boundaries.json"
 python3 - "$ROOT" <<'PY'
@@ -76,17 +91,13 @@ from pathlib import Path
 r=Path(sys.argv[1]); qs=json.loads((r/"queries.json").read_text())["queries"]
 max_steps=0
 for q in qs:
-    out=subprocess.check_output(["python3","experiments/personal_vault_v0/query_loc2_experimental.py",
-      "--rlb2",str(r/"bwt.rlb2"),"--rank-index",str(r/"bwt.rlr2"),"--locate-core",str(r/"locate.loc2"),
-      "--pattern-hex",q["pattern_hex"],"--max-offsets","-1"],text=True)
+    out=subprocess.check_output(["python3","experiments/personal_vault_v0/query_loc2_experimental.py","--rlb2",str(r/"bwt.rlb2"),"--rank-index",str(r/"bwt.rlr2"),"--locate-core",str(r/"locate.loc2"),"--pattern-hex",q["pattern_hex"],"--max-offsets","-1"],text=True)
     result=json.loads(out.splitlines()[0])
     assert result["count"]==1 and result["locate_offsets"]==[q["expected_offset"]],(q,result)
     max_steps=max(max_steps,result.get("maximum_lf_steps",0))
 n=(r/"corpus.bin").stat().st_size
 total=(r/"bwt.rlb2").stat().st_size+(r/"bwt.rlr2").stat().st_size+(r/"locate.loc2").stat().st_size
-report={"format":"GLYPH_PERSONAL_VAULT_LOC2_AB_V0","queries":len(qs),"queries_passed":len(qs),
-"loc2_bytes":(r/"locate.loc2").stat().st_size,"runtime_bytes":total,"runtime_ratio":total/n,
-"maximum_lf_steps_observed":max_steps,"rlb2_unchanged":True,"rlr2_unchanged":True}
+report={"format":"GLYPH_PERSONAL_VAULT_LOC2_AB_V0","queries":len(qs),"queries_passed":len(qs),"loc2_bytes":(r/"locate.loc2").stat().st_size,"runtime_bytes":total,"runtime_ratio":total/n,"maximum_lf_steps_observed":max_steps,"rlb2_unchanged":True,"rlr2_unchanged":True}
 (r/"loc2-ab.json").write_text(json.dumps(report,sort_keys=True,separators=(",",":"))+"\n")
 print(json.dumps(report,sort_keys=True))
 PY
@@ -116,7 +127,6 @@ rejected=0
 for q in bounds:
     out=subprocess.check_output(["python3","tools/rlbwt_query_v2.py","--runtime-manifest",str(r/"runtime.json"),"--pattern-hex",q["pattern_hex"],"--max-offsets","-1"],text=True)
     result=json.loads(out.splitlines()[0])
-    # Raw concatenation MUST see the cross-object byte string. Vault semantics must reject it.
     if q["forbidden_offset"] in result["locate_offsets"]: rejected+=1
 assert rejected==len(bounds)
 runtime=json.loads((r/"runtime.json").read_text())
