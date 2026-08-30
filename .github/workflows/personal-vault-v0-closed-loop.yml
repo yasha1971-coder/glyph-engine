@@ -16,8 +16,8 @@ jobs:
         run: |
           bash experiments/personal_vault_v0/fetch_corpora.sh /tmp/pv0-preflight-input
           python3 experiments/personal_vault_v0/human_intent_preflight.py /tmp/pv0-preflight-input --out /tmp/human-intent-preflight.json
-      - name: Run GLYPH Personal Vault V0 closed loop
-        run: bash experiments/personal_vault_v0/run_closed_loop.sh /tmp/pv0
+      - name: Run fast GLYPH Personal Vault V0 kernel loop
+        run: bash experiments/personal_vault_v0/run_kernel_v0_fast.sh /tmp/pv0
       - name: Gate object-aware RLB3X query semantics
         run: python3 experiments/personal_vault_v0/object_aware_gate.py /tmp/pv0
       - name: Gate Human Intent V0 AI-plan to GLYPH evidence
@@ -27,8 +27,8 @@ jobs:
           name: personal-vault-v0-report
           path: |
             /tmp/human-intent-preflight.json
-            /tmp/pv0/report.json
-            /tmp/pv0/runtime.json
+            /tmp/pv0/kernel-v0-size.json
+            /tmp/pv0/kernel-v0-manifest.json
             /tmp/pv0/objects.json
             /tmp/pv0/queries.json
             /tmp/pv0/boundaries.json
