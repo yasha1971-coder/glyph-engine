@@ -52,8 +52,6 @@ with tempfile.TemporaryDirectory(prefix='glyph-ai-vault-bridge-v0-') as td:
     mf=hostile/'segments'/'00000001'/'segment-manifest.json'
     doc=json.loads(mf.read_text()); doc['hostile_mutation']=1
     mf.write_text(json.dumps(doc,sort_keys=True,separators=(',',':'))+'\n')
-    bad=subprocess.run(['python3',BRIDGE,str(hostile),'--plan',str(Path(__file__).resolve())],text=True,capture_output=True)
-    # Above plan path is not JSON, so use verify to test the root binding rejection directly.
     bad_verify=subprocess.run(['python3',CLI,'verify',hostile],text=True,capture_output=True)
     assert bad_verify.returncode!=0
     assert 'root-to-segment-manifest binding failed' in (bad_verify.stderr+bad_verify.stdout)
