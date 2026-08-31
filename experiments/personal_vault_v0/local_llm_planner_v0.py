@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-import argparse,json,re,subprocess,tempfile
+import argparse,json,re,subprocess
 from pathlib import Path
 
 
 def extract_json(text):
-    # Prefer a fenced JSON object, otherwise take the first balanced-looking object.
     m=re.search(r'```(?:json)?\s*(\{.*?\})\s*```',text,re.S|re.I)
     candidates=[m.group(1)] if m else []
     candidates+=re.findall(r'(\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})',text,re.S)
@@ -38,23 +37,27 @@ Human clarification: {json.dumps(clarification,ensure_ascii=False) if clarificat
 
 def main():
     ap=argparse.ArgumentParser()
-    ap.add_argument('--llama-cli',type=Path,required=True)
-    ap.add_argument('--model',required=True,help='GGUF path or -hf style model argument value')
+    ap.add_argument('--llama-cli',type=Path,required=True,help='Path to llama-completion one-shot binary')
+    ap.add_argument('--model',required=True)
     ap.add_argument('--input',type=Path,required=True)
     ap.add_argument('--output',type=Path,required=True)
-    ap.add_argument('--hf',action='store_true',help='Pass model through llama.cpp -hf instead of -m')
+    ap.add_argument('--hf',action='store_true')
     a=ap.parse_args()
     inp=json.loads(a.input.read_text())
     if inp.get('format')!='GLYPH_PLANNER_INPUT_V0': raise SystemExit('bad planner input format')
     prompt=build_prompt(inp)
-    cmd=[str(a.llama_cli),'-n','160','--temp','0','--no-display-prompt','-p',prompt]
+    # llama-completion is explicitly forced into one-shot mode. This avoids the
+    # interactive/conversation lifecycle of llama-cli keeping CI alive after generation.
+    cmd=[str(a.llama_cli),'--jinja','--single-turn','--no-display-prompt','-n','128','--temp','0','-c','2048','-p',prompt]
     if a.hf: cmd += ['-hf',a.model]
     else: cmd += ['-m',a.model]
-    p=subprocess.run(cmd,text=True,capture_output=True)
+    try:
+        p=subprocess.run(cmd,text=True,capture_output=True,timeout=120)
+    except subprocess.TimeoutExpired as e:
+        raise SystemExit('local LLM one-shot invocation exceeded 120 s') from e
     if p.returncode!=0:
-        raise SystemExit('llama-cli failed: '+p.stderr[-4000:])
-    raw=p.stdout.strip()
-    doc=extract_json(raw)
+        raise SystemExit('llama-completion failed: '+p.stderr[-4000:])
+    doc=extract_json(p.stdout.strip())
     out={
         'format':'GLYPH_PLANNER_OUTPUT_V0',
         'probes':doc.get('probes'),
@@ -62,6 +65,6 @@ def main():
         'stop_if_unverified':doc.get('stop_if_unverified'),
     }
     a.output.write_text(json.dumps(out,ensure_ascii=False,sort_keys=True,separators=(',',':'))+'\n')
-    print(json.dumps({'ok':True,'planner':'local_llm','probes':out['probes']},ensure_ascii=False,sort_keys=True))
+    print(json.dumps({'ok':True,'planner':'local_llm_one_shot','probes':out['probes']},ensure_ascii=False,sort_keys=True))
 
 if __name__=='__main__': main()
