@@ -13,13 +13,51 @@ def sha256_path(path):
 
 def run(*args):
     # Keep stdout reserved for the CLI's single machine-readable JSON result.
-    # Child-tool progress and diagnostics go to stderr so callers can safely json.loads(stdout).
     subprocess.check_call([str(x) for x in args],stdout=sys.stderr,stderr=sys.stderr)
 
 def repo_meta(vault):
     p=vault/'repo.meta'
     if not p.is_file(): raise SystemExit('not a GLYPH Vault: '+str(vault))
     return json.loads(p.read_text())
+
+def root_files(vault):
+    return sorted((vault/'manifests'/'roots').glob('*.json'))
+
+def latest_root(vault):
+    roots=root_files(vault)
+    if not roots: return None,None
+    p=roots[-1]
+    return p,json.loads(p.read_text())
+
+def committed_segment_ids(vault):
+    _,root=latest_root(vault)
+    return [] if root is None else list(root.get('segments',[]))
+
+def root_segment_entries(vault,segment_ids):
+    entries=[]
+    for sid in segment_ids:
+        seg=vault/'segments'/sid
+        manifest=seg/'segment-manifest.json'
+        if not manifest.is_file(): raise SystemExit('committed segment missing manifest: '+sid)
+        m=json.loads(manifest.read_text())
+        entries.append({'segment_id':sid,'segment_manifest_sha256':sha256_path(manifest),'object_count':m['object_count'],'source_bytes':m['source_bytes']})
+    return entries
+
+def publish_root(vault,segment_ids):
+    parent_path,parent=latest_root(vault)
+    root_manifest={
+        'format':'GLYPH_VAULT_ROOT_MANIFEST_V0',
+        'committed_unix_ns':time.time_ns(),
+        'segments':segment_ids,
+        'segment_entries':root_segment_entries(vault,segment_ids),
+        'parent_root_name':None if parent_path is None else parent_path.name,
+        'parent_root_sha256':None if parent_path is None else sha256_path(parent_path),
+    }
+    root_tmp=vault/'journal'/'root.tmp'
+    root_tmp.write_text(json.dumps(root_manifest,sort_keys=True,separators=(',',':'))+'\n')
+    root_name=f'{time.time_ns()}.json'
+    os.replace(root_tmp,vault/'manifests'/'roots'/root_name)
+    return root_name
 
 def init(vault):
     vault=vault.resolve()
@@ -77,16 +115,39 @@ def add(vault,source):
     (staging/'segment-manifest.json').write_text(json.dumps(manifest,sort_keys=True,separators=(',',':'))+'\n')
     for p in (corpus,sa,bwt,restored,staging/'rlb3x-report.json',staging/'restore-report.json'):
         if p.exists(): p.unlink()
+    prior=committed_segment_ids(vault)
     os.replace(staging,final)
-    root_manifest={'format':'GLYPH_VAULT_ROOT_MANIFEST_V0','committed_unix_ns':time.time_ns(),'segments':[p.name for p in sorted((vault/'segments').iterdir()) if p.is_dir()]}
-    root_tmp=vault/'journal'/'root.tmp'; root_tmp.write_text(json.dumps(root_manifest,sort_keys=True,separators=(',',':'))+'\n')
-    root_name=f'{time.time_ns()}.json'; os.replace(root_tmp,vault/'manifests/roots'/root_name)
+    root_name=publish_root(vault,prior+[name])
     meta['next_segment_id']=seg_id+1; (vault/'repo.meta').write_text(json.dumps(meta,sort_keys=True,separators=(',',':'))+'\n')
-    print(json.dumps({'ok':True,'action':'add','segment_id':name,'objects':count,'source_bytes':manifest['source_bytes'],'published':True,'source_deleted':False},sort_keys=True))
+    print(json.dumps({'ok':True,'action':'add','segment_id':name,'objects':count,'source_bytes':manifest['source_bytes'],'published':True,'root_manifest':root_name,'source_deleted':False},sort_keys=True))
 
 def iter_segments(vault):
     repo_meta(vault)
-    return [p for p in sorted((vault/'segments').iterdir()) if p.is_dir()]
+    segs=[]
+    for sid in committed_segment_ids(vault):
+        p=vault/'segments'/sid
+        if not p.is_dir(): raise SystemExit('committed segment missing: '+sid)
+        segs.append(p)
+    return segs
+
+def verify_root(vault):
+    root_path,root=latest_root(vault)
+    if root is None: return {'root_present':False,'root_name':None,'segments':0,'binding_verified':True,'parent_binding_verified':True}
+    entries=root.get('segment_entries')
+    if not isinstance(entries,list) or len(entries)!=len(root.get('segments',[])): raise SystemExit('root segment binding missing')
+    by_id={e['segment_id']:e for e in entries}
+    for sid in root['segments']:
+        e=by_id.get(sid)
+        if e is None: raise SystemExit('root entry missing for segment '+sid)
+        manifest=vault/'segments'/sid/'segment-manifest.json'
+        if not manifest.is_file() or sha256_path(manifest)!=e['segment_manifest_sha256']:
+            raise SystemExit('root-to-segment-manifest binding failed: '+sid)
+    parent_ok=True
+    if root.get('parent_root_name') is not None:
+        parent=vault/'manifests'/'roots'/root['parent_root_name']
+        parent_ok=parent.is_file() and sha256_path(parent)==root.get('parent_root_sha256')
+        if not parent_ok: raise SystemExit('root parent binding failed')
+    return {'root_present':True,'root_name':root_path.name,'root_sha256':sha256_path(root_path),'segments':len(root['segments']),'binding_verified':True,'parent_binding_verified':parent_ok}
 
 def verify_segment(seg):
     m=json.loads((seg/'segment-manifest.json').read_text())
@@ -105,11 +166,12 @@ def verify_segment(seg):
     return len(om['objects']),sum(o['bytes'] for o in om['objects'])
 
 def verify(vault):
+    root_report=verify_root(vault)
     total_obj=total_bytes=0
     segs=iter_segments(vault)
     for seg in segs:
         n,b=verify_segment(seg); total_obj+=n; total_bytes+=b
-    report={'ok':True,'action':'verify','segments':len(segs),'objects':total_obj,'recoverable_bytes':total_bytes,'full_restore_hash_check':True}
+    report={'ok':True,'action':'verify','segments':len(segs),'objects':total_obj,'recoverable_bytes':total_bytes,'full_restore_hash_check':True,'root_binding_verified':root_report['binding_verified'],'root_parent_binding_verified':root_report['parent_binding_verified'],'root_sha256':root_report.get('root_sha256')}
     (vault/'manifests'/'last-verify.json').write_text(json.dumps(report,sort_keys=True,separators=(',',':'))+'\n')
     print(json.dumps(report,sort_keys=True))
 
@@ -126,6 +188,7 @@ def find_object(vault,selector):
     return matches[0]
 
 def restore(vault,selector,out):
+    verify_root(vault)
     seg,o=find_object(vault,selector)
     with tempfile.TemporaryDirectory(prefix='glyph-restore-') as td:
         corpus=Path(td)/'corpus.bin'; run('python3',HERE/'restore_rlb3x.py',seg/'bwt.rlb3x',corpus,Path(td)/'report.json')
@@ -133,9 +196,10 @@ def restore(vault,selector,out):
             f.seek(o['offset']); blob=f.read(o['bytes'])
     if hashlib.sha256(blob).hexdigest()!=o['sha256']: raise SystemExit('restored object hash mismatch')
     out=out.resolve(); out.parent.mkdir(parents=True,exist_ok=True); out.write_bytes(blob)
-    print(json.dumps({'ok':True,'action':'restore','path':o['path'],'bytes':len(blob),'sha256':o['sha256'],'output':str(out)},sort_keys=True))
+    print(json.dumps({'ok':True,'action':'restore','segment_id':seg.name,'path':o['path'],'bytes':len(blob),'sha256':o['sha256'],'output':str(out)},sort_keys=True))
 
 def free_space(vault):
+    verify_root(vault)
     verified=(vault/'manifests'/'last-verify.json').is_file()
     eligible=[]; changed=[]; missing=[]
     for seg in iter_segments(vault):
@@ -150,6 +214,7 @@ def free_space(vault):
     print(json.dumps(report,sort_keys=True))
 
 def list_objects(vault):
+    verify_root(vault)
     rows=[]
     for seg in iter_segments(vault):
         om=json.loads((seg/'objects.json').read_text())
