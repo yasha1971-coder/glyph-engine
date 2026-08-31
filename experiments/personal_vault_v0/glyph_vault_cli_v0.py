@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse,hashlib,json,os,shutil,subprocess,tempfile,time
+import argparse,hashlib,json,os,shutil,subprocess,tempfile,time,sys
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parent
@@ -12,7 +12,9 @@ def sha256_path(path):
     return h.hexdigest()
 
 def run(*args):
-    subprocess.check_call([str(x) for x in args])
+    # Keep stdout reserved for the CLI's single machine-readable JSON result.
+    # Child-tool progress and diagnostics go to stderr so callers can safely json.loads(stdout).
+    subprocess.check_call([str(x) for x in args],stdout=sys.stderr,stderr=sys.stderr)
 
 def repo_meta(vault):
     p=vault/'repo.meta'
@@ -58,7 +60,6 @@ def add(vault,source):
     restored=staging/'restore-test.bin'
     run('python3',HERE/'restore_rlb3x.py',rlb,restored,staging/'restore-report.json')
     if corpus.read_bytes()!=restored.read_bytes(): raise SystemExit('segment corpus restore mismatch')
-    # verify every object from restored corpus without relying on the source after this point
     restored_bytes=restored.read_bytes()
     for o in om['objects']:
         blob=restored_bytes[o['offset']:o['offset']+o['bytes']]
@@ -74,7 +75,6 @@ def add(vault,source):
         manifest['files'][key]={'name':p.name,'bytes':p.stat().st_size,'sha256':sha256_path(p)}
     manifest['restore_tested']=True; manifest['object_hashes_verified']=True; manifest['eligible_to_free_source']=False
     (staging/'segment-manifest.json').write_text(json.dumps(manifest,sort_keys=True,separators=(',',':'))+'\n')
-    # Remove construction-only and test material before immutable publication.
     for p in (corpus,sa,bwt,restored,staging/'rlb3x-report.json',staging/'restore-report.json'):
         if p.exists(): p.unlink()
     os.replace(staging,final)
@@ -136,7 +136,6 @@ def restore(vault,selector,out):
     print(json.dumps({'ok':True,'action':'restore','path':o['path'],'bytes':len(blob),'sha256':o['sha256'],'output':str(out)},sort_keys=True))
 
 def free_space(vault):
-    # V0 never deletes. Eligibility additionally requires a successful full verify record.
     verified=(vault/'manifests'/'last-verify.json').is_file()
     eligible=[]; changed=[]; missing=[]
     for seg in iter_segments(vault):
