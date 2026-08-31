@@ -36,6 +36,17 @@ jobs:
         run: python3 experiments/personal_vault_v0/blind_memory_gate_v1.py /tmp/pv0
       - name: Gate second-pass resolution of frozen Blind Memory V1 unresolved cases
         run: python3 experiments/personal_vault_v0/blind_memory_resolution_gate_v1.py
+      - name: Build pinned llama.cpp for autonomous local planner
+        run: |
+          git clone --quiet https://github.com/ggml-org/llama.cpp /tmp/llama.cpp
+          git -C /tmp/llama.cpp checkout --quiet 010be9683afabe14ce299197b38c329f94bae568
+          cmake -S /tmp/llama.cpp -B /tmp/llama.cpp/build -DCMAKE_BUILD_TYPE=Release -DLLAMA_CURL=ON
+          cmake --build /tmp/llama.cpp/build --target llama-cli -j2
+      - name: Gate real autonomous local Qwen planner to GLYPH
+        run: |
+          python3 experiments/personal_vault_v0/local_llm_runtime_gate_v0.py /tmp/pv0 \
+            --llama-cli /tmp/llama.cpp/build/bin/llama-cli \
+            --model lmstudio-community/Qwen3-0.6B-GGUF:Q4_K_M --hf
       - name: Gate first real-device Vault repository lifecycle
         run: python3 experiments/personal_vault_v0/glyph_vault_cli_gate_v0.py
       - name: Gate additive two-segment Vault growth and exact search
