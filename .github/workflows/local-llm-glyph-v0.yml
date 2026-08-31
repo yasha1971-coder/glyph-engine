@@ -26,15 +26,15 @@ jobs:
           git -C /tmp/llama.cpp checkout --quiet 010be9683afabe14ce299197b38c329f94bae568
           cmake -S /tmp/llama.cpp -B /tmp/llama.cpp/build -DCMAKE_BUILD_TYPE=Release
           cmake --build /tmp/llama.cpp/build --target llama-completion -j2
-      - name: Download pinned Qwen3 0.6B GGUF once
+      - name: Download pinned Qwen3 1.7B GGUF once
         run: |
           mkdir -p /tmp/models
           curl -L --fail --retry 3 \
-            -o /tmp/models/qwen3-0.6b-q4_k_m.gguf \
-            https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf
-          test -s /tmp/models/qwen3-0.6b-q4_k_m.gguf
-      - name: Gate real autonomous local Qwen planner to GLYPH
+            -o /tmp/models/qwen3-1.7b-q4_k_m.gguf \
+            https://huggingface.co/lmstudio-community/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q4_K_M.gguf
+          test -s /tmp/models/qwen3-1.7b-q4_k_m.gguf
+      - name: Gate real autonomous local Qwen 1.7B planner to GLYPH
         run: |
           python3 experiments/personal_vault_v0/local_llm_runtime_gate_v0.py /tmp/pv0 \
             --llama-cli /tmp/llama.cpp/build/bin/llama-completion \
-            --model /tmp/models/qwen3-0.6b-q4_k_m.gguf
+            --model /tmp/models/qwen3-1.7b-q4_k_m.gguf
