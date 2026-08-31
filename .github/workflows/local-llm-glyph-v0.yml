@@ -1,0 +1,40 @@
+name: local-llm-glyph-v0
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'experiments/personal_vault_v0/local_llm_planner_v0.py'
+      - 'experiments/personal_vault_v0/local_llm_runtime_gate_v0.py'
+      - 'experiments/personal_vault_v0/planner_protocol_v0.py'
+      - 'experiments/personal_vault_v0/ai_glyph_bridge_v1.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_object.py'
+      - 'experiments/personal_vault_v0/run_kernel_v0_fast.sh'
+      - '.github/workflows/local-llm-glyph-v0.yml'
+permissions:
+  contents: read
+jobs:
+  autonomous-local-llm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build GLYPH kernel fixture
+        run: bash experiments/personal_vault_v0/run_kernel_v0_fast.sh /tmp/pv0
+      - name: Build pinned llama.cpp
+        run: |
+          git clone --quiet https://github.com/ggml-org/llama.cpp /tmp/llama.cpp
+          git -C /tmp/llama.cpp checkout --quiet 010be9683afabe14ce299197b38c329f94bae568
+          cmake -S /tmp/llama.cpp -B /tmp/llama.cpp/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/llama.cpp/build --target llama-cli -j2
+      - name: Download pinned Qwen3 0.6B GGUF once
+        run: |
+          mkdir -p /tmp/models
+          curl -L --fail --retry 3 \
+            -o /tmp/models/qwen3-0.6b-q4_k_m.gguf \
+            https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf
+          test -s /tmp/models/qwen3-0.6b-q4_k_m.gguf
+      - name: Gate real autonomous local Qwen planner to GLYPH
+        run: |
+          python3 experiments/personal_vault_v0/local_llm_runtime_gate_v0.py /tmp/pv0 \
+            --llama-cli /tmp/llama.cpp/build/bin/llama-cli \
+            --model /tmp/models/qwen3-0.6b-q4_k_m.gguf
