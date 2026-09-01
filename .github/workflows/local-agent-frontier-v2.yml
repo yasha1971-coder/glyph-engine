@@ -1,13 +1,7 @@
-name: local-agent-frontier-v2
+name: research-local-agent-frontier-v2
+run-name: "RESEARCH — constrained edge agent v2"
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'experiments/personal_vault_v0/local_agent_frontier_v2.py'
-      - 'experiments/personal_vault_v0/local_agent_frontier_gate_v2.py'
-      - 'experiments/personal_vault_v0/query_rlb3x_object.py'
-      - 'experiments/personal_vault_v0/run_kernel_v0_fast.sh'
-      - '.github/workflows/local-agent-frontier-v2.yml'
 permissions:
   contents: read
 jobs:
