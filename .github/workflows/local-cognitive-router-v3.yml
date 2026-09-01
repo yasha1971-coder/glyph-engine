@@ -1,13 +1,7 @@
-name: local-cognitive-router-v3
+name: research-local-cognitive-router-v3
+run-name: "RESEARCH — cognitive router v3"
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - 'experiments/personal_vault_v0/local_cognitive_router_v3.py'
-      - 'experiments/personal_vault_v0/local_cognitive_router_gate_v3.py'
-      - 'experiments/personal_vault_v0/query_rlb3x_object.py'
-      - 'experiments/personal_vault_v0/run_kernel_v0_fast.sh'
-      - '.github/workflows/local-cognitive-router-v3.yml'
 permissions:
   contents: read
 jobs:
