@@ -1,0 +1,40 @@
+name: product-mvp-v0.1
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'experiments/personal_vault_v0/glyph_vault_cli_v0.py'
+      - 'experiments/personal_vault_v0/glyph_vault_cli_v1.py'
+      - 'experiments/personal_vault_v0/glyph_vault_cli_gate_v0.py'
+      - 'experiments/personal_vault_v0/glyph_vault_multisegment_gate_v0.py'
+      - 'experiments/personal_vault_v0/real_intake_v1.py'
+      - 'experiments/personal_vault_v0/real_intake_gate_v1.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_object.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_loc2.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_count.py'
+      - 'experiments/personal_vault_v0/restore_rlb3x.py'
+      - 'experiments/personal_vault_v0/rlb3x_fixed.py'
+      - 'experiments/personal_vault_v0/loc2_experimental.py'
+      - '.github/workflows/product-mvp-v0.1.yml'
+permissions:
+  contents: read
+jobs:
+  product-mvp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate repository lifecycle
+        run: python3 experiments/personal_vault_v0/glyph_vault_cli_gate_v0.py
+      - name: Gate immutable multi-segment growth and exact search
+        run: python3 experiments/personal_vault_v0/glyph_vault_multisegment_gate_v0.py
+      - name: Gate heterogeneous real-folder intake and bit-perfect restore
+        run: python3 experiments/personal_vault_v0/real_intake_gate_v1.py
+      - name: Product MVP status
+        run: |
+          cat <<'EOF'
+          GLYPH PRODUCT MVP V0.1 CORE OK
+          Contract exercised: init -> add -> verify -> list/identity -> exact search substrate -> restore -> hash equality.
+          Source deletion remains disabled.
+          Semantic/LLM research is intentionally outside this product gate.
+          EOF
