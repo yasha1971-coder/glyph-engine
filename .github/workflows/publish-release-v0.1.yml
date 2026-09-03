@@ -1,0 +1,59 @@
+name: publish-release-v0.1
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_sha:
+        description: 'Exact 40-character commit SHA approved for V0.1 pilot release'
+        required: true
+        type: string
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+jobs:
+  publish-attested-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require exact approved commit
+        env:
+          CONFIRM_SHA: ${{ inputs.confirm_sha }}
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          test ${#CONFIRM_SHA} -eq 40
+          test "$actual" = "$CONFIRM_SHA"
+          echo "RELEASE_COMMIT_CONFIRMED=$actual"
+      - name: Re-run product MVP gates before packaging
+        run: |
+          set -euo pipefail
+          python3 experiments/personal_vault_v0/glyph_vault_cli_gate_v0.py
+          python3 experiments/personal_vault_v0/glyph_vault_multisegment_gate_v0.py
+          python3 experiments/personal_vault_v0/real_intake_gate_v1.py
+      - name: Build and verify product-only archive
+        run: |
+          set -euo pipefail
+          bash deploy/personal-vault-v0.1/make-release.sh /tmp/dist
+          sha256sum -c /tmp/dist/*.tar.gz.sha256
+          tar -tzf /tmp/dist/*.tar.gz >/tmp/release-file-list.txt
+          test -s /tmp/release-file-list.txt
+      - name: Record release subjects
+        id: subjects
+        run: |
+          set -euo pipefail
+          archive="$(find /tmp/dist -maxdepth 1 -name '*.tar.gz' -type f -print -quit)"
+          test -n "$archive"
+          echo "archive=$archive" >> "$GITHUB_OUTPUT"
+      - name: Generate GitHub build provenance attestation
+        uses: actions/attest@v4
+        with:
+          subject-path: ${{ steps.subjects.outputs.archive }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: glyph-personal-vault-v0.1-attested-release
+          path: |
+            /tmp/dist/*.tar.gz
+            /tmp/dist/*.tar.gz.sha256
+            /tmp/release-file-list.txt
+          if-no-files-found: error
