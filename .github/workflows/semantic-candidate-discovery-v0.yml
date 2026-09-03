@@ -1,0 +1,21 @@
+name: research-semantic-candidate-discovery-v0
+run-name: "RESEARCH — rejected E5 semantic baseline"
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  semantic-candidate-discovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch frozen Personal Vault corpus
+        run: bash experiments/personal_vault_v0/fetch_corpora.sh /tmp/pv0-input
+      - name: Install pinned semantic retrieval dependencies
+        run: |
+          python3 -m pip install --disable-pip-version-check --no-input 'sentence-transformers==5.1.0' 'numpy==2.1.3'
+      - name: Reproduce rejected multilingual E5 baseline
+        run: |
+          python3 experiments/personal_vault_v0/semantic_candidate_discovery_v0.py /tmp/pv0-input \
+            --model intfloat/multilingual-e5-small
