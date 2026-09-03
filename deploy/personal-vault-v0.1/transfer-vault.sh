@@ -13,6 +13,7 @@ Requirements:
   - local `glyph`, ssh and rsync available
   - identical GLYPH v0.1 release installed on the remote host
   - remote destination path MUST NOT already exist
+  - remote Vault path uses only A-Z a-z 0-9 _ . / -
 
 This is a fail-closed first-replica transfer. It never deletes the local Vault.
 EOF
@@ -24,12 +25,25 @@ LOCAL_VAULT="$1"
 REMOTE="$2"
 REMOTE_VAULT="$3"
 GLYPH_LOCAL="${GLYPH_LOCAL:-glyph}"
-GLYPH_REMOTE="${GLYPH_REMOTE:-$HOME/.local/bin/glyph}"
+GLYPH_REMOTE="${GLYPH_REMOTE:-glyph}"
+
+[[ "$REMOTE_VAULT" =~ ^[A-Za-z0-9_./-]+$ ]] || { echo "unsafe remote Vault path" >&2; exit 2; }
+[[ "$GLYPH_REMOTE" =~ ^[A-Za-z0-9_./-]+$ ]] || { echo "unsafe GLYPH_REMOTE command" >&2; exit 2; }
 
 for x in "$GLYPH_LOCAL" ssh rsync python3; do
   command -v "$x" >/dev/null 2>&1 || { echo "missing local command: $x" >&2; exit 2; }
 done
 [[ -d "$LOCAL_VAULT" ]] || { echo "local Vault not found: $LOCAL_VAULT" >&2; exit 2; }
+
+remote_glyph() {
+  local subcmd="$1"; shift
+  local suffix=""
+  for arg in "$@"; do
+    [[ "$arg" =~ ^[A-Za-z0-9_./:-]+$ ]] || { echo "unsafe remote glyph argument: $arg" >&2; exit 2; }
+    suffix+=" $arg"
+  done
+  ssh "$REMOTE" "PATH=\$HOME/.local/bin:\$PATH $GLYPH_REMOTE $subcmd$suffix"
+}
 
 # Full local verification is mandatory before any replica is created.
 "$GLYPH_LOCAL" verify "$LOCAL_VAULT" >/tmp/glyph-transfer-local-verify.json
@@ -41,7 +55,7 @@ REMOTE_STAGE="${REMOTE_VAULT}.incoming-${TRANSFER_ID}"
 
 # Confirm the exact same product release is active on both machines.
 LOCAL_VERSION="$($GLYPH_LOCAL version)"
-REMOTE_VERSION="$(ssh "$REMOTE" "$GLYPH_REMOTE version")"
+REMOTE_VERSION="$(remote_glyph version)"
 LOCAL_RELEASE_SHA="$(python3 -c 'import json,sys; print(json.loads(sys.stdin.read()).get("git_sha") or "")' <<<"$LOCAL_VERSION")"
 REMOTE_RELEASE_SHA="$(python3 -c 'import json,sys; print(json.loads(sys.stdin.read()).get("git_sha") or "")' <<<"$REMOTE_VERSION")"
 [[ -n "$LOCAL_RELEASE_SHA" && "$LOCAL_RELEASE_SHA" == "$REMOTE_RELEASE_SHA" ]] || {
@@ -70,8 +84,8 @@ LOCAL_ROOT_AFTER="$(python3 -c 'import json,sys; x=json.loads(sys.stdin.read());
 }
 
 # Remote full restore/hash verification is the publication gate.
-REMOTE_VERIFY="$(ssh "$REMOTE" "$GLYPH_REMOTE verify '$REMOTE_STAGE'")"
-REMOTE_STATUS="$(ssh "$REMOTE" "$GLYPH_REMOTE status '$REMOTE_STAGE'")"
+REMOTE_VERIFY="$(remote_glyph verify "$REMOTE_STAGE")"
+REMOTE_STATUS="$(remote_glyph status "$REMOTE_STAGE")"
 REMOTE_ROOT="$(python3 -c 'import json,sys; x=json.loads(sys.stdin.read()); print(x.get("latest_root_sha256") or "")' <<<"$REMOTE_STATUS")"
 [[ "$REMOTE_ROOT" == "$LOCAL_ROOT" ]] || {
   echo "remote root mismatch after verification: local=$LOCAL_ROOT remote=$REMOTE_ROOT" >&2
