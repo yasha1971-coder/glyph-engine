@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           bash deploy/personal-vault-v0.1/make-release.sh /tmp/dist
-          sha256sum -c /tmp/dist/*.tar.gz.sha256
+          (cd /tmp/dist && sha256sum -c *.tar.gz.sha256)
       - name: Install packaged release in isolated user home
         run: |
           set -euo pipefail
