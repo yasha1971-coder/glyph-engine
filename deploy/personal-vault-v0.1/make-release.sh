@@ -92,5 +92,8 @@ PY
 # manual GitHub attestation workflow.
 TARBALL="$OUTDIR/$NAME.tar.gz"
 tar --sort=name --mtime="@$EPOCH" --owner=0 --group=0 --numeric-owner -C "$TMP" -cf - "$NAME" | gzip -n > "$TARBALL"
-sha256sum "$TARBALL" > "$TARBALL.sha256"
+(
+  cd "$OUTDIR"
+  sha256sum "$NAME.tar.gz" > "$NAME.tar.gz.sha256"
+)
 printf '%s\n' "$TARBALL"
