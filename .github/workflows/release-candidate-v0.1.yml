@@ -18,6 +18,7 @@ on:
       - 'src/**'
       - 'third_party/libsais/**'
       - 'tools/rlbwt_query_v2.py'
+      - 'tools/rlbwt_container_v2.py'
       - 'CMakeLists.txt'
       - '.github/workflows/release-candidate-v0.1.yml'
 permissions:
@@ -28,6 +29,11 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Record exact release source SHA
+        run: echo "EXPECTED_RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
       - name: Build product-only release archive
         run: |
           set -euo pipefail
@@ -42,6 +48,11 @@ jobs:
           HOME=/tmp/glyph-home bash "$pkg/deploy/personal-vault-v0.1/install.sh"
           HOME=/tmp/glyph-home /tmp/glyph-home/.local/bin/glyph version | tee /tmp/glyph-version.json
           HOME=/tmp/glyph-home /tmp/glyph-home/.local/bin/glyph doctor | tee /tmp/glyph-doctor.json
+          python3 - <<'PY'
+          import json,os
+          v=json.load(open('/tmp/glyph-version.json'))
+          assert v['git_sha']==os.environ['EXPECTED_RELEASE_SHA'], (v,os.environ['EXPECTED_RELEASE_SHA'])
+          PY
       - name: Exercise real packaged user loop
         run: |
           set -euo pipefail
@@ -79,6 +90,7 @@ jobs:
       - name: Release candidate verdict
         run: |
           echo 'GLYPH PERSONAL VAULT V0.1 PACKAGED PILOT GREEN'
+          echo "Exact source SHA: $EXPECTED_RELEASE_SHA"
           echo 'Contract: package hash -> atomic install -> doctor -> init -> add -> full verify -> exact search -> restore -> byte equality -> no source deletion.'
       - uses: actions/upload-artifact@v4
         if: always()
