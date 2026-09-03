@@ -16,6 +16,9 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.confirm_sha }}
+          fetch-depth: 1
       - name: Require exact approved commit
         env:
           CONFIRM_SHA: ${{ inputs.confirm_sha }}
@@ -35,10 +38,10 @@ jobs:
         run: |
           set -euo pipefail
           bash deploy/personal-vault-v0.1/make-release.sh /tmp/dist
-          sha256sum -c /tmp/dist/*.tar.gz.sha256
+          (cd /tmp/dist && sha256sum -c *.tar.gz.sha256)
           tar -tzf /tmp/dist/*.tar.gz >/tmp/release-file-list.txt
           test -s /tmp/release-file-list.txt
-      - name: Record release subjects
+      - name: Record release subject
         id: subjects
         run: |
           set -euo pipefail
