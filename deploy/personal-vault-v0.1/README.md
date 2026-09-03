@@ -10,6 +10,7 @@ The deployment sequence is deliberately one-way and fail-closed:
 Git commit
   -> product CI green
   -> product-only release archive + SHA256SUMS
+  -> optional GitHub build-provenance attestation for an approved SHA
   -> install into a versioned release directory
   -> laptop doctor
   -> laptop real-folder pilot
@@ -67,16 +68,32 @@ From a clean checkout at the commit you intend to pilot:
 
 ```bash
 bash deploy/personal-vault-v0.1/make-release.sh dist
-sha256sum -c dist/glyph-personal-vault-v0.1-*.tar.gz.sha256
+(cd dist && sha256sum -c *.tar.gz.sha256)
 ```
 
-The archive records the exact Git SHA and contains an internal `SHA256SUMS` manifest. The release packager builds only the two native construction helpers used by the product path.
+The archive records the exact Git SHA and contains an internal `SHA256SUMS` manifest. The release packager builds only the two native construction helpers used by the product path. Archive metadata is normalized; GitHub build provenance is a separate release-level proof of where the artifact was built.
+
+## Attested release for an approved commit
+
+The manual `publish-release-v0.1` workflow requires the exact 40-character commit SHA. It checks out that SHA directly, re-runs the product MVP gates, builds the product-only archive, verifies its checksum and generates a GitHub artifact attestation before uploading it.
+
+When consuming an attested artifact with GitHub CLI available, verify provenance as an additional supply-chain check:
+
+```bash
+gh attestation verify glyph-personal-vault-v0.1-*.tar.gz \
+  --repo yasha1971-coder/glyph-engine
+```
+
+Attestation supplements, rather than replaces, the archive SHA-256 and GLYPH's own runtime verification.
 
 ## Install on the laptop
 
-Extract the archive, then from its top-level directory:
+The current V0.1 packaged pilot targets Linux. Extract the archive, then from its top-level directory:
 
 ```bash
+(cd /path/to/download && sha256sum -c glyph-personal-vault-v0.1-*.tar.gz.sha256)
+tar -xzf glyph-personal-vault-v0.1-*.tar.gz
+cd glyph-personal-vault-v0.1-*
 bash deploy/personal-vault-v0.1/install.sh
 ~/.local/bin/glyph version
 ~/.local/bin/glyph doctor
@@ -128,7 +145,7 @@ glyph free-space ~/GlyphPilot/vault --dry-run
 
 ## Promote the identical release to OVH
 
-Install the **same release archive** on the OVH user account and run:
+Install the **same release archive** on the OVH account and run:
 
 ```bash
 glyph version
@@ -144,6 +161,8 @@ For the pilot, use an unprivileged dedicated account such as `glyph`. Keep code 
 /srv/glyph/vaults/                          # Vault replicas
 ```
 
+A later production hardening pass may move software releases to a root-owned `/opt/glyph/releases/` tree; that is intentionally not required to prove the V0.1 user loop.
+
 Do not overwrite an existing Vault during the first replica transfer.
 
 ## Verified first replica to OVH
@@ -157,7 +176,7 @@ bash deploy/personal-vault-v0.1/transfer-vault.sh \
   /srv/glyph/vaults/pilot-001
 ```
 
-The transfer script refuses to publish if the software release differs, the source Vault changes during transfer, remote verification fails, or the remote root hash differs.
+The transfer script refuses to publish if the software release differs, the source Vault changes during transfer, remote verification fails, or the remote root hash differs. Disposable cache, journal and derived state are not treated as canonical replica payload.
 
 ## Rollback
 
