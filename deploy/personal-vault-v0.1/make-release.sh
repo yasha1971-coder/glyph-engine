@@ -5,6 +5,7 @@ OUTDIR="${1:-dist}"
 ROOT="$(git rev-parse --show-toplevel)"
 SHA="$(git -C "$ROOT" rev-parse HEAD)"
 SHORT="${SHA:0:12}"
+EPOCH="$(git -C "$ROOT" show -s --format=%ct "$SHA")"
 ARCH="$(uname -m)"
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 NAME="glyph-personal-vault-v0.1-${OS}-${ARCH}-${SHORT}"
@@ -22,6 +23,7 @@ FILES=(
   src
   third_party/libsais
   tools/rlbwt_query_v2.py
+  tools/rlbwt_container_v2.py
   experiments/personal_vault_v0/glyph_vault_cli_v0.py
   experiments/personal_vault_v0/glyph_vault_cli_v1.py
   experiments/personal_vault_v0/real_intake_v1.py
@@ -48,10 +50,13 @@ mkdir -p "$STAGE/deploy/personal-vault-v0.1/bin"
 install -m 0755 "$TMP/build/build_sa_binary_v1" "$STAGE/deploy/personal-vault-v0.1/bin/"
 install -m 0755 "$TMP/build/build_bwt_binary_v1" "$STAGE/deploy/personal-vault-v0.1/bin/"
 
-python3 - "$STAGE" "$SHA" "$OS" "$ARCH" <<'PY'
-import hashlib,json,sys,time
+CXX_ID="$(c++ --version | head -n1)"
+CMAKE_ID="$(cmake --version | head -n1)"
+python3 - "$STAGE" "$SHA" "$OS" "$ARCH" "$EPOCH" "$CXX_ID" "$CMAKE_ID" <<'PY'
+import hashlib,json,sys
 from pathlib import Path
 stage=Path(sys.argv[1]); sha=sys.argv[2]; os_name=sys.argv[3]; arch=sys.argv[4]
+epoch=int(sys.argv[5]); cxx=sys.argv[6]; cmake=sys.argv[7]
 rows=[]
 for p in sorted(x for x in stage.rglob('*') if x.is_file()):
     rel=p.relative_to(stage).as_posix()
@@ -64,7 +69,9 @@ release={
   'git_sha':sha,
   'platform':os_name,
   'arch':arch,
-  'created_unix_ns':time.time_ns(),
+  'source_commit_unix':epoch,
+  'compiler':cxx,
+  'cmake':cmake,
   'source_deletion_enabled':False,
   'product_scope':['init','add','verify','status','list','search_exact','restore','free-space-dry-run'],
   'file_count':len(rows),
@@ -73,16 +80,17 @@ release={
 with (stage/'SHA256SUMS').open('w') as f:
     for r in rows:
         f.write(f"{r['sha256']}  {r['path']}\n")
-for rel in ('deploy/personal-vault-v0.1/RELEASE.json',):
-    p=stage/rel
-    fhash=hashlib.sha256(p.read_bytes()).hexdigest()
-    with (stage/'SHA256SUMS').open('a') as f: f.write(f'{fhash}  {rel}\n')
+p=stage/'deploy/personal-vault-v0.1/RELEASE.json'
+with (stage/'SHA256SUMS').open('a') as f:
+    f.write(f'{hashlib.sha256(p.read_bytes()).hexdigest()}  deploy/personal-vault-v0.1/RELEASE.json\n')
 PY
 
 # Self-check manifest before packaging.
 ( cd "$STAGE" && sha256sum -c SHA256SUMS >/dev/null )
 
+# Normalize archive metadata. Build provenance is additionally bound by the
+# manual GitHub attestation workflow.
 TARBALL="$OUTDIR/$NAME.tar.gz"
-tar -C "$TMP" -czf "$TARBALL" "$NAME"
+tar --sort=name --mtime="@$EPOCH" --owner=0 --group=0 --numeric-owner -C "$TMP" -cf - "$NAME" | gzip -n > "$TARBALL"
 sha256sum "$TARBALL" > "$TARBALL.sha256"
 printf '%s\n' "$TARBALL"
