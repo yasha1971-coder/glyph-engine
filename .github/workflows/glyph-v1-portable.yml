@@ -1,0 +1,48 @@
+name: glyph-v1-portable
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'deploy/glyph-v1/**'
+      - '.github/workflows/glyph-v1-portable.yml'
+permissions:
+  contents: read
+jobs:
+  portable-contract:
+    strategy:
+      matrix:
+        python: ['3.10', '3.12']
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify frozen identities and evidence
+        run: python deploy/glyph-v1/portable_runtime.py verify-profile
+      - name: Run portable contract tests
+        run: python -m unittest discover -s deploy/glyph-v1/tests -v
+      - name: Verify unified command surface
+        run: python deploy/glyph-v1/glyph.py version
+  packaged-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Build and verify one GLYPH V1 archive
+        run: |
+          set -euo pipefail
+          bash deploy/glyph-v1/make-release.sh /tmp/dist
+          (cd /tmp/dist && sha256sum -c *.tar.gz.sha256)
+      - name: Install in an isolated laptop or OVH-style home
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/release /tmp/glyph-home
+          tar -xzf /tmp/dist/*.tar.gz -C /tmp/release
+          pkg="$(find /tmp/release -mindepth 1 -maxdepth 1 -type d -print -quit)"
+          HOME=/tmp/glyph-home bash "$pkg/deploy/glyph-v1/install.sh"
+          HOME=/tmp/glyph-home /tmp/glyph-home/.local/bin/glyph version
+          HOME=/tmp/glyph-home /tmp/glyph-home/.local/bin/glyph verify-profile
