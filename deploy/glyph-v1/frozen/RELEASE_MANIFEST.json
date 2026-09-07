@@ -1,0 +1,705 @@
+{
+  "format": "GLYPH_LOCAL_INTELLIGENCE_LAPTOP_RC1_RELEASE",
+  "release": "RC1",
+  "created_utc": "2026-09-06T23:38:19.465043+00:00",
+  "architecture_frozen": true,
+  "production_claimed": false,
+  "canonical_mutated": false,
+  "host": {
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "trust_boundary": {
+    "canonical_vault": "/home/contour/GlyphPilot/VIKA_proekt-vault-patched-test",
+    "canonical_pin": "/home/contour/GlyphPilot/VIKA-trust2-five/readpath-pin-v2.json",
+    "canonical_write_allowed": false,
+    "qwen_selection_authority": false,
+    "content_only_auto_selection": false,
+    "payload_before_human_selection": false,
+    "verified_bytes_required_for_answer": true,
+    "corruption": "UNTRUSTED_FAIL_CLOSED"
+  },
+  "components": {
+    "strict_selection_v613": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/rnd/hybrid_resolver_v613.py",
+      "exists": true,
+      "sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+      "size": 21283,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/hybrid_resolver_v613.py",
+      "release_copy_sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9"
+    },
+    "preservation_lane_v72": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/rnd/preservation_lane_v72.py",
+      "exists": true,
+      "sha256": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe",
+      "size": 10829,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/preservation_lane_v72.py",
+      "release_copy_sha256": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe"
+    },
+    "hardened_reader": {
+      "source": "/home/contour/GlyphPilot/VIKA-trust2-five/glyph-trust2-multi.py",
+      "exists": true,
+      "sha256": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b",
+      "size": 9594,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/glyph-trust2-multi.py",
+      "release_copy_sha256": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b"
+    },
+    "canonical_pin": {
+      "source": "/home/contour/GlyphPilot/VIKA-trust2-five/readpath-pin-v2.json",
+      "exists": true,
+      "sha256": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b",
+      "size": 6555,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/readpath-pin-v2.json",
+      "release_copy_sha256": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b"
+    },
+    "local_model": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/models/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
+      "exists": true,
+      "sha256": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983",
+      "size": 3013027808
+    }
+  },
+  "evidence": {
+    "laptop_acceptance_v1": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_ACCEPTANCE_V1.json",
+      "exists": true,
+      "sha256": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3",
+      "size": 24542,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LOCAL_INTELLIGENCE_LAPTOP_ACCEPTANCE_V1.json",
+      "release_copy_sha256": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3"
+    },
+    "rc1_acceptance": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_RC1_ACCEPTANCE.json",
+      "exists": true,
+      "sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac",
+      "size": 13715,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LOCAL_INTELLIGENCE_LAPTOP_RC1_ACCEPTANCE.json",
+      "release_copy_sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac"
+    },
+    "rc1_spec": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LAPTOP_RC1_SPEC.json",
+      "exists": true,
+      "sha256": "d63146541fb600f0e94259e6c128c513f4e381f7a71108185a77330fdc4df000",
+      "size": 2782,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LAPTOP_RC1_SPEC.json",
+      "release_copy_sha256": "d63146541fb600f0e94259e6c128c513f4e381f7a71108185a77330fdc4df000"
+    },
+    "e2e_authenticated_v6": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-e2e-authenticated-v6.json",
+      "exists": true,
+      "sha256": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c",
+      "size": 1824,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-e2e-authenticated-v6.json",
+      "release_copy_sha256": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c"
+    },
+    "object_bridge_v71": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-nl-object-bridge-v71.json",
+      "exists": true,
+      "sha256": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d",
+      "size": 3176,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-nl-object-bridge-v71.json",
+      "release_copy_sha256": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d"
+    },
+    "preservation_v72": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-preservation-lane-v72.json",
+      "exists": true,
+      "sha256": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d",
+      "size": 2233,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-preservation-lane-v72.json",
+      "release_copy_sha256": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d"
+    },
+    "adversarial_v8": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-adversarial-currentness-v8.json",
+      "exists": true,
+      "sha256": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa",
+      "size": 1865,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-adversarial-currentness-v8.json",
+      "release_copy_sha256": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa"
+    },
+    "strict_selection_v613": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-strict-selection-v613.json",
+      "exists": true,
+      "sha256": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097",
+      "size": 21446,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-strict-selection-v613.json",
+      "release_copy_sha256": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097"
+    },
+    "frozen_stress_v614": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-frozen-stress-suite-v614.json",
+      "exists": true,
+      "sha256": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68",
+      "size": 74315,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-frozen-stress-suite-v614.json",
+      "release_copy_sha256": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68"
+    },
+    "language_substrate_v617": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-language-substrate-v617.json",
+      "exists": true,
+      "sha256": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef",
+      "size": 4347,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-language-substrate-v617.json",
+      "release_copy_sha256": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef"
+    },
+    "language_bridge_v618": {
+      "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-language-bridge-v618.json",
+      "exists": true,
+      "sha256": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4",
+      "size": 27874,
+      "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-language-bridge-v618.json",
+      "release_copy_sha256": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4"
+    }
+  },
+  "acceptance": {
+    "previous_rc1_status": "RELEASE_CANDIDATE_ACCEPTED",
+    "previous_rc1_sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac"
+  },
+  "release_policy": {
+    "allowed_changes_after_freeze": [
+      "BUGFIX_WITH_FALSIFIER",
+      "PERFORMANCE_FIX_WITH_IDENTICAL_AUTHORITY_RESULT"
+    ],
+    "forbidden_without_new_release_line": [
+      "QUERY_SPECIFIC_TUNING",
+      "ORACLE_WEAKENING",
+      "NEW_RETRIEVAL_SUBSYSTEM",
+      "NEW_AUTHORITY_SOURCE",
+      "CANONICAL_FORMAT_MUTATION"
+    ],
+    "recall_failure_policy": "SHORTLIST_OR_INSUFFICIENT_IS_ALLOWED; WRONG_CANDIDATE_READY_IS_RELEASE_BLOCKING",
+    "performance_policy": "SEARCH_FIRST; PAYLOAD_AFTER_SELECTION",
+    "model_policy": "LOCAL_MODEL_MAY_INTERPRET_VERIFIED_EVIDENCE; IT IS NOT RETRIEVAL_OR_TRUTH_AUTHORITY"
+  },
+  "status": "RC1_RELEASE_FROZEN",
+  "checks": [
+    {
+      "name": "canonical_vault_exists",
+      "ok": true,
+      "detail": "/home/contour/GlyphPilot/VIKA_proekt-vault-patched-test"
+    },
+    {
+      "name": "canonical_pin_exists",
+      "ok": true,
+      "detail": "/home/contour/GlyphPilot/VIKA-trust2-five/readpath-pin-v2.json"
+    },
+    {
+      "name": "component_copy_exact:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/rnd/hybrid_resolver_v613.py",
+        "exists": true,
+        "sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+        "size": 21283,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/hybrid_resolver_v613.py",
+        "release_copy_sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9"
+      }
+    },
+    {
+      "name": "component_exists:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/rnd/hybrid_resolver_v613.py",
+        "exists": true,
+        "sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+        "size": 21283,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/hybrid_resolver_v613.py",
+        "release_copy_sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9"
+      }
+    },
+    {
+      "name": "component_sha:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "actual": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+        "expected": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9"
+      }
+    },
+    {
+      "name": "component_copy_exact:preservation_lane_v72",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/rnd/preservation_lane_v72.py",
+        "exists": true,
+        "sha256": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe",
+        "size": 10829,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/preservation_lane_v72.py",
+        "release_copy_sha256": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe"
+      }
+    },
+    {
+      "name": "component_exists:preservation_lane_v72",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/rnd/preservation_lane_v72.py",
+        "exists": true,
+        "sha256": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe",
+        "size": 10829,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/preservation_lane_v72.py",
+        "release_copy_sha256": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe"
+      }
+    },
+    {
+      "name": "component_copy_exact:hardened_reader",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/VIKA-trust2-five/glyph-trust2-multi.py",
+        "exists": true,
+        "sha256": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b",
+        "size": 9594,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/glyph-trust2-multi.py",
+        "release_copy_sha256": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b"
+      }
+    },
+    {
+      "name": "component_exists:hardened_reader",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/VIKA-trust2-five/glyph-trust2-multi.py",
+        "exists": true,
+        "sha256": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b",
+        "size": 9594,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/glyph-trust2-multi.py",
+        "release_copy_sha256": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b"
+      }
+    },
+    {
+      "name": "component_copy_exact:canonical_pin",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/VIKA-trust2-five/readpath-pin-v2.json",
+        "exists": true,
+        "sha256": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b",
+        "size": 6555,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/readpath-pin-v2.json",
+        "release_copy_sha256": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b"
+      }
+    },
+    {
+      "name": "component_exists:canonical_pin",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/VIKA-trust2-five/readpath-pin-v2.json",
+        "exists": true,
+        "sha256": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b",
+        "size": 6555,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/components/readpath-pin-v2.json",
+        "release_copy_sha256": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b"
+      }
+    },
+    {
+      "name": "component_exists:local_model",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/models/Qwen_Qwen3.5-4B-Q4_K_M.gguf",
+        "exists": true,
+        "sha256": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983",
+        "size": 3013027808
+      }
+    },
+    {
+      "name": "component_sha:local_model",
+      "ok": true,
+      "detail": {
+        "actual": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983",
+        "expected": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:laptop_acceptance_v1",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_ACCEPTANCE_V1.json",
+        "exists": true,
+        "sha256": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3",
+        "size": 24542,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LOCAL_INTELLIGENCE_LAPTOP_ACCEPTANCE_V1.json",
+        "release_copy_sha256": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3"
+      }
+    },
+    {
+      "name": "evidence_exists:laptop_acceptance_v1",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_ACCEPTANCE_V1.json",
+        "exists": true,
+        "sha256": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3",
+        "size": 24542,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LOCAL_INTELLIGENCE_LAPTOP_ACCEPTANCE_V1.json",
+        "release_copy_sha256": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3"
+      }
+    },
+    {
+      "name": "evidence_sha:laptop_acceptance_v1",
+      "ok": true,
+      "detail": {
+        "actual": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3",
+        "expected": "d715271f3342c6bfe5cece4ccd7e4a3b8bc9236922a45feb7d16ca9a6f2ab1f3"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:rc1_acceptance",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_RC1_ACCEPTANCE.json",
+        "exists": true,
+        "sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac",
+        "size": 13715,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LOCAL_INTELLIGENCE_LAPTOP_RC1_ACCEPTANCE.json",
+        "release_copy_sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac"
+      }
+    },
+    {
+      "name": "evidence_exists:rc1_acceptance",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_RC1_ACCEPTANCE.json",
+        "exists": true,
+        "sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac",
+        "size": 13715,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LOCAL_INTELLIGENCE_LAPTOP_RC1_ACCEPTANCE.json",
+        "release_copy_sha256": "dbd5009967d53478b66c5b260c499807434722b1bd839d34c623fd1a9e73e3ac"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:rc1_spec",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LAPTOP_RC1_SPEC.json",
+        "exists": true,
+        "sha256": "d63146541fb600f0e94259e6c128c513f4e381f7a71108185a77330fdc4df000",
+        "size": 2782,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LAPTOP_RC1_SPEC.json",
+        "release_copy_sha256": "d63146541fb600f0e94259e6c128c513f4e381f7a71108185a77330fdc4df000"
+      }
+    },
+    {
+      "name": "evidence_exists:rc1_spec",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LAPTOP_RC1_SPEC.json",
+        "exists": true,
+        "sha256": "d63146541fb600f0e94259e6c128c513f4e381f7a71108185a77330fdc4df000",
+        "size": 2782,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/LAPTOP_RC1_SPEC.json",
+        "release_copy_sha256": "d63146541fb600f0e94259e6c128c513f4e381f7a71108185a77330fdc4df000"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:e2e_authenticated_v6",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-e2e-authenticated-v6.json",
+        "exists": true,
+        "sha256": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c",
+        "size": 1824,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-e2e-authenticated-v6.json",
+        "release_copy_sha256": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c"
+      }
+    },
+    {
+      "name": "evidence_exists:e2e_authenticated_v6",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-e2e-authenticated-v6.json",
+        "exists": true,
+        "sha256": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c",
+        "size": 1824,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-e2e-authenticated-v6.json",
+        "release_copy_sha256": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c"
+      }
+    },
+    {
+      "name": "evidence_sha:e2e_authenticated_v6",
+      "ok": true,
+      "detail": {
+        "actual": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c",
+        "expected": "824264f57a229d1b5a25a0e607065c6a9357bfcb762e428d982d7d3c08e8155c"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:object_bridge_v71",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-nl-object-bridge-v71.json",
+        "exists": true,
+        "sha256": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d",
+        "size": 3176,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-nl-object-bridge-v71.json",
+        "release_copy_sha256": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d"
+      }
+    },
+    {
+      "name": "evidence_exists:object_bridge_v71",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-nl-object-bridge-v71.json",
+        "exists": true,
+        "sha256": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d",
+        "size": 3176,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-nl-object-bridge-v71.json",
+        "release_copy_sha256": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d"
+      }
+    },
+    {
+      "name": "evidence_sha:object_bridge_v71",
+      "ok": true,
+      "detail": {
+        "actual": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d",
+        "expected": "2fe240fcf718c88ffd1a445844b52d2ea61fed9e1a2dcc08470f64713a3fc15d"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:preservation_v72",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-preservation-lane-v72.json",
+        "exists": true,
+        "sha256": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d",
+        "size": 2233,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-preservation-lane-v72.json",
+        "release_copy_sha256": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d"
+      }
+    },
+    {
+      "name": "evidence_exists:preservation_v72",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-preservation-lane-v72.json",
+        "exists": true,
+        "sha256": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d",
+        "size": 2233,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-preservation-lane-v72.json",
+        "release_copy_sha256": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d"
+      }
+    },
+    {
+      "name": "evidence_sha:preservation_v72",
+      "ok": true,
+      "detail": {
+        "actual": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d",
+        "expected": "57a39a06bb81a4c1727c4f204f9c045723c7c877c46ae8cad451f76f3313eb6d"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:adversarial_v8",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-adversarial-currentness-v8.json",
+        "exists": true,
+        "sha256": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa",
+        "size": 1865,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-adversarial-currentness-v8.json",
+        "release_copy_sha256": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa"
+      }
+    },
+    {
+      "name": "evidence_exists:adversarial_v8",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-adversarial-currentness-v8.json",
+        "exists": true,
+        "sha256": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa",
+        "size": 1865,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-adversarial-currentness-v8.json",
+        "release_copy_sha256": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa"
+      }
+    },
+    {
+      "name": "evidence_sha:adversarial_v8",
+      "ok": true,
+      "detail": {
+        "actual": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa",
+        "expected": "28d33f086b23d3c762599e759e4e3bfea2d56b5e7ff11f7e51a1d66541f573fa"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-strict-selection-v613.json",
+        "exists": true,
+        "sha256": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097",
+        "size": 21446,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-strict-selection-v613.json",
+        "release_copy_sha256": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097"
+      }
+    },
+    {
+      "name": "evidence_exists:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-strict-selection-v613.json",
+        "exists": true,
+        "sha256": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097",
+        "size": 21446,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-strict-selection-v613.json",
+        "release_copy_sha256": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097"
+      }
+    },
+    {
+      "name": "evidence_sha:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "actual": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097",
+        "expected": "0e559ebbb3e6c1bafd93a8012288bb4c45b81e2887b62bc5acb108e82ee07097"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:frozen_stress_v614",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-frozen-stress-suite-v614.json",
+        "exists": true,
+        "sha256": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68",
+        "size": 74315,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-frozen-stress-suite-v614.json",
+        "release_copy_sha256": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68"
+      }
+    },
+    {
+      "name": "evidence_exists:frozen_stress_v614",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-frozen-stress-suite-v614.json",
+        "exists": true,
+        "sha256": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68",
+        "size": 74315,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-frozen-stress-suite-v614.json",
+        "release_copy_sha256": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68"
+      }
+    },
+    {
+      "name": "evidence_sha:frozen_stress_v614",
+      "ok": true,
+      "detail": {
+        "actual": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68",
+        "expected": "b82ca9a8ed3fa8f5c023ceb8158c69fe7b2f2caf85986bff8126aec90cc73f68"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:language_substrate_v617",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-language-substrate-v617.json",
+        "exists": true,
+        "sha256": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef",
+        "size": 4347,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-language-substrate-v617.json",
+        "release_copy_sha256": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef"
+      }
+    },
+    {
+      "name": "evidence_exists:language_substrate_v617",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-language-substrate-v617.json",
+        "exists": true,
+        "sha256": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef",
+        "size": 4347,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-language-substrate-v617.json",
+        "release_copy_sha256": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef"
+      }
+    },
+    {
+      "name": "evidence_sha:language_substrate_v617",
+      "ok": true,
+      "detail": {
+        "actual": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef",
+        "expected": "dc5135556f95d9ef16d10fed2e5176bb1e981c0285e340475af97e5063062bef"
+      }
+    },
+    {
+      "name": "evidence_copy_exact:language_bridge_v618",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-language-bridge-v618.json",
+        "exists": true,
+        "sha256": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4",
+        "size": 27874,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-language-bridge-v618.json",
+        "release_copy_sha256": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4"
+      }
+    },
+    {
+      "name": "evidence_exists:language_bridge_v618",
+      "ok": true,
+      "detail": {
+        "source": "/home/contour/GlyphPilot/LI-V0-LAPTOP/li-v0-language-bridge-v618.json",
+        "exists": true,
+        "sha256": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4",
+        "size": 27874,
+        "release_copy": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/evidence/li-v0-language-bridge-v618.json",
+        "release_copy_sha256": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4"
+      }
+    },
+    {
+      "name": "evidence_sha:language_bridge_v618",
+      "ok": true,
+      "detail": {
+        "actual": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4",
+        "expected": "2fda78537a4ed4d1c9688b8a173eb8da5ec9a295c5e7f181850ce1414feeeea4"
+      }
+    },
+    {
+      "name": "previous_rc1_release_candidate_accepted",
+      "ok": true,
+      "detail": "RELEASE_CANDIDATE_ACCEPTED"
+    },
+    {
+      "name": "previous_rc1_zero_blockers",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "v614_red_preserved",
+      "ok": true,
+      "detail": "Historical recall limitation remains visible"
+    },
+    {
+      "name": "v618_red_preserved",
+      "ok": true,
+      "detail": "Historical language-bridge limitation remains visible"
+    },
+    {
+      "name": "source_unchanged:strict_selection_v613",
+      "ok": true,
+      "detail": {
+        "before": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+        "after": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9"
+      }
+    },
+    {
+      "name": "source_unchanged:preservation_lane_v72",
+      "ok": true,
+      "detail": {
+        "before": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe",
+        "after": "4a0a4775549550fad175bf7f9c353558bc8e89ecc437b5b7323bea3a877769fe"
+      }
+    },
+    {
+      "name": "source_unchanged:hardened_reader",
+      "ok": true,
+      "detail": {
+        "before": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b",
+        "after": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b"
+      }
+    },
+    {
+      "name": "source_unchanged:canonical_pin",
+      "ok": true,
+      "detail": {
+        "before": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b",
+        "after": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b"
+      }
+    },
+    {
+      "name": "source_unchanged:local_model",
+      "ok": true,
+      "detail": {
+        "before": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983",
+        "after": "13c16f426047e2de38cd075bdade4a7bcbc8c774384876f677740cda65f8a983"
+      }
+    }
+  ],
+  "blocking_failures": [],
+  "nonblocking_failures": []
+}

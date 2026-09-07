@@ -1,0 +1,23 @@
+{
+  "format": "GLYPH_V1_OVH_ENGINEERING_PASSPORT_V1",
+  "status": "OVH_HISTORICAL_QUERY_REPLAY_VERIFIED",
+  "python": "3.10.12",
+  "segments": 5,
+  "logical_corpus_bytes": 249967975,
+  "rlb_bytes": 236856112,
+  "loc_bytes": 7811668,
+  "rank_bytes": 27153260,
+  "authloc_bytes": 76680,
+  "search_data_bytes": 271897720,
+  "search_data_ratio": 1.0877302182409567,
+  "sub_1x_for_this_vault": false,
+  "phase_a_state": "CANDIDATE_READY",
+  "phase_a_candidates": 1,
+  "human_selection": 1,
+  "missing_cache_fail_closed": true,
+  "phase_b_status": "GREEN_AUTHENTICATED_MATERIALIZATION",
+  "objects_materialized": 2,
+  "all_object_hashes_verified": true,
+  "qwen_used": false,
+  "scope": "historical-query cross-host replay; not production"
+}

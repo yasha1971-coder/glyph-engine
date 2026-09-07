@@ -1,0 +1,35 @@
+{
+  "format": "GLYPH_V1_PORTABLE_PROFILE_V1",
+  "name": "GLYPH V1 — Authenticated Retrieval and Provable Memory",
+  "python": {
+    "minimum": "3.10",
+    "verified_hosts": [
+      "Laptop Python 3.12.3",
+      "OVH Python 3.10.12"
+    ]
+  },
+  "scope": "Frozen Laptop V1 retrieval replayed on OVH against the same five-segment authenticated Vault; not a production or universal-recall claim.",
+  "frozen_files": {
+    "frozen/RELEASE_MANIFEST.json": "de3161726e336127647af4596ee5e7c0588965bb1cc21b687276d42259b0e36b",
+    "frozen/glyph-trust2-multi.py": "3057d489e089022703d30e50d0c3c8a9f91c1b4d34e466fe034b6d922a69926b",
+    "frozen/hybrid_resolver_v613.py": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+    "frozen/query_authloc_all.py": "2eaedca288dc5fb48b5ffe884a56da25c6e47c2efdaf97167bbdd98a20104208",
+    "frozen/readpath-pin-v2.json": "585d10d10d3824f4753319830ec00dc108486b45ce143d5b3aad55cc4c04a95b"
+  },
+  "evidence_files": {
+    "evidence/laptop/GLYPH_V1_LAPTOP_RELEASE_VERIFIED.json": "c4b5d482279f90f6930c212acc30385c5ad02018177462f8c1f81ae893eaab6e",
+    "evidence/laptop/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_A_20260907-002922.json": "21403520d1ba9d32f6d0a8108302efe09f031767e6c9f9e8bdb0c9ebfa8210de",
+    "evidence/laptop/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_B_20260907-003503.json": "e4bafcd2a4373d541029e472a2b5c7f45748519ac698a77072fb8478eba69162",
+    "evidence/ovh/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_A_20260907-074413.json": "826add484235f68fd77523ad9d4dd329597eb906984b8468fdfd25a06a7635fb",
+    "evidence/ovh/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_B_20260907-074442.json": "2b1f410e1924c823b7858922295396f80b95d06d9deffee19244315d0d2e6486",
+    "evidence/ovh/GLYPH_V1_OVH_ENGINEERING_PASSPORT_V1.json": "98471592f2674bdecc1e8fc72d0a7a1901f7340d372e648fb5c4c62faa0591b8"
+  },
+  "trust_laws": [
+    "model has no retrieval or truth authority",
+    "payload is inaccessible before explicit human selection",
+    "content-only evidence cannot auto-select",
+    "authentication or corruption failure fails closed",
+    "materialized bytes must match authenticated object SHA-256",
+    "canonical and derived state remain separate"
+  ]
+}

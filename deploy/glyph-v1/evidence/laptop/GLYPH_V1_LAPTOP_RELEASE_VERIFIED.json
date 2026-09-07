@@ -1,0 +1,57 @@
+{
+  "authority_boundary": {
+    "model_selection_authority": false,
+    "payload_only_after_human_selection": true,
+    "qwen_used": false,
+    "verified_bytes_required": true
+  },
+  "claim": {
+    "statement": "On the frozen laptop RC1 release, a natural-language ACEAPEX recovery query resolved to the correct authenticated logical parent before payload access; after explicit human selection, both related objects were materialized and verified byte-for-byte by their authenticated SHA-256 identities.",
+    "status": "MEASURED"
+  },
+  "format": "GLYPH_V1_LAPTOP_RELEASE_VERIFIED",
+  "live_acceptance": {
+    "all_object_hashes_verified": true,
+    "authenticated_materialized_objects": 2,
+    "candidate_count": 1,
+    "discovery_state": "CANDIDATE_READY",
+    "human_selection_required": true,
+    "natural_language_query": "Найди в проекте ACEAPEX манифест с историей экспериментов по GPU-декодированию. Там должна быть полная история git, чтобы можно было понять, что именно пробовали, и при необходимости восстановить это и продолжить работу.",
+    "objects": [
+      {
+        "bytes": 5443,
+        "canonical_path": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_/ARCHIVE MANIFEST.md",
+        "sha256": "ef448e3ce777184f58797c8915de135de0983463e12bc6885560b475f79d002c"
+      },
+      {
+        "bytes": 6092,
+        "canonical_path": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_/reorg with recovery.sh",
+        "sha256": "d866a5362b03d5c4663d309ba304bacd878ad539cb500ad427db5ab07d3edc1d"
+      }
+    ],
+    "payload_before_selection": false,
+    "phase_a_receipt": "/home/contour/GlyphPilot/LI-V0-LAPTOP/live-acceptance/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_A_20260907-002922.json",
+    "phase_a_sha256": "21403520d1ba9d32f6d0a8108302efe09f031767e6c9f9e8bdb0c9ebfa8210de",
+    "phase_b_receipt": "/home/contour/GlyphPilot/LI-V0-LAPTOP/live-acceptance/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_B_20260907-003503.json",
+    "phase_b_sha256": "e4bafcd2a4373d541029e472a2b5c7f45748519ac698a77072fb8478eba69162"
+  },
+  "product": {
+    "class": "Provable Memory Engine",
+    "milestone": "LAPTOP RELEASE — VERIFIED",
+    "name": "GLYPH V1"
+  },
+  "production_scope": "Laptop V1 verified. Broader production deployment is not claimed.",
+  "release": {
+    "architecture": "FROZEN",
+    "manifest": "/home/contour/GlyphPilot/LI-V0-LAPTOP/release/GLYPH-LI-LAPTOP-RC1-FINAL/RELEASE_MANIFEST.json",
+    "manifest_sha256": "de3161726e336127647af4596ee5e7c0588965bb1cc21b687276d42259b0e36b",
+    "release_receipt": "/home/contour/GlyphPilot/LI-V0-LAPTOP/LOCAL_INTELLIGENCE_LAPTOP_RC1_FINAL_RELEASE.json",
+    "release_receipt_sha256": "43873c3c3c57bad84e5dc8cda54651ab368870c6207cc496ec41567e0c98dbd8"
+  },
+  "safety": {
+    "canonical_mutated": false,
+    "frozen_release_mutated": false
+  },
+  "timestamp_utc": "2026-09-07T00:37:16.610025+00:00",
+  "verdict": "LAPTOP V1 GOAL ACHIEVED"
+}

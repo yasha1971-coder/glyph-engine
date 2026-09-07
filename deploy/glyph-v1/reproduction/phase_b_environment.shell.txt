@@ -1,0 +1,29 @@
+set +e
+set +u
+BASE="$HOME/GlyphPilot/LI-V0-LAPTOP"
+REL="$BASE/release/GLYPH-LI-LAPTOP-RC1-FINAL"
+VAULT="$HOME/GlyphPilot/VIKA_proekt-vault-patched-test"
+PIN="$HOME/GlyphPilot/VIKA-trust2-five/readpath-pin-v2.json"
+HARD="$HOME/GlyphPilot/VIKA-trust2-five/glyph-trust2-multi.py"
+PY="$BASE/.venv-pbwt/bin/python"
+RUN="$BASE/live-acceptance"
+CACHE="$BASE/cache/preservation-v72"
+# Human selection from Phase A — exact displayed candidate #1.
+SELECTED_PARENT='Восстановить если надо 5.7.2026 Лицо ACEAPEX_'
+# Bind Phase B to the exact Phase A evidence.
+PHASE_A_SHA='21403520d1ba9d32f6d0a8108302efe09f031767e6c9f9e8bdb0c9ebfa8210de'
+RELEASE_SHA='de3161726e336127647af4596ee5e7c0588965bb1cc21b687276d42259b0e36b'
+RESOLVER_SHA='cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9'
+export BASE REL VAULT PIN HARD RUN CACHE SELECTED_PARENT
+export PHASE_A_SHA RELEASE_SHA RESOLVER_SHA
+echo "======================================================================"
+echo " GLYPH V1 — LIVE ACCEPTANCE #1"
+echo " PHASE B — HUMAN-SELECTED AUTHENTICATED MATERIALIZATION"
+echo "======================================================================"
+echo
+echo "HUMAN_SELECTION = 1"
+echo "SELECTED_PARENT = $SELECTED_PARENT"
+echo
+echo "--- FROZEN RELEASE BEFORE ---"
+sha256sum "$REL/RELEASE_MANIFEST.json"
+sha256sum "$REL/components/hybrid_resolver_v613.py"

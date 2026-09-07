@@ -1,0 +1,47 @@
+{
+  "all_object_hashes_verified": true,
+  "authenticated_object_count": 2,
+  "canonical_mutated": false,
+  "format": "GLYPH_V1_LIVE_ACCEPTANCE_PHASE_B",
+  "frozen_resolver_sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+  "human_selection": {
+    "candidate_number": 1,
+    "name": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_",
+    "parent": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_"
+  },
+  "needed_segments": [
+    "00000005"
+  ],
+  "objects": [
+    {
+      "bytes": 5443,
+      "canonical_path": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_/ARCHIVE MANIFEST.md",
+      "expected_sha256": "ef448e3ce777184f58797c8915de135de0983463e12bc6885560b475f79d002c",
+      "materialized_path": "/home/contour/GlyphPilot/LI-V0-LAPTOP/live-acceptance/materialized-20260907-003503/00000005-0329-ARCHIVE MANIFEST.md",
+      "materialized_sha256": "ef448e3ce777184f58797c8915de135de0983463e12bc6885560b475f79d002c",
+      "object_index": 329,
+      "offset": 23267759,
+      "segment_id": "00000005",
+      "sha_field": "sha256"
+    },
+    {
+      "bytes": 6092,
+      "canonical_path": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_/reorg with recovery.sh",
+      "expected_sha256": "d866a5362b03d5c4663d309ba304bacd878ad539cb500ad427db5ab07d3edc1d",
+      "materialized_path": "/home/contour/GlyphPilot/LI-V0-LAPTOP/live-acceptance/materialized-20260907-003503/00000005-0330-reorg with recovery.sh",
+      "materialized_sha256": "d866a5362b03d5c4663d309ba304bacd878ad539cb500ad427db5ab07d3edc1d",
+      "object_index": 330,
+      "offset": 23273202,
+      "segment_id": "00000005",
+      "sha_field": "sha256"
+    }
+  ],
+  "payload_touched_after_human_selection": true,
+  "phase_a_receipt": "/home/contour/GlyphPilot/LI-V0-LAPTOP/live-acceptance/GLYPH_V1_LIVE_ACCEPTANCE_PHASE_A_20260907-002922.json",
+  "phase_a_sha256": "21403520d1ba9d32f6d0a8108302efe09f031767e6c9f9e8bdb0c9ebfa8210de",
+  "qwen_used": false,
+  "release_manifest_sha256": "de3161726e336127647af4596ee5e7c0588965bb1cc21b687276d42259b0e36b",
+  "release_mutated": false,
+  "status": "GREEN_AUTHENTICATED_MATERIALIZATION",
+  "timestamp_utc": "2026-09-07T00:35:03.726466+00:00"
+}
