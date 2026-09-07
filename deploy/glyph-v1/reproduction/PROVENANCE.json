@@ -1,0 +1,25 @@
+{
+  "source": "laptop .bash_history excerpts",
+  "ranges_inclusive": {
+    "phase_a_environment.shell.txt": [
+      1063,
+      1092
+    ],
+    "phase_a_history.py": [
+      1094,
+      1379
+    ],
+    "phase_b_environment.shell.txt": [
+      1393,
+      1421
+    ],
+    "phase_b_history.py": [
+      1423,
+      1780
+    ]
+  },
+  "status": "historical source recovered; not replayed",
+  "phase_b_source": "existing preservation-v72 corpus.bin",
+  "selection": "historical candidate #1; not a new OVH selection",
+  "history_text_reencoding": "UTF-8"
+}

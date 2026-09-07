@@ -1,0 +1,105 @@
+{
+  "acceptance_status": "WAITING_FOR_HUMAN_SELECTION",
+  "canonical_write_attempted": false,
+  "content_ms": 0.0,
+  "families": {
+    "aceape": [
+      "aceape"
+    ],
+    "gpu-декод": [
+      "gpu-декод"
+    ],
+    "быть": [
+      "быть"
+    ],
+    "восстанов": [
+      "восстанов"
+    ],
+    "должн": [
+      "должн"
+    ],
+    "именн": [
+      "именн"
+    ],
+    "истори": [
+      "истори"
+    ],
+    "манифе": [
+      "манифе"
+    ],
+    "можно": [
+      "можно"
+    ],
+    "необходим": [
+      "необходим"
+    ],
+    "полна": [
+      "полна"
+    ],
+    "понят": [
+      "понят"
+    ],
+    "пробова": [
+      "пробова"
+    ],
+    "продолж": [
+      "продолж"
+    ],
+    "проект": [
+      "проект"
+    ],
+    "работ": [
+      "работ"
+    ],
+    "чтобы": [
+      "чтобы"
+    ],
+    "экспериме": [
+      "экспериме"
+    ]
+  },
+  "fm_report": {},
+  "format": "GLYPH_V1_LIVE_ACCEPTANCE_PHASE_A_FROZEN_V613",
+  "frozen_internal_state": "CANDIDATE_READY",
+  "frozen_meta_accept": true,
+  "frozen_resolver_sha256": "cefc8611ed96a490d978efc851611ca7ed4f1ab7690be0ace72687a3b5e0e6d9",
+  "frozen_winner": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_",
+  "frozen_winner_parent": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_",
+  "human_selection_required": true,
+  "materialized": false,
+  "payload_touched": false,
+  "query": "Найди в проекте ACEAPEX манифест с историей экспериментов по GPU-декодированию. Там должна быть полная история git, чтобы можно было понять, что именно пробовали, и при необходимости восстановить это и продолжить работу.",
+  "query_specific_bridge_added": false,
+  "qwen_used": false,
+  "release_manifest_sha256": "de3161726e336127647af4596ee5e7c0588965bb1cc21b687276d42259b0e36b",
+  "release_write_attempted": false,
+  "retrieval_source": "verbatim frozen V6.13 body before Oracle",
+  "shortlist": [
+    {
+      "content_detail": {},
+      "content_families": [],
+      "content_score": 0.0,
+      "evidence_profile": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "family_count": 2,
+      "metadata_families": [
+        "aceape",
+        "восстанов"
+      ],
+      "metadata_score": 9.288,
+      "name": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_",
+      "parent": "Восстановить если надо 5.7.2026 Лицо ACEAPEX_",
+      "total_score": 9.288
+    }
+  ],
+  "target_file_names_embedded": false,
+  "target_name_embedded": false,
+  "target_oracle_present": false,
+  "timestamp_end_utc": "2026-09-07T00:29:22.206089+00:00",
+  "timestamp_start_utc": "2026-09-07T00:29:22.131087+00:00"
+}

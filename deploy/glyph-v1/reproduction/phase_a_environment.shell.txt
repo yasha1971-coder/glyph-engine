@@ -1,0 +1,30 @@
+set +e
+set +u
+BASE="$HOME/GlyphPilot/LI-V0-LAPTOP"
+REL="$BASE/release/GLYPH-LI-LAPTOP-RC1-FINAL"
+RES="$REL/components/hybrid_resolver_v613.py"
+PY="$BASE/.venv-pbwt/bin/python"
+RUN="$BASE/live-acceptance"
+mkdir -p "$RUN"
+QUERY='Найди в проекте ACEAPEX манифест с историей экспериментов по GPU-декодированию. Там должна быть полная история git, чтобы можно было понять, что именно пробовали, и при необходимости восстановить это и продолжить работу.'
+export BASE REL RES RUN QUERY
+echo "======================================================================"
+echo " GLYPH V1 — LIVE ACCEPTANCE #1"
+echo " PHASE A — FROZEN V6.13 BLIND DISCOVERY"
+echo "======================================================================"
+echo
+echo "--- FROZEN IDENTITIES BEFORE ---"
+sha256sum "$REL/RELEASE_MANIFEST.json"
+sha256sum "$RES"
+echo
+echo "--- UNSEEN QUERY ---"
+printf '%s\n' "$QUERY"
+echo
+echo "--- HARD BOUNDARY ---"
+echo "FROZEN RETRIEVAL LOGIC = V6.13 EXACT"
+echo "TARGET ORACLE          = NONE"
+echo "QUERY-SPECIFIC BRIDGE  = NONE"
+echo "QWEN                   = FORBIDDEN"
+echo "PAYLOAD MATERIALIZE    = FORBIDDEN"
+echo "HUMAN SELECTION        = REQUIRED AFTER DISCOVERY"
+echo
