@@ -1,0 +1,107 @@
+name: release-candidate-v0.1
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'deploy/personal-vault-v0.1/**'
+      - 'experiments/personal_vault_v0/glyph_vault_cli_v0.py'
+      - 'experiments/personal_vault_v0/glyph_vault_cli_v1.py'
+      - 'experiments/personal_vault_v0/real_intake_v1.py'
+      - 'experiments/personal_vault_v0/vault_v0.py'
+      - 'experiments/personal_vault_v0/rlb3x_fixed.py'
+      - 'experiments/personal_vault_v0/loc2_experimental.py'
+      - 'experiments/personal_vault_v0/query_loc2_experimental.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_count.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_loc2.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_object.py'
+      - 'experiments/personal_vault_v0/restore_rlb3x.py'
+      - 'src/**'
+      - 'third_party/libsais/**'
+      - 'tools/rlbwt_query_v2.py'
+      - 'tools/rlbwt_container_v2.py'
+      - 'CMakeLists.txt'
+      - '.github/workflows/release-candidate-v0.1.yml'
+permissions:
+  contents: read
+jobs:
+  packaged-pilot-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Record exact release source SHA
+        run: echo "EXPECTED_RELEASE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+      - name: Build product-only release archive
+        run: |
+          set -euo pipefail
+          bash deploy/personal-vault-v0.1/make-release.sh /tmp/dist
+          (cd /tmp/dist && sha256sum -c *.tar.gz.sha256)
+      - name: Install packaged release in isolated user home
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/release /tmp/glyph-home
+          tar -xzf /tmp/dist/*.tar.gz -C /tmp/release
+          pkg="$(find /tmp/release -mindepth 1 -maxdepth 1 -type d | head -n1)"
+          HOME=/tmp/glyph-home bash "$pkg/deploy/personal-vault-v0.1/install.sh"
+          HOME=/tmp/glyph-home /tmp/glyph-home/.local/bin/glyph version | tee /tmp/glyph-version.json
+          HOME=/tmp/glyph-home /tmp/glyph-home/.local/bin/glyph doctor | tee /tmp/glyph-doctor.json
+          python3 - <<'PY'
+          import json,os
+          v=json.load(open('/tmp/glyph-version.json'))
+          assert v['git_sha']==os.environ['EXPECTED_RELEASE_SHA'], (v,os.environ['EXPECTED_RELEASE_SHA'])
+          PY
+      - name: Exercise real packaged user loop
+        run: |
+          set -euo pipefail
+          export HOME=/tmp/glyph-home
+          export PATH="$HOME/.local/bin:$PATH"
+          mkdir -p /tmp/source-copy/docs/sub
+          printf 'GLYPH_RELEASE_SMOKE_7F91 exact evidence\n' > /tmp/source-copy/docs/hello.txt
+          printf 'unicode filename content\n' > '/tmp/source-copy/docs/данные.txt'
+          : > /tmp/source-copy/docs/empty.bin
+          head -c 8192 /dev/urandom > /tmp/source-copy/docs/sub/random.bin
+          glyph init /tmp/glyph-vault
+          glyph add /tmp/glyph-vault /tmp/source-copy
+          glyph verify /tmp/glyph-vault | tee /tmp/glyph-verify.json
+          glyph status /tmp/glyph-vault | tee /tmp/glyph-status.json
+          glyph list /tmp/glyph-vault > /tmp/glyph-list.json
+          glyph search /tmp/glyph-vault 'GLYPH_RELEASE_SMOKE_7F91' | tee /tmp/glyph-search.json
+          python3 - <<'PY'
+          import json
+          s=json.load(open('/tmp/glyph-search.json'))
+          assert s['valid_count']==1, s
+          assert s['hits'][0]['path']=='docs/hello.txt', s
+          st=json.load(open('/tmp/glyph-status.json'))
+          assert st['source_deletion_enabled'] is False, st
+          assert st['last_verify']['full_restore_hash_check'] is True, st
+          PY
+          glyph restore /tmp/glyph-vault docs/hello.txt /tmp/restored.txt
+          cmp /tmp/source-copy/docs/hello.txt /tmp/restored.txt
+          glyph free-space /tmp/glyph-vault --dry-run | tee /tmp/glyph-free-space.json
+          python3 - <<'PY'
+          import json
+          x=json.load(open('/tmp/glyph-free-space.json'))
+          assert x['source_deletion_performed'] is False, x
+          assert x['dry_run'] is True, x
+          PY
+      - name: Release candidate verdict
+        run: |
+          echo 'GLYPH PERSONAL VAULT V0.1 PACKAGED PILOT GREEN'
+          echo "Exact source SHA: $EXPECTED_RELEASE_SHA"
+          echo 'Contract: package hash -> atomic install -> doctor -> init -> add -> full verify -> exact search -> restore -> byte equality -> no source deletion.'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: glyph-personal-vault-v0.1-rc
+          path: |
+            /tmp/dist/*.tar.gz
+            /tmp/dist/*.tar.gz.sha256
+            /tmp/glyph-version.json
+            /tmp/glyph-doctor.json
+            /tmp/glyph-verify.json
+            /tmp/glyph-status.json
+            /tmp/glyph-search.json
+            /tmp/glyph-free-space.json

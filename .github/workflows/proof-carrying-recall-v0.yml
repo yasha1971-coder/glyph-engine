@@ -1,0 +1,22 @@
+name: proof-carrying-recall-v0
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'experiments/personal_vault_v0/proof_carrying_recall_v0.py'
+      - 'experiments/personal_vault_v0/verify_proof_carrying_recall_v0.py'
+      - 'experiments/personal_vault_v0/proof_carrying_recall_gate_v0.py'
+      - 'experiments/personal_vault_v0/glyph_vault_cli_v0.py'
+      - 'experiments/personal_vault_v0/query_rlb3x_object.py'
+      - 'experiments/personal_vault_v0/restore_rlb3x.py'
+      - '.github/workflows/proof-carrying-recall-v0.yml'
+permissions:
+  contents: read
+jobs:
+  proof-carrying-recall:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gate proof-carrying recall after source removal
+        run: python3 experiments/personal_vault_v0/proof_carrying_recall_gate_v0.py
