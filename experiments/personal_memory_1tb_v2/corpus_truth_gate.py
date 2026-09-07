@@ -138,7 +138,8 @@ def initialize(db: sqlite3.Connection, source: Path, state: Path) -> None:
             [(key, json.dumps(value, sort_keys=True)) for key, value in identity.items()],
         )
         db.execute("INSERT INTO directories(path,state) VALUES('','pending')")
-    db.execute("UPDATE directories SET state='pending' WHERE state='scanning'")
+    # Interrupted and previously inaccessible directories are retried on resume.
+    db.execute("UPDATE directories SET state='pending',error=NULL WHERE state IN ('scanning','error')")
     db.commit()
 
 
@@ -180,6 +181,7 @@ def scan_one(db: sqlite3.Connection, source: Path, relative_dir: str) -> None:
                         VALUES(?,?,?,?,?,?,?,?,?,?)""",
                         row,
                     )
+                    db.execute("DELETE FROM errors WHERE path=? AND operation='lstat'", (relative,))
                     if row[1] == "directory":
                         db.execute(
                             "INSERT OR IGNORE INTO directories(path,state) VALUES(?,'pending')",
@@ -190,7 +192,8 @@ def scan_one(db: sqlite3.Connection, source: Path, relative_dir: str) -> None:
                         "INSERT OR REPLACE INTO errors(path,operation,error) VALUES(?,?,?)",
                         (relative, "lstat", f"{type(exc).__name__}: {exc}"),
                     )
-            db.execute("UPDATE directories SET state='done' WHERE path=?", (relative_dir,))
+            db.execute("UPDATE directories SET state='done',error=NULL WHERE path=?", (relative_dir,))
+            db.execute("DELETE FROM errors WHERE path=? AND operation='scandir'", (relative_dir,))
     except OSError as exc:
         with db:
             db.execute(
@@ -243,6 +246,8 @@ def sha256(path: Path) -> str:
 def write_receipt(db: sqlite3.Connection, source: Path, state: Path) -> Path:
     summary = aggregate(db)
     unfinished = sum(summary["directory_states"].get(x, 0) for x in ("pending", "scanning"))
+    traversal_finished = unfinished == 0
+    coverage_complete = traversal_finished and summary["errors"] == 0
     receipt = {
         "format": FORMAT,
         "schema_version": SCHEMA_VERSION,
@@ -258,7 +263,8 @@ def write_receipt(db: sqlite3.Connection, source: Path, state: Path) -> Path:
         "platform": sys.platform,
         "disk": disk_facts(source),
         "inventory": summary,
-        "complete": unfinished == 0,
+        "traversal_finished": traversal_finished,
+        "complete": coverage_complete,
         "claim_1tb_closed": False,
         "note": "Metadata inventory does not establish duplicate bytes, compression ratio, content identity or 1 TB acceptance.",
     }
