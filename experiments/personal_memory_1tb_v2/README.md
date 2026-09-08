@@ -31,3 +31,18 @@ comparative experiment for shifted-content deduplication.
 
 Exit code `75` means safely resumable incomplete work, `2` means fail-closed
 source/state inconsistency, and `0` means a complete content manifest.
+
+### One writer per chunk state
+
+On Linux/WSL local filesystems the CLI holds an advisory `flock` on
+`.chunk-truth.lock` from before opening the database through receipt publication
+and database close. A competing invocation exits `75` with `state is busy` on
+stderr, without opening the chunk database or publishing a receipt. It emits no
+completion JSON; any existing receipt belongs to the previous completed run.
+
+The kernel releases the lock on normal exit or process death. Keep the lock file
+in place, including after a crash; its existence does not indicate a busy state.
+Do not delete/replace the state directory or lock inode while a process holds it.
+All writers must use this locking protocol. Older CLI versions, external SQLite
+writers, hostile local changes and unverified network-filesystem lock semantics
+remain outside this guarantee. No native Windows support is introduced.

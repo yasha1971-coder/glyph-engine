@@ -1,8 +1,10 @@
 import hashlib
+import fcntl
 import importlib.util
 import json
 import os
 import sqlite3
+import selectors
 import subprocess
 import sys
 import tempfile
@@ -202,6 +204,79 @@ class ChunkTruthManifestTests(unittest.TestCase):
             receipt = state / "GLYPH_CHUNK_TRUTH_RECEIPT_V1.json"
             expected = hashlib.sha256(receipt.read_bytes()).hexdigest()
             self.assertEqual(receipt.with_suffix(".json.sha256").read_text().split()[0], expected)
+
+    def test_busy_state_does_not_create_database(self):
+        temporary, source, inventory, state = self.setup_case()
+        with temporary:
+            (source / "a.bin").write_bytes(b"a")
+            make_inventory(source, inventory)
+            state.mkdir()
+            with (state / ".chunk-truth.lock").open("a+b") as lock:
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                result = self.run_tool(inventory, state)
+                self.assertEqual(result.returncode, 75, result.stdout + result.stderr)
+                self.assertIn("state is busy", result.stderr)
+                self.assertFalse((state / "chunk-truth.sqlite3").exists())
+                self.assertFalse((state / "GLYPH_CHUNK_TRUTH_RECEIPT_V1.json").exists())
+            self.assertEqual(self.run_tool(inventory, state).returncode, 0)
+
+    def test_process_lock_and_release_after_exit_or_kill(self):
+        # Pause the actual CLI after it has opened/imported the database but
+        # before processing a file; a pipe makes the race deterministic.
+        runner = """
+import importlib.util, sys
+spec = importlib.util.spec_from_file_location('worker', sys.argv[1])
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+original = module.process_file
+def pause(*args, **kwargs):
+    print('READY', flush=True)
+    sys.stdin.readline()
+    return original(*args, **kwargs)
+module.process_file = pause
+sys.argv = sys.argv[1:]
+raise SystemExit(module.main())
+"""
+        for kill in (False, True):
+            with self.subTest(kill=kill):
+                temporary, source, inventory, state = self.setup_case()
+                with temporary:
+                    payload = b"a" * 8192
+                    (source / "a.bin").write_bytes(payload)
+                    make_inventory(source, inventory)
+                    command = [sys.executable, "-c", runner, str(TOOL),
+                               "--inventory-state", str(inventory), "--state", str(state),
+                               "--chunk-bytes", "4096"]
+                    with subprocess.Popen(command, stdin=subprocess.PIPE,
+                                          stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                          text=True) as worker:
+                        try:
+                            with selectors.DefaultSelector() as ready:
+                                ready.register(worker.stdout, selectors.EVENT_READ)
+                                self.assertTrue(ready.select(timeout=10), "worker did not start")
+                            self.assertEqual(worker.stdout.readline().strip(), "READY")
+                            result = self.run_tool(inventory, state)
+                            self.assertEqual(result.returncode, 75, result.stdout + result.stderr)
+                            self.assertIn("state is busy", result.stderr)
+                            with sqlite3.connect(state / "chunk-truth.sqlite3") as db:
+                                self.assertEqual(db.execute("SELECT COUNT(*) FROM chunks").fetchone()[0], 0)
+                            if kill:
+                                worker.kill()
+                                worker.communicate(timeout=10)
+                            else:
+                                _, err = worker.communicate("continue\n", timeout=10)
+                                self.assertEqual(worker.returncode, 0, err)
+                        finally:
+                            if worker.poll() is None:
+                                worker.kill()
+                                worker.communicate(timeout=10)
+                    result = self.run_tool(inventory, state)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    receipt = json.loads((state / "GLYPH_CHUNK_TRUTH_RECEIPT_V1.json").read_text())
+                    self.assertTrue(receipt["complete"])
+                    self.assertEqual(receipt["files_done"], 1)
+                    self.assertEqual(receipt["total_chunks"], 2)
+                    self.assertEqual((source / "a.bin").read_bytes(), payload)
 
 
 if __name__ == "__main__":

@@ -4,12 +4,15 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import closing, contextmanager
 import datetime as dt
+import fcntl
 import hashlib
 import itertools
 import json
 import os
 import sqlite3
+import sys
 from pathlib import Path
 
 FORMAT = "GLYPH_RESTARTABLE_CHUNK_TRUTH_MANIFEST_V1"
@@ -17,6 +20,25 @@ SCHEMA_VERSION = 1
 DEFAULT_CHUNK_BYTES = 8 * 1024 * 1024
 INCOMPLETE = 75
 UNTRUSTED = 2
+
+
+@contextmanager
+def state_lock(state: Path):
+    """Serialize cooperating CLI writers on Linux/WSL local filesystems.
+
+    Keep the lock file in place: unlinking it permits a second lock inode.
+    The kernel releases the lock when the process exits, including SIGKILL.
+    """
+    with (state / ".chunk-truth.lock").open("a+b") as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            print("STOP: chunk state is busy; another writer holds the lock", file=sys.stderr)
+            raise SystemExit(INCOMPLETE)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock, fcntl.LOCK_UN)
 
 
 def utc_now() -> str:
@@ -402,37 +424,42 @@ def main() -> int:
     if is_within(state, inventory_state) or is_within(inventory_state, state):
         raise SystemExit("STOP: inventory and chunk state must be disjoint")
     state.mkdir(parents=True, exist_ok=True)
-    db = connect(state / "chunk-truth.sqlite3")
-    initialize(db, source, state, inventory_sha, args.chunk_bytes)
-    inserted = import_inventory(db, inventory_db)
-    verified_bytes = verify_saved_state(db, source, args.chunk_bytes)
-    processed = 0
-    while args.max_chunks is None or processed < args.max_chunks:
-        row = db.execute(
-            "SELECT path,logical_bytes,mtime_ns,device,inode FROM files "
-            "WHERE state='pending' ORDER BY path LIMIT 1"
-        ).fetchone()
-        if row is None:
-            break
-        remaining = None if args.max_chunks is None else args.max_chunks - processed
-        used = process_file(db, source, row, args.chunk_bytes, remaining)
-        processed += used
-        if remaining == 0:
-            break
-    receipt_path = write_receipt(db, source, state, inventory_sha, args.chunk_bytes)
-    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
-    print(json.dumps({
-        "format": FORMAT,
-        "complete": receipt["complete"],
-        "errors": receipt["errors"],
-        "files_imported": inserted,
-        "chunks_processed_this_run": processed,
-        "checkpoint_bytes_verified_this_run": verified_bytes,
-        "receipt": os.fspath(receipt_path),
-    }, sort_keys=True))
-    if receipt["errors"]:
-        return UNTRUSTED
-    return 0 if receipt["complete"] else INCOMPLETE
+    with state_lock(state):
+        return run_gate(args, source, state, inventory_db, inventory_sha)
+
+
+def run_gate(args, source, state, inventory_db, inventory_sha) -> int:
+    with closing(connect(state / "chunk-truth.sqlite3")) as db:
+        initialize(db, source, state, inventory_sha, args.chunk_bytes)
+        inserted = import_inventory(db, inventory_db)
+        verified_bytes = verify_saved_state(db, source, args.chunk_bytes)
+        processed = 0
+        while args.max_chunks is None or processed < args.max_chunks:
+            row = db.execute(
+                "SELECT path,logical_bytes,mtime_ns,device,inode FROM files "
+                "WHERE state='pending' ORDER BY path LIMIT 1"
+            ).fetchone()
+            if row is None:
+                break
+            remaining = None if args.max_chunks is None else args.max_chunks - processed
+            used = process_file(db, source, row, args.chunk_bytes, remaining)
+            processed += used
+            if remaining == 0:
+                break
+        receipt_path = write_receipt(db, source, state, inventory_sha, args.chunk_bytes)
+        receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+        print(json.dumps({
+            "format": FORMAT,
+            "complete": receipt["complete"],
+            "errors": receipt["errors"],
+            "files_imported": inserted,
+            "chunks_processed_this_run": processed,
+            "checkpoint_bytes_verified_this_run": verified_bytes,
+            "receipt": os.fspath(receipt_path),
+        }, sort_keys=True))
+        if receipt["errors"]:
+            return UNTRUSTED
+        return 0 if receipt["complete"] else INCOMPLETE
 
 
 if __name__ == "__main__":
