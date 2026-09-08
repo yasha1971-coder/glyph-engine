@@ -122,6 +122,67 @@ class ChunkTruthManifestTests(unittest.TestCase):
             db.close()
             self.assertIn("non-contiguous", error)
 
+    def test_valid_hex_digest_corruption_fails_closed(self):
+        for completed in (False, True):
+            with self.subTest(completed=completed):
+                temporary, source, inventory, state = self.setup_case()
+                with temporary:
+                    (source / "a.bin").write_bytes(b"a" * 8192)
+                    make_inventory(source, inventory)
+                    extra = () if completed else ("--max-chunks", "1")
+                    first = self.run_tool(inventory, state, *extra)
+                    self.assertEqual(first.returncode, 0 if completed else 75)
+                    with sqlite3.connect(state / "chunk-truth.sqlite3") as db:
+                        db.execute("UPDATE chunks SET sha256=? WHERE ordinal=0", ("0" * 64,))
+                    result = self.run_tool(inventory, state)
+                    self.assertEqual(result.returncode, chunk_truth.UNTRUSTED, result.stdout)
+                    receipt = json.loads((state / "GLYPH_CHUNK_TRUTH_RECEIPT_V1.json").read_text())
+                    self.assertFalse(receipt["complete"])
+                    self.assertEqual(receipt["errors"], 1)
+
+    def test_completed_checkpoint_fields_fail_closed(self):
+        for sql in (
+            "DELETE FROM chunks WHERE ordinal=1",
+            "UPDATE files SET content_root_sha256='wrong'",
+            "UPDATE files SET next_offset=0",
+            "UPDATE files SET chunk_count=0",
+        ):
+            with self.subTest(sql=sql):
+                temporary, source, inventory, state = self.setup_case()
+                with temporary:
+                    (source / "a.bin").write_bytes(b"a" * 8192)
+                    make_inventory(source, inventory)
+                    self.assertEqual(self.run_tool(inventory, state).returncode, 0)
+                    with sqlite3.connect(state / "chunk-truth.sqlite3") as db:
+                        db.execute(sql)
+                    result = self.run_tool(inventory, state)
+                    self.assertEqual(result.returncode, chunk_truth.UNTRUSTED, result.stdout)
+
+    def test_changed_bytes_with_restored_mtime_fail_closed(self):
+        temporary, source, inventory, state = self.setup_case()
+        with temporary:
+            path = source / "a.bin"
+            path.write_bytes(b"a" * 8192)
+            make_inventory(source, inventory)
+            self.assertEqual(self.run_tool(inventory, state, "--max-chunks", "1").returncode, 75)
+            before = path.stat()
+            with path.open("r+b") as stream:
+                stream.write(b"b")
+            os.utime(path, ns=(before.st_atime_ns, before.st_mtime_ns))
+            self.assertEqual(self.run_tool(inventory, state).returncode, chunk_truth.UNTRUSTED)
+
+    def test_empty_file_and_tail_remain_unchanged(self):
+        temporary, source, inventory, state = self.setup_case()
+        with temporary:
+            payloads = {"empty": b"", "tail": b"a" * 4096 + b"tail"}
+            for name, data in payloads.items():
+                (source / name).write_bytes(data)
+            make_inventory(source, inventory)
+            for _ in range(2):
+                self.assertEqual(self.run_tool(inventory, state).returncode, 0)
+            for name, data in payloads.items():
+                self.assertEqual((source / name).read_bytes(), data)
+
     def test_state_inside_source_is_rejected(self):
         temporary, source, inventory, _ = self.setup_case()
         with temporary:

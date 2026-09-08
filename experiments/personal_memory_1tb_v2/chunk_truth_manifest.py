@@ -193,11 +193,60 @@ def content_root(db, path: str, logical_bytes: int) -> str:
     return canonical_hash(itertools.chain(head, chunks))
 
 
+def verify_saved_state(db, source: Path, chunk_bytes: int) -> int:
+    """Re-read checkpoint bytes; SQLite integrity is not content integrity.
+
+    Requires a stable source and exclusive ownership of the state directory.
+    This deliberately costs O(previously hashed bytes) per invocation.
+    """
+    verified_bytes = 0
+    for row in db.execute(
+        "SELECT path,logical_bytes,mtime_ns,device,inode,state,next_offset,"
+        "chunk_count,content_root_sha256 FROM files WHERE state!='error' ORDER BY path"
+    ):
+        path, size = row[:2]
+        try:
+            offset, count = validate_chain(db, path, size, chunk_bytes)
+            if (offset, count) != (row[6], row[7]):
+                raise ValueError("checkpoint counters mismatch")
+            if row[5] == 'done':
+                if offset != size:
+                    raise ValueError("completed file has incomplete chunk coverage")
+                if row[8] != content_root(db, path, size):
+                    raise ValueError("completed content root mismatch")
+            if not count and row[5] != 'done':
+                continue
+            absolute = source / path
+            if not is_within(canonical(absolute), source):
+                raise ValueError("source path escapes root")
+            if expected_identity(row) != stat_identity(absolute.stat(follow_symlinks=False)):
+                raise ValueError("source identity changed before checkpoint verification")
+            with absolute.open("rb", buffering=0) as stream:
+                if expected_identity(row) != stat_identity(os.fstat(stream.fileno())):
+                    raise ValueError("opened source identity mismatch")
+                for length, digest in db.execute(
+                    "SELECT bytes,sha256 FROM chunks WHERE path=? ORDER BY ordinal", (path,)
+                ):
+                    data = stream.read(length)
+                    if len(data) != length or hashlib.sha256(data).hexdigest() != digest:
+                        raise ValueError("saved chunk digest differs from source bytes")
+                    verified_bytes += length
+                if expected_identity(row) != stat_identity(os.fstat(stream.fileno())):
+                    raise ValueError("source identity changed during checkpoint verification")
+        except (OSError, ValueError, TypeError, sqlite3.DatabaseError) as exc:
+            with db:
+                db.execute("UPDATE files SET state='error',error=? WHERE path=?",
+                           (f"{type(exc).__name__}: {exc}", path))
+    return verified_bytes
+
+
 def process_file(db, source: Path, row, chunk_bytes: int, budget: int | None) -> int:
     path = row[0]
     absolute = source / path
     used = 0
     try:
+        if not is_within(canonical(absolute), source):
+            raise ValueError("source path escapes root")
         before = absolute.stat(follow_symlinks=False)
         if expected_identity(row) != stat_identity(before):
             raise ValueError("source identity changed since metadata inventory")
@@ -208,6 +257,8 @@ def process_file(db, source: Path, row, chunk_bytes: int, budget: int | None) ->
                 (offset, ordinal, path),
             )
         with absolute.open("rb", buffering=0) as stream:
+            if expected_identity(row) != stat_identity(os.fstat(stream.fileno())):
+                raise ValueError("opened source identity mismatch")
             stream.seek(offset)
             while offset < int(row[1]):
                 if budget is not None and used >= budget:
@@ -270,11 +321,13 @@ def write_receipt(db, source: Path, state: Path, inventory_sha: str, chunk_bytes
         "SELECT COUNT(*),COALESCE(SUM(logical_bytes),0) FROM files WHERE state='done'"
     ).fetchone()
     total_chunks, hashed_bytes = db.execute(
-        "SELECT COUNT(*),COALESCE(SUM(bytes),0) FROM chunks"
+        "SELECT COUNT(*),COALESCE(SUM(bytes),0) FROM chunks "
+        "WHERE path IN (SELECT path FROM files WHERE state!='error')"
     ).fetchone()
     unique_chunks, unique_bytes = db.execute(
         "SELECT COUNT(*),COALESCE(SUM(bytes),0) FROM "
-        "(SELECT sha256,bytes FROM chunks GROUP BY sha256,bytes)"
+        "(SELECT sha256,bytes FROM chunks "
+        "WHERE path IN (SELECT path FROM files WHERE state!='error') GROUP BY sha256,bytes)"
     ).fetchone()
     errors = states.get("error", 0)
     complete = files_done == files_total and errors == 0
@@ -307,6 +360,10 @@ def write_receipt(db, source: Path, state: Path, inventory_sha: str, chunk_bytes
         "complete": complete,
         "claim_1tb_closed": False,
         "limitations": [
+            "Every invocation re-reads all saved checkpoint bytes, including done files.",
+            "max-chunks limits new chunks only, not checkpoint verification reads.",
+            "Requires stable source files and one writer; no atomic filesystem snapshot or hostile-writer protection.",
+            "Receipt checksum is not a digital signature or an external trust anchor.",
             "Fixed chunks prove aligned duplicates, not shifted-content redundancy.",
             "Hashes only: no compressed payload repository is created by this gate.",
             "Source stability is checked using size, mtime, device and inode.",
@@ -348,6 +405,7 @@ def main() -> int:
     db = connect(state / "chunk-truth.sqlite3")
     initialize(db, source, state, inventory_sha, args.chunk_bytes)
     inserted = import_inventory(db, inventory_db)
+    verified_bytes = verify_saved_state(db, source, args.chunk_bytes)
     processed = 0
     while args.max_chunks is None or processed < args.max_chunks:
         row = db.execute(
@@ -369,6 +427,7 @@ def main() -> int:
         "errors": receipt["errors"],
         "files_imported": inserted,
         "chunks_processed_this_run": processed,
+        "checkpoint_bytes_verified_this_run": verified_bytes,
         "receipt": os.fspath(receipt_path),
     }, sort_keys=True))
     if receipt["errors"]:
