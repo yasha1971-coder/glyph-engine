@@ -45,3 +45,24 @@ repeatable receipt with corpus identity, complete byte accounting, parameters,
 artifact hashes and independent restore is located. No Disk D scan, compression
 run, payload implementation, branch deletion or public-site change occurred in
 this movement.
+
+## 2026-09-09 — fixed-chunk dedup baseline gate
+
+Base: `256f4436cf709bfc129b5c02fb411f518bcfcbc3`.
+
+STATUS: code-proven on bounded fixtures; real-corpus measurement remains open.
+
+`GLYPH_DEDUP_BASELINE_V1` measures only exact reuse already established by a
+completed fixed, file-aligned chunk-truth state. It validates the canonical
+receipt and checksum plus all SQLite chains, counters, content roots and the
+manifest root before reporting unique bytes, reused references, exact duplicate
+files, storage ratio and saving fraction. The output is deterministic for an
+unchanged state and carries explicit non-claims for compression, shifted-content
+deduplication and independent restore.
+
+The test matrix includes exact duplicate files, deterministic receipt replay, a
+shifted-content negative control, incomplete state, receipt corruption, valid-hex
+database corruption and a busy writer. No user corpus, Disk D inventory,
+ACEAPEX path, payload format or public surface is changed by this gate.
+This implementation alone does not close ordered convergence gate 3; that
+requires a receipt from a named real corpus, starting with the VIKA pilot.

@@ -46,3 +46,20 @@ Do not delete/replace the state directory or lock inode while a process holds it
 All writers must use this locking protocol. Older CLI versions, external SQLite
 writers, hostile local changes and unverified network-filesystem lock semantics
 remain outside this guarantee. No native Windows support is introduced.
+
+## Fixed-chunk dedup baseline
+
+After a chunk-truth run is complete, measure only the reuse that its fixed,
+file-aligned SHA-256 chunks actually prove:
+
+```bash
+python3 experiments/personal_memory_1tb_v2/dedup_baseline.py \
+  --state /path/to/chunk-truth-state
+```
+
+The command acquires the same cooperating-writer lock, verifies the canonical
+chunk receipt and checksum, validates every database chain, counter, content
+root and manifest root, then writes `GLYPH_DEDUP_BASELINE_V1.json` plus its
+SHA-256 checksum inside the chunk state. It does not re-read source files, create
+a payload store, compress data or claim shifted-content/delta savings. Identical
+output state produces an identical baseline receipt.
