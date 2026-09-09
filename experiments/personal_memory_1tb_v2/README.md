@@ -63,3 +63,29 @@ root and manifest root, then writes `GLYPH_DEDUP_BASELINE_V1.json` plus its
 SHA-256 checksum inside the chunk state. It does not re-read source files, create
 a payload store, compress data or claim shifted-content/delta savings. Identical
 output state produces an identical baseline receipt.
+
+## Verified whole-file hybrid archive pilot
+
+`verified_hybrid_archive.py` is the first V2 step that creates compressed payload
+objects and independently restores them. It content-addresses complete files by
+SHA-256, stores exact duplicates once, and exhaustively selects the smallest of
+raw, DEFLATE-9, bzip2-9 and XZ-9 for each unique object.
+
+```bash
+python3 experiments/personal_memory_1tb_v2/verified_hybrid_archive.py build \
+  --inventory-state /path/to/completed-inventory \
+  --output /new/archive/path \
+  --required-saving-percent 30
+
+python3 experiments/personal_memory_1tb_v2/verified_hybrid_archive.py restore \
+  --archive /new/archive/path \
+  --destination /new/restore/path
+```
+
+The reported storage ratio includes every object payload, the canonical manifest
+and its checksum sidecar. The restore path verifies stored-object hashes,
+decompresses through an independent command path, verifies every restored file
+SHA-256 and reproduces the source manifest root. Source content and relative
+paths are preserved; timestamps and other filesystem metadata are not yet part
+of this pilot. It is whole-file routing only, not CDC, delta, cross-file
+compression or a compressed self-index.
