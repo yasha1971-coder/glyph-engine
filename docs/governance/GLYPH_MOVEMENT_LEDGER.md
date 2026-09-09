@@ -66,3 +66,28 @@ database corruption and a busy writer. No user corpus, Disk D inventory,
 ACEAPEX path, payload format or public surface is changed by this gate.
 This implementation alone does not close ordered convergence gate 3; that
 requires a receipt from a named real corpus, starting with the VIKA pilot.
+
+## 2026-09-09 — verified hybrid compression truth pilot
+
+Base tree: `db0a004c92ec701bd5bf184f0e46ebd493e4c084` from remote commit
+`8856a2234ccb37ac93ee5a4b79f432d59e2475fc`.
+
+The fixed-chunk VIKA matrix is accepted only as user-executed transcript
+evidence: 415 files, 249,967,975 logical bytes, all six chunk states complete
+with zero errors. Gross fixed-chunk saving ranged from 2.556308663% at 4 KiB to
+0.083646315% at 1 MiB and 8 MiB. It is not compression evidence and does not
+meet the product target.
+
+`GLYPH_VERIFIED_HYBRID_ARCHIVE_V1` creates a real content-addressed payload
+archive. Complete-file SHA-256 identity supplies exact-file deduplication; each
+unique object is trial-compressed with raw, DEFLATE-9, bzip2-9 and XZ-9 and the
+smallest byte representation is stored. The numerator includes object payloads,
+the canonical manifest and checksum sidecar. The separate restore operation
+rejects corrupted objects and verifies restored bytes and the complete manifest
+root before reporting success.
+
+The VIKA acceptance target is at least 30% logical-byte reduction with
+independent byte-perfect restore. No result is claimed until a named receipt and
+restore evidence are produced. This pilot does not implement CDC, delta,
+cross-file dictionaries, RLBWT queryability, permissions/timestamp preservation,
+or the final append-only generation protocol. ACEAPEX is outside this movement.
