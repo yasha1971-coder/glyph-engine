@@ -199,6 +199,8 @@ def build(inventory_state: Path, output: Path, required_percent: float) -> dict:
         objects: dict[str, dict] = {}
         codec_counts: dict[str, int] = {}
         logical_total = 0
+        files_expected = sum(1 for row in rows if row[1] == "file")
+        files_processed = 0
         for row in rows:
             raw_path, kind, size, *_ = row
             relative = safe_relative(raw_path)
@@ -229,6 +231,16 @@ def build(inventory_state: Path, output: Path, required_percent: float) -> dict:
             elif objects[digest]["logical_bytes"] != len(data):
                 raise ArchiveError("SHA-256 identity collision")
             files.append({"path": relative.as_posix(), "bytes": len(data), "sha256": digest})
+            files_processed += 1
+            if files_processed % 10 == 0 or files_processed == files_expected:
+                print(json.dumps({
+                    "format": FORMAT,
+                    "progress": "compressing",
+                    "files_processed": files_processed,
+                    "files_total": files_expected,
+                    "logical_bytes_processed": logical_total,
+                    "unique_objects": len(objects),
+                }, sort_keys=True), file=sys.stderr, flush=True)
         object_list = [objects[key] for key in sorted(objects)]
         payload_bytes = sum(item["stored_bytes"] for item in object_list)
         records = [{"path": item["path"], "bytes": item["bytes"], "sha256": item["sha256"]} for item in files]
