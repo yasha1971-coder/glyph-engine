@@ -1,0 +1,61 @@
+test_busy_state_does_not_create_database (test_chunk_truth_manifest.ChunkTruthManifestTests.test_busy_state_does_not_create_database) ... ok
+test_changed_bytes_with_restored_mtime_fail_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_changed_bytes_with_restored_mtime_fail_closed) ... ok
+test_completed_checkpoint_fields_fail_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_completed_checkpoint_fields_fail_closed) ... ok
+test_corrupt_checkpoint_fails_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_corrupt_checkpoint_fails_closed) ... ok
+test_duplicate_chunks_are_proven (test_chunk_truth_manifest.ChunkTruthManifestTests.test_duplicate_chunks_are_proven) ... ok
+test_empty_file_and_tail_remain_unchanged (test_chunk_truth_manifest.ChunkTruthManifestTests.test_empty_file_and_tail_remain_unchanged) ... ok
+test_process_lock_and_release_after_exit_or_kill (test_chunk_truth_manifest.ChunkTruthManifestTests.test_process_lock_and_release_after_exit_or_kill) ... ok
+test_receipt_checksum_matches (test_chunk_truth_manifest.ChunkTruthManifestTests.test_receipt_checksum_matches) ... ok
+test_resume_inside_file_is_idempotent (test_chunk_truth_manifest.ChunkTruthManifestTests.test_resume_inside_file_is_idempotent) ... ok
+test_source_change_after_inventory_fails_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_source_change_after_inventory_fails_closed) ... ok
+test_state_inside_source_is_rejected (test_chunk_truth_manifest.ChunkTruthManifestTests.test_state_inside_source_is_rejected) ... ok
+test_valid_hex_digest_corruption_fails_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_valid_hex_digest_corruption_fails_closed) ... ok
+test_classification (test_corpus_truth_gate.CorpusTruthGateTests.test_classification) ... ok
+test_inventory_does_not_follow_symlink (test_corpus_truth_gate.CorpusTruthGateTests.test_inventory_does_not_follow_symlink) ... ok
+test_resume (test_corpus_truth_gate.CorpusTruthGateTests.test_resume) ... ok
+test_state_inside_source_is_rejected (test_corpus_truth_gate.CorpusTruthGateTests.test_state_inside_source_is_rejected) ... ok
+test_busy_chunk_state_is_rejected_without_output (test_dedup_baseline.DedupBaselineTests.test_busy_chunk_state_is_rejected_without_output) ... ok
+test_exact_duplicates_are_measured_and_receipt_is_deterministic (test_dedup_baseline.DedupBaselineTests.test_exact_duplicates_are_measured_and_receipt_is_deterministic) ... ok
+test_incomplete_chunk_state_is_rejected (test_dedup_baseline.DedupBaselineTests.test_incomplete_chunk_state_is_rejected) ... ok
+test_receipt_or_database_tampering_is_rejected (test_dedup_baseline.DedupBaselineTests.test_receipt_or_database_tampering_is_rejected) ... ok
+test_shifted_content_is_not_misreported_as_fixed_chunk_dedup (test_dedup_baseline.DedupBaselineTests.test_shifted_content_is_not_misreported_as_fixed_chunk_dedup) ... ok
+test_binary_and_scan_budget_do_not_claim_absence (test_local_memory_bridge.LocalMemoryBridgeTests.test_binary_and_scan_budget_do_not_claim_absence) ... {"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 67, "progress": "compressing", "unique_objects": 3}
+ok
+test_context_budget_preserves_utf8_and_byte_coordinates (test_local_memory_bridge.LocalMemoryBridgeTests.test_context_budget_preserves_utf8_and_byte_coordinates) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_empty_scope_is_not_proven_empty (test_local_memory_bridge.LocalMemoryBridgeTests.test_empty_scope_is_not_proven_empty) ... ok
+test_external_codec_never_executed_by_query (test_local_memory_bridge.LocalMemoryBridgeTests.test_external_codec_never_executed_by_query) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_oversized_decoding_rejected (test_local_memory_bridge.LocalMemoryBridgeTests.test_oversized_decoding_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_private_paths_never_disclosed_without_grant (test_local_memory_bridge.LocalMemoryBridgeTests.test_private_paths_never_disclosed_without_grant) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_real_precomp_manifest_mixed_coverage (test_local_memory_bridge.LocalMemoryBridgeTests.test_real_precomp_manifest_mixed_coverage) ... {"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 10073, "progress": "compressing", "unique_objects": 3}
+ok
+test_small_context_still_reports_match (test_local_memory_bridge.LocalMemoryBridgeTests.test_small_context_still_reports_match) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_symlink_object_rejected (test_local_memory_bridge.LocalMemoryBridgeTests.test_symlink_object_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_tampering_discards_evidence (test_local_memory_bridge.LocalMemoryBridgeTests.test_tampering_discards_evidence) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_two_additions_rename_versions_restore_and_old_bytes_unchanged (test_local_memory_bridge.LocalMemoryBridgeTests.test_two_additions_rename_versions_restore_and_old_bytes_unchanged) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+{"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 122, "progress": "compressing", "unique_objects": 3}
+ok
+test_wrong_pin_and_unknown_grant_rejected (test_local_memory_bridge.LocalMemoryBridgeTests.test_wrong_pin_and_unknown_grant_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_build_deduplicates_routes_and_restores_exact_bytes (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_build_deduplicates_routes_and_restores_exact_bytes) ... ok
+test_corrupted_object_is_rejected_without_restore (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_corrupted_object_is_rejected_without_restore) ... ok
+test_incompressible_object_uses_raw (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_incompressible_object_uses_raw) ... ok
+test_receipt_corruption_and_existing_destinations_are_rejected (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_receipt_corruption_and_existing_destinations_are_rejected) ... ok
+test_source_identity_change_is_rejected_without_archive (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_source_identity_change_is_rejected_without_archive) ... ok
+test_corrupted_object_is_rejected_without_restore (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_corrupted_object_is_rejected_without_restore) ... ok
+test_no_supported_stream_falls_back_safely (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_no_supported_stream_falls_back_safely) ... ok
+test_noneligible_object_skips_external_tool (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_noneligible_object_skips_external_tool) ... ok
+test_roundtrip_mismatch_is_never_selected (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_roundtrip_mismatch_is_never_selected) ... ok
+test_verified_candidate_is_selected_and_restores_exact_bytes (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_verified_candidate_is_selected_and_restores_exact_bytes) ... ok
+test_wrong_binary_hash_is_rejected_without_output (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_wrong_binary_hash_is_rejected_without_output) ... ok
+
+----------------------------------------------------------------------
+Ran 44 tests in 5.038s
+
+OK
