@@ -175,8 +175,12 @@ def handler_for(args, memory, token):
                     def date_value(value, scale):
                         return datetime.fromtimestamp(value / scale, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if value is not None else 'Неизвестно'
                     meta = files[focus]
-                    page += '<p>Создан исходный файл: неизвестно — браузер не сообщает эту дату.</p>'
-                    page += '<p>Изменён исходный файл: ' + date_value(meta.get('source_modified_ms'), 1000) + ' <small>(сведения браузера)</small></p>'
+                    page += '<p>Создан исходный файл: ' + date_value(meta.get('source_created_ms'), 1000) + '</p>'
+                    page += '<p>Изменён исходный файл: ' + date_value(meta.get('source_modified_ms'), 1000) + '</p>'
+                    if meta.get('filesystem_dates_observed_ms'):
+                        page += '<p><small>Даты дополнены из Windows после совпадения SHA-256. Это сведения файловой системы, не доказательство первого появления документа.</small></p>'
+                    elif meta.get('source_modified_ms') is not None:
+                        page += '<p><small>Дата изменения сообщена браузером.</small></p>'
                     page += '<p>Эта версия сохранена в GLYPH: ' + date_value(meta.get('saved_ns'), 1e9) + '</p>'
                     page += f'<p>Текущий размер: {files[focus]["bytes"]:,} байт</p><div class="actions">' + download(current, focus)
                     page += f'<a class="button" href="/{token}?update={quote(focus, safe="")}">Обновить этот файл</a></div></section>'
@@ -189,6 +193,10 @@ def handler_for(args, memory, token):
                             date = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'Дата старой записи неизвестна'
                             changes.append((pin, item, date))
                             last = item['sha256']
+                        elif item and changes and item.get('filesystem_dates_observed_ms'):
+                            # Metadata enrichment is not another content version.
+                            old_pin, _, old_date = changes[-1]
+                            changes[-1] = (old_pin, item, old_date)
                     page += f'<section class="panel"><h2>История этого файла · {len(changes)}</h2><p>Вверху — последняя сохранённая версия.</p><table>'
                     for number, (pin, item, date) in reversed(list(enumerate(changes, 1))):
                         label = 'Текущая версия' if number == len(changes) else f'Версия {number}'
@@ -315,6 +323,7 @@ def main():
     p.add_argument('--precompressor', type=Path)
     p.add_argument('--precompressor-sha256')
     p.add_argument('--port', type=int, default=8766)
+    p.add_argument('--enrich-source-dates', type=Path)
     p.add_argument('--worker', choices=['add', 'restore'])
     p.add_argument('--snapshot')
     p.add_argument('--source', type=Path)
@@ -337,6 +346,13 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         pin = inc.read_regular(m.root, 'CURRENT', 65).decode().strip()
         m.snapshot(pin)
+        if a.enrich_source_dates:
+            import source_dates
+            print('Читаю даты Windows и проверяю SHA-256 известных файлов. Архив не пересжимается.', flush=True)
+            new_pin, report = source_dates.enrich(m, pin, a.enrich_source_dates)
+            if new_pin != pin:
+                set_head(m.root, new_pin)
+            print(json.dumps({'source_dates': report}, ensure_ascii=False), flush=True)
         token = secrets.token_urlsafe(32)
         server = HTTPServer(('127.0.0.1', a.port), handler_for(a, m, token))
         print(f'Открой на ноутбуке: http://127.0.0.1:{server.server_port}/{token}', flush=True)

@@ -207,3 +207,18 @@ class MemoryBrowserTests(unittest.TestCase):
     def test_invalid_source_date_is_rejected(self):
         self.assertEqual(self.upload(b'x', self.first, modified=-1)[0], 422)
         self.assertEqual(self.head(), self.first)
+
+    def test_filesystem_dates_visible_without_extra_content_version(self):
+        import source_dates
+        item = self.m.snapshot(self.first)['files']
+        name = next(iter(item))
+        record = {'path': name, 'status': 'ok', 'bytes': item[name]['bytes'],
+                  'sha256': item[name]['sha256'], 'created_ms': 1500000000000,
+                  'modified_ms': 1600000000000}
+        pin, _ = source_dates.apply(self.m, self.first, [record])
+        ui.set_head(self.m.root, pin)
+        status, _, page = self.request('GET', path='/token?' + urlencode({'file': name}))
+        self.assertEqual(status, 200)
+        self.assertIn(b'2017-07-14', page)
+        self.assertIn(b'2020-09-13', page)
+        self.assertIn('История этого файла · 1'.encode(), page)
