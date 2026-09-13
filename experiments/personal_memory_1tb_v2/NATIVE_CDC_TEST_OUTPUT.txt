@@ -1,0 +1,165 @@
+test_busy_state_does_not_create_database (test_chunk_truth_manifest.ChunkTruthManifestTests.test_busy_state_does_not_create_database) ... ok
+test_changed_bytes_with_restored_mtime_fail_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_changed_bytes_with_restored_mtime_fail_closed) ... ok
+test_completed_checkpoint_fields_fail_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_completed_checkpoint_fields_fail_closed) ... ok
+test_corrupt_checkpoint_fails_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_corrupt_checkpoint_fails_closed) ... ok
+test_duplicate_chunks_are_proven (test_chunk_truth_manifest.ChunkTruthManifestTests.test_duplicate_chunks_are_proven) ... ok
+test_empty_file_and_tail_remain_unchanged (test_chunk_truth_manifest.ChunkTruthManifestTests.test_empty_file_and_tail_remain_unchanged) ... ok
+test_process_lock_and_release_after_exit_or_kill (test_chunk_truth_manifest.ChunkTruthManifestTests.test_process_lock_and_release_after_exit_or_kill) ... ok
+test_receipt_checksum_matches (test_chunk_truth_manifest.ChunkTruthManifestTests.test_receipt_checksum_matches) ... ok
+test_resume_inside_file_is_idempotent (test_chunk_truth_manifest.ChunkTruthManifestTests.test_resume_inside_file_is_idempotent) ... ok
+test_source_change_after_inventory_fails_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_source_change_after_inventory_fails_closed) ... ok
+test_state_inside_source_is_rejected (test_chunk_truth_manifest.ChunkTruthManifestTests.test_state_inside_source_is_rejected) ... ok
+test_valid_hex_digest_corruption_fails_closed (test_chunk_truth_manifest.ChunkTruthManifestTests.test_valid_hex_digest_corruption_fails_closed) ... ok
+test_chunking_is_deterministic_and_bounded (test_chunk_versions.ChunkVersionTests.test_chunking_is_deterministic_and_bounded) ... ok
+test_compressible_data_uses_whole_fallback (test_chunk_versions.ChunkVersionTests.test_compressible_data_uses_whole_fallback) ... ok
+test_insertion_reuses_ranges_and_no_delta_chain (test_chunk_versions.ChunkVersionTests.test_insertion_reuses_ranges_and_no_delta_chain) ... ok
+test_legacy_snapshot_stays_readable (test_chunk_versions.ChunkVersionTests.test_legacy_snapshot_stays_readable) ... ok
+test_missing_recipe_corrupt_chunk_and_range_bounds (test_chunk_versions.ChunkVersionTests.test_missing_recipe_corrupt_chunk_and_range_bounds) ... ok
+test_packed_snapshot_and_invalid_stream (test_chunk_versions.ChunkVersionTests.test_packed_snapshot_and_invalid_stream) ... ok
+test_changed_binary_refused (test_compressed_preservation.CompressedPreservationTests.test_changed_binary_refused) ... {"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+ok
+test_changed_selection_binding_never_decodes (test_compressed_preservation.CompressedPreservationTests.test_changed_selection_binding_never_decodes) ... {"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+ok
+test_existing_host_materializes_without_cache (test_compressed_preservation.CompressedPreservationTests.test_existing_host_materializes_without_cache) ... {"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+ok
+test_host_rechecks_backend_before_publication (test_compressed_preservation.CompressedPreservationTests.test_host_rechecks_backend_before_publication) ... {"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+ok
+test_selected_precomp_object_exact_bytes (test_compressed_preservation.CompressedPreservationTests.test_selected_precomp_object_exact_bytes) ... {"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+ok
+test_wrong_identity_refused_before_decoder (test_compressed_preservation.CompressedPreservationTests.test_wrong_identity_refused_before_decoder) ... {"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+ok
+test_classification (test_corpus_truth_gate.CorpusTruthGateTests.test_classification) ... ok
+test_inventory_does_not_follow_symlink (test_corpus_truth_gate.CorpusTruthGateTests.test_inventory_does_not_follow_symlink) ... ok
+test_resume (test_corpus_truth_gate.CorpusTruthGateTests.test_resume) ... ok
+test_state_inside_source_is_rejected (test_corpus_truth_gate.CorpusTruthGateTests.test_state_inside_source_is_rejected) ... ok
+test_busy_chunk_state_is_rejected_without_output (test_dedup_baseline.DedupBaselineTests.test_busy_chunk_state_is_rejected_without_output) ... ok
+test_exact_duplicates_are_measured_and_receipt_is_deterministic (test_dedup_baseline.DedupBaselineTests.test_exact_duplicates_are_measured_and_receipt_is_deterministic) ... ok
+test_incomplete_chunk_state_is_rejected (test_dedup_baseline.DedupBaselineTests.test_incomplete_chunk_state_is_rejected) ... ok
+test_receipt_or_database_tampering_is_rejected (test_dedup_baseline.DedupBaselineTests.test_receipt_or_database_tampering_is_rejected) ... ok
+test_shifted_content_is_not_misreported_as_fixed_chunk_dedup (test_dedup_baseline.DedupBaselineTests.test_shifted_content_is_not_misreported_as_fixed_chunk_dedup) ... ok
+test_missing_bad_hash_existing_output_no_writes (test_golden_demo.GoldenDemoTests.test_missing_bad_hash_existing_output_no_writes) ... ok
+test_official_profile_size_and_count (test_golden_demo.GoldenDemoTests.test_official_profile_size_and_count) ... ok
+test_source_output_overlap_is_rejected (test_golden_demo.GoldenDemoTests.test_source_output_overlap_is_rejected) ... ok
+test_synthetic_workflow_and_original_unchanged (test_golden_demo.GoldenDemoTests.test_synthetic_workflow_and_original_unchanged) ... {"complete": true, "directories_processed_this_run": 1, "format": "GLYPH_1TB_CORPUS_TRUTH_GATE_V1", "receipt": "/tmp/tmpows4z503/demo/inventory/GLYPH_1TB_CORPUS_TRUTH_RECEIPT_V1.json"}
+{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 4900, "progress": "compressing", "unique_objects": 1}
+ok
+test_absent_files_are_retained (test_incremental_memory.IncrementalMemoryTests.test_absent_files_are_retained) ... ok
+test_busy_writer_rejected (test_incremental_memory.IncrementalMemoryTests.test_busy_writer_rejected) ... ok
+test_corrupt_object_no_output_and_no_successful_reuse (test_incremental_memory.IncrementalMemoryTests.test_corrupt_object_no_output_and_no_successful_reuse) ... ok
+test_corrupt_snapshot_is_rejected (test_incremental_memory.IncrementalMemoryTests.test_corrupt_snapshot_is_rejected) ... ok
+test_existing_destination_and_overlapping_source_rejected (test_incremental_memory.IncrementalMemoryTests.test_existing_destination_and_overlapping_source_rejected) ... ok
+test_failure_before_publication_leaves_old_snapshot_usable (test_incremental_memory.IncrementalMemoryTests.test_failure_before_publication_leaves_old_snapshot_usable) ... ok
+test_symlink_and_oversized_input_rejected (test_incremental_memory.IncrementalMemoryTests.test_symlink_and_oversized_input_rejected) ... ok
+test_versions_repeat_dedup_revert_and_base_unchanged (test_incremental_memory.IncrementalMemoryTests.test_versions_repeat_dedup_revert_and_base_unchanged) ... ok
+test_binary_and_scan_budget_do_not_claim_absence (test_local_memory_bridge.LocalMemoryBridgeTests.test_binary_and_scan_budget_do_not_claim_absence) ... {"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 67, "progress": "compressing", "unique_objects": 3}
+ok
+test_context_budget_preserves_utf8_and_byte_coordinates (test_local_memory_bridge.LocalMemoryBridgeTests.test_context_budget_preserves_utf8_and_byte_coordinates) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_empty_scope_is_not_proven_empty (test_local_memory_bridge.LocalMemoryBridgeTests.test_empty_scope_is_not_proven_empty) ... ok
+test_external_codec_never_executed_by_query (test_local_memory_bridge.LocalMemoryBridgeTests.test_external_codec_never_executed_by_query) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_oversized_decoding_rejected (test_local_memory_bridge.LocalMemoryBridgeTests.test_oversized_decoding_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_private_paths_never_disclosed_without_grant (test_local_memory_bridge.LocalMemoryBridgeTests.test_private_paths_never_disclosed_without_grant) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_real_precomp_manifest_mixed_coverage (test_local_memory_bridge.LocalMemoryBridgeTests.test_real_precomp_manifest_mixed_coverage) ... {"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 10073, "progress": "compressing", "unique_objects": 3}
+ok
+test_small_context_still_reports_match (test_local_memory_bridge.LocalMemoryBridgeTests.test_small_context_still_reports_match) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_symlink_object_rejected (test_local_memory_bridge.LocalMemoryBridgeTests.test_symlink_object_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_tampering_discards_evidence (test_local_memory_bridge.LocalMemoryBridgeTests.test_tampering_discards_evidence) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_two_additions_rename_versions_restore_and_old_bytes_unchanged (test_local_memory_bridge.LocalMemoryBridgeTests.test_two_additions_rename_versions_restore_and_old_bytes_unchanged) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+{"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 122, "progress": "compressing", "unique_objects": 3}
+ok
+test_wrong_pin_and_unknown_grant_rejected (test_local_memory_bridge.LocalMemoryBridgeTests.test_wrong_pin_and_unknown_grant_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+ok
+test_broken_connection_does_not_trigger_second_response (test_memory_browser.MemoryBrowserTests.test_broken_connection_does_not_trigger_second_response) ... ok
+test_cancel_and_stale_choice_leave_current (test_memory_browser.MemoryBrowserTests.test_cancel_and_stale_choice_leave_current) ... ok
+test_choice_can_keep_separate_without_overwriting_and_reuses_content (test_memory_browser.MemoryBrowserTests.test_choice_can_keep_separate_without_overwriting_and_reuses_content) ... ok
+test_concurrent_updates_preserve_single_winner (test_memory_browser.MemoryBrowserTests.test_concurrent_updates_preserve_single_winner) ... ok
+test_confirmed_deletion_old_links_rejected_and_remaining_downloads (test_memory_browser.MemoryBrowserTests.test_confirmed_deletion_old_links_rejected_and_remaining_downloads) ... ok
+test_corrupted_payload_can_be_deleted_without_preview (test_memory_browser.MemoryBrowserTests.test_corrupted_payload_can_be_deleted_without_preview) ... ok
+test_corruption_is_not_downloaded (test_memory_browser.MemoryBrowserTests.test_corruption_is_not_downloaded) ... ok
+test_delete_remains_available_during_slow_preview (test_memory_browser.MemoryBrowserTests.test_delete_remains_available_during_slow_preview) ... ok
+test_duplicate_notice_requires_intact_stored_bytes (test_memory_browser.MemoryBrowserTests.test_duplicate_notice_requires_intact_stored_bytes) ... ok
+test_duplicate_under_different_name_does_not_add_record (test_memory_browser.MemoryBrowserTests.test_duplicate_under_different_name_does_not_add_record) ... ok
+test_filesystem_dates_visible_without_extra_content_version (test_memory_browser.MemoryBrowserTests.test_filesystem_dates_visible_without_extra_content_version) ... ok
+test_foreign_null_origin_and_traversal_rejected (test_memory_browser.MemoryBrowserTests.test_foreign_null_origin_and_traversal_rejected) ... ok
+test_idle_preconnection_does_not_block_listing (test_memory_browser.MemoryBrowserTests.test_idle_preconnection_does_not_block_listing) ... ok
+test_invalid_source_date_is_rejected (test_memory_browser.MemoryBrowserTests.test_invalid_source_date_is_rejected) ... ok
+test_named_versions_restore_and_escape (test_memory_browser.MemoryBrowserTests.test_named_versions_restore_and_escape) ... ok
+test_original_unicode_filename_without_custom_path (test_memory_browser.MemoryBrowserTests.test_original_unicode_filename_without_custom_path) ... ok
+test_oversized_upload_preserves_current (test_memory_browser.MemoryBrowserTests.test_oversized_upload_preserves_current) ... ok
+test_preview_corruption_and_foreign_origin_are_rejected (test_memory_browser.MemoryBrowserTests.test_preview_corruption_and_foreign_origin_are_rejected) ... ok
+test_preview_verified_text_pdf_image_and_unsupported (test_memory_browser.MemoryBrowserTests.test_preview_verified_text_pdf_image_and_unsupported) ... ok
+test_screens_are_separate_and_save_returns_to_file_card (test_memory_browser.MemoryBrowserTests.test_screens_are_separate_and_save_returns_to_file_card) ... ok
+test_source_date_is_distinct_from_save_date_and_survives_choice (test_memory_browser.MemoryBrowserTests.test_source_date_is_distinct_from_save_date_and_survives_choice) ... ok
+test_stale_delete_and_missing_confirmation_do_not_delete (test_memory_browser.MemoryBrowserTests.test_stale_delete_and_missing_confirmation_do_not_delete) ... ok
+test_stale_tab_does_not_overwrite_current (test_memory_browser.MemoryBrowserTests.test_stale_tab_does_not_overwrite_current) ... ok
+test_update_form_binds_original_path_and_new_upload_cannot_overwrite (test_memory_browser.MemoryBrowserTests.test_update_form_binds_original_path_and_new_upload_cannot_overwrite) ... ok
+test_upload_change_download_both_versions_and_repeat (test_memory_browser.MemoryBrowserTests.test_upload_change_download_both_versions_and_repeat) ... ok
+test_identical_boundaries_and_content (test_native_cdc.NativeCDCTests.test_identical_boundaries_and_content) ... ok
+test_invalid_parameters (test_native_cdc.NativeCDCTests.test_invalid_parameters) ... ok
+test_other_parameters_and_insertions (test_native_cdc.NativeCDCTests.test_other_parameters_and_insertions) ... ok
+test_delete_document_removes_all_history_and_exclusive_payload (test_permanent_delete.PermanentDeleteTests.test_delete_document_removes_all_history_and_exclusive_payload) ... ok
+test_delete_middle_and_latest_preserves_other_versions (test_permanent_delete.PermanentDeleteTests.test_delete_middle_and_latest_preserves_other_versions) ... ok
+test_failure_before_head_is_aborted_on_restart (test_permanent_delete.PermanentDeleteTests.test_failure_before_head_is_aborted_on_restart) ... ok
+test_failure_during_cleanup_completes_on_restart (test_permanent_delete.PermanentDeleteTests.test_failure_during_cleanup_completes_on_restart) ... ok
+test_revert_is_distinct_version_after_deletion (test_permanent_delete.PermanentDeleteTests.test_revert_is_distinct_version_after_deletion) ... ok
+test_shared_legacy_ranges_survive_deleted_original_version (test_permanent_delete.PermanentDeleteTests.test_shared_legacy_ranges_survive_deleted_original_version) ... ok
+test_shared_object_and_other_document_survive (test_permanent_delete.PermanentDeleteTests.test_shared_object_and_other_document_survive) ... ok
+test_stale_and_detached_histories_rejected (test_permanent_delete.PermanentDeleteTests.test_stale_and_detached_histories_rejected) ... ok
+test_fresh_workers_and_tamper (test_qualification.QualificationTests.test_fresh_workers_and_tamper) ... {"complete": true, "directories_processed_this_run": 1, "format": "GLYPH_1TB_CORPUS_TRUTH_GATE_V1", "receipt": "/tmp/tmpos5rfwck/demo/inventory/GLYPH_1TB_CORPUS_TRUTH_RECEIPT_V1.json"}
+{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 2100, "progress": "compressing", "unique_objects": 1}
+ok
+test_quantile_and_empty (test_qualification.QualificationTests.test_quantile_and_empty) ... ok
+test_changed_external_pin_rejected (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_changed_external_pin_rejected) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_corrupt_object_map_blocks_materialization (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_corrupt_object_map_blocks_materialization) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_corrupt_root_blocks_materialization (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_corrupt_root_blocks_materialization) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_corrupt_selected_compressed_object_is_not_published (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_corrupt_selected_compressed_object_is_not_published) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_real_fm_locate_matches_bytes_and_absence (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_real_fm_locate_matches_bytes_and_absence) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_real_host_authentication_and_compressed_materialization (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_real_host_authentication_and_compressed_materialization) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_touched_index_corruption_is_untrusted (test_real_authenticated_preservation.RealAuthenticatedPreservationTests.test_touched_index_corruption_is_untrusted) ... {"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+ok
+test_corrupt_object_stops_resume (test_scale_lab.ScaleLabTests.test_corrupt_object_stops_resume) ... ok
+test_disk_reserve_stops_without_progress (test_scale_lab.ScaleLabTests.test_disk_reserve_stops_without_progress) ... ok
+test_orphan_after_interrupt_and_no_overwrite (test_scale_lab.ScaleLabTests.test_orphan_after_interrupt_and_no_overwrite) ... {"format": "GLYPH_V2_COMPRESSED_PHASE_B_RESULT_V1", "materialized_directory": "/tmp/tmpkjd7v1pd/output/materialized-20260913-232644-030155", "objects": 1, "receipt": "/tmp/tmpkjd7v1pd/output/GLYPH_V2_COMPRESSED_PHASE_B_20260913-232644-030327.json", "sha256": "2f9f5d0d542f6d65df9511c9a8deb15602c0af127b516b808f0165cd9159b255", "status": "GREEN_AUTHENTICATED_MATERIALIZATION"}
+{"stage": "written-and-verified", "logical_bytes": 1048595, "target_bytes": 1048595, "elapsed_this_session_s": 0.01, "free_bytes": 29940953088}
+{"stage": "scale-complete", "format": "GLYPH_SCALE_LAB_RESULT_V1", "status": "FULL_TARGET_BYTE_VERIFIED", "logical_input_bytes": 1048595, "blocks": 9, "unique_payload_bytes": 542383, "directory_bytes_before_report": 553057, "allocated_bytes_before_report": 573440, "workload_bytes": {"modified-seed": 262144, "repeated-seed": 262144, "unique-synthetic": 524307}, "encode_seconds": 0.0014267279766499996, "generated_encoded_fsynced_readback_seconds_excluding_index_commit": 0.004504516007727943, "final_verify_s": 0.0028231909964233637, "peak_rss_bytes": 166264832, "config_sha256": "f0f76fdd3db2db5fbcb53ea352d1ce557813e7fd0305b1763d267d162ff3b078", "runner_sha256": "56e00fc036b45ab82c4b09a91e6441a08b0723d433ca1c1e8d3398b18576cf8b", "decoder_sha256": "1c274f12aceb12899106332783832802c471831ecf8317aeebbab1f0899aeda2", "limitations": ["synthetic sharded storage lab; not a unified Personal Memory vault", "only GLYPH raw/deflate9 decoder; no xz/bzip2 codec selection", "half of logical bytes intentionally unique pseudorandom", "remaining data derived from local samples, not representative personal corpus", "readback may be served by OS cache; no power-loss claim", "fsync on WSL/DrvFS is not proof of physical media persistence"]}
+ok
+test_resume_roundtrip_and_exclusion (test_scale_lab.ScaleLabTests.test_resume_roundtrip_and_exclusion) ... {"stage": "written-and-verified", "logical_bytes": 1048595, "target_bytes": 1048595, "elapsed_this_session_s": 0.0, "free_bytes": 29940948992}
+{"stage": "scale-complete", "format": "GLYPH_SCALE_LAB_RESULT_V1", "status": "FULL_TARGET_BYTE_VERIFIED", "logical_input_bytes": 1048595, "blocks": 9, "unique_payload_bytes": 542383, "directory_bytes_before_report": 553057, "allocated_bytes_before_report": 573440, "workload_bytes": {"modified-seed": 262144, "repeated-seed": 262144, "unique-synthetic": 524307}, "encode_seconds": 0.0013832360273227096, "generated_encoded_fsynced_readback_seconds_excluding_index_commit": 0.004521581984590739, "final_verify_s": 0.0027812590124085546, "peak_rss_bytes": 166264832, "config_sha256": "f0f76fdd3db2db5fbcb53ea352d1ce557813e7fd0305b1763d267d162ff3b078", "runner_sha256": "56e00fc036b45ab82c4b09a91e6441a08b0723d433ca1c1e8d3398b18576cf8b", "decoder_sha256": "1c274f12aceb12899106332783832802c471831ecf8317aeebbab1f0899aeda2", "limitations": ["synthetic sharded storage lab; not a unified Personal Memory vault", "only GLYPH raw/deflate9 decoder; no xz/bzip2 codec selection", "half of logical bytes intentionally unique pseudorandom", "remaining data derived from local samples, not representative personal corpus", "readback may be served by OS cache; no power-loss claim", "fsync on WSL/DrvFS is not proof of physical media persistence"]}
+ok
+test_changed_and_missing_sources_are_not_bound (test_source_dates.SourceDatesTests.test_changed_and_missing_sources_are_not_bound) ... ok
+test_duplicate_or_invalid_records_publish_nothing (test_source_dates.SourceDatesTests.test_duplicate_or_invalid_records_publish_nothing) ... ok
+test_matching_metadata_added_without_payload_or_old_snapshot_changes (test_source_dates.SourceDatesTests.test_matching_metadata_added_without_payload_or_old_snapshot_changes) ... ok
+test_native_request_uses_only_known_paths (test_source_dates.SourceDatesTests.test_native_request_uses_only_known_paths) ... ok
+test_browser_escapes_names_and_rejects_foreign_access (test_vault_browser.VaultBrowserTests.test_browser_escapes_names_and_rejects_foreign_access) ... ok
+test_click_downloads_verified_bytes_from_worker (test_vault_browser.VaultBrowserTests.test_click_downloads_verified_bytes_from_worker) ... ok
+test_corruption_returns_no_private_payload (test_vault_browser.VaultBrowserTests.test_corruption_returns_no_private_payload) ... ok
+test_form_policy_preserves_same_origin_post (test_vault_browser.VaultBrowserTests.test_form_policy_preserves_same_origin_post) ... ok
+test_null_origin_is_still_rejected (test_vault_browser.VaultBrowserTests.test_null_origin_is_still_rejected) ... ok
+test_build_deduplicates_routes_and_restores_exact_bytes (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_build_deduplicates_routes_and_restores_exact_bytes) ... ok
+test_corrupted_object_is_rejected_without_restore (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_corrupted_object_is_rejected_without_restore) ... ok
+test_incompressible_object_uses_raw (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_incompressible_object_uses_raw) ... ok
+test_receipt_corruption_and_existing_destinations_are_rejected (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_receipt_corruption_and_existing_destinations_are_rejected) ... ok
+test_source_identity_change_is_rejected_without_archive (test_verified_hybrid_archive.VerifiedHybridArchiveTests.test_source_identity_change_is_rejected_without_archive) ... ok
+test_corrupted_object_is_rejected_without_restore (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_corrupted_object_is_rejected_without_restore) ... ok
+test_no_supported_stream_falls_back_safely (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_no_supported_stream_falls_back_safely) ... ok
+test_noneligible_object_skips_external_tool (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_noneligible_object_skips_external_tool) ... ok
+test_roundtrip_mismatch_is_never_selected (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_roundtrip_mismatch_is_never_selected) ... ok
+test_verified_candidate_is_selected_and_restores_exact_bytes (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_verified_candidate_is_selected_and_restores_exact_bytes) ... ok
+test_wrong_binary_hash_is_rejected_without_output (test_verified_reversible_precompression_archive.VerifiedReversiblePrecompressionArchiveTests.test_wrong_binary_hash_is_rejected_without_output) ... ok
+
+----------------------------------------------------------------------
+Ran 126 tests in 37.201s
+
+OK

@@ -1,4 +1,5 @@
 """Gear CDC reference pilot, not FastCDC. Depth-one legacy ranges, no delta chain."""
+import os
 import hashlib
 import json
 import zlib
@@ -9,7 +10,7 @@ GEAR = tuple(int.from_bytes(hashlib.sha256(b'GLYPH-GEAR-V1' + bytes([i])).digest
 FORMAT = 'GLYPH_CHUNK_RECIPE_V1'
 
 
-def split(data):
+def split_python(data):
     start, rolling = 0, 0
     for i, byte in enumerate(data):
         rolling = ((rolling << 1) + GEAR[byte]) & MASK64
@@ -19,6 +20,15 @@ def split(data):
             start, rolling = i + 1, 0
     if start < len(data):
         yield start, data[start:]
+
+
+def split(data):
+    native = os.environ.get('GLYPH_CDC_NATIVE')
+    if native and isinstance(data, bytes):
+        from native_cdc import split as native_split
+        yield from native_split(data, GEAR, MIN, TARGET, MAX, native)
+    else:
+        yield from split_python(data)
 
 
 def pack(data):
