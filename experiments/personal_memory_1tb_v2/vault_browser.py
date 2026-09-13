@@ -65,7 +65,9 @@ def handler_for(args, view, token):
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(data)))
             self.send_header("Cache-Control", "no-store")
-            self.send_header("Referrer-Policy", "no-referrer")
+            # no-referrer can make a browser form POST send Origin: null.
+            # Preserve same-origin forms without leaking the token cross-origin.
+            self.send_header("Referrer-Policy", "same-origin")
             self.send_header("X-Content-Type-Options", "nosniff")
             self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'")
             if filename:
