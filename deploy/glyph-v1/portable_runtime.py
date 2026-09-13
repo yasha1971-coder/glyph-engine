@@ -336,11 +336,11 @@ def verified_slice(corpus, offset, size, expected):
     return data
 
 
-def run_materialization(args):
+def run_materialization(args, preservation=None):
     verify_profile(include_evidence=False)
     vault = require_directory(args.vault, "Vault")
     trust_root = require_directory(args.trust_root, "trust root")
-    cache = require_directory(args.cache, "preservation cache")
+    cache = require_directory(args.cache, "preservation cache") if preservation is None else preservation.root
     output = require_separate_output(
         args.output,
         ((vault, "canonical Vault"), (trust_root, "trust sidecars"), (cache, "derived cache")),
@@ -387,7 +387,7 @@ def run_materialization(args):
         raise Refusal("selected parent absent from authenticated object maps")
 
     needed = sorted({sid for sid, _, _, _ in selected_objects})
-    missing_cache = [sid for sid in needed if not (cache / sid / "corpus.bin").is_file()]
+    missing_cache = [sid for sid in needed if not (cache / sid / "corpus.bin").is_file()] if preservation is None else []
     if missing_cache:
         print(
             json.dumps(
@@ -410,7 +410,11 @@ def run_materialization(args):
             expected, sha_field = object_expected_sha(obj)
             size = int(obj["bytes"])
             offset = int(obj["offset"])
-            data = verified_slice(cache / sid / "corpus.bin", offset, size, expected)
+            data = (verified_slice(cache / sid / "corpus.bin", offset, size, expected)
+                    if preservation is None else preservation.read_verified(str(obj["path"]), size, expected))
+            # The host rechecks even a pluggable backend: backend success is not authority.
+            if len(data) != size or hashlib.sha256(data).hexdigest() != expected:
+                raise Refusal("preservation backend returned mismatching bytes")
             basename = PurePosixPath(str(obj["path"])).name or f"object-{index}"
             destination = stage / f"{sid}-{index:04d}-{basename}"
             with destination.open("xb") as materialized:
@@ -455,11 +459,16 @@ def run_materialization(args):
         "status": "GREEN_AUTHENTICATED_MATERIALIZATION",
     }
     receipt_path = output / f"GLYPH_V1_PORTABLE_PHASE_B_{stamp()}.json"
+    if preservation is not None:
+        receipt["format"] = "GLYPH_V2_COMPRESSED_PHASE_B_EXPERIMENT_V1"
+        receipt["preservation"] = preservation.identity()
+        receipt_path = output / f"GLYPH_V2_COMPRESSED_PHASE_B_{stamp()}.json"
     write_json_exclusive(receipt_path, receipt)
     print(
         json.dumps(
             {
-                "format": "GLYPH_V1_PORTABLE_PHASE_B_RESULT_V1",
+                "format": ("GLYPH_V1_PORTABLE_PHASE_B_RESULT_V1" if preservation is None
+                           else "GLYPH_V2_COMPRESSED_PHASE_B_RESULT_V1"),
                 "status": receipt["status"],
                 "objects": len(verified),
                 "receipt": str(receipt_path),

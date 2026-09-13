@@ -89,3 +89,43 @@ SHA-256 and reproduces the source manifest root. Source content and relative
 paths are preserved; timestamps and other filesystem metadata are not yet part
 of this pilot. It is whole-file routing only, not CDC, delta, cross-file
 compression or a compressed self-index.
+
+## Verified reversible-precompression pilot
+
+`verified_reversible_precompression_archive.py` is a separate experimental
+router for already-compressed JPEG, PNG, PDF and ZIP objects. It adds reversible
+precompression candidates to the V1 whole-file codecs. A candidate is eligible
+only after an immediate exact-byte restore; unsupported, failed or mismatching
+candidates fall back to the ordinary lossless router and are counted in the
+receipt.
+
+The external executable is not bundled or trusted. Build requires its expected
+SHA-256, and restore checks the receipt-bound executable hash again. The first
+reference pilot pins upstream Precomp v0.4.7 source commit
+`31b693d843e378e7d30190736f95c095769868b0`. The upstream release's Linux x86-64
+binary observed by the pilot has SHA-256
+`6a5289ba81ea658e8e7984bf32791635f53b8e7cee4aafc26b853c7cd5b018f8`.
+The containing upstream `precomp.zip` release asset observed by the pilot has
+SHA-256 `fcd308310135cdc1ae25b45288bcc5201f9cabf5a9e707cfb33b0f99c548de0b`.
+Verify the downloaded release independently; do not treat these identifiers as
+a supply-chain signature.
+
+```bash
+python3 experiments/personal_memory_1tb_v2/verified_reversible_precompression_archive.py build \
+  --inventory-state /path/to/completed-inventory \
+  --output /new/archive/path \
+  --required-saving-percent 30 \
+  --precomp /path/to/pinned/precomp \
+  --precomp-sha256 6a5289ba81ea658e8e7984bf32791635f53b8e7cee4aafc26b853c7cd5b018f8
+
+python3 experiments/personal_memory_1tb_v2/verified_reversible_precompression_archive.py restore \
+  --archive /new/archive/path \
+  --destination /new/restore/path \
+  --precomp /path/to/pinned/precomp
+```
+
+This is a measurement probe, not a production Personal Memory dependency. The
+upstream Linux release labels itself a development/test binary. Every selected
+object is still verified locally, but future production integration requires a
+reviewed, reproducible source build, hostile fixtures and explicit licensing and
+supply-chain review.
