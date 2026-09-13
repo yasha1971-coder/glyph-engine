@@ -238,3 +238,61 @@ class MemoryBrowserTests(unittest.TestCase):
         self.assertEqual(self.download(second, 'заметка.txt')[2], b'second')
         self.assertEqual(self.upload(b'third', second, note='x' * 501)[0], 422)
         self.assertEqual(self.head(), second)
+
+    def test_preview_verified_text_pdf_image_and_unsupported(self):
+        from urllib.parse import quote
+        for name, data, mime in [('sample.txt', b'<script>bad()</script>', 'text/plain'),
+                                 ('sample.pdf', b'%PDF-1.4\n%%EOF', 'application/pdf'),
+                                 ('sample.png', b'\x89PNG\r\n\x1a\n', 'image/png')]:
+            self.assertEqual(self.upload(data, self.head(), path=name)[0], 303)
+            status, headers, body = self.request('GET', path='/token?preview=' + name + '&snapshot=' + self.head())
+            self.assertEqual(status, 200)
+            self.assertEqual(body, data)
+            self.assertTrue(headers['Content-Type'].startswith(mime))
+            self.assertTrue(headers['Content-Disposition'].startswith('inline;'))
+            self.assertIn("default-src 'none'", headers['Content-Security-Policy'])
+            if mime != 'application/pdf':
+                self.assertIn('sandbox;', headers['Content-Security-Policy'])
+            self.assertEqual(headers['Cache-Control'], 'no-store')
+        self.upload(b'<svg onload="bad()"/>', self.head(), path='active.svg')
+        self.assertEqual(self.request('GET', path='/token?preview=active.svg')[0], 415)
+
+    def test_preview_corruption_and_foreign_origin_are_rejected(self):
+        self.upload(b'hello', self.head(), path='preview.txt')
+        pin = self.head()
+        self.assertEqual(self.request('GET', path='/token?preview=preview.txt', origin='https://other.example')[0], 403)
+        (self.m.root / 'objects' / inc.digest(b'hello')).write_bytes(b'broken')
+        status, _, data = self.request('GET', path='/token?preview=preview.txt')
+        self.assertEqual(status, 422)
+        self.assertNotIn(b'hello', data)
+
+    def confirm_delete(self, page):
+        ticket = re.search(rb'name="delete_ticket" value="([^"]+)"', page).group(1).decode()
+        return self.request('POST', urlencode({'delete_ticket': ticket, 'confirm': 'yes'}), 'application/x-www-form-urlencoded')
+
+    def test_confirmed_deletion_old_links_rejected_and_remaining_downloads(self):
+        self.upload(b'one', self.head(), path='versions.txt')
+        old = self.head()
+        self.upload(b'two', old, path='versions.txt')
+        current = self.head()
+        status, _, page = self.request('GET', path='/token?delete=versions.txt&version=' + current)
+        self.assertEqual(status, 200)
+        self.assertEqual(self.head(), current)
+        self.assertIn('эту версию'.encode(), page)
+        self.assertEqual(self.confirm_delete(page)[0], 303)
+        self.assertEqual(self.download(self.head(), 'versions.txt')[2], b'one')
+        self.assertEqual(self.download(current, 'versions.txt')[0], 422)
+        self.assertEqual(self.request('GET', path='/token?preview=versions.txt&snapshot=' + current)[0], 422)
+        page = self.request('GET', path='/token?delete=versions.txt')[2]
+        self.assertIn('со всей историей'.encode(), page)
+        self.assertEqual(self.confirm_delete(page)[0], 303)
+        self.assertNotIn('versions.txt', self.m.snapshot(self.head())['files'])
+        self.assertEqual(self.confirm_delete(page)[0], 422)
+
+    def test_stale_delete_and_missing_confirmation_do_not_delete(self):
+        self.upload(b'one', self.head(), path='keep.txt')
+        page = self.request('GET', path='/token?delete=keep.txt')[2]
+        self.upload(b'two', self.head(), path='keep.txt')
+        self.assertEqual(self.confirm_delete(page)[0], 409)
+        self.assertIn('keep.txt', self.m.snapshot(self.head())['files'])
+        self.assertEqual(self.request('POST', urlencode({'delete_ticket': 'madeup', 'confirm': 'yes'}), 'application/x-www-form-urlencoded')[0], 422)

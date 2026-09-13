@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Linux private pilot: pinned base archive + immutable, additive snapshots.
 
-Local trusted repository only. No deletion, model, full-text index or encryption.
+Local trusted repository only. Explicit UI deletion is in permanent_delete.py.
+No model, full-text index or encryption.
 Base archive must remain available. New files <= 8 MiB, <= 10000 paths/snapshot.
 """
 import argparse
