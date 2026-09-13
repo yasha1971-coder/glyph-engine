@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from email.parser import BytesParser
 import fcntl
 import html
+import io
+import threading
 import json
 import os
 from pathlib import Path
@@ -16,11 +18,37 @@ import sys
 import tempfile
 import time
 from urllib.parse import parse_qs, quote, urlsplit
-from http.server import HTTPServer
+from http.server import ThreadingHTTPServer
 
 import incremental_memory as inc
 import vault_browser
 import permanent_delete
+
+
+class HTTPServer(ThreadingHTTPServer):
+    """Bound connection threads: browser preconnects cannot occupy the only reader."""
+    daemon_threads = True
+    block_on_close = False
+
+    def __init__(self, *args, **kwargs):
+        self.slots = threading.BoundedSemaphore(12)
+        super().__init__(*args, **kwargs)
+
+    def process_request(self, request, client_address):
+        if not self.slots.acquire(blocking=False):
+            self.shutdown_request(request)
+            return
+        try:
+            super().process_request(request, client_address)
+        except BaseException:
+            self.slots.release()
+            raise
+
+    def process_request_thread(self, request, client_address):
+        try:
+            super().process_request_thread(request, client_address)
+        finally:
+            self.slots.release()
 
 
 def set_head(root, pin):
@@ -37,7 +65,7 @@ def set_head(root, pin):
             os.unlink(name)
 
 
-def worker(args, action, pin, extra):
+def worker(args, action, pin, extra, timeout=330):
     cmd = [sys.executable, str(Path(__file__).resolve()), '--memory', str(args.memory),
            '--archive', str(args.archive), '--archive-sha256', args.archive_sha256,
            '--worker', action, '--snapshot', pin] + extra
@@ -45,9 +73,9 @@ def worker(args, action, pin, extra):
         cmd += ['--precompressor', str(args.precompressor), '--precompressor-sha256', args.precompressor_sha256]
     with tempfile.TemporaryFile() as output:
         child = subprocess.Popen(cmd, stdout=output, stderr=subprocess.DEVNULL,
-                                 preexec_fn=vault_browser.limited_child, start_new_session=True)
+                                 start_new_session=True)
         try:
-            result = child.wait(timeout=330)
+            result = child.wait(timeout=timeout)
         except BaseException:
             os.killpg(child.pid, signal.SIGKILL)
             child.wait()
@@ -62,8 +90,73 @@ def handler_for(args, memory, token):
     parent = vault_browser.handler_for(args, memory.backend.view, token)
     pending = {}
     deletions = {}
+    state_lock = threading.RLock()
+    read_slots = threading.BoundedSemaphore(2)
     script_nonce = secrets.token_urlsafe(24)
     class Handler(parent):
+        def setup(self):
+            super().setup()
+            self.connection.settimeout(10)
+
+        def dispatch(self, post=False):
+            # Network input/output never owns the state lock. Responses are staged
+            # so a disconnect cannot cause a second HTTP response or roll back a write.
+            output, input_stream = self.wfile, self.rfile
+            buffered = io.BytesIO()
+            self.wfile = buffered
+            try:
+                if not self.allowed() or urlsplit(self.path).path != '/' + token:
+                    self.send(403, b'Forbidden', 'text/plain')
+                else:
+                    readonly = not post and 'preview' in parse_qs(urlsplit(self.path).query)
+                    if post:
+                        length = int(self.headers.get('Content-Length', '0'))
+                        if not 0 < length <= inc.LIMIT + 65536:
+                            raise inc.Error('request too large')
+                        body = input_stream.read(length)
+                        if len(body) != length:
+                            raise inc.Error('incomplete body')
+                        self.rfile = io.BytesIO(body)
+                        if self.headers.get('Content-Type', '').startswith('application/x-www-form-urlencoded'):
+                            fields = parse_qs(body.decode())
+                            readonly = set(fields) == {'snapshot', 'path'}
+                    with state_lock:
+                        permanent_delete.recover(memory)
+                    action = self.post_locked if post else self.get_locked
+                    if readonly:
+                        if read_slots.acquire(blocking=False):
+                            try:
+                                action()
+                            finally:
+                                read_slots.release()
+                        else:
+                            self.send(503, 'Уже открываются два файла. Закрой лишний просмотр и повтори.'.encode())
+                    else:
+                        with state_lock:
+                            action()
+                self.connection.settimeout(10)
+                output.write(buffered.getvalue())
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError, TimeoutError):
+                self.close_connection = True
+            except Exception:
+                # Reply only if no HTTP response has been prepared yet.
+                if buffered.tell() == 0:
+                    try:
+                        self.send(422, 'Запрос не выполнен. Обнови страницу и повтори.'.encode())
+                        output.write(buffered.getvalue())
+                    except (OSError, ValueError):
+                        pass
+                self.close_connection = True
+            finally:
+                self.wfile, self.rfile = output, input_stream
+                buffered.close()
+
+        def do_GET(self):
+            self.dispatch()
+
+        def do_POST(self):
+            self.dispatch(post=True)
+
         def send_header(self, keyword, value):
             if keyword.lower() == 'content-security-policy':
                 value += "; script-src 'nonce-" + script_nonce + "'"
@@ -109,22 +202,26 @@ def handler_for(args, memory, token):
             page += form('cancel', 'Отмена')
             self.send(200, page.encode())
 
-        def selected_bytes(self, pin, path):
-            if pin not in self.history():
-                raise inc.Error('unknown version')
-            item = memory.snapshot(pin)['files'][path]
+        def selected_bytes(self, pin, path, timeout=330):
+            with state_lock:
+                if pin not in self.history():
+                    raise inc.Error('unknown version')
+                item = memory.snapshot(pin)['files'][path]
             if item['bytes'] > 64 * 1024**2:
                 raise inc.Error('preview size limit')
             with tempfile.TemporaryDirectory(prefix='glyph-view-') as temporary:
                 output = Path(temporary) / 'selected'
-                worker(args, 'restore', pin, ['--path', path, '--output', str(output)])
+                worker(args, 'restore', pin, ['--path', path, '--output', str(output)], timeout=timeout)
                 data = inc.read_regular(Path(temporary), 'selected', 64 * 1024**2)
             if len(data) != item['bytes'] or inc.digest(data) != item['sha256']:
                 raise inc.Error('verification failed')
+            with state_lock:
+                if pin not in self.history():
+                    raise inc.Error('version deleted during read')
             return data
 
         def preview(self, pin, path):
-            data = self.selected_bytes(pin, path)
+            data = self.selected_bytes(pin, path, timeout=30)
             suffix = Path(path).suffix.lower()
             mime = None
             if suffix == '.pdf' and data.startswith(b'%PDF-'):
@@ -156,25 +253,26 @@ def handler_for(args, memory, token):
             self.wfile.write(data)
 
         def current(self):
-            pin = inc.read_regular(memory.root, 'CURRENT', 65).decode().strip()
-            memory.snapshot(pin)
-            return pin
+            with state_lock:
+                pin = inc.read_regular(memory.root, 'CURRENT', 65).decode().strip()
+                memory.snapshot(pin)
+                return pin
 
         def history(self):
-            pins, pin = [], self.current()
-            while pin is not None:
-                if pin in pins or len(pins) >= 1000:
-                    raise inc.Error('invalid history')
-                pins.append(pin)
-                pin = memory.snapshot(pin)['parent']
-            return pins
+            with state_lock:
+                pins, pin = [], self.current()
+                while pin is not None:
+                    if pin in pins or len(pins) >= 1000:
+                        raise inc.Error('invalid history')
+                    pins.append(pin)
+                    pin = memory.snapshot(pin)['parent']
+                return pins
 
-        def do_GET(self):
+        def get_locked(self):
             url = urlsplit(self.path)
             if not self.allowed() or url.path != '/' + token or len(self.path) > 8192:
                 return self.send(403, b'Forbidden', 'text/plain')
             try:
-                permanent_delete.recover(memory)
                 params = parse_qs(url.query)
                 if 'preview' in params:
                     return self.preview(params.get('snapshot', [self.current()])[0], params['preview'][0])
@@ -314,13 +412,13 @@ def handler_for(args, memory, token):
                     page += '</table></section>'
                 self.send(200, page.encode())
             except Exception:
-                self.send(422, 'Состояние памяти не прошло проверку.'.encode())
+                message = 'Не удалось просмотреть эту версию. Она могла быть удалена, повреждена или превысить лимит чтения. Вернись в карточку: удаление не требует просмотра.' if 'preview' in parse_qs(url.query) else 'Не удалось прочитать состояние памяти.'
+                self.send(422, message.encode())
 
-        def do_POST(self):
+        def post_locked(self):
             if not self.allowed() or self.path != '/' + token:
                 return self.send(403, b'Forbidden', 'text/plain')
             try:
-                permanent_delete.recover(memory)
                 length = int(self.headers.get('Content-Length', '0'))
                 if not 0 < length <= inc.LIMIT + 65536:
                     raise inc.Error('request too large')
@@ -442,6 +540,8 @@ def main():
     p.add_argument('--path')
     p.add_argument('--output', type=Path)
     a = p.parse_args()
+    if a.worker:
+        vault_browser.limited_child()
     m = inc.Memory(a.memory, a.archive, a.archive_sha256, a.precompressor, a.precompressor_sha256)
     if a.worker:
         if a.worker == 'add':

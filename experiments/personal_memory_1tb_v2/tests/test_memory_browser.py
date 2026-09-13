@@ -296,3 +296,73 @@ class MemoryBrowserTests(unittest.TestCase):
         self.assertEqual(self.confirm_delete(page)[0], 409)
         self.assertIn('keep.txt', self.m.snapshot(self.head())['files'])
         self.assertEqual(self.request('POST', urlencode({'delete_ticket': 'madeup', 'confirm': 'yes'}), 'application/x-www-form-urlencoded')[0], 422)
+
+    def test_idle_preconnection_does_not_block_listing(self):
+        import socket
+        idle = socket.create_connection(('127.0.0.1', self.server.server_port), timeout=2)
+        self.addCleanup(idle.close)
+        self.assertEqual(self.request('GET')[0], 200)
+
+    def test_broken_connection_does_not_trigger_second_response(self):
+        from unittest.mock import patch
+        import socket, struct
+        finished = threading.Event()
+        original = self.server.RequestHandlerClass.preview
+        def pause(handler, pin, path):
+            finished.wait(2)
+            return original(handler, pin, path)
+        self.upload(b'plain text', self.head(), path='close.txt')
+        with patch.object(self.server, 'handle_error') as error, patch.object(self.server.RequestHandlerClass, 'preview', pause):
+            sock = socket.create_connection(('127.0.0.1', self.server.server_port), timeout=2)
+            sock.sendall(f'GET /token?preview=close.txt HTTP/1.0\r\nHost: 127.0.0.1:{self.server.server_port}\r\n\r\n'.encode())
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
+            sock.close()
+            finished.set()
+            self.assertEqual(self.request('GET')[0], 200)
+            # All in-flight preview handlers finish before asserting no traceback.
+            for t in list(threading.enumerate()):
+                if 'process_request_thread' in t.name:
+                    t.join(3)
+            error.assert_not_called()
+
+    def test_delete_remains_available_during_slow_preview(self):
+        from unittest.mock import patch
+        entered, release = threading.Event(), threading.Event()
+        self.upload(b'first', self.head(), path='busy.txt')
+        old_pin = self.head()
+        original = ui.worker
+        def slow(*args, **kwargs):
+            if args[1] == 'restore':
+                entered.set(); release.wait(5)
+            return original(*args, **kwargs)
+        result = []
+        with patch.object(ui, 'worker', slow):
+            reader = threading.Thread(target=lambda: result.append(self.request('GET', path='/token?preview=busy.txt')))
+            reader.start()
+            try:
+                self.assertTrue(entered.wait(3))
+                self.assertEqual(self.request('GET')[0], 200)
+                page = self.request('GET', path='/token?delete=busy.txt')[2]
+                self.assertEqual(self.confirm_delete(page)[0], 303)
+                self.assertNotIn('busy.txt', self.m.snapshot(self.head())['files'])
+            finally:
+                release.set(); reader.join(5)
+        self.assertEqual(result[0][0], 422)
+        self.assertNotEqual(self.head(), old_pin)
+
+    def test_corrupted_payload_can_be_deleted_without_preview(self):
+        self.upload(b'broken payload', self.head(), path='broken.txt')
+        (self.m.root / 'objects' / inc.digest(b'broken payload')).write_bytes(b'bad')
+        self.assertEqual(self.request('GET', path='/token?preview=broken.txt')[0], 422)
+        page = self.request('GET', path='/token?delete=broken.txt')[2]
+        self.assertEqual(self.confirm_delete(page)[0], 303)
+        self.assertNotIn('broken.txt', self.m.snapshot(self.head())['files'])
+
+    def test_concurrent_updates_preserve_single_winner(self):
+        self.upload(b'start', self.head(), path='race.txt')
+        pin = self.head()
+        results = []
+        threads = [threading.Thread(target=lambda data=d: results.append(self.upload(data, pin, path='race.txt')[0])) for d in (b'one', b'two')]
+        for t in threads: t.start()
+        for t in threads: t.join(10)
+        self.assertEqual(sorted(results), [303, 409])
