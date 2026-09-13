@@ -87,51 +87,70 @@ def handler_for(args, memory, token):
                 update = params.get('update', [''])[0]
                 if (focus and focus not in files) or (update and update not in files):
                     raise inc.Error('unknown file')
+                adding = params.get('add', [''])[0] == '1'
+                if sum(bool(x) for x in (focus, update, adding)) > 1:
+                    raise inc.Error('ambiguous screen')
                 esc = html.escape
-                page = '<!doctype html><meta charset="utf-8"><title>GLYPH · Личная память</title>'
-                page += '<style>body{font:17px system-ui;max-width:1100px;margin:30px auto;padding:20px;background:#f6f7f9;color:#182330}button,input{font:inherit;padding:9px}td{padding:12px;overflow-wrap:anywhere}table{width:100%;table-layout:fixed}small{color:#555}a{color:#1558a6}form{margin:10px 0}</style>'
-                page += f'<h1>GLYPH · Личная память</h1><p><a href="/{token}">Мои файлы</a></p>'
+                page = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GLYPH · Мои файлы</title>'
+                page += '<style>body{font:17px system-ui;max-width:1000px;margin:32px auto;padding:0 20px;background:#f5f7fa;color:#182330}h1{font-size:28px}h2{font-size:23px;overflow-wrap:anywhere}.panel{background:white;padding:24px;margin:20px 0;border:1px solid #dae0e8;border-radius:12px}.path{color:#536170;overflow-wrap:anywhere}button,input,.button{font:inherit;padding:10px 14px}button,.button{background:#1558a6;color:white;border:0;border-radius:6px;cursor:pointer;text-decoration:none;display:inline-block}a{color:#1558a6}form{margin:16px 0}table{width:100%;border-collapse:collapse}td{padding:14px 8px;border-bottom:1px solid #e2e6ec;overflow-wrap:anywhere}td:first-child{width:65%}.notice{padding:16px;background:#e4f3e9}.actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap}small{color:#536170}</style>'
+                page += '<h1>GLYPH · Личная память</h1>'
                 notice = params.get('notice', [''])[0]
-                notices = {'added': 'Файл сохранён. Предыдущие версии доступны в истории.',
-                           'unchanged': 'Эти байты уже сохранены: новая версия не создана.',
-                           'duplicate': 'Такой файл уже сохранён. Открыта его история; лишняя запись не добавлена.'}
+                notices = {'added': 'Файл сохранён. Ты находишься в его карточке.',
+                           'unchanged': 'Содержимое не изменилось. Новая версия не создана.',
+                           'duplicate': 'Этот файл уже сохранён. Открыта его карточка; лишняя запись не добавлена.'}
                 if notice in notices:
-                    page += '<p><strong>' + notices[notice] + '</strong></p>'
-                page += '<p><small>Локальный пилот. До 8 MiB за добавление. Старые версии сохраняются. Поиск по имени; LLM ещё не подключена.</small></p>'
-                page += '<h2>' + ('Новая версия: ' + esc(update) if update else 'Добавить файл') + '</h2>'
-                page += f'<form method="post" enctype="multipart/form-data" action="/{token}">'
-                page += f'<input type="hidden" name="parent" value="{current}"><input type="hidden" name="path" value="{esc(update, quote=True)}"><input type="file" name="file" required>'
-                page += '<button>' + ('Сохранить новую версию' if update else 'Добавить в память') + '</button></form>'
-                if update:
-                    page += '<p>Выбранный файл обновит эту запись. Её прежние версии останутся доступны.</p>'
-                else:
-                    page += '<p><small>Для изменения существующего файла нажми «Новая версия» рядом с ним.</small></p>'
-                page += f'<form action="/{token}"><input name="q" value="{esc(query, quote=True)}" placeholder="Имя или папка"><button>Найти</button></form>'
-                def download(pin, path):
+                    page += '<p class="notice">' + notices[notice] + '</p>'
+                def identity(path):
+                    parent_path = str(Path(path).parent)
+                    location = 'В корне памяти' if parent_path == '.' else 'Папка: ' + parent_path
+                    return '<h2>' + esc(Path(path).name) + '</h2><p class="path">' + esc(location) + '</p>'
+                def download(pin, path, label='Скачать файл'):
                     return (f'<form method="post" action="/{token}"><input type="hidden" name="snapshot" value="{pin}">'
-                            f'<input type="hidden" name="path" value="{esc(path, quote=True)}"><button>Восстановить и скачать</button></form>')
-                if focus:
-                    page += '<h2>История: ' + esc(focus) + '</h2><table>'
+                            f'<input type="hidden" name="path" value="{esc(path, quote=True)}"><button>{label}</button></form>')
+                if update or adding:
+                    back = '/' + token + ('?file=' + quote(update, safe='') if update else '')
+                    page += f'<p><a href="{back}">← ' + ('В карточку файла' if update else 'Мои файлы') + '</a></p>'
+                    page += '<section class="panel"><h2>' + ('Обновить этот файл' if update else 'Добавить новый файл') + '</h2>'
+                    if update:
+                        page += identity(update)
+                        page += '<p>Выбери изменённый файл на ноутбуке. Он станет новой версией этой записи; прежняя сохранится.</p>'
+                    else:
+                        page += '<p>Выбери файл на ноутбуке, который хочешь сохранить в личной памяти.</p>'
+                    page += f'<form method="post" enctype="multipart/form-data" action="/{token}">'
+                    page += f'<input type="hidden" name="parent" value="{current}"><input type="hidden" name="path" value="{esc(update, quote=True)}">'
+                    page += '<p><label>1. Выбери файл<br><input type="file" name="file" required></label></p><p><small>До 8 MiB. Исходный файл на ноутбуке остаётся на месте.</small></p>'
+                    page += '<button>2. ' + ('Сохранить новую версию' if update else 'Сохранить в память') + '</button></form></section>'
+                elif focus:
+                    page += f'<p><a href="/{token}">← Мои файлы</a></p><section class="panel"><p><small>Карточка файла</small></p>'
+                    page += identity(focus)
+                    page += f'<p>Текущий размер: {files[focus]["bytes"]:,} байт</p><div class="actions">' + download(current, focus)
+                    page += f'<a class="button" href="/{token}?update={quote(focus, safe="")}">Обновить этот файл</a></div></section>'
                     changes, last = [], None
                     for pin in reversed(pins):
                         doc = memory.snapshot(pin)
                         item = doc['files'].get(focus)
                         if item and item['sha256'] != last:
                             stamp = doc.get('created_ns')
-                            date = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'До обновления пилота — дата не записана'
+                            date = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'Дата старой записи неизвестна'
                             changes.append((pin, item, date))
                             last = item['sha256']
+                    page += f'<section class="panel"><h2>История этого файла · {len(changes)}</h2><p>Вверху — последняя сохранённая версия.</p><table>'
                     for number, (pin, item, date) in reversed(list(enumerate(changes, 1))):
-                        page += f'<tr><td>Версия {number}<br>{date}</td><td>{item["bytes"]:,} B</td><td>{download(pin, focus)}</td></tr>'
-                    page += '</table>'
+                        label = 'Текущая версия' if number == len(changes) else f'Версия {number}'
+                        page += f'<tr><td><strong>{label}</strong><br><small>{date}</small><br>{item["bytes"]:,} байт</td><td>{download(pin, focus, "Скачать эту версию")}</td></tr>'
+                    page += '</table></section>'
                 else:
+                    page += f'<div class="actions"><h2>Мои файлы</h2><a class="button" href="/{token}?add=1">Добавить файл</a></div>'
+                    page += f'<form action="/{token}"><input name="q" value="{esc(query, quote=True)}" placeholder="Имя файла или папка"><button>Найти</button></form>'
                     matches = [(p, f) for p, f in sorted(files.items()) if query.casefold() in p.casefold()]
-                    page += f'<p>Файлов: {len(files)} · Найдено: {len(matches)} · Показано: {min(200,len(matches))}</p><table>'
+                    page += f'<p>Всего: {len(files)} · Найдено: {len(matches)} · Показано: {min(200,len(matches))}</p><section class="panel"><table>'
                     for path, item in matches[:200]:
                         target = quote(path, safe='')
-                        page += f'<tr><td>{esc(path)}</td><td>{item["bytes"]:,} B</td><td>{download(current, path)}'
-                        page += f'<a href="/{token}?file={target}">История</a> · <a href="/{token}?update={target}">Новая версия</a></td></tr>'
-                    page += '</table>'
+                        folder = str(Path(path).parent)
+                        folder = 'В корне памяти' if folder == '.' else 'Папка: ' + folder
+                        page += f'<tr><td><strong>{esc(Path(path).name)}</strong><br><small class="path">{esc(folder)}</small><br><small>{item["bytes"]:,} байт</small></td>'
+                        page += f'<td><a class="button" href="/{token}?file={target}">Открыть карточку</a></td></tr>'
+                    page += '</table></section>'
                 self.send(200, page.encode())
             except Exception:
                 self.send(422, 'Состояние памяти не прошло проверку.'.encode())
@@ -195,7 +214,7 @@ def handler_for(args, memory, token):
                     memory.snapshot(new_pin)
                     set_head(memory.root, new_pin)
                     self.send_response(303)
-                    self.send_header('Location', '/' + token + '?notice=' + ('unchanged' if new_pin == pin else 'added'))
+                    self.send_header('Location', '/' + token + '?notice=' + ('unchanged' if new_pin == pin else 'added') + '&file=' + quote(path, safe=''))
                     self.send_header('Cache-Control', 'no-store')
                     self.send_header('Content-Length', '0')
                     self.end_headers()

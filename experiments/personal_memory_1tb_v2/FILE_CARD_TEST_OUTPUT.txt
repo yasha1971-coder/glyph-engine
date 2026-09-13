@@ -1,0 +1,15 @@
+test_corruption_is_not_downloaded (test_memory_browser.MemoryBrowserTests.test_corruption_is_not_downloaded) ... ok
+test_duplicate_notice_requires_intact_stored_bytes (test_memory_browser.MemoryBrowserTests.test_duplicate_notice_requires_intact_stored_bytes) ... ok
+test_duplicate_under_different_name_does_not_add_record (test_memory_browser.MemoryBrowserTests.test_duplicate_under_different_name_does_not_add_record) ... ok
+test_foreign_null_origin_and_traversal_rejected (test_memory_browser.MemoryBrowserTests.test_foreign_null_origin_and_traversal_rejected) ... ok
+test_original_unicode_filename_without_custom_path (test_memory_browser.MemoryBrowserTests.test_original_unicode_filename_without_custom_path) ... ok
+test_oversized_upload_preserves_current (test_memory_browser.MemoryBrowserTests.test_oversized_upload_preserves_current) ... ok
+test_screens_are_separate_and_save_returns_to_file_card (test_memory_browser.MemoryBrowserTests.test_screens_are_separate_and_save_returns_to_file_card) ... ok
+test_stale_tab_does_not_overwrite_current (test_memory_browser.MemoryBrowserTests.test_stale_tab_does_not_overwrite_current) ... ok
+test_update_form_binds_original_path_and_new_upload_cannot_overwrite (test_memory_browser.MemoryBrowserTests.test_update_form_binds_original_path_and_new_upload_cannot_overwrite) ... ok
+test_upload_change_download_both_versions_and_repeat (test_memory_browser.MemoryBrowserTests.test_upload_change_download_both_versions_and_repeat) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 9.779s
+
+OK
