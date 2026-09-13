@@ -1,4 +1,5 @@
 import http.client
+import re
 from pathlib import Path
 import sys
 import threading
@@ -43,9 +44,11 @@ class MemoryBrowserTests(unittest.TestCase):
         finally:
             c.close()
 
-    def upload(self, data, pin, path='заметка.txt', origin=None, filename='note.txt'):
+    def upload(self, data, pin, path='заметка.txt', origin=None, filename='note.txt', modified=None):
         boundary = 'glyph-test-boundary'
         parts = []
+        if modified is not None:
+            parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="source_modified_ms"\r\n\r\n{modified}\r\n'.encode())
         for name, value in [('parent', pin), ('path', path)]:
             parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode())
         parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="{filename}"\r\nContent-Type: application/octet-stream\r\n\r\n'.encode() + data + b'\r\n')
@@ -108,16 +111,17 @@ class MemoryBrowserTests(unittest.TestCase):
         self.upload(b'hello', self.first, path='', filename='a.txt')
         pin = self.head()
         before = len(self.m.snapshot(pin)['files'])
-        status, headers, _ = self.upload(b'hello', pin, path='', filename='b.txt')
-        self.assertEqual(status, 303)
-        self.assertIn('notice=duplicate', headers['Location'])
+        status, headers, body = self.upload(b'hello', pin, path='', filename='b.txt')
+        self.assertEqual(status, 200)
+        self.assertEqual(self.choose(body, '0')[0], 303)
         self.assertEqual(self.head(), pin)
         self.assertEqual(len(self.m.snapshot(pin)['files']), before)
 
     def test_update_form_binds_original_path_and_new_upload_cannot_overwrite(self):
         self.upload(b'one', self.first, path='', filename='a.txt')
         pin = self.head()
-        self.assertEqual(self.upload(b'two', pin, path='', filename='a.txt')[0], 409)
+        self.assertEqual(self.upload(b'two', pin, path='', filename='a.txt')[0], 200)
+        self.assertEqual(self.head(), pin)
         status, _, page = self.request('GET', path='/token?update=a.txt')
         self.assertEqual(status, 200)
         self.assertIn(b'name="path" value="a.txt"', page)
@@ -129,7 +133,7 @@ class MemoryBrowserTests(unittest.TestCase):
         self.upload(b'hello', self.first, path='', filename='a.txt')
         pin = self.head()
         next((self.m.root / 'objects').iterdir()).write_bytes(b'bad')
-        self.assertEqual(self.upload(b'hello', pin, path='', filename='b.txt')[0], 422)
+        self.assertEqual(self.choose(self.upload(b'hello', pin, path='', filename='b.txt')[2], '0')[0], 422)
         self.assertEqual(self.head(), pin)
 
     def test_screens_are_separate_and_save_returns_to_file_card(self):
@@ -154,3 +158,52 @@ class MemoryBrowserTests(unittest.TestCase):
         self.assertNotIn(b'<table>', update)
         self.assertNotIn(b'name="q"', update)
         self.assertNotIn(b'&lt;script&gt;', update)
+
+    def choose(self, body, decision):
+        ticket = re.search(rb'name="ticket" value="([^"]+)"', body).group(1).decode()
+        return self.request('POST', urlencode({'ticket': ticket, 'decision': decision}), 'application/x-www-form-urlencoded')
+
+    def test_choice_can_keep_separate_without_overwriting_and_reuses_content(self):
+        self.upload(b'old', self.first, path='', filename='a.txt')
+        pin = self.head()
+        body = self.upload(b'new', pin, path='', filename='a.txt')[2]
+        self.assertEqual(self.choose(body, 'separate')[0], 303)
+        current = self.head()
+        self.assertEqual(self.download(current, 'a.txt')[2], b'old')
+        self.assertEqual(self.download(current, 'a (2).txt')[2], b'new')
+        objects = len(list((self.m.root / 'objects').iterdir()))
+        body = self.upload(b'new', current, path='', filename='other.txt')[2]
+        self.assertEqual(self.choose(body, 'separate')[0], 303)
+        self.assertEqual(len(list((self.m.root / 'objects').iterdir())), objects)
+
+    def test_cancel_and_stale_choice_leave_current(self):
+        self.upload(b'old', self.first, path='', filename='a.txt')
+        pin = self.head()
+        body = self.upload(b'new', pin, path='', filename='a.txt')[2]
+        self.assertEqual(self.choose(body, 'cancel')[0], 303)
+        self.assertEqual(self.head(), pin)
+        body = self.upload(b'new', pin, path='', filename='a.txt')[2]
+        self.upload(b'changed', pin, path='a.txt')
+        current = self.head()
+        self.assertEqual(self.choose(body, '0')[0], 409)
+        self.assertEqual(self.head(), current)
+
+    def test_source_date_is_distinct_from_save_date_and_survives_choice(self):
+        stamp = 1600000000000
+        self.upload(b'old', self.first, path='', filename='a.txt', modified=stamp)
+        pin = self.head()
+        item = self.m.snapshot(pin)['files']['a.txt']
+        self.assertEqual(item['source_modified_ms'], stamp)
+        self.assertIsNone(item['source_created_ms'])
+        self.assertGreater(item['saved_ns'], stamp * 1000000)
+        body = self.upload(b'new', pin, path='', filename='a.txt', modified=stamp + 1000)[2]
+        self.assertEqual(self.choose(body, '0')[0], 303)
+        self.assertEqual(self.m.snapshot(self.head())['files']['a.txt']['source_modified_ms'], stamp + 1000)
+        self.assertEqual(self.m.snapshot(pin)['files']['a.txt'], item)
+        page = self.request('GET', path='/token?file=a.txt')[2]
+        self.assertIn('Изменён исходный файл'.encode(), page)
+        self.assertIn(b'2020-09-13', page)
+
+    def test_invalid_source_date_is_rejected(self):
+        self.assertEqual(self.upload(b'x', self.first, modified=-1)[0], 422)
+        self.assertEqual(self.head(), self.first)

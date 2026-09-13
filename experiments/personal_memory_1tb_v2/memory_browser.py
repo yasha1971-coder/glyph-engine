@@ -14,6 +14,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import time
 from urllib.parse import parse_qs, quote, urlsplit
 from http.server import HTTPServer
 
@@ -58,7 +59,54 @@ def worker(args, action, pin, extra):
 
 def handler_for(args, memory, token):
     parent = vault_browser.handler_for(args, memory.backend.view, token)
+    pending = {}
+    script_nonce = secrets.token_urlsafe(24)
     class Handler(parent):
+        def send_header(self, keyword, value):
+            if keyword.lower() == 'content-security-policy':
+                value += "; script-src 'nonce-" + script_nonce + "'"
+            super().send_header(keyword, value)
+
+        def finish_upload(self, pin, path, data, modified):
+            with tempfile.TemporaryDirectory(prefix='glyph-incoming-') as temporary:
+                source = Path(temporary)
+                target = source / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(data)
+                extra = ['--source', str(source)]
+                if modified is not None:
+                    extra += ['--source-modified-ms', str(modified)]
+                new_pin = worker(args, 'add', pin, extra)
+            memory.snapshot(new_pin)
+            set_head(memory.root, new_pin)
+            self.send_response(303)
+            self.send_header('Location', '/' + token + '?notice=' + ('unchanged' if new_pin == pin else 'added') + '&file=' + quote(path, safe=''))
+            self.send_header('Cache-Control', 'no-store')
+            self.send_header('Content-Length', '0')
+            self.end_headers()
+
+        def offer_choice(self, pin, path, data, modified, candidates):
+            now = time.monotonic()
+            for key in list(pending):
+                if now - pending[key]['time'] > 600:
+                    del pending[key]
+            if len(pending) >= 2:
+                return self.send(409, 'Заверши или отмени предыдущий выбор. Через 10 минут незавершённые загрузки освобождаются.'.encode())
+            ticket = secrets.token_urlsafe(24)
+            pending[ticket] = dict(pin=pin, path=path, data=data, modified=modified, candidates=candidates, time=now)
+            esc = html.escape
+            page = '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font:18px system-ui;max-width:900px;margin:40px auto;padding:20px;background:#f5f7fa;color:#182330}button{font:inherit;background:#1558a6;color:white;border:0;border-radius:6px;padding:12px;margin:8px 0;cursor:pointer}p{overflow-wrap:anywhere}</style><h1>Как сохранить файл?</h1>'
+            page += '<p>Загружен: <strong>' + esc(path) + '</strong></p><p>Найдены совпадения по имени или содержимому. Само совпадение имени не означает, что это один документ.</p>'
+            def form(value, label):
+                return (f'<form method="post" action="/{token}"><input type="hidden" name="ticket" value="{ticket}">'
+                        f'<button name="decision" value="{value}">{label}</button></form>')
+            for i, candidate in enumerate(candidates):
+                page += '<hr><p>' + esc(candidate) + '</p>' + form(str(i), 'Сохранить новой версией этого файла')
+            page += '<hr>' + form('separate', 'Сохранить отдельным файлом')
+            page += '<p>Одинаковые данные будут использовать общее хранение. Старые версии сохраняются.</p>'
+            page += form('cancel', 'Отмена')
+            self.send(200, page.encode())
+
         def current(self):
             pin = inc.read_regular(memory.root, 'CURRENT', 65).decode().strip()
             memory.snapshot(pin)
@@ -118,11 +166,18 @@ def handler_for(args, memory, token):
                         page += '<p>Выбери файл на ноутбуке, который хочешь сохранить в личной памяти.</p>'
                     page += f'<form method="post" enctype="multipart/form-data" action="/{token}">'
                     page += f'<input type="hidden" name="parent" value="{current}"><input type="hidden" name="path" value="{esc(update, quote=True)}">'
-                    page += '<p><label>1. Выбери файл<br><input type="file" name="file" required></label></p><p><small>До 8 MiB. Исходный файл на ноутбуке остаётся на месте.</small></p>'
+                    page += '<p><label>1. Выбери файл<br><input type="file" id="upload-file" name="file" required><input type="hidden" id="source-modified" name="source_modified_ms" value=""></label></p><p><small>До 8 MiB. Исходный файл на ноутбуке остаётся на месте.</small></p>'
+                    page += f'<script nonce="{script_nonce}">' + "document.getElementById('upload-file').addEventListener('change', function(){ const f=this.files[0]; document.getElementById('source-modified').value=f && Number.isFinite(f.lastModified) ? String(f.lastModified) : ''; });" + '</script>'
                     page += '<button>2. ' + ('Сохранить новую версию' if update else 'Сохранить в память') + '</button></form></section>'
                 elif focus:
                     page += f'<p><a href="/{token}">← Мои файлы</a></p><section class="panel"><p><small>Карточка файла</small></p>'
                     page += identity(focus)
+                    def date_value(value, scale):
+                        return datetime.fromtimestamp(value / scale, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if value is not None else 'Неизвестно'
+                    meta = files[focus]
+                    page += '<p>Создан исходный файл: неизвестно — браузер не сообщает эту дату.</p>'
+                    page += '<p>Изменён исходный файл: ' + date_value(meta.get('source_modified_ms'), 1000) + ' <small>(сведения браузера)</small></p>'
+                    page += '<p>Эта версия сохранена в GLYPH: ' + date_value(meta.get('saved_ns'), 1e9) + '</p>'
                     page += f'<p>Текущий размер: {files[focus]["bytes"]:,} байт</p><div class="actions">' + download(current, focus)
                     page += f'<a class="button" href="/{token}?update={quote(focus, safe="")}">Обновить этот файл</a></div></section>'
                     changes, last = [], None
@@ -130,14 +185,14 @@ def handler_for(args, memory, token):
                         doc = memory.snapshot(pin)
                         item = doc['files'].get(focus)
                         if item and item['sha256'] != last:
-                            stamp = doc.get('created_ns')
+                            stamp = item.get('saved_ns', doc.get('created_ns'))
                             date = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'Дата старой записи неизвестна'
                             changes.append((pin, item, date))
                             last = item['sha256']
                     page += f'<section class="panel"><h2>История этого файла · {len(changes)}</h2><p>Вверху — последняя сохранённая версия.</p><table>'
                     for number, (pin, item, date) in reversed(list(enumerate(changes, 1))):
                         label = 'Текущая версия' if number == len(changes) else f'Версия {number}'
-                        page += f'<tr><td><strong>{label}</strong><br><small>{date}</small><br>{item["bytes"]:,} байт</td><td>{download(pin, focus, "Скачать эту версию")}</td></tr>'
+                        page += f'<tr><td><strong>{label}</strong><br><small>Сохранено в GLYPH: {date}</small><br><small>Изменено в источнике: {date_value(item.get("source_modified_ms"), 1000)}</small><br>{item["bytes"]:,} байт</td><td>{download(pin, focus, "Скачать эту версию")}</td></tr>'
                     page += '</table></section>'
                 else:
                     page += f'<div class="actions"><h2>Мои файлы</h2><a class="button" href="/{token}?add=1">Добавить файл</a></div>'
@@ -175,7 +230,7 @@ def handler_for(args, memory, token):
                     parts = {}
                     for part in message.iter_parts():
                         name = part.get_param('name', header='content-disposition')
-                        if name not in ('file', 'parent', 'path') or name in parts or part.is_multipart():
+                        if name not in ('file', 'parent', 'path', 'source_modified_ms') or name in parts or part.is_multipart():
                             raise inc.Error('bad upload fields')
                         parts[name] = part
                     pin = parts['parent'].get_payload(decode=True).decode()
@@ -183,45 +238,59 @@ def handler_for(args, memory, token):
                         return self.send(409, 'Память уже обновилась. Вернись к списку, обнови страницу и повтори добавление.'.encode())
                     filename = parts['file'].get_filename()
                     chosen = parts['path'].get_payload(decode=True).decode().strip() if 'path' in parts else ''
+                    raw_modified = parts['source_modified_ms'].get_payload(decode=True).decode() if 'source_modified_ms' in parts else ''
+                    modified = int(raw_modified) if raw_modified else None
+                    if modified is not None and not 0 <= modified <= 253402300799000:
+                        raise inc.Error('invalid source date')
                     path = inc.valid_path(chosen or filename)
                     data = parts['file'].get_payload(decode=True)
                     if len(data) > inc.LIMIT or len(path) > 1024:
                         raise inc.Error('upload budget exceeded')
                     known = memory.snapshot(pin)['files']
                     if not chosen:
-                        duplicate = next((p for p, item in known.items() if item['sha256'] == inc.digest(data)), None)
-                        if duplicate is not None:
-                            # Do not call corrupt retained content 'already saved'.
-                            with tempfile.TemporaryDirectory(prefix='glyph-duplicate-') as temporary:
-                                output = Path(temporary) / 'selected'
-                                worker(args, 'restore', pin, ['--path', duplicate, '--output', str(output)])
-                                if inc.read_regular(Path(temporary), 'selected', inc.LIMIT) != data:
-                                    raise inc.Error('existing duplicate failed verification')
-                            self.send_response(303)
-                            self.send_header('Location', '/' + token + '?notice=duplicate&file=' + quote(duplicate, safe=''))
-                            self.send_header('Cache-Control', 'no-store')
-                            self.send_header('Content-Length', '0')
-                            self.end_headers()
-                            return
-                        if path in known:
-                            return self.send(409, 'Имя уже занято. Вернись к списку и нажми «Новая версия» возле нужного файла.'.encode())
-                    with tempfile.TemporaryDirectory(prefix='glyph-incoming-') as temporary:
-                        source = Path(temporary)
-                        target = source / path
-                        target.parent.mkdir(parents=True, exist_ok=True)
-                        target.write_bytes(data)
-                        new_pin = worker(args, 'add', pin, ['--source', str(source)])
-                    memory.snapshot(new_pin)
-                    set_head(memory.root, new_pin)
-                    self.send_response(303)
-                    self.send_header('Location', '/' + token + '?notice=' + ('unchanged' if new_pin == pin else 'added') + '&file=' + quote(path, safe=''))
-                    self.send_header('Cache-Control', 'no-store')
-                    self.send_header('Content-Length', '0')
-                    self.end_headers()
+                        candidates = [p for p, item in known.items()
+                                      if Path(p).name.casefold() == Path(path).name.casefold() or item['sha256'] == inc.digest(data)]
+                        if candidates:
+                            # Bound the chooser; no candidate is auto-selected.
+                            return self.offer_choice(pin, path, data, modified, candidates[:20])
+                    return self.finish_upload(pin, path, data, modified)
+
                 else:
                     if length > 8192:
                         raise inc.Error('selection too large')
                     fields = parse_qs(body.decode())
+                    if 'ticket' in fields:
+                        ticket = fields['ticket'][0]
+                        entry = pending.get(ticket)
+                        if entry is None or time.monotonic() - entry['time'] > 600:
+                            pending.pop(ticket, None)
+                            return self.send(409, 'Выбор истёк. Выбери файл заново.'.encode())
+                        decision = fields.get('decision', [''])[0]
+                        if decision == 'cancel':
+                            del pending[ticket]
+                            self.send_response(303)
+                            self.send_header('Location', '/' + token)
+                            self.send_header('Content-Length', '0')
+                            self.end_headers()
+                            return
+                        if entry['pin'] != self.current():
+                            del pending[ticket]
+                            return self.send(409, 'Память обновилась. Выбери файл заново.'.encode())
+                        if decision == 'separate':
+                            path = entry['path']
+                            known = memory.snapshot(entry['pin'])['files']
+                            n = 2
+                            original = Path(path)
+                            while path in known:
+                                path = str(original.with_name(original.stem + f' ({n})' + original.suffix))
+                                n += 1
+                        else:
+                            index = int(decision)
+                            if not 0 <= index < len(entry['candidates']):
+                                raise inc.Error('invalid choice')
+                            path = entry['candidates'][index]
+                        del pending[ticket]
+                        return self.finish_upload(entry['pin'], path, entry['data'], entry['modified'])
                     pin, path = fields['snapshot'][0], fields['path'][0]
                     if pin not in self.history():
                         raise inc.Error('unknown version')
@@ -249,13 +318,14 @@ def main():
     p.add_argument('--worker', choices=['add', 'restore'])
     p.add_argument('--snapshot')
     p.add_argument('--source', type=Path)
+    p.add_argument('--source-modified-ms', type=int)
     p.add_argument('--path')
     p.add_argument('--output', type=Path)
     a = p.parse_args()
     m = inc.Memory(a.memory, a.archive, a.archive_sha256, a.precompressor, a.precompressor_sha256)
     if a.worker:
         if a.worker == 'add':
-            print(m.add(a.snapshot, a.source))
+            print(m.add(a.snapshot, a.source, a.source_modified_ms))
         else:
             m.restore(a.snapshot, a.path, a.output)
         return

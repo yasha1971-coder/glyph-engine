@@ -172,7 +172,9 @@ class Memory:
             finally:
                 fcntl.flock(stream, fcntl.LOCK_UN)
 
-    def add(self, parent, source):
+    def add(self, parent, source, source_modified_ms=None):
+        if source_modified_ms is not None and (type(source_modified_ms) is not int or not 0 <= source_modified_ms <= 253402300799000):
+            raise Error("invalid browser modification date")
         source = Path(source).resolve()
         if not source.is_dir() or any(a == b or a in b.parents or b in a.parents
                 for a, b in ((source, self.root), (source, self.backend.root))):
@@ -222,6 +224,16 @@ class Memory:
                     else:
                         item = chunk_versions.store(self, data, files.get(rel))
                         known[sha] = item
+                    previous = files.get(rel)
+                    if previous and previous['sha256'] == sha:
+                        # A repeated byte-identical upload does not rewrite dates.
+                        item = previous
+                    else:
+                        item = {key: value for key, value in item.items()
+                                if key in ('sha256', 'bytes', 'storage', 'recipe')}
+                        item.update(saved_ns=time.time_ns(), source_modified_ms=source_modified_ms,
+                                    source_created_ms=None,
+                                    date_source='browser-reported' if source_modified_ms is not None else 'unknown')
                     files[rel] = item
             if files == self.snapshot(parent)['files']:
                 return parent
