@@ -73,3 +73,18 @@ class VaultBrowserTests(unittest.TestCase):
         status, headers, body = self.request('POST', body='index=0')
         self.assertEqual(status, 422)
         self.assertNotIn(self.data, body)
+
+    def test_form_policy_preserves_same_origin_post(self):
+        status, headers, _ = self.request()
+        self.assertEqual(status, 200)
+        self.assertEqual(headers['Referrer-Policy'], 'same-origin')
+        origin = f'http://127.0.0.1:{self.server.server_port}'
+        status, headers, body = self.request(
+            'POST', body='index=0', headers={'Origin': origin})
+        self.assertEqual(status, 200)
+        self.assertEqual(body, self.data)
+        self.assertIn('attachment', headers['Content-Disposition'])
+
+    def test_null_origin_is_still_rejected(self):
+        self.assertEqual(self.request(
+            'POST', body='index=0', headers={'Origin': 'null'})[0], 403)
