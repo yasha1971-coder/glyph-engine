@@ -1,5 +1,7 @@
 # Incremental Personal Memory: private storage pilot
 
+Update 2026-09-13: CHUNK_HISTORY_DESIGN.md supersedes the writer/UI details below.
+
 Status: CLI implementation and synthetic tests. Not yet connected to the browser;
 not installed or tested on the user's laptop. Not a production release.
 

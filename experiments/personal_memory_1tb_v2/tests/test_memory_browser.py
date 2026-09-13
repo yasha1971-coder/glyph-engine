@@ -67,7 +67,7 @@ class MemoryBrowserTests(unittest.TestCase):
         self.assertEqual(self.download(third, 'заметка.txt')[2], b'new version')
         self.assertEqual(self.upload(b'new version', third)[0], 303)
         self.assertEqual(self.head(), third)
-        status, headers, body = self.request('GET')
+        status, headers, body = self.request('GET', path='/token?file=%D0%B7%D0%B0%D0%BC%D0%B5%D1%82%D0%BA%D0%B0.txt')
         self.assertEqual(status, 200)
         self.assertEqual(headers['Referrer-Policy'], 'same-origin')
         self.assertIn(second.encode(), body)
@@ -103,3 +103,31 @@ class MemoryBrowserTests(unittest.TestCase):
     def test_original_unicode_filename_without_custom_path(self):
         self.assertEqual(self.upload(b'example', self.first, path='', filename='файл.txt')[0], 303)
         self.assertEqual(self.download(self.head(), 'файл.txt')[2], b'example')
+
+    def test_duplicate_under_different_name_does_not_add_record(self):
+        self.upload(b'hello', self.first, path='', filename='a.txt')
+        pin = self.head()
+        before = len(self.m.snapshot(pin)['files'])
+        status, headers, _ = self.upload(b'hello', pin, path='', filename='b.txt')
+        self.assertEqual(status, 303)
+        self.assertIn('notice=duplicate', headers['Location'])
+        self.assertEqual(self.head(), pin)
+        self.assertEqual(len(self.m.snapshot(pin)['files']), before)
+
+    def test_update_form_binds_original_path_and_new_upload_cannot_overwrite(self):
+        self.upload(b'one', self.first, path='', filename='a.txt')
+        pin = self.head()
+        self.assertEqual(self.upload(b'two', pin, path='', filename='a.txt')[0], 409)
+        status, _, page = self.request('GET', path='/token?update=a.txt')
+        self.assertEqual(status, 200)
+        self.assertIn(b'name="path" value="a.txt"', page)
+        self.assertEqual(self.upload(b'two', pin, path='a.txt', filename='different.txt')[0], 303)
+        self.assertNotIn('different.txt', self.m.snapshot(self.head())['files'])
+        self.assertEqual(self.download(pin, 'a.txt')[2], b'one')
+
+    def test_duplicate_notice_requires_intact_stored_bytes(self):
+        self.upload(b'hello', self.first, path='', filename='a.txt')
+        pin = self.head()
+        next((self.m.root / 'objects').iterdir()).write_bytes(b'bad')
+        self.assertEqual(self.upload(b'hello', pin, path='', filename='b.txt')[0], 422)
+        self.assertEqual(self.head(), pin)

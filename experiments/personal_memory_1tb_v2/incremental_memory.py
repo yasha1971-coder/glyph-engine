@@ -5,6 +5,7 @@ Local trusted repository only. No deletion, model, full-text index or encryption
 Base archive must remain available. New files <= 8 MiB, <= 10000 paths/snapshot.
 """
 import argparse
+import base64
 import contextlib
 import fcntl
 import json
@@ -13,12 +14,15 @@ from pathlib import Path
 import stat
 import tempfile
 import zlib
+import time
+import chunk_versions
 
 import verified_hybrid_archive as base
 from compressed_preservation import CompressedPreservation
 from local_memory_bridge import HEX, read_regular
 
-FORMAT = 'GLYPH_INCREMENTAL_MEMORY_PILOT_V1'
+LEGACY_FORMAT = 'GLYPH_INCREMENTAL_MEMORY_PILOT_V1'
+FORMAT = 'GLYPH_INCREMENTAL_MEMORY_PILOT_V2'
 LIMIT = 8 * 1024 * 1024
 META_LIMIT = 16 * 1024 * 1024
 Error = base.ArchiveError
@@ -85,9 +89,13 @@ class Memory:
 
     def commit(self, parent, files):
         raw = base.canonical_json({'format': FORMAT, 'base': self.base_pin,
-                                   'parent': parent, 'files': files})
+                                   'parent': parent, 'created_ns': time.time_ns(), 'files': files})
         if len(raw) > META_LIMIT or len(files) > 10000:
             raise Error('snapshot metadata budget exceeded')
+        packed = base.canonical_json({'format': 'GLYPH_SNAPSHOT_PACK_V1',
+             'deflate_base64': base64.b64encode(zlib.compress(raw, 6)).decode('ascii')})
+        if len(packed) < len(raw):
+            raw = packed
         pin = digest(raw)
         publish(self.root / 'snapshots' / (pin + '.json'), raw)
         return pin
@@ -99,7 +107,14 @@ class Memory:
         if digest(raw) != pin:
             raise Error('snapshot corruption')
         doc = json.loads(raw)
-        if doc['format'] != FORMAT or doc['base'] != self.base_pin:
+        if doc.get('format') == 'GLYPH_SNAPSHOT_PACK_V1':
+            payload = base64.b64decode(doc['deflate_base64'], validate=True)
+            decoder = zlib.decompressobj()
+            decoded = decoder.decompress(payload, META_LIMIT + 1)
+            if len(decoded) > META_LIMIT or not decoder.eof or decoder.unused_data or decoder.unconsumed_tail:
+                raise Error('invalid packed snapshot')
+            doc = json.loads(decoded)
+        if doc['format'] not in (FORMAT, LEGACY_FORMAT) or doc['base'] != self.base_pin:
             raise Error('wrong snapshot or base')
         if doc['parent'] is not None and not HEX.fullmatch(doc['parent']):
             raise Error('invalid parent')
@@ -108,13 +123,15 @@ class Memory:
         for name, item in doc['files'].items():
             valid_path(name)
             if (not HEX.fullmatch(item['sha256']) or type(item['bytes']) is not int
-                    or item['bytes'] < 0 or item['storage'] not in ('base', 'raw', 'deflate')):
+                    or item['bytes'] < 0 or item['storage'] not in ('base', 'raw', 'deflate', 'chunks-v1')):
                 raise Error('invalid file identity')
             if item['storage'] != 'base' and item['bytes'] > LIMIT:
                 raise Error('file budget exceeded')
         return doc
 
     def read_item(self, item):
+        if item['storage'] == 'chunks-v1':
+            return chunk_versions.read(self, item)
         sha, size = item['sha256'], item['bytes']
         if item['storage'] == 'base':
             name = self.by_digest.get(sha)
@@ -203,16 +220,13 @@ class Memory:
                         if self.read_item(item) != data:
                             raise Error('existing object mismatch')
                     else:
-                        packed = zlib.compress(data, 6)
-                        codec, payload = ('deflate', packed) if len(packed) < len(data) else ('raw', data)
-                        publish(self.root / 'objects' / sha, payload)
-                        item = {'sha256': sha, 'bytes': len(data), 'storage': codec}
-                        if self.read_item(item) != data:
-                            raise Error('new object roundtrip failed')
+                        item = chunk_versions.store(self, data, files.get(rel))
                         known[sha] = item
                     files[rel] = item
             if files == self.snapshot(parent)['files']:
                 return parent
+            if len(visited) >= 1000:
+                raise Error('history budget exceeded; current snapshot preserved')
             return self.commit(parent, files)
 
 

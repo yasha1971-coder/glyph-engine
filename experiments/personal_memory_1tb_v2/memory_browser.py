@@ -2,6 +2,7 @@
 """Local personal-memory UI pilot: one-file upload, versions and verified download."""
 import argparse
 import email.policy
+from datetime import datetime, timezone
 from email.parser import BytesParser
 import fcntl
 import html
@@ -78,32 +79,60 @@ def handler_for(args, memory, token):
                 return self.send(403, b'Forbidden', 'text/plain')
             try:
                 params = parse_qs(url.query)
-                pins = self.history()
-                pin = params.get('snapshot', [pins[0]])[0]
-                if pin not in pins:
-                    raise inc.Error('unknown version')
+                pins = self.history() if params.get('file') else [self.current()]
+                current = pins[0]
+                files = memory.snapshot(current)['files']
                 query = params.get('q', [''])[0][:200]
-                files = memory.snapshot(pin)['files']
+                focus = params.get('file', [''])[0]
+                update = params.get('update', [''])[0]
+                if (focus and focus not in files) or (update and update not in files):
+                    raise inc.Error('unknown file')
                 esc = html.escape
                 page = '<!doctype html><meta charset="utf-8"><title>GLYPH · Личная память</title>'
-                page += '<style>body{font:17px system-ui;max-width:1000px;margin:35px auto;padding:20px}button,input,select{font:inherit;padding:8px}td{padding:10px;overflow-wrap:anywhere}small{color:#555}</style>'
-                page += '<h1>GLYPH · Личная память</h1><p>Добавить → найти → вернуть оригинал.</p>'
-                page += '<p><small>Отдельный пилот. Один файл до 8 MiB за добавление. Прежний архив остаётся необходимой основой. Поиск — по имени; LLM ещё не подключена.</small></p>'
+                page += '<style>body{font:17px system-ui;max-width:1100px;margin:30px auto;padding:20px;background:#f6f7f9;color:#182330}button,input{font:inherit;padding:9px}td{padding:12px;overflow-wrap:anywhere}table{width:100%;table-layout:fixed}small{color:#555}a{color:#1558a6}form{margin:10px 0}</style>'
+                page += f'<h1>GLYPH · Личная память</h1><p><a href="/{token}">Мои файлы</a></p>'
+                notice = params.get('notice', [''])[0]
+                notices = {'added': 'Файл сохранён. Предыдущие версии доступны в истории.',
+                           'unchanged': 'Эти байты уже сохранены: новая версия не создана.',
+                           'duplicate': 'Такой файл уже сохранён. Открыта его история; лишняя запись не добавлена.'}
+                if notice in notices:
+                    page += '<p><strong>' + notices[notice] + '</strong></p>'
+                page += '<p><small>Локальный пилот. До 8 MiB за добавление. Старые версии сохраняются. Поиск по имени; LLM ещё не подключена.</small></p>'
+                page += '<h2>' + ('Новая версия: ' + esc(update) if update else 'Добавить файл') + '</h2>'
                 page += f'<form method="post" enctype="multipart/form-data" action="/{token}">'
-                page += f'<input type="hidden" name="parent" value="{pins[0]}"><input type="file" name="file" required>'
-                page += '<p><input name="path" placeholder="Путь в памяти (необязательно)"></p><p><small>Одинаковый путь создаёт новую версию файла. Пустое поле — имя выбранного файла.</small></p><button>Добавить в память</button></form><hr>'
-                page += f'<form action="/{token}"><select name="snapshot">'
-                for i, version in enumerate(pins):
-                    selected = ' selected' if version == pin else ''
-                    label = 'Сейчас' if i == 0 else f'Версия {len(pins)-i}'
-                    page += f'<option value="{version}"{selected}>{label}</option>'
-                page += f'</select> <input name="q" value="{esc(query, quote=True)}" placeholder="Имя или папка"><button>Показать</button></form>'
-                matches = [(p, f) for p, f in sorted(files.items()) if query.casefold() in p.casefold()]
-                page += f'<p>Файлов: {len(files)} · Найдено: {len(matches)} · Показано: {min(200,len(matches))}</p><table>'
-                for path, item in matches[:200]:
-                    page += f'<tr><td>{esc(path)}</td><td>{item["bytes"]} B</td><td><form method="post" action="/{token}">'
-                    page += f'<input type="hidden" name="snapshot" value="{pin}"><input type="hidden" name="path" value="{esc(path, quote=True)}"><button>Восстановить и скачать</button></form></td></tr>'
-                self.send(200, (page + '</table>').encode())
+                page += f'<input type="hidden" name="parent" value="{current}"><input type="hidden" name="path" value="{esc(update, quote=True)}"><input type="file" name="file" required>'
+                page += '<button>' + ('Сохранить новую версию' if update else 'Добавить в память') + '</button></form>'
+                if update:
+                    page += '<p>Выбранный файл обновит эту запись. Её прежние версии останутся доступны.</p>'
+                else:
+                    page += '<p><small>Для изменения существующего файла нажми «Новая версия» рядом с ним.</small></p>'
+                page += f'<form action="/{token}"><input name="q" value="{esc(query, quote=True)}" placeholder="Имя или папка"><button>Найти</button></form>'
+                def download(pin, path):
+                    return (f'<form method="post" action="/{token}"><input type="hidden" name="snapshot" value="{pin}">'
+                            f'<input type="hidden" name="path" value="{esc(path, quote=True)}"><button>Восстановить и скачать</button></form>')
+                if focus:
+                    page += '<h2>История: ' + esc(focus) + '</h2><table>'
+                    changes, last = [], None
+                    for pin in reversed(pins):
+                        doc = memory.snapshot(pin)
+                        item = doc['files'].get(focus)
+                        if item and item['sha256'] != last:
+                            stamp = doc.get('created_ns')
+                            date = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'До обновления пилота — дата не записана'
+                            changes.append((pin, item, date))
+                            last = item['sha256']
+                    for number, (pin, item, date) in reversed(list(enumerate(changes, 1))):
+                        page += f'<tr><td>Версия {number}<br>{date}</td><td>{item["bytes"]:,} B</td><td>{download(pin, focus)}</td></tr>'
+                    page += '</table>'
+                else:
+                    matches = [(p, f) for p, f in sorted(files.items()) if query.casefold() in p.casefold()]
+                    page += f'<p>Файлов: {len(files)} · Найдено: {len(matches)} · Показано: {min(200,len(matches))}</p><table>'
+                    for path, item in matches[:200]:
+                        target = quote(path, safe='')
+                        page += f'<tr><td>{esc(path)}</td><td>{item["bytes"]:,} B</td><td>{download(current, path)}'
+                        page += f'<a href="/{token}?file={target}">История</a> · <a href="/{token}?update={target}">Новая версия</a></td></tr>'
+                    page += '</table>'
+                self.send(200, page.encode())
             except Exception:
                 self.send(422, 'Состояние памяти не прошло проверку.'.encode())
 
@@ -139,6 +168,24 @@ def handler_for(args, memory, token):
                     data = parts['file'].get_payload(decode=True)
                     if len(data) > inc.LIMIT or len(path) > 1024:
                         raise inc.Error('upload budget exceeded')
+                    known = memory.snapshot(pin)['files']
+                    if not chosen:
+                        duplicate = next((p for p, item in known.items() if item['sha256'] == inc.digest(data)), None)
+                        if duplicate is not None:
+                            # Do not call corrupt retained content 'already saved'.
+                            with tempfile.TemporaryDirectory(prefix='glyph-duplicate-') as temporary:
+                                output = Path(temporary) / 'selected'
+                                worker(args, 'restore', pin, ['--path', duplicate, '--output', str(output)])
+                                if inc.read_regular(Path(temporary), 'selected', inc.LIMIT) != data:
+                                    raise inc.Error('existing duplicate failed verification')
+                            self.send_response(303)
+                            self.send_header('Location', '/' + token + '?notice=duplicate&file=' + quote(duplicate, safe=''))
+                            self.send_header('Cache-Control', 'no-store')
+                            self.send_header('Content-Length', '0')
+                            self.end_headers()
+                            return
+                        if path in known:
+                            return self.send(409, 'Имя уже занято. Вернись к списку и нажми «Новая версия» возле нужного файла.'.encode())
                     with tempfile.TemporaryDirectory(prefix='glyph-incoming-') as temporary:
                         source = Path(temporary)
                         target = source / path
@@ -148,7 +195,7 @@ def handler_for(args, memory, token):
                     memory.snapshot(new_pin)
                     set_head(memory.root, new_pin)
                     self.send_response(303)
-                    self.send_header('Location', '/' + token)
+                    self.send_header('Location', '/' + token + '?notice=' + ('unchanged' if new_pin == pin else 'added'))
                     self.send_header('Cache-Control', 'no-store')
                     self.send_header('Content-Length', '0')
                     self.end_headers()

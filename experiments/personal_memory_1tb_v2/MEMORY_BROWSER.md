@@ -1,5 +1,7 @@
 # Personal Memory browser pilot
 
+Update 2026-09-13: CHUNK_HISTORY_DESIGN.md supersedes the writer/UI details below.
+
 Supersedes the CLI-only interface status in INCREMENTAL_MEMORY_PILOT.md.
 This is still a private pilot, not a replacement for the installed V1 release.
 
