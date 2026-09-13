@@ -172,7 +172,10 @@ class Memory:
             finally:
                 fcntl.flock(stream, fcntl.LOCK_UN)
 
-    def add(self, parent, source, source_modified_ms=None):
+    def add(self, parent, source, source_modified_ms=None, version_note=""):
+        if not isinstance(version_note, str) or len(version_note) > 500 or "\x00" in version_note:
+            raise Error("invalid version note")
+        version_note = version_note.strip()
         if source_modified_ms is not None and (type(source_modified_ms) is not int or not 0 <= source_modified_ms <= 253402300799000):
             raise Error("invalid browser modification date")
         source = Path(source).resolve()
@@ -231,7 +234,7 @@ class Memory:
                     else:
                         item = {key: value for key, value in item.items()
                                 if key in ('sha256', 'bytes', 'storage', 'recipe')}
-                        item.update(saved_ns=time.time_ns(), source_modified_ms=source_modified_ms,
+                        item.update(version_note=version_note, saved_ns=time.time_ns(), source_modified_ms=source_modified_ms,
                                     source_created_ms=None,
                                     date_source='browser-reported' if source_modified_ms is not None else 'unknown')
                     files[rel] = item

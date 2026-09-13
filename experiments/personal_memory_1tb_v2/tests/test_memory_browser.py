@@ -44,11 +44,13 @@ class MemoryBrowserTests(unittest.TestCase):
         finally:
             c.close()
 
-    def upload(self, data, pin, path='заметка.txt', origin=None, filename='note.txt', modified=None):
+    def upload(self, data, pin, path='заметка.txt', origin=None, filename='note.txt', modified=None, note=None):
         boundary = 'glyph-test-boundary'
         parts = []
         if modified is not None:
             parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="source_modified_ms"\r\n\r\n{modified}\r\n'.encode())
+        if note is not None:
+            parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="version_note"\r\n\r\n{note}\r\n'.encode())
         for name, value in [('parent', pin), ('path', path)]:
             parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'.encode())
         parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="{filename}"\r\nContent-Type: application/octet-stream\r\n\r\n'.encode() + data + b'\r\n')
@@ -222,3 +224,17 @@ class MemoryBrowserTests(unittest.TestCase):
         self.assertIn(b'2017-07-14', page)
         self.assertIn(b'2020-09-13', page)
         self.assertIn('История этого файла · 1'.encode(), page)
+
+    def test_named_versions_restore_and_escape(self):
+        self.assertEqual(self.upload(b'first', self.first, note='До исправлений')[0], 303)
+        first = self.head()
+        self.assertEqual(self.upload(b'second', first, note='<script>sent</script>')[0], 303)
+        second = self.head()
+        status, _, page = self.request('GET', path='/token?file=' + __import__('urllib.parse', fromlist=['quote']).quote('заметка.txt'))
+        self.assertEqual(status, 200)
+        self.assertIn('До исправлений', page.decode())
+        self.assertIn('&lt;script&gt;sent&lt;/script&gt;', page.decode())
+        self.assertEqual(self.download(first, 'заметка.txt')[2], b'first')
+        self.assertEqual(self.download(second, 'заметка.txt')[2], b'second')
+        self.assertEqual(self.upload(b'third', second, note='x' * 501)[0], 422)
+        self.assertEqual(self.head(), second)
