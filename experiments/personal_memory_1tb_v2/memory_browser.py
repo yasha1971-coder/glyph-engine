@@ -234,7 +234,7 @@ def handler_for(args, memory, token):
                 mime = 'image/gif'
             elif suffix == '.webp' and data[:4] == b'RIFF' and data[8:12] == b'WEBP':
                 mime = 'image/webp'
-            elif suffix in ('.txt', '.md', '.csv', '.json', '.log', '.py', '.c', '.cpp', '.h', '.tex', '.yaml', '.yml'):
+            elif suffix in ('.txt', '.md', '.csv', '.json', '.xml', '.log', '.py', '.c', '.cpp', '.h', '.tex', '.yaml', '.yml'):
                 data.decode('utf-8-sig')  # Reject binary or unsupported encodings.
                 if b'\x00' not in data:
                     mime = 'text/plain; charset=utf-8'
