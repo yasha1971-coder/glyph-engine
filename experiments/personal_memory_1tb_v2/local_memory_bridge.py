@@ -84,7 +84,7 @@ class ArchiveView:
         codec = obj["codec"]
         # External precompression requires a separately sandboxed worker. Never
         # launch a process just because an LLM requested a document.
-        if codec not in ("raw", "deflate9", "bzip2-9", "xz-9"):
+        if codec not in ("raw", "deflate9", "bzip2-9", "xz-6", "xz-9"):
             return None
         payload = read_regular(self.root, obj["path"], self.limit)
         if len(payload) != obj["stored_bytes"] or base.sha256_bytes(payload) != obj["stored_sha256"]:
@@ -93,6 +93,7 @@ class ArchiveView:
             data = payload
         else:
             decoder = {"deflate9": zlib.decompressobj, "bzip2-9": bz2.BZ2Decompressor,
+                       "xz-6": lambda: lzma.LZMADecompressor(memlimit=128 * 1024 * 1024),
                        "xz-9": lambda: lzma.LZMADecompressor(memlimit=128 * 1024 * 1024)}[codec]()
             data = decoder.decompress(payload, self.limit + 1)
             if not decoder.eof or decoder.unused_data:

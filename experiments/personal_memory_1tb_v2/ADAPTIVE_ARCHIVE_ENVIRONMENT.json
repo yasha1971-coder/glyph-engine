@@ -1,0 +1,15 @@
+{
+  "evidence": "single integration run in assistant environment, not user laptop",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "cpu_model": "INTEL(R) XEON(R) PLATINUM 8573C",
+  "cpu_count": 9,
+  "affinity_cpu_count": 9,
+  "build_result_sha256": "0c0f290aa1512f401bfc83fee98fe30b91c73069dda74a4bd50e961515d1fa96",
+  "data_payload_bytes": 50095977,
+  "container_logical_bytes": 50103847,
+  "base_build_s": 48.11656321900227,
+  "demo_total_s": 190.9800549219981,
+  "manifest_validation": "counts match observed files and canonical manifest; payload matches frozen sample policy on full Silesia",
+  "cpu.max": "800000 100000",
+  "memory.max": "21474836480"
+}

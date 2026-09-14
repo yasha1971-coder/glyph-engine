@@ -49,3 +49,13 @@ class GoldenDemoTests(unittest.TestCase):
     def test_official_profile_size_and_count(self):
         self.assertEqual(len(demo.SILESIA), 12)
         self.assertEqual(sum(x[0] for x in demo.SILESIA.values()), 211938580)
+
+    def test_staged_aliases_and_adaptive_full_workflow(self):
+        (self.golden / 'xml').rename(self.golden / 'xml.xml')
+        with patch.object(demo, 'SILESIA', self.profile), contextlib.redirect_stdout(io.StringIO()):
+            report = demo.build(self.golden, self.root / 'demo', revisions=3,
+                                codec_policy='sample-bz-xz6', workers=2)
+        self.assertTrue(all(report['checks'].values()))
+        self.assertEqual(report['base_codec_policy'], 'sample-bz-xz6')
+        self.assertEqual(report['base_codec_workers'], 2)
+        self.assertEqual((self.golden / 'xml.xml').read_bytes(), self.data)

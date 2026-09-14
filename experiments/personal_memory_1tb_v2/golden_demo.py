@@ -64,6 +64,8 @@ def discover(golden):
     if golden.is_symlink() or not golden.is_dir():
         raise inc.Error('GOLDEN directory missing or symlink')
     candidates = {name: [] for name in SILESIA}
+    accepted_names = {name: name for name in SILESIA}
+    accepted_names.update({alias.casefold(): name for name, alias in ALIASES.items() if name in SILESIA})
     count = 0
     for folder, dirs, files in os.walk(golden, followlinks=False):
         relative = Path(folder).relative_to(golden)
@@ -74,7 +76,7 @@ def discover(golden):
         if count > 20000:
             raise inc.Error('GOLDEN name discovery budget exceeded')
         for name in sorted(files):
-            key = name.casefold()
+            key = accepted_names.get(name.casefold())
             if key in candidates and not (Path(folder) / name).is_symlink():
                 candidates[key].append(Path(folder) / name)
     chosen = {}
@@ -102,8 +104,10 @@ def run(command):
     subprocess.run([sys.executable, str(Path(__file__).with_name(command[0]))] + command[1:], check=True)
 
 
-def build(golden, output, revisions=100):
+def build(golden, output, revisions=100, *, codec_policy='legacy-best', workers=1):
     golden, output = Path(golden).resolve(), Path(output).resolve()
+    if codec_policy not in ('legacy-best', 'sample-bz-xz6') or type(workers) is not int or workers not in (1, 2):
+        raise inc.Error('unsupported codec policy or workers')
     if not 1 <= revisions <= 100:
         raise inc.Error('revision budget is 1..100')
     if output == golden or golden in output.parents or output in golden.parents:
@@ -129,7 +133,7 @@ def build(golden, output, revisions=100):
     event('build-base-archive', files=len(identities), note='Full Silesia; compression can take several minutes')
     run(['corpus_truth_gate.py', '--source', str(source), '--state', str(inventory)])
     base_started = time.monotonic()
-    base_report = archive.build(inventory, container, 0)
+    base_report = archive.build(inventory, container, 0, codec_policy=codec_policy, workers=workers)
     base_seconds = time.monotonic() - base_started
     receipt_pin = inc.digest((container / archive.RECEIPT).read_bytes())
     m = inc.Memory(memory_dir, container, receipt_pin)
@@ -245,7 +249,12 @@ def build(golden, output, revisions=100):
         'not_claimed': ['industrial readiness', 'LLM integration', 'indexed full-text UI search',
                         'representative average personal-data ratio', 'graphical PDF acceptance',
                         'one-terabyte performance', 'cryptographic publisher authentication'],
-        'base_codec_profile': 'existing raw/deflate9/bzip2-9/xz-9 hybrid; no Precomp in this self-contained demo'}
+        'base_codec_profile': ('existing raw/deflate9/bzip2-9/xz-9 hybrid; no Precomp in this self-contained demo'
+                               if codec_policy == 'legacy-best' else 'sample-bz-xz6; raw fallback; no Precomp'),
+        'base_codec_policy': codec_policy, 'base_codec_workers': workers,
+        'cdc_backend': {'mode': 'native' if os.environ.get('GLYPH_CDC_NATIVE') else 'python',
+                        'library_sha256': inc.digest(Path(os.environ['GLYPH_CDC_NATIVE']).read_bytes())
+                                          if os.environ.get('GLYPH_CDC_NATIVE') else None}}
     raw = archive.canonical_json(report)
     (output / REPORT).write_bytes(raw)
     (output / (REPORT + '.sha256')).write_text(inc.digest(raw) + '\n')
@@ -273,10 +282,12 @@ def main():
     p.add_argument('--golden', type=Path)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--revisions', type=int, default=100)
+    p.add_argument('--codec-policy', choices=('legacy-best', 'sample-bz-xz6'), default='legacy-best')
+    p.add_argument('--workers', type=int, choices=(1, 2), default=1)
     a = p.parse_args()
     if a.action == 'build':
         if a.golden is None: p.error('--golden required')
-        build(a.golden, a.output, a.revisions)
+        build(a.golden, a.output, a.revisions, codec_policy=a.codec_policy, workers=a.workers)
     else:
         serve(a.output)
 
