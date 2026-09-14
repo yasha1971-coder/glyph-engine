@@ -24,6 +24,8 @@ import incremental_memory as inc
 import vault_browser
 import permanent_delete
 
+SEARCH_STYLE = '<meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font:17px system-ui;max-width:1000px;margin:32px auto;padding:20px;background:#f5f7fa;color:#182330}section{background:white;padding:20px;margin:16px 0;border-radius:12px}h2,blockquote{overflow-wrap:anywhere}a{color:#1558a6}button{font:inherit;background:#1558a6;color:white;padding:12px;border:0;border-radius:6px}</style>'
+
 
 class HTTPServer(ThreadingHTTPServer):
     """Bound connection threads: browser preconnects cannot occupy the only reader."""
@@ -65,7 +67,7 @@ def set_head(root, pin):
             os.unlink(name)
 
 
-def worker(args, action, pin, extra, timeout=330):
+def worker(args, action, pin, extra, timeout=330, output_limit=4096):
     cmd = [sys.executable, str(Path(__file__).resolve()), '--memory', str(args.memory),
            '--archive', str(args.archive), '--archive-sha256', args.archive_sha256,
            '--worker', action, '--snapshot', pin] + extra
@@ -83,7 +85,10 @@ def worker(args, action, pin, extra, timeout=330):
         if result:
             raise inc.Error('worker rejected operation')
         output.seek(0)
-        return output.read(4096).decode().strip()
+        data = output.read(output_limit + 1)
+        if len(data) > output_limit:
+            raise inc.Error('worker response too large')
+        return data.decode().strip()
 
 
 def handler_for(args, memory, token):
@@ -108,7 +113,7 @@ def handler_for(args, memory, token):
                 if not self.allowed() or urlsplit(self.path).path != '/' + token:
                     self.send(403, b'Forbidden', 'text/plain')
                 else:
-                    readonly = not post and 'preview' in parse_qs(urlsplit(self.path).query)
+                    readonly = not post and bool({'preview', 'content'} & set(parse_qs(urlsplit(self.path).query)))
                     if post:
                         length = int(self.headers.get('Content-Length', '0'))
                         if not 0 < length <= inc.LIMIT + 65536:
@@ -274,6 +279,46 @@ def handler_for(args, memory, token):
                 return self.send(403, b'Forbidden', 'text/plain')
             try:
                 params = parse_qs(url.query)
+                if 'content' in params:
+                    query = params['content'][0]
+                    if len(query) < 3 or len(query.encode()) > 256 or '\x00' in query:
+                        return self.send(400, 'Введите точную фразу: от 3 символов до 256 байт UTF-8.'.encode())
+                    pin = self.current()
+                    try:
+                        result = json.loads(worker(args, 'search', pin, ['--query', query], timeout=30, output_limit=262144))
+                    except Exception:
+                        return self.send(422, 'Поиск не завершён: повреждение данных, лимит времени или ресурсов. Отсутствие совпадений не установлено. Вернитесь в «Мои файлы».'.encode())
+                    with state_lock:
+                        if self.current() != pin:
+                            return self.send(409, 'Память изменилась во время поиска. Повторите запрос.'.encode())
+                        page = '<!doctype html><meta charset="utf-8"><title>Поиск внутри файлов</title>' + SEARCH_STYLE + '<h1>Поиск внутри файлов</h1>'
+                        page += f'<p><a href="/{token}">← Мои файлы</a></p><p>Точная фраза с учётом регистра: ' + html.escape(query) + '</p>'
+                        page += '<p>Область: текущие версии. Старые версии доступны в истории файла. PDF, изображения и звук не распознаются.</p>'
+                        page += '<p>' + ('Найдены совпадения.' if result['snippets'] else 'В проверенной области совпадений нет.') + '</p>'
+                        if not result['coverage_complete']:
+                            page += '<p><strong>Поиск неполный.</strong> Не проиндексировано файлов: ' + str(len(result['skipped'])) + '. Причины: формат или лимит чтения.</p>'
+                        if result['truncated']:
+                            page += '<p>Показаны первые 20 совпадений. Уточните фразу.</p>'
+                        for s in result['snippets']:
+                            target = quote(s['path'], safe='')
+                            page += '<section><h2>' + html.escape(s['path']) + '</h2><blockquote>' + html.escape(s['text']) + '</blockquote>'
+                            page += f'<a href="/{token}?found={target}&amp;snapshot={pin}">Открыть найденную версию</a></section>'
+                        return self.send(200, page.encode())
+                if 'found' in params:
+                    pin, path = params.get('snapshot', [''])[0], params['found'][0]
+                    if pin not in self.history():
+                        raise inc.Error('search version no longer available')
+                    meta = memory.snapshot(pin)['files'][path]
+                    esc, target = html.escape, quote(path, safe='')
+                    page = '<!doctype html><meta charset="utf-8"><title>Найденная версия</title>' + SEARCH_STYLE + '<h1>Найденная версия файла</h1><h2>' + esc(path) + '</h2>'
+                    page += '<p>Размер: ' + str(meta['bytes']) + ' байт. Это версия на момент поиска.</p>'
+                    stamp = meta.get('saved_ns')
+                    date = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'Дата старой записи неизвестна'
+                    page += '<p>Сохранено в GLYPH: ' + esc(date) + '</p><p>' + esc(meta.get('version_note', '')) + '</p>'
+                    page += f'<p><a href="/{token}?preview={target}&amp;snapshot={pin}">Просмотреть</a></p>'
+                    page += f'<form method="post" action="/{token}"><input type="hidden" name="snapshot" value="{pin}"><input type="hidden" name="path" value="{esc(path, quote=True)}"><button>Скачать найденную версию</button></form>'
+                    page += f'<p><a href="/{token}?file={target}">Карточка и история файла</a></p><a href="/{token}">Мои файлы</a>'
+                    return self.send(200, page.encode())
                 if 'preview' in params:
                     return self.preview(params.get('snapshot', [self.current()])[0], params['preview'][0])
                 if 'delete' in params:
@@ -401,6 +446,7 @@ def handler_for(args, memory, token):
                 else:
                     page += f'<div class="actions"><h2>Мои файлы</h2><a class="button" href="/{token}?add=1">Добавить файл</a></div>'
                     page += f'<form action="/{token}"><input name="q" value="{esc(query, quote=True)}" placeholder="Имя файла или папка"><button>Найти</button></form>'
+                    page += f'<form action="/{token}"><label>Поиск внутри текста <input name="content" minlength="3" required placeholder="Точная фраза с учётом регистра"></label><button>Искать в содержимом</button></form><p><small>Текущие версии; до 32 MiB текста за запрос. Неполная проверка будет отмечена.</small></p>'
                     matches = [(p, f) for p, f in sorted(files.items()) if query.casefold() in p.casefold()]
                     page += f'<p>Всего: {len(files)} · Найдено: {len(matches)} · Показано: {min(200,len(matches))}</p><section class="panel"><table>'
                     for path, item in matches[:200]:
@@ -532,7 +578,8 @@ def main():
     p.add_argument('--precompressor-sha256')
     p.add_argument('--port', type=int, default=8766)
     p.add_argument('--enrich-source-dates', type=Path)
-    p.add_argument('--worker', choices=['add', 'restore'])
+    p.add_argument('--worker', choices=['add', 'restore', 'search'])
+    p.add_argument('--query')
     p.add_argument('--snapshot')
     p.add_argument('--source', type=Path)
     p.add_argument('--source-modified-ms', type=int)
@@ -546,6 +593,9 @@ def main():
     if a.worker:
         if a.worker == 'add':
             print(m.add(a.snapshot, a.source, a.source_modified_ms, a.version_note))
+        elif a.worker == 'search':
+            from memory_content_search import search
+            print(json.dumps(search(m, a.snapshot, a.query), ensure_ascii=False))
         else:
             m.restore(a.snapshot, a.path, a.output)
         return
