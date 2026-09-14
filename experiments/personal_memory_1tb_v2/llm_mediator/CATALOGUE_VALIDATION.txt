@@ -1,0 +1,8 @@
+test_no_fabricated_passes (test_acceptance_catalogue.CatalogueTests.test_no_fabricated_passes) ... ok
+test_traceable_requirement_categories (test_acceptance_catalogue.CatalogueTests.test_traceable_requirement_categories) ... ok
+test_unique_complete_specifications (test_acceptance_catalogue.CatalogueTests.test_unique_complete_specifications) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+OK
