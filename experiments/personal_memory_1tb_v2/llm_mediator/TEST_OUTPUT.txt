@@ -1,0 +1,13 @@
+test_clarification_does_not_read (test_mediator.MediatorTests.test_clarification_does_not_read) ... ok
+test_corruption_propagates_without_partial_answer (test_mediator.MediatorTests.test_corruption_propagates_without_partial_answer) ... ok
+test_exact_query_returns_bound_evidence (test_mediator.MediatorTests.test_exact_query_returns_bound_evidence) ... ok
+test_malformed_and_unavailable_operations_rejected (test_mediator.MediatorTests.test_malformed_and_unavailable_operations_rejected) ... ok
+test_no_grants_is_incomplete_not_absence (test_mediator.MediatorTests.test_no_grants_is_incomplete_not_absence) ... ok
+test_remote_and_credential_urls_rejected_before_request (test_mediator.MediatorTests.test_remote_and_credential_urls_rejected_before_request) ... ok
+test_unknown_grant_rejected (test_mediator.MediatorTests.test_unknown_grant_rejected) ... ok
+test_utf8_budget (test_mediator.MediatorTests.test_utf8_budget) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.014s
+
+OK
