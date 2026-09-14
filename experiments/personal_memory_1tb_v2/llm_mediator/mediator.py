@@ -91,3 +91,15 @@ def execute(plan_json, views, host_grants):
             'scope': result['scope'], 'coverage_complete': result['coverage_complete'],
             'skipped': result['skipped'], 'context_truncated': result['context_truncated'],
             'evidence': result['snippets'], 'answer_kind': 'verified excerpts; not generated synthesis'}
+
+
+def execute_indexed(plan_json, index, host_grants):
+    """Optional bounded content-index backend; no change to the legacy bridge."""
+    plan = parse(plan_json)
+    if plan['action'] == 'clarify':
+        return {'status': 'CLARIFY', 'question': plan['question'], 'operation_executed': False}
+    if len(plan['query']) < 3 or '\x00' in plan['query']:
+        return {'status': 'CLARIFY', 'question': 'Укажите точную фразу длиной от трёх символов.',
+                'operation_executed': False}
+    result = index.query(plan['query'], host_grants)
+    return dict(result, query=plan['query'], answer_kind='verified literal excerpts; not generated synthesis')
