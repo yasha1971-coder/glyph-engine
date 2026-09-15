@@ -1,0 +1,12 @@
+test_all_policies_roundtrip_and_raw_fallback (test_codec_frontier.CodecFrontierTests.test_all_policies_roundtrip_and_raw_fallback) ... ok
+test_corrupt_zstd_rejected (test_codec_frontier.CodecFrontierTests.test_corrupt_zstd_rejected) ... ok
+test_new_output_workers_source_identity_and_exclusion (test_codec_frontier.CodecFrontierTests.test_new_output_workers_source_identity_and_exclusion) ... {"stage": "policy-measured", "trial": 1, "policy": "bzip2-9", "seconds": 0.0077017830044496804, "bytes": 76}
+{"stage": "policy-measured", "trial": 1, "policy": "sample-bz-xz6", "seconds": 0.0038104669947642833, "bytes": 76}
+ok
+test_sample_is_bounded_and_no_prior_results (test_codec_frontier.CodecFrontierTests.test_sample_is_bounded_and_no_prior_results) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.409s
+
+OK
+COMPLETE: /tmp/tmpmmh3mgay/out/FRONTIER.json

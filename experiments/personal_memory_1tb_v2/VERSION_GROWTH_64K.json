@@ -1,0 +1,18 @@
+{
+  "actual_overlay_bytes_by_directory": {
+    "chunks": 19900601,
+    "objects": 524288,
+    "recipes": 125367,
+    "snapshots": 6951110
+  },
+  "actual_overlay_logical_bytes": 27501366,
+  "catalog_paths_after_add": 416,
+  "edits": 100,
+  "elapsed_seconds": 17.651,
+  "format": "GLYPH_SYNTHETIC_VERSION_GROWTH_V1",
+  "initial_file_bytes": 524288,
+  "note": "Baseline excludes metadata; actual includes all snapshots, recipes and payloads. Synthetic insertion+byte edits, not VIKA or a universal ratio. Base archive excluded from both.",
+  "seed": 1984,
+  "versions_verified": 101,
+  "whole_file_payload_baseline_bytes": 52958138
+}

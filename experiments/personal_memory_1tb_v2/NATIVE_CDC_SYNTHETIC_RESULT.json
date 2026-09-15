@@ -1,0 +1,364 @@
+{
+  "format": "GLYPH_ENCODE_MICROSCOPE_V1",
+  "cdc": [
+    {
+      "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+      "bytes": 4194304,
+      "boundaries": 185,
+      "seconds": {
+        "python": [
+          0.7828511020052247,
+          0.7329977369954577,
+          0.7266921989939874
+        ],
+        "native": [
+          0.005195731995627284,
+          0.004587668998283334,
+          0.004526107994024642
+        ]
+      }
+    },
+    {
+      "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+      "bytes": 4194304,
+      "boundaries": 64,
+      "seconds": {
+        "python": [
+          0.7398487870086683,
+          0.7437868119886843,
+          0.7715132829907816
+        ],
+        "native": [
+          0.003753842000151053,
+          0.003785388995311223,
+          0.0037524200015468523
+        ]
+      }
+    }
+  ],
+  "boundaries_exact": true,
+  "script_sha256": "09bb3b400407a04a15cd2535ab013356390aa0f9a477236a2a04e21f4d424fca",
+  "native_source_sha256": "fad6f89e4984db0f73c894cb8b4a0c47e3715145fed23d292fa2ec16a2501521",
+  "native_library_sha256": "4d3ced1cceff7787e8afd08a7ed150f0fa11f2584c7421712df881a075424db9",
+  "cdc_scope": "split plus Python byte slicing, no compression or vault metadata",
+  "codec_trials": [
+    {
+      "1": {
+        "wall_seconds": 2.5344799449958373,
+        "files": [
+          {
+            "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+            "source_bytes": 4194304,
+            "winner": "raw",
+            "best_bytes": 4194304,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 4195590,
+                "encode_seconds": 0.08893415999773424
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 4212811,
+                "encode_seconds": 0.4966957220021868
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 4194576,
+                "encode_seconds": 1.056380962007097
+              }
+            ]
+          },
+          {
+            "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+            "source_bytes": 4194304,
+            "winner": "xz-9",
+            "best_bytes": 792,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 12272,
+                "encode_seconds": 0.009520412000711076
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 1036,
+                "encode_seconds": 0.5548277219932061
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 792,
+                "encode_seconds": 0.08283093699719757
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "wall_seconds": 2.0595881899935193,
+        "files": [
+          {
+            "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+            "source_bytes": 4194304,
+            "winner": "raw",
+            "best_bytes": 4194304,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 4195590,
+                "encode_seconds": 0.08713014599925373
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 4212811,
+                "encode_seconds": 0.5143540010030847
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 4194576,
+                "encode_seconds": 1.2430533250008011
+              }
+            ]
+          },
+          {
+            "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+            "source_bytes": 4194304,
+            "winner": "xz-9",
+            "best_bytes": 792,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 12272,
+                "encode_seconds": 0.009335408001788892
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 1036,
+                "encode_seconds": 0.581078624993097
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 792,
+                "encode_seconds": 0.07683322401135229
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "2": {
+        "wall_seconds": 1.9161609159928048,
+        "files": [
+          {
+            "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+            "source_bytes": 4194304,
+            "winner": "raw",
+            "best_bytes": 4194304,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 4195590,
+                "encode_seconds": 0.08976017500390299
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 4212811,
+                "encode_seconds": 0.49594998300017323
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 4194576,
+                "encode_seconds": 1.1070717930124374
+              }
+            ]
+          },
+          {
+            "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+            "source_bytes": 4194304,
+            "winner": "xz-9",
+            "best_bytes": 792,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 12272,
+                "encode_seconds": 0.009331420005764812
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 1036,
+                "encode_seconds": 0.5689537470025243
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 792,
+                "encode_seconds": 0.07812518600258045
+              }
+            ]
+          }
+        ]
+      },
+      "1": {
+        "wall_seconds": 2.699583996000001,
+        "files": [
+          {
+            "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+            "source_bytes": 4194304,
+            "winner": "raw",
+            "best_bytes": 4194304,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 4195590,
+                "encode_seconds": 0.09170994699525181
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 4212811,
+                "encode_seconds": 0.4879051129973959
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 4194576,
+                "encode_seconds": 1.2153878649987746
+              }
+            ]
+          },
+          {
+            "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+            "source_bytes": 4194304,
+            "winner": "xz-9",
+            "best_bytes": 792,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 12272,
+                "encode_seconds": 0.009332514004199766
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 1036,
+                "encode_seconds": 0.5591379779943964
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 792,
+                "encode_seconds": 0.07925418599916156
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "1": {
+        "wall_seconds": 2.5460630299930926,
+        "files": [
+          {
+            "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+            "source_bytes": 4194304,
+            "winner": "raw",
+            "best_bytes": 4194304,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 4195590,
+                "encode_seconds": 0.08676655300951097
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 4212811,
+                "encode_seconds": 0.4744912759924773
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 4194576,
+                "encode_seconds": 1.0887759739998728
+              }
+            ]
+          },
+          {
+            "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+            "source_bytes": 4194304,
+            "winner": "xz-9",
+            "best_bytes": 792,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 12272,
+                "encode_seconds": 0.009721351001644507
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 1036,
+                "encode_seconds": 0.5695672790025128
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 792,
+                "encode_seconds": 0.08069955300015863
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "wall_seconds": 2.0124513679911615,
+        "files": [
+          {
+            "sha256": "1b1af4995ef5530aef31ff8b0cd0a7ef49aae2af6d061234577e96162398561c",
+            "source_bytes": 4194304,
+            "winner": "raw",
+            "best_bytes": 4194304,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 4195590,
+                "encode_seconds": 0.09284261699940544
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 4212811,
+                "encode_seconds": 0.505137146989
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 4194576,
+                "encode_seconds": 1.1925514899921836
+              }
+            ]
+          },
+          {
+            "sha256": "d8e544bd6249a13f0680fd96bc4d90c52efaee2250d677921139af0f79e3a8a2",
+            "source_bytes": 4194304,
+            "winner": "xz-9",
+            "best_bytes": 792,
+            "codecs": [
+              {
+                "codec": "deflate9",
+                "bytes": 12272,
+                "encode_seconds": 0.009431300000869669
+              },
+              {
+                "codec": "bzip2-9",
+                "bytes": 1036,
+                "encode_seconds": 0.577496689002146
+              },
+              {
+                "codec": "xz-9",
+                "bytes": 792,
+                "encode_seconds": 0.08593451300112065
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "codec_scope": "all three codecs; wall includes reading, compression, roundtrip and pool startup; no archive writing",
+  "limitations": [
+    "local workload only",
+    "no one-terabyte or end-to-end Vault speed claim",
+    "xz-only size is candidate measurement, not automatically deployed"
+  ]
+}

@@ -1,0 +1,1671 @@
+{
+  "format": "GLYPH_CODEC_FRONTIER_V1",
+  "status": "ALL_SELECTED_POLICIES_EXACT",
+  "source_files": 4,
+  "source_logical_bytes": 3095561,
+  "zstd_version": "1.5.5",
+  "zstd_skipped": false,
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "runner_sha256": "53a15b64c1127970a3cf94db65a4b895a0ff1e56e381c94cab98ac1ca846379a",
+  "runs": [
+    {
+      "trial": 1,
+      "policy": "legacy-best",
+      "workers": 2,
+      "wall_s": 0.834010862003197,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.05459976200654637,
+          "write_fsync_read_s": 0.0002852239995263517,
+          "decode_compare_s": 0.002375376003328711,
+          "pipeline_s": 0.057621258005383424,
+          "peak_worker_rss_bytes": 81793024,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.4096902390010655,
+          "write_fsync_read_s": 0.0004128720029257238,
+          "decode_compare_s": 0.0036610749957617372,
+          "pipeline_s": 0.4150373970041983,
+          "peak_worker_rss_bytes": 93802496,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "legacy-best",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.3952718809887301,
+          "write_fsync_read_s": 0.0003673149913083762,
+          "decode_compare_s": 2.554801176302135e-05,
+          "pipeline_s": 0.39691571101138834,
+          "peak_worker_rss_bytes": 102223872,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.4067464940017089,
+          "write_fsync_read_s": 0.00021802300761919469,
+          "decode_compare_s": 0.004061429004650563,
+          "pipeline_s": 0.41187586799787823,
+          "peak_worker_rss_bytes": 93802496,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "bzip2-9",
+      "workers": 2,
+      "wall_s": 0.2735829220036976,
+      "payload_bytes": 1773725,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 90780,
+          "encode_including_probe_s": 0.01012225600425154,
+          "write_fsync_read_s": 0.0001947190030477941,
+          "decode_compare_s": 0.004041589010739699,
+          "pipeline_s": 0.014861941992421634,
+          "peak_worker_rss_bytes": 13856768,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 569120,
+          "encode_including_probe_s": 0.10887153599469457,
+          "write_fsync_read_s": 0.0005251399998087436,
+          "decode_compare_s": 0.03246523400594015,
+          "pipeline_s": 0.14324404300714377,
+          "peak_worker_rss_bytes": 21590016,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "bzip2-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.1309474779991433,
+          "write_fsync_read_s": 0.0004995719937141985,
+          "decode_compare_s": 2.9574002837762237e-05,
+          "pipeline_s": 0.13252428898704238,
+          "peak_worker_rss_bytes": 22736896,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 65249,
+          "encode_including_probe_s": 0.10808451900084037,
+          "write_fsync_read_s": 0.0002900099934777245,
+          "decode_compare_s": 0.01663980098965112,
+          "pipeline_s": 0.12588078698900063,
+          "peak_worker_rss_bytes": 21590016,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "xz-3",
+      "workers": 2,
+      "wall_s": 0.16927141199994367,
+      "payload_bytes": 1768764,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 89428,
+          "encode_including_probe_s": 0.015606969012878835,
+          "write_fsync_read_s": 0.00024907900660764426,
+          "decode_compare_s": 0.002381345009780489,
+          "pipeline_s": 0.018541604003985412,
+          "peak_worker_rss_bytes": 22376448,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 563580,
+          "encode_including_probe_s": 0.10126345300523099,
+          "write_fsync_read_s": 0.00045194099948275834,
+          "decode_compare_s": 0.003417101994273253,
+          "pipeline_s": 0.10653374600224197,
+          "peak_worker_rss_bytes": 29192192,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-3",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.14486508700065315,
+          "write_fsync_read_s": 0.0006309769960353151,
+          "decode_compare_s": 4.3334002839401364e-05,
+          "pipeline_s": 0.14654150599380955,
+          "peak_worker_rss_bytes": 30253056,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 67180,
+          "encode_including_probe_s": 0.02959666500100866,
+          "write_fsync_read_s": 0.0002150899963453412,
+          "decode_compare_s": 0.003369391997694038,
+          "pipeline_s": 0.03408690101059619,
+          "peak_worker_rss_bytes": 30760960,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "xz-6",
+      "workers": 2,
+      "wall_s": 0.4804965479997918,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.026831650990061462,
+          "write_fsync_read_s": 0.0002503020077710971,
+          "decode_compare_s": 0.0024460120039293543,
+          "pipeline_s": 0.029857521993108094,
+          "peak_worker_rss_bytes": 31158272,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.24199420301010832,
+          "write_fsync_read_s": 0.0004559470107778907,
+          "decode_compare_s": 0.0039342200034298,
+          "pipeline_s": 0.2475503409950761,
+          "peak_worker_rss_bytes": 41906176,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-6",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.22445016499841586,
+          "write_fsync_read_s": 0.0004381809994811192,
+          "decode_compare_s": 2.5657995138317347e-05,
+          "pipeline_s": 0.22599288499623071,
+          "peak_worker_rss_bytes": 42840064,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.2232498730008956,
+          "write_fsync_read_s": 0.00022700699628330767,
+          "decode_compare_s": 0.003649997990578413,
+          "pipeline_s": 0.22806187700189184,
+          "peak_worker_rss_bytes": 42795008,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "xz-9",
+      "workers": 2,
+      "wall_s": 0.5612665530061349,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.06909179300419055,
+          "write_fsync_read_s": 0.000429776991950348,
+          "decode_compare_s": 0.002354355005081743,
+          "pipeline_s": 0.07220650800445583,
+          "peak_worker_rss_bytes": 81494016,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.3122825879981974,
+          "write_fsync_read_s": 0.001627035002456978,
+          "decode_compare_s": 0.0037633659958373755,
+          "pipeline_s": 0.318809907999821,
+          "peak_worker_rss_bytes": 92241920,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.2884109709993936,
+          "write_fsync_read_s": 0.0029129850008757785,
+          "decode_compare_s": 2.7831003535538912e-05,
+          "pipeline_s": 0.29245036900101695,
+          "peak_worker_rss_bytes": 93167616,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.23274590000801254,
+          "write_fsync_read_s": 0.00022613498731516302,
+          "decode_compare_s": 0.004068688998813741,
+          "pipeline_s": 0.23784167401026934,
+          "peak_worker_rss_bytes": 92241920,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "sample-bz-xz6",
+      "workers": 2,
+      "wall_s": 0.4718083059997298,
+      "payload_bytes": 1773725,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 90780,
+          "encode_including_probe_s": 0.012534587003756315,
+          "write_fsync_read_s": 0.00041040900396183133,
+          "decode_compare_s": 0.0038276020059129223,
+          "pipeline_s": 0.017384235994541086,
+          "peak_worker_rss_bytes": 13860864,
+          "probe": {
+            "reason": "small-input",
+            "sample_bytes": 0
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 569120,
+          "encode_including_probe_s": 0.2561649700073758,
+          "write_fsync_read_s": 0.0016764390020398423,
+          "decode_compare_s": 0.03038301199558191,
+          "pipeline_s": 0.2893552989989985,
+          "peak_worker_rss_bytes": 39170048,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 107667,
+              "xz-6": 105680
+            },
+            "estimated_saved_bytes": 10597.333333333334
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "sample-bz-xz6",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.2812951090018032,
+          "write_fsync_read_s": 0.0027422109997132793,
+          "decode_compare_s": 2.641000901348889e-05,
+          "pipeline_s": 0.2869633529917337,
+          "peak_worker_rss_bytes": 39956480,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 198520,
+              "xz-6": 196800
+            },
+            "estimated_saved_bytes": 9173.333333333334
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 65249,
+          "encode_including_probe_s": 0.15901574600138701,
+          "write_fsync_read_s": 0.0002673370036063716,
+          "decode_compare_s": 0.015920521997031756,
+          "pipeline_s": 0.1761020600097254,
+          "peak_worker_rss_bytes": 39743488,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 14474,
+              "xz-6": 13168
+            },
+            "estimated_saved_bytes": 6008.185882568359
+          },
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "zstd-3",
+      "workers": 2,
+      "wall_s": 0.01616249200014863,
+      "payload_bytes": 1817234,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "zstd-3",
+          "codec": "raw",
+          "payload_bytes": 93924,
+          "encode_including_probe_s": 0.0005768570117652416,
+          "write_fsync_read_s": 0.00013684300938621163,
+          "decode_compare_s": 6.909991498105228e-06,
+          "pipeline_s": 0.0010294990061083809,
+          "peak_worker_rss_bytes": 14258176,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "zstd-3",
+          "codec": "zstd-3",
+          "payload_bytes": 578871,
+          "encode_including_probe_s": 0.002144703990779817,
+          "write_fsync_read_s": 0.00024212901189457625,
+          "decode_compare_s": 0.0009229599963873625,
+          "pipeline_s": 0.004595320991938934,
+          "peak_worker_rss_bytes": 18649088,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "zstd-3",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.0012597110035130754,
+          "write_fsync_read_s": 0.00033641900517977774,
+          "decode_compare_s": 2.4426000891253352e-05,
+          "pipeline_s": 0.002705867009353824,
+          "peak_worker_rss_bytes": 17936384,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "zstd-3",
+          "codec": "zstd-3",
+          "payload_bytes": 95863,
+          "encode_including_probe_s": 0.0017330319969914854,
+          "write_fsync_read_s": 0.00013027299428358674,
+          "decode_compare_s": 0.00047652800276409835,
+          "pipeline_s": 0.003214872005628422,
+          "peak_worker_rss_bytes": 18649088,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 1,
+      "policy": "zstd-9",
+      "workers": 2,
+      "wall_s": 0.030492744990624487,
+      "payload_bytes": 1802757,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "zstd-9",
+          "codec": "raw",
+          "payload_bytes": 93924,
+          "encode_including_probe_s": 0.0007240950071718544,
+          "write_fsync_read_s": 0.00016922099166549742,
+          "decode_compare_s": 1.0094998287968338e-05,
+          "pipeline_s": 0.0013620920071844012,
+          "peak_worker_rss_bytes": 14520320,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "zstd-9",
+          "codec": "zstd-9",
+          "payload_bytes": 573671,
+          "encode_including_probe_s": 0.010972878997563384,
+          "write_fsync_read_s": 0.00021774299966637045,
+          "decode_compare_s": 0.0008633919933345169,
+          "pipeline_s": 0.013265861998661421,
+          "peak_worker_rss_bytes": 26578944,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "zstd-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.004515452004852705,
+          "write_fsync_read_s": 0.00038770500395912677,
+          "decode_compare_s": 4.261299909558147e-05,
+          "pipeline_s": 0.006179322997923009,
+          "peak_worker_rss_bytes": 26447872,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "zstd-9",
+          "codec": "zstd-9",
+          "payload_bytes": 86586,
+          "encode_including_probe_s": 0.011456216001533903,
+          "write_fsync_read_s": 0.00014627700147684664,
+          "decode_compare_s": 0.0005782880034530535,
+          "pipeline_s": 0.013604534993646666,
+          "peak_worker_rss_bytes": 26447872,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "legacy-best",
+      "workers": 2,
+      "wall_s": 0.9502724869962549,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.07264705099805724,
+          "write_fsync_read_s": 0.00040256699139717966,
+          "decode_compare_s": 0.0023476250062230974,
+          "pipeline_s": 0.07570915599353611,
+          "peak_worker_rss_bytes": 81858560,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.5419985909975367,
+          "write_fsync_read_s": 0.0017019360093399882,
+          "decode_compare_s": 0.003657369001302868,
+          "pipeline_s": 0.5485224139993079,
+          "peak_worker_rss_bytes": 93859840,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "legacy-best",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.4604224950016942,
+          "write_fsync_read_s": 0.0028371509979479015,
+          "decode_compare_s": 2.8511989512480795e-05,
+          "pipeline_s": 0.4643291329994099,
+          "peak_worker_rss_bytes": 102289408,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.40004272300575394,
+          "write_fsync_read_s": 0.00024118799774441868,
+          "decode_compare_s": 0.003994380007497966,
+          "pipeline_s": 0.405120101000648,
+          "peak_worker_rss_bytes": 102289408,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "zstd-9",
+      "workers": 2,
+      "wall_s": 0.030355181006598286,
+      "payload_bytes": 1802757,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "zstd-9",
+          "codec": "raw",
+          "payload_bytes": 93924,
+          "encode_including_probe_s": 0.0006139110046206042,
+          "write_fsync_read_s": 0.00012046900519635528,
+          "decode_compare_s": 9.073002729564905e-06,
+          "pipeline_s": 0.0011256300058448687,
+          "peak_worker_rss_bytes": 14520320,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "zstd-9",
+          "codec": "zstd-9",
+          "payload_bytes": 573671,
+          "encode_including_probe_s": 0.009477177998633124,
+          "write_fsync_read_s": 0.0003148579999106005,
+          "decode_compare_s": 0.0008470470056636259,
+          "pipeline_s": 0.011875277996296063,
+          "peak_worker_rss_bytes": 26578944,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "zstd-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.005604789999779314,
+          "write_fsync_read_s": 0.0003168709954479709,
+          "decode_compare_s": 4.2764004319906235e-05,
+          "pipeline_s": 0.006994612995185889,
+          "peak_worker_rss_bytes": 26447872,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "zstd-9",
+          "codec": "zstd-9",
+          "payload_bytes": 86586,
+          "encode_including_probe_s": 0.01032440600101836,
+          "write_fsync_read_s": 0.00013924700033385307,
+          "decode_compare_s": 0.0005895350041100755,
+          "pipeline_s": 0.013130089995684102,
+          "peak_worker_rss_bytes": 26447872,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "zstd-3",
+      "workers": 2,
+      "wall_s": 0.014798197007621638,
+      "payload_bytes": 1817234,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "zstd-3",
+          "codec": "raw",
+          "payload_bytes": 93924,
+          "encode_including_probe_s": 0.0004953250027028844,
+          "write_fsync_read_s": 0.00011870599701069295,
+          "decode_compare_s": 9.674011380411685e-06,
+          "pipeline_s": 0.0009230300056515262,
+          "peak_worker_rss_bytes": 14258176,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "zstd-3",
+          "codec": "zstd-3",
+          "payload_bytes": 578871,
+          "encode_including_probe_s": 0.0020006499980809167,
+          "write_fsync_read_s": 0.000195440006791614,
+          "decode_compare_s": 0.0007985060074133798,
+          "pipeline_s": 0.004161887991358526,
+          "peak_worker_rss_bytes": 18649088,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "zstd-3",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.0012638059997698292,
+          "write_fsync_read_s": 0.0002882980043068528,
+          "decode_compare_s": 4.219300171826035e-05,
+          "pipeline_s": 0.0028523939981823787,
+          "peak_worker_rss_bytes": 18067456,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "zstd-3",
+          "codec": "zstd-3",
+          "payload_bytes": 95863,
+          "encode_including_probe_s": 0.0018410030024824664,
+          "write_fsync_read_s": 0.00012560700997710228,
+          "decode_compare_s": 0.00043088999518658966,
+          "pipeline_s": 0.0033739179925760254,
+          "peak_worker_rss_bytes": 18649088,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "sample-bz-xz6",
+      "workers": 2,
+      "wall_s": 0.39476659600040875,
+      "payload_bytes": 1773725,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 90780,
+          "encode_including_probe_s": 0.009785176007426344,
+          "write_fsync_read_s": 0.0001638129906496033,
+          "decode_compare_s": 0.003945065996958874,
+          "pipeline_s": 0.014193700000760145,
+          "peak_worker_rss_bytes": 13864960,
+          "probe": {
+            "reason": "small-input",
+            "sample_bytes": 0
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 569120,
+          "encode_including_probe_s": 0.16817934400751255,
+          "write_fsync_read_s": 0.0003766490117413923,
+          "decode_compare_s": 0.030249764007749036,
+          "pipeline_s": 0.20005509199108928,
+          "peak_worker_rss_bytes": 39174144,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 107667,
+              "xz-6": 105680
+            },
+            "estimated_saved_bytes": 10597.333333333334
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "sample-bz-xz6",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.17495722600142471,
+          "write_fsync_read_s": 0.00045581700396724045,
+          "decode_compare_s": 2.6188994525000453e-05,
+          "pipeline_s": 0.17660894700384233,
+          "peak_worker_rss_bytes": 39960576,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 198520,
+              "xz-6": 196800
+            },
+            "estimated_saved_bytes": 9173.333333333334
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 65249,
+          "encode_including_probe_s": 0.17489479298819788,
+          "write_fsync_read_s": 0.0023970879992702976,
+          "decode_compare_s": 0.01637611999467481,
+          "pipeline_s": 0.1944952479971107,
+          "peak_worker_rss_bytes": 40349696,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 14474,
+              "xz-6": 13168
+            },
+            "estimated_saved_bytes": 6008.185882568359
+          },
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "xz-9",
+      "workers": 2,
+      "wall_s": 0.5099948620045325,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.04269644099986181,
+          "write_fsync_read_s": 0.00044593198981601745,
+          "decode_compare_s": 0.0023477749928133562,
+          "pipeline_s": 0.04590355200343765,
+          "peak_worker_rss_bytes": 81498112,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.25543270699563436,
+          "write_fsync_read_s": 0.0005316290043992922,
+          "decode_compare_s": 0.0038126689905766398,
+          "pipeline_s": 0.2611332990054507,
+          "peak_worker_rss_bytes": 92246016,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.25225181500718463,
+          "write_fsync_read_s": 0.0006213029992068186,
+          "decode_compare_s": 2.7780988602899015e-05,
+          "pipeline_s": 0.25389156899473164,
+          "peak_worker_rss_bytes": 93171712,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.2380833319912199,
+          "write_fsync_read_s": 0.00031021100585348904,
+          "decode_compare_s": 0.00412938000226859,
+          "pipeline_s": 0.243358753999928,
+          "peak_worker_rss_bytes": 92246016,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "xz-6",
+      "workers": 2,
+      "wall_s": 0.4560258179990342,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.02356069500092417,
+          "write_fsync_read_s": 0.0002492400089977309,
+          "decode_compare_s": 0.002317610997124575,
+          "pipeline_s": 0.02648512700397987,
+          "peak_worker_rss_bytes": 31170560,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.21975914199720137,
+          "write_fsync_read_s": 0.0004280159919289872,
+          "decode_compare_s": 0.0037778979894937947,
+          "pipeline_s": 0.2251751910080202,
+          "peak_worker_rss_bytes": 41918464,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-6",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.21301291599229444,
+          "write_fsync_read_s": 0.0004977189964847639,
+          "decode_compare_s": 4.4405998778529465e-05,
+          "pipeline_s": 0.21453498599294107,
+          "peak_worker_rss_bytes": 42848256,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.22134626799379475,
+          "write_fsync_read_s": 0.00022448301024269313,
+          "decode_compare_s": 0.0036572889948729426,
+          "pipeline_s": 0.22609140099666547,
+          "peak_worker_rss_bytes": 42803200,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "xz-3",
+      "workers": 2,
+      "wall_s": 0.15553961099067237,
+      "payload_bytes": 1768764,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 89428,
+          "encode_including_probe_s": 0.014784426995902322,
+          "write_fsync_read_s": 0.00030283899104688317,
+          "decode_compare_s": 0.0023488870065193623,
+          "pipeline_s": 0.01773185199999716,
+          "peak_worker_rss_bytes": 22388736,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 563580,
+          "encode_including_probe_s": 0.0855316069937544,
+          "write_fsync_read_s": 0.00042290700366720557,
+          "decode_compare_s": 0.0032533990015508607,
+          "pipeline_s": 0.09043761999055278,
+          "peak_worker_rss_bytes": 29204480,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-3",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.1321406269998988,
+          "write_fsync_read_s": 0.0006280520028667524,
+          "decode_compare_s": 2.9893999453634024e-05,
+          "pipeline_s": 0.13377135699556675,
+          "peak_worker_rss_bytes": 30265344,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 67180,
+          "encode_including_probe_s": 0.02801540700602345,
+          "write_fsync_read_s": 0.0002485389995854348,
+          "decode_compare_s": 0.003060161994653754,
+          "pipeline_s": 0.0323964609997347,
+          "peak_worker_rss_bytes": 30773248,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 2,
+      "policy": "bzip2-9",
+      "workers": 2,
+      "wall_s": 0.27369991900923196,
+      "payload_bytes": 1773725,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 90780,
+          "encode_including_probe_s": 0.009425081007066183,
+          "write_fsync_read_s": 0.00017683199257589877,
+          "decode_compare_s": 0.003816153999650851,
+          "pipeline_s": 0.013736631997744553,
+          "peak_worker_rss_bytes": 13869056,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 569120,
+          "encode_including_probe_s": 0.11060963399359025,
+          "write_fsync_read_s": 0.000456697991467081,
+          "decode_compare_s": 0.03440675100137014,
+          "pipeline_s": 0.14664932899177074,
+          "peak_worker_rss_bytes": 21602304,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "bzip2-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.12468236499989871,
+          "write_fsync_read_s": 0.0007829420064808801,
+          "decode_compare_s": 5.863700062036514e-05,
+          "pipeline_s": 0.1265346839936683,
+          "peak_worker_rss_bytes": 22749184,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 65249,
+          "encode_including_probe_s": 0.1104402330092853,
+          "write_fsync_read_s": 0.00022857901058159769,
+          "decode_compare_s": 0.01702245899650734,
+          "pipeline_s": 0.12865964899538085,
+          "peak_worker_rss_bytes": 22749184,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "xz-3",
+      "workers": 2,
+      "wall_s": 0.18477382299897727,
+      "payload_bytes": 1768764,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 89428,
+          "encode_including_probe_s": 0.01518476199998986,
+          "write_fsync_read_s": 0.0002286689996253699,
+          "decode_compare_s": 0.0023908490111352876,
+          "pipeline_s": 0.01810086000477895,
+          "peak_worker_rss_bytes": 22392832,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 563580,
+          "encode_including_probe_s": 0.09533896599896252,
+          "write_fsync_read_s": 0.000438410002971068,
+          "decode_compare_s": 0.0034072679991368204,
+          "pipeline_s": 0.10036289499839768,
+          "peak_worker_rss_bytes": 29208576,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-3",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.16068503900896758,
+          "write_fsync_read_s": 0.0006460189906647429,
+          "decode_compare_s": 3.0094000976532698e-05,
+          "pipeline_s": 0.16247682900575455,
+          "peak_worker_rss_bytes": 30269440,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-3",
+          "codec": "xz-3",
+          "payload_bytes": 67180,
+          "encode_including_probe_s": 0.029210390988737345,
+          "write_fsync_read_s": 0.0002490799961378798,
+          "decode_compare_s": 0.0032016830082284287,
+          "pipeline_s": 0.03351923800073564,
+          "peak_worker_rss_bytes": 30777344,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "xz-6",
+      "workers": 2,
+      "wall_s": 0.46686649999173824,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.024203319000662304,
+          "write_fsync_read_s": 0.00025488800019957125,
+          "decode_compare_s": 0.0023818149929866195,
+          "pipeline_s": 0.02718825900228694,
+          "peak_worker_rss_bytes": 31174656,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.21947626599285286,
+          "write_fsync_read_s": 0.00045400399540085346,
+          "decode_compare_s": 0.0038788179954281077,
+          "pipeline_s": 0.22497807299077976,
+          "peak_worker_rss_bytes": 41922560,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-6",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.19337251200340688,
+          "write_fsync_read_s": 0.00046699300582986325,
+          "decode_compare_s": 2.7280999347567558e-05,
+          "pipeline_s": 0.19488767099392135,
+          "peak_worker_rss_bytes": 42852352,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-6",
+          "codec": "xz-6",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.23470977500255685,
+          "write_fsync_read_s": 0.00022075799643062055,
+          "decode_compare_s": 0.0038674410025123507,
+          "pipeline_s": 0.23970732399902772,
+          "peak_worker_rss_bytes": 42852352,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "xz-9",
+      "workers": 2,
+      "wall_s": 0.5436599219974596,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.0427051639999263,
+          "write_fsync_read_s": 0.0002470759936841205,
+          "decode_compare_s": 0.002397218006080948,
+          "pipeline_s": 0.045649403997231275,
+          "peak_worker_rss_bytes": 81510400,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.2797875450050924,
+          "write_fsync_read_s": 0.0013219420070527121,
+          "decode_compare_s": 0.004808017998584546,
+          "pipeline_s": 0.28712912400078494,
+          "peak_worker_rss_bytes": 92258304,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "xz-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.2772020129923476,
+          "write_fsync_read_s": 0.0008678279991727322,
+          "decode_compare_s": 3.0105002224445343e-05,
+          "pipeline_s": 0.2791242660023272,
+          "peak_worker_rss_bytes": 93184000,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "xz-9",
+          "codec": "xz-9",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.2462278630118817,
+          "write_fsync_read_s": 0.00026900999364443123,
+          "decode_compare_s": 0.0040634620090713724,
+          "pipeline_s": 0.2515332379989559,
+          "peak_worker_rss_bytes": 92258304,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "sample-bz-xz6",
+      "workers": 2,
+      "wall_s": 0.3720723669975996,
+      "payload_bytes": 1773725,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 90780,
+          "encode_including_probe_s": 0.009315218005212955,
+          "write_fsync_read_s": 0.00024352199397981167,
+          "decode_compare_s": 0.0038073920004535466,
+          "pipeline_s": 0.01382236801146064,
+          "peak_worker_rss_bytes": 13881344,
+          "probe": {
+            "reason": "small-input",
+            "sample_bytes": 0
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 569120,
+          "encode_including_probe_s": 0.1873025209933985,
+          "write_fsync_read_s": 0.00040091499977279454,
+          "decode_compare_s": 0.030515588994603604,
+          "pipeline_s": 0.21952551499998663,
+          "peak_worker_rss_bytes": 39190528,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 107667,
+              "xz-6": 105680
+            },
+            "estimated_saved_bytes": 10597.333333333334
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "sample-bz-xz6",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.17693163600051776,
+          "write_fsync_read_s": 0.00046375799865927547,
+          "decode_compare_s": 4.4194996007718146e-05,
+          "pipeline_s": 0.1784790929959854,
+          "peak_worker_rss_bytes": 39976960,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 198520,
+              "xz-6": 196800
+            },
+            "estimated_saved_bytes": 9173.333333333334
+          },
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "sample-bz-xz6",
+          "codec": "bzip2-9",
+          "payload_bytes": 65249,
+          "encode_including_probe_s": 0.15597406499728095,
+          "write_fsync_read_s": 0.00023350599803961813,
+          "decode_compare_s": 0.01564244000473991,
+          "pipeline_s": 0.17270591399574187,
+          "peak_worker_rss_bytes": 40366080,
+          "probe": {
+            "reason": "sample",
+            "sample_bytes": 196608,
+            "sample_sizes": {
+              "bzip2-9": 14474,
+              "xz-6": 13168
+            },
+            "estimated_saved_bytes": 6008.185882568359
+          },
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "zstd-3",
+      "workers": 2,
+      "wall_s": 0.016200579004362226,
+      "payload_bytes": 1817234,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "zstd-3",
+          "codec": "raw",
+          "payload_bytes": 93924,
+          "encode_including_probe_s": 0.0004916300094919279,
+          "write_fsync_read_s": 0.00013386800128500909,
+          "decode_compare_s": 9.794006473384798e-06,
+          "pipeline_s": 0.000993904992355965,
+          "peak_worker_rss_bytes": 14282752,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "zstd-3",
+          "codec": "zstd-3",
+          "payload_bytes": 578871,
+          "encode_including_probe_s": 0.0020821899961447343,
+          "write_fsync_read_s": 0.000251543999183923,
+          "decode_compare_s": 0.0008208989893319085,
+          "pipeline_s": 0.004363467000075616,
+          "peak_worker_rss_bytes": 18673664,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "zstd-3",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.0014227119972929358,
+          "write_fsync_read_s": 0.00025901501066982746,
+          "decode_compare_s": 7.656399975530803e-05,
+          "pipeline_s": 0.002805124007863924,
+          "peak_worker_rss_bytes": 17960960,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "zstd-3",
+          "codec": "zstd-3",
+          "payload_bytes": 95863,
+          "encode_including_probe_s": 0.001831298999604769,
+          "write_fsync_read_s": 0.0001831419940572232,
+          "decode_compare_s": 0.0004883950023213401,
+          "pipeline_s": 0.0034617289929883555,
+          "peak_worker_rss_bytes": 18673664,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "zstd-9",
+      "workers": 2,
+      "wall_s": 0.030582757986849174,
+      "payload_bytes": 1802757,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "zstd-9",
+          "codec": "raw",
+          "payload_bytes": 93924,
+          "encode_including_probe_s": 0.000630466005532071,
+          "write_fsync_read_s": 0.00020020699594169855,
+          "decode_compare_s": 9.754003258422017e-06,
+          "pipeline_s": 0.0012390689953463152,
+          "peak_worker_rss_bytes": 14548992,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "zstd-9",
+          "codec": "zstd-9",
+          "payload_bytes": 573671,
+          "encode_including_probe_s": 0.009337251001852565,
+          "write_fsync_read_s": 0.00033645000075921416,
+          "decode_compare_s": 0.0008653539989609271,
+          "pipeline_s": 0.01177334699605126,
+          "peak_worker_rss_bytes": 26607616,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "zstd-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.005541586011531763,
+          "write_fsync_read_s": 0.00028108799597248435,
+          "decode_compare_s": 4.34340036008507e-05,
+          "pipeline_s": 0.006928214992512949,
+          "peak_worker_rss_bytes": 26476544,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "zstd-9",
+          "codec": "zstd-9",
+          "payload_bytes": 86586,
+          "encode_including_probe_s": 0.010485664999578148,
+          "write_fsync_read_s": 0.00013472000136971474,
+          "decode_compare_s": 0.0005276030133245513,
+          "pipeline_s": 0.012093992991140112,
+          "peak_worker_rss_bytes": 26476544,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "legacy-best",
+      "workers": 2,
+      "wall_s": 0.8516264690115349,
+      "payload_bytes": 1752024,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 89540,
+          "encode_including_probe_s": 0.09884099499322474,
+          "write_fsync_read_s": 0.00030701600189786404,
+          "decode_compare_s": 0.002453200999298133,
+          "pipeline_s": 0.10195497699896805,
+          "peak_worker_rss_bytes": 81891328,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 557580,
+          "encode_including_probe_s": 0.41739933801000006,
+          "write_fsync_read_s": 0.0003484780027065426,
+          "decode_compare_s": 0.003712961988640018,
+          "pipeline_s": 0.4226021509966813,
+          "peak_worker_rss_bytes": 93892608,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "legacy-best",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.44052105001173913,
+          "write_fsync_read_s": 0.0004067140107508749,
+          "decode_compare_s": 2.685000072233379e-05,
+          "pipeline_s": 0.4421998820034787,
+          "peak_worker_rss_bytes": 102322176,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "legacy-best",
+          "codec": "xz-9",
+          "payload_bytes": 56328,
+          "encode_including_probe_s": 0.41827665698656347,
+          "write_fsync_read_s": 0.00023941599647514522,
+          "decode_compare_s": 0.004317448998335749,
+          "pipeline_s": 0.4237325269932626,
+          "peak_worker_rss_bytes": 93892608,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    },
+    {
+      "trial": 3,
+      "policy": "bzip2-9",
+      "workers": 2,
+      "wall_s": 0.26544674699835014,
+      "payload_bytes": 1773725,
+      "files": [
+        {
+          "source_sha256": "0c2c57cb5f969f75f2ebd7d4cc9aa4bc51a449d820da25d6b2920742d12746bd",
+          "source_bytes": 93924,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 90780,
+          "encode_including_probe_s": 0.009573040006216615,
+          "write_fsync_read_s": 0.00023885500559117645,
+          "decode_compare_s": 0.0038291839882731438,
+          "pipeline_s": 0.014075152997975238,
+          "peak_worker_rss_bytes": 13901824,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "ef12e6aad2282968d690ec04743bf88107a594f416972a089df257b538fcb4e3",
+          "source_bytes": 1048576,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 569120,
+          "encode_including_probe_s": 0.11390293500153348,
+          "write_fsync_read_s": 0.00048125500325113535,
+          "decode_compare_s": 0.033600007998757064,
+          "pipeline_s": 0.14941063500009477,
+          "peak_worker_rss_bytes": 21635072,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "e0fb6cd4c2e182538515455e7e5d22aebda3a08b0cbc4b81669db2af46c3deb5",
+          "source_bytes": 1048576,
+          "policy": "bzip2-9",
+          "codec": "raw",
+          "payload_bytes": 1048576,
+          "encode_including_probe_s": 0.1199601769912988,
+          "write_fsync_read_s": 0.0005612329987343401,
+          "decode_compare_s": 2.8802998713217676e-05,
+          "pipeline_s": 0.12155175000953022,
+          "peak_worker_rss_bytes": 22781952,
+          "probe": {},
+          "exact_restore": true
+        },
+        {
+          "source_sha256": "7764ec4ad964359b485168059e8b9ae13772564ef4cb5a7b9259169e9966e996",
+          "source_bytes": 904485,
+          "policy": "bzip2-9",
+          "codec": "bzip2-9",
+          "payload_bytes": 65249,
+          "encode_including_probe_s": 0.10604549098934513,
+          "write_fsync_read_s": 0.00022136900224722922,
+          "decode_compare_s": 0.018293005996383727,
+          "pipeline_s": 0.12539507499604952,
+          "peak_worker_rss_bytes": 22781952,
+          "probe": {},
+          "exact_restore": true
+        }
+      ]
+    }
+  ],
+  "total_wall_s": 8.365795421996154,
+  "methodology": [
+    "fixed probe rule, never reads old benchmark results",
+    "same inputs and worker count for each policy; rotating order",
+    "each payload written, fsynced, reread and restored exactly",
+    "reported sizes are summed payload, no metadata or whole-file dedup",
+    "wall includes processes, source read/hash, probe, codec, I/O and validation",
+    "no cache flushing; temporary-file fsync is not full archive commit",
+    "RSS values are per-worker high-water marks, not sum of peaks at same instant"
+  ],
+  "not_claimed": [
+    "app format integration",
+    "Precomp-equivalent VIKA density",
+    "universal best codec",
+    "directory/catalogue durability",
+    "representative user-corpus statistics"
+  ]
+}
