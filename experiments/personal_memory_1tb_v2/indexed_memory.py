@@ -12,7 +12,10 @@ from local_memory_bridge import Error
 
 class ContentIndex:
     def __init__(self, views, grants, *, source_budget=32 * 1024**2,
-                 max_files=10000, sqlite_pages=16384, seconds=30):
+                 max_files=10000, sqlite_pages=16384, seconds=30, casefold=False):
+        if not isinstance(casefold, bool):
+            raise ValueError('casefold must be boolean')
+        self._casefold = casefold
         if not (0 < source_budget <= 64 * 1024**2 and 0 < max_files <= 10000
                 and 16 <= sqlite_pages <= 16384 and 0 < seconds <= 120):
             raise ValueError("unsupported index budgets")
@@ -59,7 +62,7 @@ class ContentIndex:
                                 reason = 'nul-containing-content'
                             else:
                                 rowid = len(self._rows) + 1
-                                self._db.execute('INSERT INTO docs(rowid,body) VALUES (?,?)', (rowid, body))
+                                self._db.execute('INSERT INTO docs(rowid,body) VALUES (?,?)', (rowid, body.casefold() if self._casefold else body))
                                 self._rows[rowid] = (version, path, item['sha256'])
                 if reason:
                     self._skipped.append(dict(version=version, path=path, reason=reason))
@@ -80,7 +83,11 @@ class ContentIndex:
             self._closed = True
 
     def query(self, text, grants, *, limit=20, seconds=5):
-        """Return exact literal matches; caller must pass its CURRENT grants.
+        """Return substring matches; caller must pass its CURRENT grants.
+
+        Default is exact. Opt-in casefold returns original character spans,
+        which can cover a complete character expanded by Unicode casefold.
+        Neither mode infers relevance, negation, time or semantic equivalence.
 
         No-match describes the indexed snapshot, not current disk health.
         Each returned candidate is re-read and cryptographically verified.
@@ -98,7 +105,8 @@ class ContentIndex:
         snippets = []
         try:
             # Quoting makes FTS operators/punctuation literal, binding prevents SQL injection.
-            phrase = '"' + text.replace('"', '""') + '"'
+            needle = text.casefold() if self._casefold else text
+            phrase = '"' + needle.replace('"', '""') + '"'
             rows = self._db.execute('SELECT rowid FROM docs WHERE docs MATCH ? ORDER BY rowid LIMIT ?',
                                     (phrase, limit + 1)).fetchall()
             for (rowid,) in rows[:limit]:
@@ -108,19 +116,43 @@ class ContentIndex:
                 data = self._views[version].read(path)
                 if data is None or hashlib.sha256(data).hexdigest() != digest:
                     raise Error('candidate no longer verifies')
-                offset = data.find(text.encode('utf-8'))
+                quote = text
+                if self._casefold:
+                    body = data.decode('utf-8')
+                    pos = body.casefold().find(needle)
+                    # Map normalized coordinates back to complete source characters.
+                    # Expansion such as ß -> ss must never create false byte offsets.
+                    folded_at = 0
+                    begin = end = None
+                    for i, char in enumerate(body):
+                        if i % 4096 == 0 and time.monotonic() - started > seconds:
+                            raise Error('query deadline exceeded')
+                        next_at = folded_at + len(char.casefold())
+                        if folded_at <= pos < next_at:
+                            begin = i
+                        if folded_at < pos + len(needle) <= next_at:
+                            end = i + 1
+                            break
+                        folded_at = next_at
+                    if pos < 0 or begin is None or end is None:
+                        raise Error('normalized index disagrees with verified bytes')
+                    quote = body[begin:end]
+                    offset = len(body[:begin].encode('utf-8'))
+                else:
+                    offset = data.find(text.encode('utf-8'))
                 if offset < 0:
                     raise Error('index candidate disagrees with verified bytes')
                 # Exact quote, not a model paraphrase; byte coordinates refer to original.
                 snippets.append(dict(version=version, path=path, sha256=digest,
-                                     byte_offset=offset, byte_length=len(text.encode('utf-8')), text=text))
+                                     byte_offset=offset, byte_length=len(quote.encode('utf-8')), text=quote))
             if time.monotonic() - started > seconds:
                 raise Error('query deadline exceeded')
             complete = bool(self._grants) and not self._skipped
             return dict(status='FOUND' if snippets else ('NO_MATCH_IN_INDEXED_SCOPE' if complete else 'INCOMPLETE'),
                         coverage_complete=complete, skipped=list(self._skipped), snippets=snippets,
                         truncated=len(rows) > limit, indexed_files=len(self._rows),
-                        semantics='case-sensitive exact UTF-8 substring; pinned archive versions',
+                        semantics=('Unicode casefold substring candidates; original character spans; not semantic relevance'
+                                   if self._casefold else 'case-sensitive exact UTF-8 substring; pinned archive versions'),
                         integrity_scope='returned files reverified; no full archive scrub',
                         content_is_untrusted=True, seconds=time.monotonic() - started)
         finally:
