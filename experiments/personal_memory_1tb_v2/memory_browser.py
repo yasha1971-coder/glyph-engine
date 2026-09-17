@@ -281,19 +281,28 @@ def handler_for(args, memory, token):
                 params = parse_qs(url.query)
                 if 'content' in params:
                     query = params['content'][0]
+                    history_search = params.get('scope', ['current'])[0] == 'history'
+                    folded_search = params.get('match', ['exact'])[0] == 'folded'
                     if len(query) < 3 or len(query.encode()) > 256 or '\x00' in query:
                         return self.send(400, 'Введите точную фразу: от 3 символов до 256 байт UTF-8.'.encode())
                     pin = self.current()
                     try:
-                        result = json.loads(worker(args, 'search', pin, ['--query', query], timeout=30, output_limit=262144))
+                        options = ['--query', query]
+                        if history_search:
+                            options.append('--search-history')
+                        if folded_search:
+                            options.append('--search-casefold')
+                        result = json.loads(worker(args, 'search', pin, options, timeout=45, output_limit=262144))
                     except Exception:
                         return self.send(422, 'Поиск не завершён: повреждение данных, лимит времени или ресурсов. Отсутствие совпадений не установлено. Вернитесь в «Мои файлы».'.encode())
                     with state_lock:
                         if self.current() != pin:
                             return self.send(409, 'Память изменилась во время поиска. Повторите запрос.'.encode())
                         page = '<!doctype html><meta charset="utf-8"><title>Поиск внутри файлов</title>' + SEARCH_STYLE + '<h1>Поиск внутри файлов</h1>'
-                        page += f'<p><a href="/{token}">← Мои файлы</a></p><p>Точная фраза с учётом регистра: ' + html.escape(query) + '</p>'
-                        page += '<p>Область: текущие версии. Старые версии доступны в истории файла. PDF, изображения и звук не распознаются.</p>'
+                        page += f'<p><a href="/{token}">← Мои файлы</a></p><p>' + ('Фраза без учёта регистра: ' if folded_search else 'Точная фраза с учётом регистра: ') + html.escape(query) + '</p>'
+                        page += '<p>Область: ' + ('история версий' if history_search else 'текущие версии') + '. PDF, изображения и звук не распознаются. Это поиск фразы, не понимание смысла.</p>'
+                        if result.get('history_limited'):
+                            page += '<p><strong>История просмотрена не полностью: достигнут лимит снимков, записей или времени.</strong></p>'
                         page += '<p>' + ('Найдены совпадения.' if result['snippets'] else 'В проверенной области совпадений нет.') + '</p>'
                         if not result['coverage_complete']:
                             page += '<p><strong>Поиск неполный.</strong> Не проиндексировано файлов: ' + str(len(result['skipped'])) + '. Причины: формат или лимит чтения.</p>'
@@ -302,7 +311,11 @@ def handler_for(args, memory, token):
                         for s in result['snippets']:
                             target = quote(s['path'], safe='')
                             page += '<section><h2>' + html.escape(s['path']) + '</h2><blockquote>' + html.escape(s['text']) + '</blockquote>'
-                            page += f'<a href="/{token}?found={target}&amp;snapshot={pin}">Открыть найденную версию</a></section>'
+                            stamp = s.get('saved_ns')
+                            label = datetime.fromtimestamp(stamp / 1e9, timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC') if stamp else 'Дата сохранения неизвестна'
+                            page += '<p>' + html.escape(label + ' · ' + s.get('version_note', '')) + '</p>'
+                            found_pin = quote(s['version'], safe='')
+                            page += f'<a href="/{token}?found={target}&amp;snapshot={found_pin}">Открыть найденную версию</a></section>'
                         return self.send(200, page.encode())
                 if 'found' in params:
                     pin, path = params.get('snapshot', [''])[0], params['found'][0]
@@ -446,7 +459,7 @@ def handler_for(args, memory, token):
                 else:
                     page += f'<div class="actions"><h2>Мои файлы</h2><a class="button" href="/{token}?add=1">Добавить файл</a></div>'
                     page += f'<form action="/{token}"><input name="q" value="{esc(query, quote=True)}" placeholder="Имя файла или папка"><button>Найти</button></form>'
-                    page += f'<form action="/{token}"><label>Поиск внутри текста <input name="content" minlength="3" required placeholder="Точная фраза с учётом регистра"></label><button>Искать в содержимом</button></form><p><small>Текущие версии; до 32 MiB текста за запрос. Неполная проверка будет отмечена.</small></p>'
+                    page += f'<form action="/{token}"><label>Фраза из документа <input name="content" minlength="3" required placeholder="Что было написано?"></label><label> Где искать <select name="scope"><option value="history">Во всей доступной истории</option><option value="current">Только текущие версии</option></select></label><label> Совпадение <select name="match"><option value="folded">Без учёта регистра</option><option value="exact">Точное, с учётом регистра</option></select></label><button>Найти в тексте</button></form><p><small>До 32 MiB данных, 100 снимков и 10 000 просмотренных записей за запрос. Поиск неполной области будет отмечен. PDF, фото и звук пока не распознаются.</small></p>'
                     matches = [(p, f) for p, f in sorted(files.items()) if query.casefold() in p.casefold()]
                     page += f'<p>Всего: {len(files)} · Найдено: {len(matches)} · Показано: {min(200,len(matches))}</p><section class="panel"><table>'
                     for path, item in matches[:200]:
@@ -580,6 +593,8 @@ def main():
     p.add_argument('--enrich-source-dates', type=Path)
     p.add_argument('--worker', choices=['add', 'restore', 'search'])
     p.add_argument('--query')
+    p.add_argument('--search-history', action='store_true')
+    p.add_argument('--search-casefold', action='store_true')
     p.add_argument('--snapshot')
     p.add_argument('--source', type=Path)
     p.add_argument('--source-modified-ms', type=int)
@@ -595,7 +610,7 @@ def main():
             print(m.add(a.snapshot, a.source, a.source_modified_ms, a.version_note))
         elif a.worker == 'search':
             from memory_content_search import search
-            print(json.dumps(search(m, a.snapshot, a.query), ensure_ascii=False))
+            print(json.dumps(search(m, a.snapshot, a.query, history=a.search_history, casefold=a.search_casefold), ensure_ascii=False))
         else:
             m.restore(a.snapshot, a.path, a.output)
         return
