@@ -1,0 +1,57 @@
+{
+  "format": "GLYPH_FRONTIER_LAPTOP_TRANSCRIPT_V1",
+  "evidence_source": "user pasted terminal output; full FRONTIER.json files not supplied for this run",
+  "code_commit": "3d846a7e6f88132f9215ab6b1026f300af2610a8",
+  "workers": 2,
+  "repeats": 3,
+  "results": [
+    {
+      "corpus": "Silesia",
+      "legacy_wall_s": [
+        66.60404935899714,
+        66.1455761600082,
+        66.76448493100179
+      ],
+      "adaptive_wall_s": [
+        17.590210677008145,
+        17.23403476200474,
+        17.355318829999305
+      ],
+      "legacy_payload_bytes": 47886536,
+      "adaptive_payload_bytes": 50095977,
+      "legacy_median_s": 66.60404935899714,
+      "adaptive_median_s": 17.355318829999305,
+      "speedup": 3.8376736268232423,
+      "payload_increase_percent": 4.6139085942654035,
+      "size_gate_5_percent_passed": true
+    },
+    {
+      "corpus": "VIKA",
+      "legacy_wall_s": [
+        54.763428641992505,
+        55.21437388200138,
+        55.81963087699842
+      ],
+      "adaptive_wall_s": [
+        20.943359248005436,
+        20.769021208994673,
+        20.762519930009148
+      ],
+      "legacy_payload_bytes": 218038633,
+      "adaptive_payload_bytes": 221210348,
+      "legacy_median_s": 55.21437388200138,
+      "adaptive_median_s": 20.769021208994673,
+      "speedup": 2.6584966776426167,
+      "payload_increase_percent": 1.4546573496450055,
+      "size_gate_5_percent_passed": true
+    }
+  ],
+  "limitations": [
+    "timing is the codec_frontier pipeline, not complete application ingestion",
+    "sizes are summed payload, without deduplication or archive metadata",
+    "Precomp is absent; comparison is not against the prior 21.25% VIKA archive",
+    "two-policy scheduler in this revision always ran legacy before adaptive; not counterbalanced",
+    "input inventory hashes inputs before timing; no cold-cache claim",
+    "no per-file identities, counts or worker RSS available from this pasted output"
+  ]
+}

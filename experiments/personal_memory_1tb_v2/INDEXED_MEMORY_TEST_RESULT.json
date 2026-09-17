@@ -1,0 +1,11 @@
+{
+  "format": "GLYPH_INDEXED_MEMORY_TARGETED_TESTS_V1",
+  "date_utc": "2026-09-14",
+  "environment": "assistant workspace, not user laptop",
+  "fixture": "temporary real compressed GLYPH archives with synthetic content only",
+  "runs": [
+    {"command": "python3 -m unittest discover -s experiments/personal_memory_1tb_v2/tests -p test_indexed_memory.py -v", "tests": 10, "runner_seconds": 1.113, "exit_code": 0},
+    {"command": "python3 -m unittest discover -s experiments/personal_memory_1tb_v2/llm_mediator -v", "tests": 11, "runner_seconds": 0.010, "exit_code": 0}
+  ],
+  "caveats": ["Three mediator-directory tests validate scenario catalogue structure only", "Timings are test-runner duration, not search latency benchmarks", "No live model invoked", "No GUI integration or industrial qualification claimed", "No full regression suite run in this change"]
+}

@@ -10,6 +10,8 @@ from __future__ import annotations
 
 import argparse
 import bz2
+from collections import deque
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import lzma
@@ -146,7 +148,7 @@ def decode(codec: str, payload: bytes) -> bytes:
         return zlib.decompress(payload)
     if codec == "bzip2-9":
         return bz2.decompress(payload)
-    if codec == "xz-9":
+    if codec in ("xz-6", "xz-9"):
         return lzma.decompress(payload, format=lzma.FORMAT_XZ)
     raise ArchiveError(f"unsupported codec: {codec!r}")
 
@@ -157,7 +159,8 @@ def object_path(root: Path, digest: str) -> Path:
 
 def finalize_manifest(manifest: dict, payload_bytes: int) -> tuple[bytes, bytes]:
     checksum_bytes = 64 + 2 + len(RECEIPT.encode("utf-8")) + 1
-    for _ in range(100):
+    seen_sizes = set()
+    for _ in range(256):
         raw = canonical_json(manifest)
         total = payload_bytes + len(raw) + checksum_bytes
         ratio = total / manifest["source_logical_bytes"] if manifest["source_logical_bytes"] else None
@@ -172,6 +175,16 @@ def finalize_manifest(manifest: dict, payload_bytes: int) -> tuple[bytes, bytes]
         }
         if all(manifest.get(key) == value for key, value in values.items()):
             break
+        # JSON float lengths can alternate as their own metadata size changes.
+        # Counted padding changes the fixed point without falsifying byte totals.
+        if len(raw) in seen_sizes:
+            padding = manifest.get("accounting_padding", "")
+            if len(padding) >= 64:
+                raise ArchiveError("manifest size did not converge")
+            manifest["accounting_padding"] = padding + " "
+            seen_sizes.clear()
+        else:
+            seen_sizes.add(len(raw))
         manifest.update(values)
     else:
         raise ArchiveError("manifest size did not converge")
@@ -182,10 +195,67 @@ def finalize_manifest(manifest: dict, payload_bytes: int) -> tuple[bytes, bytes]
     return raw, checksum
 
 
-def build(inventory_state: Path, output: Path, required_percent: float) -> dict:
+def _encode_verified(data: bytes, policy: str) -> tuple[str, bytes]:
+    if policy == "legacy-best":
+        codec, payload = encode_best(data)
+    else:
+        from adaptive_codec import encode
+        codec, payload = encode(data)
+    if decode(codec, payload) != data:
+        raise ArchiveError("codec roundtrip failed")
+    return codec, payload
+
+
+def _encoded_rows(source, rows, policy, workers):
+    """Hash before dispatch; at most workers queued rows; publish in input order.
+
+    Workers only compress and verify bytes. All filesystem writes stay in build.
+    Duplicate file contents are encoded once, including duplicates still queued.
+    """
+    seen, pending = {}, deque()
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        def result():
+            row, digest, future = pending.popleft()
+            return row, digest, future.result() if future is not None else None
+
+        for row in rows:
+            if len(pending) >= workers:
+                yield result()
+            raw_path, kind, size, *_ = row
+            safe_relative(raw_path)
+            if kind == "directory":
+                pending.append((row, None, None))
+                continue
+            if kind != "file":
+                raise ArchiveError(f"unsupported inventory entry kind {kind!r}: {raw_path!r}")
+            data = read_stable_file(source, row)
+            digest = sha256_bytes(data)
+            future = None
+            if digest not in seen:
+                seen[digest] = len(data)
+                future = pool.submit(_encode_verified, data, policy)
+            elif seen[digest] != len(data):
+                raise ArchiveError("SHA-256 identity collision")
+            pending.append((row, digest, future))
+            del data
+        while pending:
+            yield result()
+
+
+def build(inventory_state: Path, output: Path, required_percent: float, *,
+          codec_policy: str = "legacy-best", workers: int = 1) -> dict:
+    if codec_policy not in ("legacy-best", "sample-bz-xz6") or type(workers) is not int or workers not in (1, 2):
+        raise ArchiveError("unsupported codec policy or worker count")
     if output.exists():
         raise ArchiveError(f"output already exists: {output}")
     source, inventory_sha, rows = load_inventory(inventory_state)
+    if codec_policy != "legacy-best" or workers != 1:
+        from adaptive_codec import LIMIT, EXCLUDED
+        file_rows = [r for r in rows if r[1] == "file"]
+        if not 1 <= len(file_rows) <= 500 or any(not 0 <= r[2] <= LIMIT for r in file_rows):
+            raise ArchiveError("bounded parallel pilot requires 1..500 files, at most 64 MiB each")
+        if any(Path(r[0]).name.casefold() in EXCLUDED for r in file_rows):
+            raise ArchiveError("excluded password-file name in inventory; use a clean current source")
     output = Path(os.path.realpath(output))
     if output == source or source in output.parents or output in source.parents:
         raise ArchiveError("archive and source must be disjoint")
@@ -201,7 +271,7 @@ def build(inventory_state: Path, output: Path, required_percent: float) -> dict:
         logical_total = 0
         files_expected = sum(1 for row in rows if row[1] == "file")
         files_processed = 0
-        for row in rows:
+        for row, digest, encoded_result in _encoded_rows(source, rows, codec_policy, workers):
             raw_path, kind, size, *_ = row
             relative = safe_relative(raw_path)
             if kind == "directory":
@@ -209,28 +279,26 @@ def build(inventory_state: Path, output: Path, required_percent: float) -> dict:
                 continue
             if kind != "file":
                 raise ArchiveError(f"unsupported inventory entry kind {kind!r}: {raw_path!r}")
-            data = read_stable_file(source, row)
-            digest = sha256_bytes(data)
-            logical_total += len(data)
+            logical_total += size
             if digest not in objects:
-                codec, encoded = encode_best(data)
-                if decode(codec, encoded) != data:
-                    raise ArchiveError(f"codec roundtrip failed: {raw_path!r}")
+                if encoded_result is None:
+                    raise ArchiveError("missing encoded object")
+                codec, encoded = encoded_result
                 destination = object_path(temporary, digest)
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_bytes(encoded)
                 objects[digest] = {
                     "sha256": digest,
-                    "logical_bytes": len(data),
+                    "logical_bytes": size,
                     "stored_bytes": len(encoded),
                     "stored_sha256": sha256_bytes(encoded),
                     "codec": codec,
                     "path": destination.relative_to(temporary).as_posix(),
                 }
                 codec_counts[codec] = codec_counts.get(codec, 0) + 1
-            elif objects[digest]["logical_bytes"] != len(data):
+            elif objects[digest]["logical_bytes"] != size:
                 raise ArchiveError("SHA-256 identity collision")
-            files.append({"path": relative.as_posix(), "bytes": len(data), "sha256": digest})
+            files.append({"path": relative.as_posix(), "bytes": size, "sha256": digest})
             files_processed += 1
             if files_processed % 10 == 0 or files_processed == files_expected:
                 print(json.dumps({
@@ -270,6 +338,11 @@ def build(inventory_state: Path, output: Path, required_percent: float) -> dict:
                 "XZ encoder byte determinism across library versions is not claimed.",
             ],
         }
+        if codec_policy != "legacy-best" or workers != 1:
+            manifest.update(encoding_policy=codec_policy, encoding_workers=workers,
+                            encoding_schedule="bounded threads; hash before encode; ordered publication")
+            if codec_policy == "sample-bz-xz6":
+                manifest["limitations"].append("xz-6 objects require a reader with explicit xz-6 support; older readers fail closed.")
         raw, checksum = finalize_manifest(manifest, payload_bytes)
         (temporary / RECEIPT).write_bytes(raw)
         (temporary / f"{RECEIPT}.sha256").write_bytes(checksum)
@@ -376,13 +449,16 @@ def main() -> int:
     build_parser.add_argument("--inventory-state", type=Path, required=True)
     build_parser.add_argument("--output", type=Path, required=True)
     build_parser.add_argument("--required-saving-percent", type=float, default=30.0)
+    build_parser.add_argument("--codec-policy", choices=("legacy-best", "sample-bz-xz6"), default="legacy-best")
+    build_parser.add_argument("--workers", type=int, choices=(1, 2), default=1)
     restore_parser = sub.add_parser("restore")
     restore_parser.add_argument("--archive", type=Path, required=True)
     restore_parser.add_argument("--destination", type=Path, required=True)
     args = parser.parse_args()
     try:
         if args.command == "build":
-            result = build(args.inventory_state.resolve(), args.output, args.required_saving_percent)
+            result = build(args.inventory_state.resolve(), args.output, args.required_saving_percent,
+                           codec_policy=args.codec_policy, workers=args.workers)
             shown = {key: result[key] for key in ("format", "complete", "source_logical_bytes", "container_logical_bytes", "storage_ratio", "saving_fraction", "target_met", "codec_object_counts")}
         else:
             shown = restore(args.archive.resolve(), args.destination)

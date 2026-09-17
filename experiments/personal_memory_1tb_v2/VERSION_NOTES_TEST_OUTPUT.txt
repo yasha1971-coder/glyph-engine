@@ -1,0 +1,31 @@
+..................{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+.{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+.{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+.{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+.{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+.{"files_processed": 1, "files_total": 1, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 4104, "progress": "compressing", "unique_objects": 1}
+..................{"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 67, "progress": "compressing", "unique_objects": 3}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+..{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_REVERSIBLE_PRECOMPRESSION_ARCHIVE_V1", "logical_bytes_processed": 10073, "progress": "compressing", "unique_objects": 3}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+{"files_processed": 3, "files_total": 3, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 122, "progress": "compressing", "unique_objects": 3}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 65, "progress": "compressing", "unique_objects": 2}
+.................{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.{"files_processed": 2, "files_total": 2, "format": "GLYPH_VERIFIED_HYBRID_ARCHIVE_V1", "logical_bytes_processed": 32, "progress": "compressing", "unique_objects": 2}
+.....................
+----------------------------------------------------------------------
+Ran 96 tests in 24.895s
+
+OK
+{"format": "GLYPH_V2_COMPRESSED_PHASE_B_RESULT_V1", "materialized_directory": "/tmp/tmpmqy3c9s2/output/materialized-20260913-163752-649478", "objects": 1, "receipt": "/tmp/tmpmqy3c9s2/output/GLYPH_V2_COMPRESSED_PHASE_B_20260913-163752-649585.json", "sha256": "0cccfbe8d5c5a428b58dd208e389188675928b80e8c107e7798f65140d2f2240", "status": "GREEN_AUTHENTICATED_MATERIALIZATION"}

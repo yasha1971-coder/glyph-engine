@@ -1,0 +1,106 @@
+{
+  "format": "GLYPH_CODEC_FRONTIER_SUMMARY_V1",
+  "evidence_collected_utc": "2026-09-14T01:35:57.149527+00:00",
+  "public_corpus_url": "https://sun.aei.polsl.pl/~sdeor/corpus/silesia.zip",
+  "corpus_files": 12,
+  "corpus_bytes": 211938580,
+  "all_source_sha256_size_pairs_match_user_microscope": true,
+  "corpus_zip_sha256": "0626e25f45c0ffb5dc801f13b7c82a3b75743ba07e3a71835a41e3d9f63c77af",
+  "runner_sha256": "53a15b64c1127970a3cf94db65a4b895a0ff1e56e381c94cab98ac1ca846379a",
+  "raw_result_sha256": "25861ad99d7e44974abbd8e463dcdc118d840a392e5e5bfbfde5a89c404e5455",
+  "exact_restore_operations": 288,
+  "environment": "assistant execution environment; not user laptop",
+  "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+  "os_cpu_count": 9,
+  "affinity_cpu_count": 9,
+  "library_versions": {
+    "zlib": "1.3.2",
+    "zstd": "1.5.5",
+    "liblzma": "5.4.5",
+    "libbz2": "1.0.8, 13-Jul-2019"
+  },
+  "results": [
+    {
+      "policy": "legacy-best",
+      "payload_bytes": 47886536,
+      "median_pipeline_s": 80.1928644580039,
+      "min_pipeline_s": 79.87053347800975,
+      "max_pipeline_s": 80.22009425400756,
+      "speedup_over_legacy": 1.0,
+      "payload_increase_percent": 0.0,
+      "max_worker_rss_bytes": 673452032
+    },
+    {
+      "policy": "bzip2-9",
+      "payload_bytes": 54506769,
+      "median_pipeline_s": 10.964724370001932,
+      "min_pipeline_s": 10.924282179010333,
+      "max_pipeline_s": 11.204255775999627,
+      "speedup_over_legacy": 7.313714577030427,
+      "payload_increase_percent": 13.824831681289297,
+      "max_worker_rss_bytes": 209473536
+    },
+    {
+      "policy": "xz-3",
+      "payload_bytes": 55752304,
+      "median_pipeline_s": 21.509833414995228,
+      "min_pipeline_s": 20.98578517200076,
+      "max_pipeline_s": 21.56743027899938,
+      "speedup_over_legacy": 3.728195514619781,
+      "payload_increase_percent": 16.425844625721098,
+      "max_worker_rss_bytes": 208539648
+    },
+    {
+      "policy": "xz-6",
+      "payload_bytes": 49233340,
+      "median_pipeline_s": 51.36066765099531,
+      "min_pipeline_s": 51.19001903399476,
+      "max_pipeline_s": 52.21396411099704,
+      "speedup_over_legacy": 1.5613672509658245,
+      "payload_increase_percent": 2.8124899240989265,
+      "max_worker_rss_bytes": 205361152
+    },
+    {
+      "policy": "xz-9",
+      "payload_bytes": 48795480,
+      "median_pipeline_s": 61.77471679600421,
+      "min_pipeline_s": 61.08056038799987,
+      "max_pipeline_s": 61.87055588999647,
+      "speedup_over_legacy": 1.2981502565656606,
+      "payload_increase_percent": 1.8981201730690955,
+      "max_worker_rss_bytes": 619753472
+    },
+    {
+      "policy": "sample-bz-xz6",
+      "payload_bytes": 50095977,
+      "median_pipeline_s": 19.234571637003683,
+      "min_pipeline_s": 19.17398027300078,
+      "max_pipeline_s": 19.380389882004238,
+      "speedup_over_legacy": 4.169204595319814,
+      "payload_increase_percent": 4.6139085942654035,
+      "max_worker_rss_bytes": 205316096
+    },
+    {
+      "policy": "zstd-3",
+      "payload_bytes": 66512901,
+      "median_pipeline_s": 0.9112069669936318,
+      "min_pipeline_s": 0.9048176059877733,
+      "max_pipeline_s": 0.9286889150098432,
+      "speedup_over_legacy": 88.00729950802094,
+      "payload_increase_percent": 38.89687280783893,
+      "max_worker_rss_bytes": 204685312
+    },
+    {
+      "policy": "zstd-9",
+      "payload_bytes": 59371345,
+      "median_pipeline_s": 2.3472688399924664,
+      "min_pipeline_s": 2.3216125820035813,
+      "max_pipeline_s": 2.5087127089936985,
+      "speedup_over_legacy": 34.16432881129256,
+      "payload_increase_percent": 23.98337812532525,
+      "max_worker_rss_bytes": 201560064
+    }
+  ],
+  "cgroup_cpu_max": "800000 100000",
+  "cgroup_memory_max": "21474836480"
+}

@@ -1,0 +1,8 @@
+{
+  "format": "GLYPH_CONTENT_SEARCH_UI_TESTS_V1",
+  "date_utc": "2026-09-14",
+  "environment": "assistant workspace; synthetic archives; localhost HTTP",
+  "new_http_tests": {"tests": 4, "seconds": 4.708, "exit_code": 0},
+  "existing_browser_regression": {"tests": 25, "seconds": 28.674, "exit_code": 0},
+  "not_claimed": ["graphical browser acceptance", "live LLM quality", "laptop deployment", "search over 1 TB", "search latency benchmark", "full historical search", "industrial readiness"]
+}
