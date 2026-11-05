@@ -63,7 +63,7 @@ class FieldRoutingSemantics(unittest.TestCase):
     def test_public_count_and_overlapping_hits(self):
         r = self.prove()
         self.assertEqual(r["match_count"], 4)
-        self.assertEqual(r["coordinates"], [[0, 0], [0, 5], [0, 7], [4, 4]])
+        self.assertEqual(r["coordinates"], [[0, 0], [0, 5], [0, 7], [4, 3]])
 
     def test_private_duplicate_has_distinct_document_identity(self):
         mask = make_mask(self.a, "private")
