@@ -34,16 +34,39 @@ class EFByteExtractor:
         self.loc=query_runtime.locate
         self.n=query_runtime.corpus_bytes
         self.step=self.loc.sample_step
-        self.rows_by_text_quotient=[None]*self.loc.m
-        for i in range(self.loc.m):
-            q=getbits(self.loc.values,i*self.loc.width,self.loc.width)
-            insist(q<len(self.rows_by_text_quotient)
-                   and self.rows_by_text_quotient[q] is None,
-                   "duplicate, missing or out-of-range source text sample")
-            self.rows_by_text_quotient[q]=self.loc.select(i)
-        insist(all(r is not None for r in self.rows_by_text_quotient),
+        # A single linear scan of the actually stored EF high bitvector
+        # replaces m * binary-search/select startup calls. Native-sized u32
+        # array is explicit temporary RAM, not an uncounted persistent sidecar.
+        from array import array
+        insist(self.loc.sa_size < 0xffffffff,"u32 ephemeral mapping unsupported")
+        missing=0xffffffff
+        self.rows_by_text_quotient=array("I",[missing])*self.loc.m
+        sample=0
+        previous=-1
+        for byte_index,packed in enumerate(self.loc.high):
+            while packed:
+                lowbit=packed & -packed
+                bit=lowbit.bit_length()-1
+                pos=byte_index*8+bit
+                insist(sample<self.loc.m,"EF high sample overflow")
+                row=((pos-sample)<<self.loc.low) | getbits(
+                    self.loc.lows,sample*self.loc.low,self.loc.low)
+                quotient=getbits(
+                    self.loc.values,sample*self.loc.width,self.loc.width)
+                insist(previous<row<self.loc.sa_size,
+                       "EF row order/geometry is not canonical")
+                insist(quotient<len(self.rows_by_text_quotient)
+                       and quotient*self.step<=self.n
+                       and self.rows_by_text_quotient[quotient]==missing,
+                       "duplicate/missing/out-of-range text sample")
+                self.rows_by_text_quotient[quotient]=row
+                previous=row
+                sample+=1
+                packed^=lowbit
+        insist(sample==self.loc.m
+               and all(r!=missing for r in self.rows_by_text_quotient),
                "incomplete source sampled suffix coverage")
-        self.sample_rows_ram_bytes=self.loc.m*4
+        self.sample_rows_ram_bytes=self.rows_by_text_quotient.buffer_info()[1]*4
 
     def row_for_suffix_offset(self,at):
         insist(0<=at<=self.n,"sample suffix offset outside source")
