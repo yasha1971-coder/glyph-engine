@@ -1,0 +1,56 @@
+name: core-enwik8-loc2-sa-geometry
+
+on:
+  push:
+    branches:
+      - codex/glyph-core-frontier-g0-20261105
+    paths:
+      - experiments/core_convergence_v1/enwik8_loc2_sa_geometry.py
+      - .github/workflows/core-enwik8-loc2-sa-geometry.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-pinned-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile pinned binary-safe canonical SA builder
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 -j2
+      - name: Rebuild full enwik8 100MB SA and verify exact LOC1-vs-LOC2 sample geometry
+        run: |
+          python3 research/experiments/core_convergence_v1/enwik8_loc2_sa_geometry.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --output "$RUNNER_TEMP/loc2-sa-$GITHUB_RUN_ID"
+      - name: Show evidence status
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/loc2-sa-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps(d,indent=2))' "$RUNNER_TEMP/loc2-sa-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Publish only bounded reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: enwik8-loc2-geometry-evidence
+          path: |
+            ${{ runner.temp }}/loc2-sa-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/loc2-sa-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn
