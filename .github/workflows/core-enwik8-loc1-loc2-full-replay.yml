@@ -1,0 +1,56 @@
+name: core-enwik8-loc1-loc2-full-replay
+
+on:
+  push:
+    branches:
+      - codex/glyph-core-frontier-g0-20261105
+    paths:
+      - experiments/core_convergence_v1/enwik8_loc1_loc2_full_replay.py
+      - .github/workflows/core-enwik8-loc1-loc2-full-replay.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-v2-loc1-versus-loc2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile original binary-safe SA and BWT builders
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Reproduce historical enwik8 SHA and full RLB2/RLR2/LOC1, then compare LOC2
+        run: |
+          python3 research/experiments/core_convergence_v1/enwik8_loc1_loc2_full_replay.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --output "$RUNNER_TEMP/enwik8-locate-$GITHUB_RUN_ID"
+      - name: Show bounded evidence summary on success or failure
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/enwik8-locate-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({k:d.get(k) for k in ("status","error","verification","loc1_storage","loc2_research_storage","saving_index_bytes_only","limitations")},indent=2))' "$RUNNER_TEMP/enwik8-locate-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Upload only reports (never upload dataset or SA/BWT)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-enwik8-loc1-loc2-frozen-comparison
+          path: |
+            ${{ runner.temp }}/enwik8-locate-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/enwik8-locate-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn

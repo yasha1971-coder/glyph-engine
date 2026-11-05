@@ -1,0 +1,44 @@
+name: core-g1b-public-v0-proof-probe
+
+on:
+  push:
+    branches:
+      - codex/glyph-core-frontier-g0-20261105
+    paths:
+      - experiments/core_convergence_v1/core_g1b_public_probe.py
+      - .github/workflows/core-g1b-public-v0-proof-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  public-v0-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Identify native toolchain
+        run: |
+          cmake --version
+          g++ --version
+          python3 --version
+      - name: Pinned 30-object public proof-carrying Vault reproduction
+        run: python3 experiments/core_convergence_v1/core_g1b_public_probe.py --output "$RUNNER_TEMP/glyph-core-g1b-$GITHUB_RUN_ID"
+      - name: Print bounded, public-only result summary
+        if: always()
+        run: |
+          REPORT="$RUNNER_TEMP/glyph-core-g1b-$GITHUB_RUN_ID/result.json"
+          if test -f "$REPORT"; then python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps({"status":x.get("status"),"storage":x.get("storage"),"source":x.get("source"),"receipt":x.get("receipt"),"limitations":x.get("limitations"),"error":x.get("error")},sort_keys=True,indent=2))' "$REPORT"; fi
+      - name: Upload only test report and command receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-core-g1b-public-proof-probe
+          path: |
+            ${{ runner.temp }}/glyph-core-g1b-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/glyph-core-g1b-${{ github.run_id }}/command_log.json
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,44 @@
+name: core-loc1-loc2-synthetic-parity
+
+on:
+  push:
+    branches:
+      - codex/glyph-core-frontier-g0-20261105
+    paths:
+      - experiments/core_convergence_v1/loc1_loc2_synthetic_gate.py
+      - .github/workflows/core-loc1-loc2-synthetic-parity.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-v2-locate-parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Execute original RLB2/RLR2 with both LOC1 and LOC2
+        run: |
+          python3 research/experiments/core_convergence_v1/loc1_loc2_synthetic_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --output "$RUNNER_TEMP/locate-synthetic-$GITHUB_RUN_ID"
+      - name: Upload only JSON evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: loc1-loc2-synthetic-result
+          path: ${{ runner.temp }}/locate-synthetic-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: warn
