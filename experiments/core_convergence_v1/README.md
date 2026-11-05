@@ -13,6 +13,10 @@ The existing GLYPH **P1–P12 → R0–R6 → O1–O6 → I0** executable verifi
 
 Preserve the distinction between executable engineering proof/conformance (already built in defined scope), experimental Merkle presence witnesses, draft corpus+SA commitments, and unclosed cryptographic non-membership. Uniqueness of the entire arrangement remains a testable claim, not an established universal fact.
 
+## Verified Laptop/OVH V1 heritage — the mandatory reference
+
+Read [V1_HERITAGE_AND_FOUR_BARRIERS.md](V1_HERITAGE_AND_FOUR_BARRIERS.md) before any new integration. The frozen historical `rlbwt-binary-safe-v2` branch already demonstrated a real five-segment, ~250 MB human-gated authenticated retrieval chain with Laptop/OVH replay, fail-closed trust and two byte-perfect selected objects. It is not merely a proposal to build a future proof framework. Its 1.087730218× search-data ratio is a different scope from the ~0.336× public 30-object V0 compact proof experiment. The next obligation is **preserve V1 trust while bridging compact storage to a portable, replayable unified result**, then qualify 100 GB / 1 TB / 10 TB, complete authenticated storage targets, reviewed native ABI, and heterogeneous real-world workloads. No automatic merge or release is implied.
+
 ## Decision: recover the global objective
 
 GLYPH CORE's research target is *verifiable searchable compression*: losslessly preserve committed bytes, perform exact count/locate without a whole-archive-decompression requirement, independently verify selected results, and restore exact bytes. Measure the joint cost of the entire searchable artifact, including index, authenticated evidence, runtime resources and recovery state.
