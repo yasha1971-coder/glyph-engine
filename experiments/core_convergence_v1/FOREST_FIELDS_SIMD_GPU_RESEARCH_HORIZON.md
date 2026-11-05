@@ -87,6 +87,14 @@ References:
 
 ACEAPEX CUDA compatibility is a separate unverified integration claim. The historical CPU ACEAPEX block/region-read behavior does not by itself certify any CUDA implementation or a 16 KiB block proof boundary.
 
+## 6A. Highest-return near-term experiment already partially implemented: LOC2
+
+The owner's enwik8 full-runtime passport measures RLB2=73,365,105 B, RLR2=12,844,028 B, LOC1=12,500,040 B, manifest=828 B (total=98,710,001 B). LOC1 stores an explicit row and SA offset (16 bytes/sample) although the rows are sampled at a deterministic period. The repo already has an **experimental LOC2** builder using implicit row position and 4-byte SA values when corpus rows fit 32-bit; it was used by the measured compact 30-object RLB3X path. Thus "compress LOC1 metadata" is not an original new design idea; it is a pre-existing implementation candidate to evaluate on enwik8 under an independent gate.
+
+For enwik8's 781,251 samples, a hypothetical LOC2-style 32-byte header + 4 bytes/sample would be **3,125,036 B** vs **12,500,040 B** LOC1; under unchanged RLB2/RLR2 and manifest, the estimated total would be **89,334,997 B = 0.89334997×**. This is arithmetic, NOT an executed V2 measurement. Benchmark exact count/locate parity, sampled/non-sampled LF paths, hostile format geometry, decode time, portable manifest profile, start/open RSS and worst LF steps. Preserve existing LOC1 V2 as oracle; do not rewrite it.
+
+Most importantly, **RLB2 alone is 0.73365105×** on enwik8. The overall ≤0.70× target is therefore mathematically impossible for that unchanged RLB2 payload, even if rank/locate/proof had zero overhead. A genuinely lower-entropy payload (or a different representation) is required on that corpus for 0.70×. Other repetitive corpora can already score lower, but that does not transfer to enwik8.
+
 ## 7. Statistical inconsistency to repair BEFORE using unique-prefix probes
 
 Provided August 2026 Pizza & Chili English 50MB / 100,000-position report:
