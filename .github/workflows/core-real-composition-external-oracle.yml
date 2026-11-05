@@ -44,19 +44,7 @@ jobs:
       - name: Full historical Composition reference (25 normative EXACT obligations)
         run: |
           python3 reference/tools/check_composition_reference_v1.py > "$RUNNER_TEMP/glyph-composition-reference-full.log"
-          grep -q '^GLYPH COMPOSITION REFERENCE OK        run: |
-          python3 research/experiments/core_convergence_v1/real_operator_comparable_gate.py \
-            --reference "$GITHUB_WORKSPACE/reference" \
-            --workdir "$RUNNER_TEMP/glyph-comparable-$GITHUB_RUN_ID"
-      - name: Upload only experimental result summary
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: glyph-real-operator-comparable-result
-          path: ${{ runner.temp }}/glyph-comparable-${{ github.run_id }}/result.json
-          if-no-files-found: warn
-          retention-days: 30
- "$RUNNER_TEMP/glyph-composition-reference-full.log"
+          grep -q '^GLYPH COMPOSITION REFERENCE OK$' "$RUNNER_TEMP/glyph-composition-reference-full.log"
           tail -n 2 "$RUNNER_TEMP/glyph-composition-reference-full.log"
       - name: Real 3-block composition versus independent oracle and CRoaring
         run: |
