@@ -254,7 +254,8 @@ def execute(snapshot: Snapshot, mask: FieldMask, pin: Optional[ExternalPin],
 
 
 def independently_verify(snapshot: Snapshot, mask: FieldMask, pin: ExternalPin,
-                         available_ids: Sequence[str], query: bytes, result: dict) -> bool:
+                         available_ids: Sequence[str], query: bytes, result: dict,
+                         requested_max_offsets: int = -1) -> bool:
     preflight(snapshot, mask, pin, available_ids)
     require(type(result) is dict, "invalid result")
     rid = result.get("result_id")
@@ -263,6 +264,8 @@ def independently_verify(snapshot: Snapshot, mask: FieldMask, pin: ExternalPin,
     require(rid == digest(b"GLYPH_FIELD_MASK_FIXTURE_RESULT_V0\x00" + canonical(candidate)),
             "result receipt identity invalid")
     require(candidate.get("query_hex") == query.hex(), "wrong query binding")
+    require(candidate.get("max_offsets") == requested_max_offsets,
+            "unbound or changed max_offsets")
     # Independent oracle: naive byte windows, no use of find_all or per-block results.
     oracle: list[list[int]] = []
     for i, doc in enumerate(snapshot.documents):
@@ -270,8 +273,7 @@ def independently_verify(snapshot: Snapshot, mask: FieldMask, pin: ExternalPin,
             for off in range(max(0, len(doc.data) - len(query) + 1)):
                 if doc.data[off:off + len(query)] == query:
                     oracle.append([i, off])
-    want = execute(snapshot, mask, pin, available_ids, query,
-                   candidate.get("max_offsets", -1))
+    want = execute(snapshot, mask, pin, available_ids, query, requested_max_offsets)
     require(candidate == {k: v for k, v in want.items() if k != "result_id"},
             "incorrect claim or incomplete coverage")
     limit = candidate["max_offsets"]
