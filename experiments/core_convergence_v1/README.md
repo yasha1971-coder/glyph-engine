@@ -21,6 +21,14 @@ Personal Memory is a downstream application, NOT the original definition of GLYP
 
 Do not optimize compression ratio, query speed or feature count in isolation. RLBWT, Move/r-index, run-aware data structures, PAQ/cmix-style entropy coding and class-specific hybrid routes are research candidates, not completed claims. The winner may be a different physical representation for different corpus classes if logical identities and exactness remain invariant.
 
+## CORE-G1A executed bridge — 2026-11-05
+
+The old compact proof route was recovered from existing source code: `proof_carrying_recall_v0.py` and `verify_proof_carrying_recall_v0.py`, using `query_rlb3x_object.py`, the original RLB3X builder, LOC2 and independent restorer. **Do not design a replacement before auditing this existing capability.**
+
+A new synthetic fixture exercises those exact programs and 16 hostile/positive cases; GitHub CI on [commit 0ef2f0f](https://github.com/yasha1971-coder/glyph-engine/commit/0ef2f0fd626ce3fd3f981385c5cbafd87246b324) passed 16/16 bridge tests, plus 13/13 structural scorecard tests. See [CORE_G1A_PROOF_REUSE_RESULT.md](CORE_G1A_PROOF_REUSE_RESULT.md) for the complete scope and limits. This is a scoped V0 receipt+object proof path, **not** cryptographically complete global non-membership, authoritative-root currentness, 1TB proof or a full persistent storage benchmark.
+
+CORE-G1B must independently replay the *existing* proof-carrying compact path on the pinned 30-object public corpus and account for all mandatory proof/evidence/search/restore artifacts. If integration with the established P/R/O or frozen V1 contracts is missing, report BLOCKED with the smallest versioned adapter proposal; never claim it already exists.
+
 ## CORE-G1: the first deciding experiment
 
 Compare candidates on the same identified source documents and identical precommitted query bytes:
