@@ -41,6 +41,10 @@ See [FOREST_FIELDS_SIMD_GPU_RESEARCH_HORIZON.md](FOREST_FIELDS_SIMD_GPU_RESEARCH
 
 The owner-authorized three-block/two-partition semantic fixture is now executable: [FIELD_ROUTING_G0_RESULT.md](FIELD_ROUTING_G0_RESULT.md). It reused Composition V1 logical/physical identity formulas and tested **35/35** field-mask/coverage/coordinate/hostile cases; the whole new research suite passed **64/64** on [GitHub Actions run 42089927296](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42089927296) at `e91845373ebcfcb3c4b34f0dd0e8c32d64c42d28`. This is deliberately a **synthetic semantics reference, NOT an Index Forest runtime**, real compiled index, authenticated field-index implementation or independently distributed root pin. PR #6 and main P/R/O/I0 closure are unchanged. The next gate must use the real verified Composition operator blocks and independent replay, not substitute test hashes for operator authority.
 
+## Real verified operator benchmark vs external CRoaring — 2026-11-05
+
+Read [REAL_OPERATOR_COMPARABLE_GATE_RESULT.md](REAL_OPERATOR_COMPARABLE_GATE_RESULT.md) and [EXTERNAL_BASELINES_AND_ORACLE_POLICY_V1.md](EXTERNAL_BASELINES_AND_ORACLE_POLICY_V1.md). The experiment compiles the **actual** immutable Composition Reference C++ SA/BWT/FM artifacts at `81628f843dc8aa633c65594a66d2386bfc3cb5c2`, executes 16 full queries on two 3-block partitions, and independently replays all original results plus 24 bound field-filter claims against byte-window oracle and external CRoaring 1.2.0. **Five hostile mutations rejected**; canonical semantics digest identical under repartition. [Original successful execution](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42091174565). Further CI is being extended to run the historical 25 EXACT Composition obligations in the same job. No r-index/SDSL performance comparison has yet been executed and no production field-index/Forest authority is claimed.
+
 ## CORE-G1: the first deciding experiment
 
 Compare candidates on the same identified source documents and identical precommitted query bytes:
