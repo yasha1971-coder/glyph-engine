@@ -60,6 +60,16 @@ Comparison on a SINGLE corpus, with explicit feature differences:
 
 Differences versus this **one SDSL configuration**: historical GLYPH V2 index is **11,960,770 B smaller**; research LOC2 index+manifest is **21,335,923 B smaller**. These are useful facts, not evidence that GLYPH is smaller/faster than every SDSL or r-index configuration. SDSL has more advanced CSA variants/sampling choices, and the benchmark runs use separate GitHub-hosted runners. No statistically valid speed comparison between cross-run systems is claimed.
 
+## Independent second enwik8 SA-only qualification
+
+To avoid relying solely on the long combined Python query run, a **separate clean GitHub Actions job** rebuilt the 100MB enwik8 SA from the pinned historical compiled builder, matched the historical SA digest, regenerated canonical LOC1 and all **781,251** LOC2 sampled offsets against the full SA. This used no RLB2/RLR2 combined runtime and makes no query-accuracy claim by itself; it is independent corroboration of physical LOC2 geometry.
+
+- [Run 42095705324 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42095705324).
+- LOC2 exact SHA256: `4f90560aeccf86e077b888a129f06f14fa655ea1eab1e445c6cb11f26eb6011c`.
+- LOC2 bytes: **3,125,036**, checked **781,251** samples; canonical LOC1 SHA `1ba04acce3b2ebea10ae3ab703138c1a33e7c9caa27fe7a1056d4ed8c44f7f6f` and SA SHA `a70951cba4f51915f9e4ef7d7e819c11c09dcaf57677cd573a9ab746e9aed727`.
+- LOC2 alone saves **9,375,004 B**; source/index SHA, geometry and duplicate artifact generation are now independently reproduced under a separate runner.
+- The reference runtime still lacks a canonical signed/externally anchored LOC2 production manifest or full portable proof format; construction-time SA is not retained runtime state.
+
 ## Implications and next falsifiers
 
 1. **LOC2 has now been physically measured on canonical enwik8**, not merely predicted by arithmetic. This is a size/geometry and exact count/locate preservation win, NOT a native speed win.
