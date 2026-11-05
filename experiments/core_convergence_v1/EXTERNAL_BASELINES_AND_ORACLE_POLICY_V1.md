@@ -39,6 +39,17 @@ A meaningful GLYPH comparison must distinguish:
 
 **No cryptographic witness size/verification-speed superiority claim has been established for GLYPH.** Do not compare its current V0 receipt to published constant-size authenticated proofs as though they solved the same threat model. Either reproduce the authors' implementation/measurement if available or extract the paper's threat/claim model for a clearly labeled *literature-only* comparison. All claims remain within original source evidence.
 
+## Pinned executable enwik8 comparator (2026-11-05)
+
+Two separate GitHub Actions jobs (not merged, no private OVH data) attempt a **byte-identical external-source benchmark**. If either job fails, classify its result as BLOCKED; do not copy a historical or synthetic ratio into a real-workload PASS.
+
+- `core-enwik8-loc1-loc2-full-replay.yml`: original GLYPH reference `c33cb493bc75f13ee4a904fabb190a29a196c94b`, canonical enwik8 ZIP from Matt Mahoney (100,000,000 bytes; SHA256 `2b49720ec4d78c3c9fabaee6e4179a5e997302b3a70029f30f2d582218c024a8`). Must reproduce historical **SA/BWT/RLB2/RLR2/LOC1 SHA256** and full exact query oracle before evaluating LOC2. Research LOC2 must bind its own SHA and manifest; it is *not* a canonical V2 manifest profile. Full query offsets and FM-row-limited exact subsets checked; separate build/verify/RSS receipt. Only counted retained runtime roles may inform a storage ratio.
+- `core-enwik8-external-sdsl-csa.yml`: external `simongog/sdsl-lite` pinned commit `c32874cb2d8524119f25f3b501526fe692df29f4`, libdivsufsort pinned git submodule; use the *same* SHA256 source and nine preselected exact byte patterns as GLYPH. Independent raw corpus oracle checks SDSL `count` and complete `locate` output. Extract all source bytes using SDSL alone after moving away the original input path, independently SHA256-check. Report serialized SDSL CSA bytes plus separately measured research manifest. **No authentication semantics inherited from GLYPH**, and no universal size/speed winner implied.
+
+The SDSL source is GPL-3.0 licensed; the pinned external build is for isolated research comparison, not a decision to link GPL-licensed code into a prospective proprietary GLYPH runtime. SDSL's classic 8-bit CSA terminator demands nonzero corpus bytes: canonical enwik8 meets that condition, but this comparator does **not** qualify a binary file with embedded NUL, duplicate document segmentation, or cross-document boundaries. Future alternatives must either employ integer-alphabet strategy or explicit document-boundary-safe adapters and price their overhead.
+
+**Scientific control:** one source, exact corpus hash, exact query bytes, explicit source/no-source state, full physical index sizes, restore equality and timing scope. Count-only CLI output or a source scan masquerading as a compressed-index hit is not an acceptable comparator. Baseline performance from separate GitHub runners is descriptive, not statistically conclusive unless machine type and workloads are shown equivalent and repeated.
+
 ## Fair comparison protocol
 
 - Pin source URL, exact external commit/tag, compiler flags, CPU model, SIMD availability, runtime environment and query workload hash. Do not take GitHub "latest" as a reproducibility parameter.
