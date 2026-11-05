@@ -1,0 +1,16 @@
+name: core-frontier-protocol
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  scorecard-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Fail-closed benchmark record schema and frontier tests
+        run: python3 -m unittest discover -s experiments/core_convergence_v1 -p 'test_*.py' -v
