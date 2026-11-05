@@ -33,6 +33,10 @@ A new synthetic fixture exercises those exact programs and 16 hostile/positive c
 
 CORE-G1B must independently replay the *existing* proof-carrying compact path on the pinned 30-object public corpus and account for all mandatory proof/evidence/search/restore artifacts. If integration with the established P/R/O or frozen V1 contracts is missing, report BLOCKED with the smallest versioned adapter proposal; never claim it already exists.
 
+## Research horizon: low-level forest, masks, SIMD, GPU
+
+See [FOREST_FIELDS_SIMD_GPU_RESEARCH_HORIZON.md](FOREST_FIELDS_SIMD_GPU_RESEARCH_HORIZON.md). The three proposed low-level primitives and VRAM research are **HYPOTHESES, not shipped capabilities**. Composition semantics and independently replayed proof bind the parts; field masks cannot create false PROVEN_EMPTY, SIMD must preserve exact scalar parity, and GPU/ACEAPEX claims require independent end-to-end proof and hardware measurement. The owner-supplied unique-prefix distribution also needs conditional-percentile/censoring reconciliation before it is used as scientific evidence. No production framework-replacement or petabyte-in-VRAM claim follows from this proposal.
+
 ## CORE-G1: the first deciding experiment
 
 Compare candidates on the same identified source documents and identical precommitted query bytes:
