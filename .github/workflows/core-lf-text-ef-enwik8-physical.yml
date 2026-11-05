@@ -1,0 +1,54 @@
+name: core-lf-text-ef-enwik8-physical
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/real_enwik8_ef_physical_gate.py
+      - .github/workflows/core-lf-text-ef-enwik8-physical.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-100mb-sa-ef:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build unmodified historical binary-safe SA executable
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 -j2
+      - name: Generate & verify actual enwik8 100MB candidate LOC-TEXT-EF file
+        run: |
+          python3 research/experiments/loc_text_ef_v0/real_enwik8_ef_physical_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --output "$RUNNER_TEMP/loc-text-ef-$GITHUB_RUN_ID"
+      - name: Show bounded result for every outcome
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/loc-text-ef-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps(x,indent=2))' "$RUNNER_TEMP/loc-text-ef-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Retain JSON only, no source/SA/index archive
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-loc-text-ef-enwik8-receipt
+          path: ${{ runner.temp }}/loc-text-ef-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: warn
