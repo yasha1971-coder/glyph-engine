@@ -37,18 +37,22 @@ jobs:
           test "$(git -C sdsl/external/libdivsufsort rev-parse HEAD)" = 0f24acd8de208464769c782119dacf158647f7ed
           cmake --version
           g++ --version
-      - name: Build and install SDSL-lite in disposable runner
+      - name: Build pinned SDSL and dependency static libraries only
         run: |
-          cmake -S sdsl -B sdsl/build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/sdsl-install"
+          cmake -S sdsl -B sdsl/build -DCMAKE_POLICY_VERSION_MINIMUM=3.5
           cmake --build sdsl/build --target divsufsort divsufsort64 sdsl -j2
-          cmake --install sdsl/build
-      - name: Build adapter against installed SDSL and divsufsort
+          test -f sdsl/build/lib/libsdsl.a
+          test -f sdsl/build/external/libdivsufsort/lib/libdivsufsort.a
+          test -f sdsl/build/external/libdivsufsort/lib/libdivsufsort64.a
+      - name: Build adapter against pinned local static libraries
         run: |
           g++ -std=c++14 -O3 -DNDEBUG \
-            -I"$RUNNER_TEMP/sdsl-install/include" \
+            -Isdsl/include \
+            -Isdsl/external/libdivsufsort/include \
+            -Isdsl/build/external/libdivsufsort/include \
             research/experiments/core_convergence_v1/sdsl_csa_wt_comparable.cpp \
-            -L"$RUNNER_TEMP/sdsl-install/lib" \
-            -Wl,-rpath,"$RUNNER_TEMP/sdsl-install/lib" \
+            -Lsdsl/build/lib \
+            -Lsdsl/build/external/libdivsufsort/lib \
             -lsdsl -ldivsufsort -ldivsufsort64 \
             -o "$RUNNER_TEMP/sdsl_comparable"
       - name: Reproduce exact enwik8 count locate and standalone SDSL extract
