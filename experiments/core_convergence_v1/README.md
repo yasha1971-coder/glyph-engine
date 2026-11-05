@@ -37,6 +37,10 @@ CORE-G1B must independently replay the *existing* proof-carrying compact path on
 
 See [FOREST_FIELDS_SIMD_GPU_RESEARCH_HORIZON.md](FOREST_FIELDS_SIMD_GPU_RESEARCH_HORIZON.md). The three proposed low-level primitives and VRAM research are **HYPOTHESES, not shipped capabilities**. Composition semantics and independently replayed proof bind the parts; field masks cannot create false PROVEN_EMPTY, SIMD must preserve exact scalar parity, and GPU/ACEAPEX claims require independent end-to-end proof and hardware measurement. The owner-supplied unique-prefix distribution also needs conditional-percentile/censoring reconciliation before it is used as scientific evidence. No production framework-replacement or petabyte-in-VRAM claim follows from this proposal.
 
+## Verified research-only field-mask semantics — 2026-11-05
+
+The owner-authorized three-block/two-partition semantic fixture is now executable: [FIELD_ROUTING_G0_RESULT.md](FIELD_ROUTING_G0_RESULT.md). It reused Composition V1 logical/physical identity formulas and tested **35/35** field-mask/coverage/coordinate/hostile cases; the whole new research suite passed **64/64** on [GitHub Actions run 42089927296](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42089927296) at `e91845373ebcfcb3c4b34f0dd0e8c32d64c42d28`. This is deliberately a **synthetic semantics reference, NOT an Index Forest runtime**, real compiled index, authenticated field-index implementation or independently distributed root pin. PR #6 and main P/R/O/I0 closure are unchanged. The next gate must use the real verified Composition operator blocks and independent replay, not substitute test hashes for operator authority.
+
 ## CORE-G1: the first deciding experiment
 
 Compare candidates on the same identified source documents and identical precommitted query bytes:
