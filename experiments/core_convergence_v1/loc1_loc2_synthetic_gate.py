@@ -111,11 +111,22 @@ def compare(ref, output):
                     a = r1.query(pattern, limit)
                     b = r2.query(pattern, limit)
                     expected_count = len(oracle)
-                    expected_offsets = oracle if limit < 0 else oracle[:limit]
+                    # Bounded locate consumes the FIRST FM rows then sorts the
+                    # selected offsets. This is not the text-order top-k.
                     require(a["count"] == b["count"] == expected_count,
-                            "count parity failure")
-                    require(a["locate_offsets"] == b["locate_offsets"] == expected_offsets,
-                            "locate parity failure")
+                            f"count parity failure {pattern!r} limit={limit}: "
+                            f"{a['count']} / {b['count']} / {expected_count}")
+                    require(a["locate_offsets"] == b["locate_offsets"],
+                            f"LOC1 vs LOC2 mismatch {pattern!r} limit={limit}: "
+                            f"{a['locate_offsets']} != {b['locate_offsets']}")
+                    if limit == -1:
+                        require(a["locate_offsets"] == oracle,
+                                f"full raw-byte oracle mismatch {pattern!r}")
+                    else:
+                        require(len(a["locate_offsets"]) == min(limit, expected_count)
+                                and len(set(a["locate_offsets"])) == len(a["locate_offsets"])
+                                and set(a["locate_offsets"]).issubset(set(oracle)),
+                                f"bounded offsets not an exact FM-row subset {pattern!r}")
                     require(a["fm_interval"] == b["fm_interval"], "FM interval mismatch")
                     require(a["maximum_lf_steps"] == b["maximum_lf_steps"],
                             "LF path mismatch")
@@ -161,6 +172,7 @@ def compare(ref, output):
             "LOC2 SHA pin supplied by the experiment; not trusted remote currentness.",
             "Original explicit LOC2 loader is not manifest bound, unlike LOC1 V2.",
             "Timing samples in same process; no performance superiority inferred.",
+            "Bounded locate means first FM rows, not first offsets in source order.",
         ],
     }
     (output / "result.json").write_text(json.dumps(result, sort_keys=True, indent=2) + "\n")
