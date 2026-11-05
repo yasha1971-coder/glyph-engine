@@ -60,3 +60,23 @@ The accompanying [EXTERNAL_BASELINES_AND_ORACLE_POLICY_V1.md](EXTERNAL_BASELINES
 **Recommended next strict gate**: real, immutable, portable Composition field-mask proof replay under independently pinned currentness, with external verifier and full proof storage accounting. In parallel only as an isolated performance experiment, benchmark LOC1 vs pre-existing LOC2 on the exact enwik8 bytes and compare to a pinned SDSL implementation with equivalent count/locate semantics; reject incompatible sentinel or document-boundary handling.
 
 Keep PR #6 composition semantics and P/R/O/I0/frozen V1 untouched. This result is additive to draft PR #18 and is not permission to merge or implement Index Forest runtime.
+
+
+## Joint historical Composition full gate — independently executed PASS
+
+After the initial success, a stricter workflow stage was added to run the **unmodified full historical Composition Reference checker** in the **same pinned checkout** before the new field-mask comparison. A faulty intermediate YAML update was rejected by GitHub before any job execution; the workflow was rewritten from a clean literal and the valid file was rechecked before rerunning. No false CI success was attributed to that invalid intermediate revision.
+
+**Accepted joint run:** https://github.com/yasha1971-coder/glyph-engine/actions/runs/42091889663
+
+- Executed HEAD: \`a3893168f5f05d8fba73694dec2f62d45051ed43\`.
+- Composition checkout HEAD: \`81628f843dc8aa633c65594a66d2386bfc3cb5c2\`, unchanged.
+- Source build: original C++ SA/BWT/FM/locate targets — SUCCESS.
+- Original \`python3 reference/tools/check_composition_reference_v1.py\` — exit 0, marker \`GLYPH COMPOSITION REFERENCE OK\` and preceding \`GLYPH COMPOSITION REFERENCE NORMAL PATH OK\`; this original checker includes its 25 normative EXACT mutation obligations and independent replay.
+- Original C++ operator + two physical three-block layouts + external CRoaring + independent raw-byte replay — SUCCESS.
+- 16 full queries and 24 field-filter claims independently verified; semantic SHA \`fb91472f3611962d1ea3589c8cb95da1ecba379df6b140600636f92d64a699e2\` identical for both layouts.
+- Five negative mutation cases rejected.
+- GitHub Actions \`comparable-real-operator\` overall SUCCESS; uploaded only \`result.json\`, artifact ID \`13444749217\` (1,099 compressed bytes).
+
+**Interpretation:** the original historical Composition executable proof obligations were reproduced *together with* the new real-block field-mask comparison. The field-mask semantics are still an additive research adapter; the historical checker does not automatically adopt its new proof schema. This is NOT evidence of completed Index Forest, external trust-currentness, full cryptographic global absence, production ACLs or comparative speed/size superiority over r-index/SDSL.
+
+Subsequent documentation-only changes (e.g. external scientific authenticated-pattern-matching prior art) do not change the executed source gate but MUST NOT be described as separately CI-executed source revisions.
