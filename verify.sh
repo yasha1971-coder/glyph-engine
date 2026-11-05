@@ -93,7 +93,7 @@ echo "[verify] GLYPH runtime conformance graph"
 echo "[verify] GLYPH operator conformance graph"
 ./tools/run_glyph_operator_conformance_graph_v1.sh
 echo "[verify] GLYPH embedded I0 contract"
-PYTHONDONTWRITEBYTECODE=1 python3 -I tools/check_embedded_i0_contract_v1.py --verify
+PYTHONDONTWRITEBYTECODE=1 python3 -I tools/check_embedded_i0_contract_v1.py --verify --result benchmarks/results/GLYPH_EMBEDDED_I0_CONTRACT_V1_RESULT_R2.json
 echo "VERIFY OK"
 
 echo ""

@@ -184,3 +184,34 @@ Three HTTP tests and an actual pinned Precomp synthetic JPEG worker roundtrip
 passed. Worker has resource limits, not a hostile-code sandbox. This is an early
 user-facing companion, not full Vault integration or preservation/search dedup.
 Details: experiments/personal_memory_1tb_v2/LOCAL_BROWSER_PILOT.md.
+
+## 2026-11-05 — G1B.3 preservation-safe Embedded I0 result selection
+
+Source base: `425184816605818821b7043851fad5e68c01d8c5` (PR #15).
+Reviewed contract-source commit: `fe94eb0314cff76191a7eaba20347c234069a8f2`.
+
+The tracked `experiments/personal_memory_1tb_v2/gear_native.cpp` adds one
+source to the unchanged I0 implementation scan: 38 -> 39. Implementation hits
+remain empty. Independent field-level comparison in G1B.2 found no other
+result difference, and the isolated reconciled tree completed full VERIFY.
+
+Preserve `GLYPH_EMBEDDED_I0_CONTRACT_V1.json` byte-for-byte as the historical
+38-source result, SHA-256:
+`3f7cce1c03a4c409163f58131f77b1b04e9efd981fa4d3797acea82a45ead51c`.
+Add `GLYPH_EMBEDDED_I0_CONTRACT_V1_RESULT_R2.json` as a result-artifact revision,
+SHA-256:
+`f88715565ac2f379856e3a96bb4875bebae2c0f8dec790db9052bb505b0639c9`.
+R2 does not change the ABI or contract version. `verify.sh` explicitly selects
+this result with `--verify --result`; the checker, scan policy, normative
+contracts and frozen V1 are unchanged. The old artifact is not deleted or rewritten.
+
+Reproduction: use the existing checker with `--write --result` for the R2 path,
+then `--verify --result` and `./verify.sh` on a clean disposable copy. Require
+the existing premature-runtime-implementation mutation to remain rejected,
+the historical artifact to remain identical, and all 11 frozen/evidence
+identities to remain unchanged. G1B.3 execution results belong to its PR record.
+
+Scope remains bounded executable verification, not ABI freeze, Embedded E1,
+production readiness or complete V2 integration. The six packed-backend SKIP
+checks and missing bounded-memory RLB3X patch lineage remain open. No merge,
+deployment, user-data access, tag movement or CONTROL update is authorized here.
