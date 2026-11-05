@@ -27,11 +27,18 @@ jobs:
           python3 --version
       - name: Pinned 30-object public proof-carrying Vault reproduction
         run: python3 experiments/core_convergence_v1/core_g1b_public_probe.py --output "$RUNNER_TEMP/glyph-core-g1b-$GITHUB_RUN_ID"
+      - name: Print bounded, public-only result summary
+        if: always()
+        run: |
+          REPORT="$RUNNER_TEMP/glyph-core-g1b-$GITHUB_RUN_ID/result.json"
+          if test -f "$REPORT"; then python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps({"status":x.get("status"),"storage":x.get("storage"),"source":x.get("source"),"receipt":x.get("receipt"),"limitations":x.get("limitations"),"error":x.get("error")},sort_keys=True,indent=2))' "$REPORT"; fi
       - name: Upload only test report and command receipts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: glyph-core-g1b-public-proof-probe
-          path: ${{ runner.temp }}/glyph-core-g1b-${{ github.run_id }}/
+          path: |
+            ${{ runner.temp }}/glyph-core-g1b-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/glyph-core-g1b-${{ github.run_id }}/command_log.json
           if-no-files-found: warn
           retention-days: 30
