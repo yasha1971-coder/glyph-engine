@@ -40,7 +40,7 @@ jobs:
       - name: Build and install SDSL-lite in disposable runner
         run: |
           cmake -S sdsl -B sdsl/build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/sdsl-install"
-          cmake --build sdsl/build --target sdsl -j2
+          cmake --build sdsl/build --target divsufsort divsufsort64 sdsl -j2
           cmake --install sdsl/build
       - name: Build adapter against installed SDSL and divsufsort
         run: |
