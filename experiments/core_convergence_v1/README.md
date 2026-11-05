@@ -5,6 +5,14 @@ Status: PRE-REGISTERED RESEARCH PROTOCOL; NO NEW ENGINE RESULT OR WINNER CLAIMED
 Base: glyph-engine PR #15 at 425184816605818821b7043851fad5e68c01d8c5.  
 Authority: research proposal. Public V1 semantics, ABI freeze, frozen V1 artifacts and Personal Memory gates stay unchanged.
 
+## Proof is the architecture, not a post-hoc cost
+
+The existing GLYPH **P1–P12 → R0–R6 → O1–O6 → I0** executable verification chain, portable evidence bundles, independently recomputed replay, and scoped Composition reference are the architectural foundation of this research. They are not optional after-the-fact certification features. The integrated research target is **proof-carrying searchable compression**: compact storage, exact count/locate, bound identities, explicit selection, byte-perfect materialization, and independent replay under one versioned correctness contract.
+
+**Required companion contract:** [PROOF_CARRYING_ARCHITECTURE.md](PROOF_CARRYING_ARCHITECTURE.md). CORE-G1 must report not just a full-size ratio and raw-byte oracle parity, but a real independently replayed evidence chain bound to the compressed/searchable artifacts. Without it, the result is only a kernel measurement, not a unified GLYPH CORE result. The structural scorecard's self-reported fields are never such a proof.
+
+Preserve the distinction between executable engineering proof/conformance (already built in defined scope), experimental Merkle presence witnesses, draft corpus+SA commitments, and unclosed cryptographic non-membership. Uniqueness of the entire arrangement remains a testable claim, not an established universal fact.
+
 ## Decision: recover the global objective
 
 GLYPH CORE's research target is *verifiable searchable compression*: losslessly preserve committed bytes, perform exact count/locate without a whole-archive-decompression requirement, independently verify selected results, and restore exact bytes. Measure the joint cost of the entire searchable artifact, including index, authenticated evidence, runtime resources and recovery state.
