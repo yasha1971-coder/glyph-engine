@@ -1,0 +1,75 @@
+name: core-enwik8-external-sdsl-csa-benchmark
+
+on:
+  push:
+    branches:
+      - codex/glyph-core-frontier-g0-20261105
+    paths:
+      - experiments/core_convergence_v1/sdsl_csa_wt_comparable.cpp
+      - experiments/core_convergence_v1/sdsl_enwik8_baseline.py
+      - .github/workflows/core-enwik8-external-sdsl-csa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-upstream-sdsl-enwik8:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: simongog/sdsl-lite
+          ref: c32874cb2d8524119f25f3b501526fe692df29f4
+          path: sdsl
+          submodules: recursive
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Verify exact external source revisions and required submodules
+        run: |
+          test "$(git -C sdsl rev-parse HEAD)" = c32874cb2d8524119f25f3b501526fe692df29f4
+          test "$(git -C sdsl/external/libdivsufsort rev-parse HEAD)" = 0f24acd8de208464769c782119dacf158647f7ed
+          cmake --version
+          g++ --version
+      - name: Build and install SDSL-lite in disposable runner
+        run: |
+          cmake -S sdsl -B sdsl/build -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DCMAKE_INSTALL_PREFIX="$RUNNER_TEMP/sdsl-install"
+          cmake --build sdsl/build --target sdsl -j2
+          cmake --install sdsl/build
+      - name: Build adapter against installed SDSL and divsufsort
+        run: |
+          g++ -std=c++14 -O3 -DNDEBUG \
+            -I"$RUNNER_TEMP/sdsl-install/include" \
+            research/experiments/core_convergence_v1/sdsl_csa_wt_comparable.cpp \
+            -L"$RUNNER_TEMP/sdsl-install/lib" \
+            -Wl,-rpath,"$RUNNER_TEMP/sdsl-install/lib" \
+            -lsdsl -ldivsufsort -ldivsufsort64 \
+            -o "$RUNNER_TEMP/sdsl_comparable"
+      - name: Reproduce exact enwik8 count locate and standalone SDSL extract
+        run: |
+          python3 research/experiments/core_convergence_v1/sdsl_enwik8_baseline.py \
+            --sdsl "$GITHUB_WORKSPACE/sdsl" \
+            --wrapper "$RUNNER_TEMP/sdsl_comparable" \
+            --output "$RUNNER_TEMP/sdsl-enwik8-$GITHUB_RUN_ID"
+      - name: Show concise evidence summary
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/sdsl-enwik8-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({k:d.get(k) for k in ("status","error","index_bytes","index_only_ratio","query_cases","byte_restore_without_source_at_original_path","limits")},indent=2))' "$RUNNER_TEMP/sdsl-enwik8-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Upload only benchmark receipts, never source/index/corpora
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-external-sdsl-enwik8-comparator
+          path: |
+            ${{ runner.temp }}/sdsl-enwik8-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/sdsl-enwik8-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn
