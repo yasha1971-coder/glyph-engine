@@ -27,6 +27,18 @@ Upstream sources:
 - https://github.com/nicolaprezza/r-index
 - https://pypi.org/project/pyroaring/
 
+## Cryptographic authenticated-search comparator (important scientific prior art)
+
+**Papadopoulos, Papamanthou, Tamassia & Triandopoulos, “Practical Authenticated Pattern Matching with Optimal Proof Size,” PVLDB 8(7), 2015**, DOI: [10.14778/2752939.2752944](https://doi.org/10.14778/2752939.2752944), is a much closer proof-theoretic baseline than SDSL/r-index alone. It studies owner-authenticated exact pattern matching against an untrusted server, using suffix-tree authentication/cryptographic accumulators with compact independently verifiable evidence, including match and mismatch. Abstract: https://researchdiscovery.drexel.edu/esploro/outputs/journalArticle/Practical-Authenticated-Pattern-Matching-with-Optimal/991020531841304721 . A second relevant published precedent is “Verification of Substring Searches on the Untrusted Cloud” (2016), addressing authenticity/completeness/freshness. This literature explicitly refutes any blanket claim that cryptographically authenticated pattern matching has never existed.
+
+A meaningful GLYPH comparison must distinguish:
+- bounded *engineering replay* that has access to committed source/index bytes and can reexecute the query (P/R/O/V1, verified in scoped tests);
+- a *succinct owner-anchored cryptographic witness* proving all occurrences or nonmembership with an untrusted server (separate commitment/absence research, not closed);
+- long-lived freshness/currentness after rollback/fork and externally pinned generations (not generally established);
+- complete portable compressed store size including independent verification and recovery cost.
+
+**No cryptographic witness size/verification-speed superiority claim has been established for GLYPH.** Do not compare its current V0 receipt to published constant-size authenticated proofs as though they solved the same threat model. Either reproduce the authors' implementation/measurement if available or extract the paper's threat/claim model for a clearly labeled *literature-only* comparison. All claims remain within original source evidence.
+
 ## Fair comparison protocol
 
 - Pin source URL, exact external commit/tag, compiler flags, CPU model, SIMD availability, runtime environment and query workload hash. Do not take GitHub "latest" as a reproducibility parameter.
