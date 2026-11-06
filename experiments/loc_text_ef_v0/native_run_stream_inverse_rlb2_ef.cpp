@@ -2,9 +2,16 @@
 // NO in-memory O(n) raw output allocation. One transient per-thread buffer,
 // 1MiB max. Independently verified by external SHA-256 gate, not signed proof.
 // NOT production: no atomic cryptographic trust pin and no 64-bit LF support.
+#if defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
 #define GLYPH_RUN_INTERVAL_LIBRARY_ONLY
 #include "native_run_interval_inverse_rlb2_ef.cpp"
 #undef GLYPH_RUN_INTERVAL_LIBRARY_ONLY
+#if defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
 
 #include <cerrno>
 #include <cstring>
@@ -96,7 +103,6 @@ int main(int argc,char** argv) {
         }
         demand(total==h.rows,"BWT frequency geometry");
         RunIntervalLF lf(encoded,h,C,direct);
-        const auto t1=clk::now();
         auto ef_bytes=load_ef(efpath);
         auto samples=parse_ef_map(ef_bytes,h.rows);
         demand(samples.n==h.rows && samples.step>0,"EF geometry");
