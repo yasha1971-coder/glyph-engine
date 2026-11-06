@@ -9,6 +9,7 @@ No result is a production or external Move-r/Orbit performance claim.
 import argparse
 import hashlib
 import json
+import statistics
 import subprocess
 import sys
 from pathlib import Path
@@ -58,7 +59,9 @@ def main():
     arg.add_argument("--dense",type=Path,required=True)
     arg.add_argument("--run-index",type=Path,required=True)
     arg.add_argument("--output",type=Path,required=True)
+    arg.add_argument("--repeats",type=int,default=1)
     a=arg.parse_args()
+    check(1<=a.repeats<=5,"repeat cap 1..5")
     ref=a.reference.resolve()
     target=a.output.resolve()
     check(subprocess.check_output(["git","-C",str(ref),"rev-parse","HEAD"],
@@ -109,15 +112,34 @@ def main():
             ("run-direct",4,a.run_index),
         ]
         measured=[]
-        for i,(mode,threads,binary) in enumerate(cases):
-            row=case(binary,rlb2,ef,work/f"decoded-{i}.raw",
-                     mode,threads,gen["source_bytes"],gen["source_sha256"],logs)
-            measured.append(row)
-            print(json.dumps({"case":i+1,"mode":mode,"threads":threads,
-                              "wall_seconds":row["wall_seconds"],
-                              "peak_rss_kb":row["peak_rss_kb"],
-                              "sha256_verified":True}),flush=True)
+        for rep in range(a.repeats):
+            # Alternate case order to reveal warm-cache/frequency sensitivity.
+            ordered=cases if rep%2==0 else list(reversed(cases))
+            for i,(mode,threads,binary) in enumerate(ordered):
+                row=case(binary,rlb2,ef,work/f"decoded-{rep}-{i}.raw",
+                         mode,threads,gen["source_bytes"],gen["source_sha256"],logs)
+                row["repeat"]=rep+1
+                measured.append(row)
+                print(json.dumps({"case":len(measured),
+                                  "mode":mode,"threads":threads,
+                                  "repeat":rep+1,
+                                  "wall_seconds":row["wall_seconds"],
+                                  "peak_rss_kb":row["peak_rss_kb"],
+                                  "sha256_verified":True}),flush=True)
+        medians=[]
+        for mode,threads,_ in cases:
+            matches=[x for x in measured
+                     if x["mode"]==mode and x["threads"]==threads]
+            check(len(matches)==a.repeats,"missing repeated profile")
+            medians.append({
+                "mode":mode,"threads":threads,
+                "repetitions":len(matches),
+                "wall_median_seconds":statistics.median(x["wall_seconds"] for x in matches),
+                "peak_rss_max_kb":max(x["peak_rss_kb"] for x in matches),
+                "wall_min_seconds":min(x["wall_seconds"] for x in matches),
+                "wall_max_seconds":max(x["wall_seconds"] for x in matches)})
         result.update({
+            "repeats":a.repeats,"per_profile_summary":medians,
             "status":PASS,
             "generated_source":gen,
             "bwt_rows":rows,"bwt_runs":runs,"r_over_n":runs/rows,
@@ -131,7 +153,7 @@ def main():
                 "Synthetic deterministic 128 lightly edited snapshots: not personal customer files.",
                 "All physical source-restored SHA checked but no external timestamp/authority.",
                 "No P/R/O signed evidence, portable proof, multi-document provenance or 1TB proof.",
-                "Single run per profile; no statistically robust latency claims.",
+                "Short repeated profiles, no cold-process p95/p99 or rigorous variance controls.",
                 "Run-LF index is temporary and employs bucketed binary predecessor, not Orbit/Move-r.",
                 "Benchmark excludes build-only SA/BWT source and code/proof deliverable overhead from ratio."
             ]
