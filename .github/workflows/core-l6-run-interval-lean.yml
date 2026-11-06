@@ -1,0 +1,47 @@
+name: core-l6-run-interval-lean-mathlib
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/RunIntervalLFProof.lean
+      - .github/workflows/core-l6-run-interval-lean.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-affine-lf-mathlib-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          path: mathlib
+          persist-credentials: false
+      - name: Verify pinned Mathlib commit and Lean toolchain
+        run: |
+          test "$(git -C mathlib rev-parse HEAD)" = 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          test "$(cat mathlib/lean-toolchain)" = "leanprover/lean4:v4.25.0"
+      - name: Initialize pinned Lean and mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: mathlib
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: false
+      - name: Kernel check finite-run LF arithmetic and exact scope
+        working-directory: mathlib
+        run: |
+          lake env lean "$GITHUB_WORKSPACE/research/experiments/loc_text_ef_v0/RunIntervalLFProof.lean"
+          echo "CORE_L6_FORMAL_LF_AFFINE_IDENTITY_LEAN_CHECKED"
