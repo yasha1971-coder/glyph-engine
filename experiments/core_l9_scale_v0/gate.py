@@ -246,6 +246,13 @@ def main():
         first_query = json.loads((target/'queries.json').read_bytes())[0]
         report['retained_runtime_code_identities'] = json.loads((target/'receipts'/(first_query['name']+'.json')).read_bytes())['runtime']['files']
         report['retained_runtime_source_bytes'] = sum(x['bytes'] for x in report['retained_runtime_code_identities'].values())
+        # Keep the already measured startup/per-query CPU/RSS/times visible in
+        # the ordinary CI log as well as the bounded downloadable artifact.
+        # Some managed callers can read job logs but cannot fetch ZIP files.
+        report['producer_measurements'] = json.loads((target/'receipts/producer-result.json').read_bytes())
+        report['retained_query_package_bytes_excluding_platform'] = (
+            sum(x['bytes'] for x in retained.values())+report['retained_runtime_source_bytes']
+            +report['retained_receipt_bytes']+report['retained_producer_metadata_bytes'])
         report['additional_research_and_build_source_bytes'] = sum(f.stat().st_size for f in HERE.glob('*.py') if f.name not in ('producer.py', 'verifier.py')) + sum((LOC/n).stat().st_size for n in ('native_run_stream_inverse_rlb2_ef.cpp', 'native_run_interval_inverse_rlb2_ef.cpp', 'native_parallel_inverse_rlb2_ef.cpp', 'native_inverse_rlb2.cpp', 'core_l8_enwik8_pinned_materialize_gate.py', 'native_inverse_enwik8_gate.py', 'real_enwik8_ef_physical_gate.py', 'independent_materialization_replay_v0.py'))
         (target/'result.json').write_text(json.dumps(report, sort_keys=True, indent=2)+'\n')
         print(json.dumps(report, sort_keys=True), flush=True)

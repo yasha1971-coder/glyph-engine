@@ -222,6 +222,28 @@ memory, hidden retained source or skipped required jobs falsify the verdict.
 The stronger small verifier's SA semantic oracle is not predicted to scale;
 this standalone source scan intentionally makes the narrower declared claim.
 
+**First full execution:** commit `916261b72d2eb34bb38f1126643fd8931d0a7d75`,
+[CI 42154875114](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42154875114),
+both `producer-100mb` and `independent-100mb-scan` SUCCESS, first attempts.
+All seven queries and 38 hostiles passed. Multi-hit phrases returned [10365653,
+82098258] and [54182448,60131944]; near-end [99999937], non-ASCII [1049436],
+chunk-boundary [1048569], absent zero, `e` count 8001205 LIMITED/UNTRUSTED.
+All source/index historical pins matched. Root was the same historical
+`c1fbcf2d9aa8014b9f3ee2549387894185ce7192cec8ab7d889f95629b0b7e5b`
+because the actual decoder bytes matched; no root digest was overwritten.
+The producer-side standalone scans measured ~1.2s/query (common `e` ~2.1s),
+source reads exactly 200000000 bytes/query, peak <=20944 KiB.
+
+**Non-semantic access failure:** GitHub connector downloaded the bounded
+producer-evidence ZIP to a file reference, but local GitHub CLI API access and
+that file-reference host both received proxy 403. No network-policy bypass,
+alternate corpus or mock was used. Producer startup/per-query measurements had
+already been captured in `producer.log`/`producer-result.json`; the follow-up
+commit additionally prints those same collected values in the ordinary CI
+result log. It changes telemetry only. The first successful CI remains intact;
+the final HEAD is independently rerun so its precise measurements can be read
+without the unavailable ZIP delivery route. No semantic failure was observed.
+
 The old six packed-backend SKIPs, missing bounded-memory RLB3X patch lineage,
 P/R/O root authority, Composition, 64-bit/TB and deployment limitations remain
 open. No merge, frozen release/tag/CONTROL change, OVH, laptop, user-data ingest
