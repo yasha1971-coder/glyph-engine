@@ -95,6 +95,7 @@ public:
     }
 };
 
+#ifndef GLYPH_RUN_INTERVAL_LIBRARY_ONLY
 int main(int argc,char** argv) {
     try {
         demand(argc==6,
@@ -216,3 +217,5 @@ int main(int argc,char** argv) {
         return 3;
     }
 }
+
+#endif  // GLYPH_RUN_INTERVAL_LIBRARY_ONLY
