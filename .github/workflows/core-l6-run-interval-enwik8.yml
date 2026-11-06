@@ -7,6 +7,7 @@ on:
     paths:
       - experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp
       - experiments/loc_text_ef_v0/native_parallel_inverse_rlb2_ef.cpp
+      - experiments/loc_text_ef_v0/native_parallel_enwik8_gate.py
       - .github/workflows/core-l6-run-interval-enwik8.yml
   workflow_dispatch:
 
@@ -40,6 +41,9 @@ jobs:
             research/experiments/loc_text_ef_v0/native_inverse_rlb2.cpp \
             -o "$RUNNER_TEMP/glyph-dense-sequential"
           g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_parallel_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/glyph-dense-parallel"
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
             research/experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp \
             -o "$RUNNER_TEMP/glyph-run-index"
       - name: Reproduce all pinned hashes then compare 1/2/4 threads and modes
@@ -48,6 +52,7 @@ jobs:
             --reference "$GITHUB_WORKSPACE/reference" \
             --sequential "$RUNNER_TEMP/glyph-dense-sequential" \
             --parallel "$RUNNER_TEMP/glyph-run-index" \
+            --dense-parallel "$RUNNER_TEMP/glyph-dense-parallel" \
             --output "$RUNNER_TEMP/core-l6-enwik8-$GITHUB_RUN_ID"
       - name: Report result scope and explicit resource accounting
         if: always()
