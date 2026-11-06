@@ -150,9 +150,9 @@ def create_all(root,frozen):
 
 def append_three(root,frozen,old_documents):
     frozen=Path(frozen).resolve()
-    must(len(old_documents)==9 and len(list((root/"leaves").glob("d*")))==8,
+    must(len(old_documents)==9 and len(list((root/"leaves").glob("d*")))==9,
          "unexpected V0 indexed leaf inventory")
-    # Eight nonempty V0 documents + one explicit hashed empty document.
+    # Nine V0 document slots (eight indexed, one hashed empty slot).
     original={(p.relative_to(root).as_posix()):(p.stat().st_size,hfile(p))
               for p in (root/"leaves").rglob("*") if p.is_file()}
     tool=load_frozen_tool(frozen/"tools/rlbwt_container_v2.py")
