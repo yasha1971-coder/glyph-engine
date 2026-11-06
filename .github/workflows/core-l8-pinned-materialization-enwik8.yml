@@ -1,0 +1,64 @@
+name: core-l8-pinned-materialization-enwik8-100mb
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/trusted_materialize_v0.py
+      - experiments/loc_text_ef_v0/core_l8_enwik8_pinned_materialize_gate.py
+      - .github/workflows/core-l8-pinned-materialization-enwik8.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-enwik8-before-publish-source-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile frozen canonical SA and BWT construction tools
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Build native streamed run-LF decoder with no original corpus API
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/glyph-core-l8-enwik8-backend"
+      - name: Check pinned enwik8 all assets, remove source/SA/BWT, validate restored SHA BEFORE publication
+        run: |
+          python3 research/experiments/loc_text_ef_v0/core_l8_enwik8_pinned_materialize_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --decoder "$RUNNER_TEMP/glyph-core-l8-enwik8-backend" \
+            --verifier "$GITHUB_WORKSPACE/research/experiments/loc_text_ef_v0/trusted_materialize_v0.py" \
+            --output "$RUNNER_TEMP/glyph-l8-enwik8-$GITHUB_RUN_ID"
+      - name: Report final result and explicit limits
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/glyph-l8-enwik8-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps({k:x.get(k) for k in ("status","error","canonical_source_bytes","canonical_source_sha256","retained_index_bytes","retained_index_ratio","materialization_wall_seconds","materialization_peak_rss_kb","rejected_cases","limitations")},indent=2))' "$RUNNER_TEMP/glyph-l8-enwik8-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Upload only bounded evidence JSON, no user or reference corpora
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-l8-enwik8-pinned-before-publish-receipt
+          path: |
+            ${{ runner.temp }}/glyph-l8-enwik8-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/glyph-l8-enwik8-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn
