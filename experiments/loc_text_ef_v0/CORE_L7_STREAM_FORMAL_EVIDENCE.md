@@ -67,7 +67,7 @@ So output reconstruction no longer needs a separate n-byte RAM vector, but **TOT
 
 ## Original canonical enwik8 100MB gate
 
-[CORE-L7 enwik8 CI 42141692079](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42141692079) launched a same-run 9-profile (original sequential, dense 1T/4T, streaming run rank/direct 1T/2T/4T) full 100MB SHA, pinned 73.365MB RLB2/12.844MB RLR2/2.844MB EF, actual peak RSS and wall. **Do not promote a 100MB streaming claim until CI finishes SUCCESS and exact metrics are inspected.**
+[CORE-L7 enwik8 CI 42141692079](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42141692079) launched a same-run 9-profile (original sequential, dense 1T/4T, streaming run rank/direct 1T/2T/4T) full 100MB SHA, pinned 73.365MB RLB2/12.844MB RLR2/2.844MB EF, actual peak RSS and wall. **COMPLETED: [CI 42141692079 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42141692079).** All **9/9** 100,000,000-byte enwik8 full source restorations SHA256-equal to externally pinned `2b49720ec4d78c3c9fabaee6e4179a5e997302b3a70029f30f2d582218c024a8`, with source/SA/BWT removed before restore. Same-run 4T results: original dense LF **17.642656 s / 569,568 kB peak RSS**; streaming run-rank **26.596536 s / 372,612 kB peak RSS**; streaming run-direct **25.910551 s / 408,364 kB peak RSS**. Single measured run per profile, no durable native production performance claim. This is a memory/speed Pareto tradeoff, NOT a simultaneous speed-and-memory win on enwik8.
 
 ## Next falsifiable gates
 
@@ -94,3 +94,5 @@ Current buffered run-LF enwik8 rank4 same-run reference from [42139617303](https
 - P-L7-001D: even if PASS, neither input parsing nor output SHA checking is yet an independent cryptographic P/R/O authority; store final status as research PASS only.
 
 The threshold 400,616 kB is 466,152 minus 65,536 (64MiB in kB). This is an empirical process-RSS prediction, not a theorem. It will be superseded by the exact same-run measured result, retaining any prediction miss.
+
+**POST-RESULT VERDICT (2026-11-06):** [CI 42141692079 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42141692079), rank 4T streaming **372,612 kB**, therefore **P-L7-001A PASS**, 28,004 kB below threshold and **93,540 kB lower** than historical buffered run4 peak (466,152 - 372,612). P-L7-001B PASS for unchanged RLB2+RLR2+EF physical files; exact 4T wall 26.596536s, so no speed victory over dense4. 100MB SHA verified 9/9, P-L7-001D retains research scope and excludes signed P/R/O attestation. Note: the root and source were **not** cryptographically verified before publication by the native CORE-L7 decoder itself; that is a subsequent CORE-L8 gate.
