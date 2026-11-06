@@ -69,7 +69,9 @@ The original 24-byte binary-safe source was verified and publicly materialized O
 - Reject wrong external root, corrupted RLR2 and wrong postdecode source SHA without publishing any final output.
 - Account actual peak RSS of the **combined verifier and decoder**, elapsed time, temporary snapshots, the invariant 89,053,457B retained three-file index subtotal and the external verifier/decoder software cost.
 
-**No 100MB CORE-L8 claim until CI PASS and exact logs are reviewed.**
+**EXECUTED 100MB CORE-L8 RESULT:** [Initial CI 42143898679 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42143898679), code head \`3f4ea618dbeeea3b072640e4cb24faf6b56edd33\`. Reconstructed all **100,000,000 bytes enwik8**, exact canonical source SHA256 \`2b49720ec4d78c3c9fabaee6e4179a5e997302b3a70029f30f2d582218c024a8\`, after original source, 400MB SA and 200MB BWT were deleted from the runner working directory. RLB2+RLR2+EF persistent search state is exactly **89,053,457 bytes** before manifesto/proof/verifier/code; root JSON SHA256 \`c1fbcf2d9aa8014b9f3ee2549387894185ce7192cec8ab7d889f95629b0b7e5b\` was constructed in CI from independently checked canonical component hashes and the actual compiled decoder digest. The verifier private-snapshotted the mandatory index pieces and executable decoder, and independently checked entire restored source SHA **before** publishing the source. Measured wrapper wall **24.219901s**, peak RSS **372,592kB**. All three 100MB hostiles rejected: wrong supplied root, mandatory RLR2 bitflip, expected source SHA deliberately wrong despite a separately repinned manifest. This is a **research source byte-identity materialization gate**, not authenticated author/currentness P/R/O.
+
+A successor [100MB independent offline replay CI 42144629682](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42144629682), containing a separate no-decoder verifier, was launched. **No 100MB independent-replay PASS should be claimed until its distinct CI concludes and receipts are checked.** The first 100MB result already stands independently.
 
 ## Next gates after CORE-L8
 
