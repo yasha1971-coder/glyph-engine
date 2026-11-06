@@ -1,0 +1,72 @@
+name: core-l6-run-interval-enwik8-100mb
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp
+      - experiments/loc_text_ef_v0/native_parallel_inverse_rlb2_ef.cpp
+      - experiments/loc_text_ef_v0/native_parallel_enwik8_gate.py
+      - .github/workflows/core-l6-run-interval-enwik8.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-enwik8-run-index-vs-dense:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build exact frozen original canonical enwik8 SA/BWT toolchain
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Compile immutable original serial and experimental run-index C++ readers
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_inverse_rlb2.cpp \
+            -o "$RUNNER_TEMP/glyph-dense-sequential"
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_parallel_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/glyph-dense-parallel"
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/glyph-run-index"
+      - name: Reproduce all pinned hashes then compare 1/2/4 threads and modes
+        run: |
+          python3 research/experiments/loc_text_ef_v0/native_parallel_enwik8_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --sequential "$RUNNER_TEMP/glyph-dense-sequential" \
+            --parallel "$RUNNER_TEMP/glyph-run-index" \
+            --dense-parallel "$RUNNER_TEMP/glyph-dense-parallel" \
+            --output "$RUNNER_TEMP/core-l6-enwik8-$GITHUB_RUN_ID"
+      - name: Report result scope and explicit resource accounting
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/core-l6-enwik8-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps({k:x.get(k) for k in ("status","error","source_bytes","retained_single_index_bytes","cases","limits")},indent=2))' "$RUNNER_TEMP/core-l6-enwik8-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Retain only bounded evidence, never enwik8/SA/BWT/index payload
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-core-l6-enwik8-run-index-vs-dense
+          path: |
+            ${{ runner.temp }}/core-l6-enwik8-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/core-l6-enwik8-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn

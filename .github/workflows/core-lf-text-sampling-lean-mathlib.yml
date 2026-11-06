@@ -1,0 +1,47 @@
+name: core-lf-text-sampling-lean-mathlib-proof
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/BoundedLFSampling.lean
+      - .github/workflows/core-lf-text-sampling-lean-mathlib.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pinned-mathlib-arithmetic-obligation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          path: mathlib
+          persist-credentials: false
+      - name: Confirm external math source revision
+        run: |
+          test "$(git -C mathlib rev-parse HEAD)" = 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          test "$(cat mathlib/lean-toolchain)" = "leanprover/lean4:v4.25.0"
+      - name: Install pinned Lean and fetch Mathlib compiled cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: mathlib
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: false
+      - name: Type-check GLYPH bounded sampling arithmetic with Mathlib
+        working-directory: mathlib
+        run: |
+          lake env lean "$GITHUB_WORKSPACE/research/experiments/loc_text_ef_v0/BoundedLFSampling.lean"
+          echo "LEAN_ARITHMETIC_CONTRACT_CHECKED_NO_SORRY"

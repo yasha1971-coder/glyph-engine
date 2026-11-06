@@ -1,0 +1,34 @@
+name: core-lf-text-sampling-exhaustive
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/exhaustive_binary_lf_sampling.py
+      - .github/workflows/core-lf-text-sampling-exhaustive.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  small-binary-exhaustive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Exhaustive binary-safe LF and Elias–Fano small-model oracle
+        run: |
+          python3 experiments/loc_text_ef_v0/exhaustive_binary_lf_sampling.py --max-len 8 --out "$RUNNER_TEMP/lf_exhaustive_result.json"
+      - name: Publish only bounded JSON evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-lf-text-sampling-exhaustive-receipt
+          path: ${{ runner.temp }}/lf_exhaustive_result.json
+          retention-days: 30
+          if-no-files-found: warn

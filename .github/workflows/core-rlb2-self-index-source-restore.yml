@@ -1,0 +1,44 @@
+name: core-rlb2-self-index-source-restore
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/self_index_source_restore_gate.py
+      - .github/workflows/core-rlb2-self-index-source-restore.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frozen-binary-safe-small-source-inversion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Recover exact bytes from independent frozen RLB2/RLR2 only
+        run: |
+          python3 research/experiments/loc_text_ef_v0/self_index_source_restore_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --out "$RUNNER_TEMP/self-index-$GITHUB_RUN_ID"
+      - name: Upload only bounded restoration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-self-index-binary-source-restore
+          path: ${{ runner.temp }}/self-index-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: warn

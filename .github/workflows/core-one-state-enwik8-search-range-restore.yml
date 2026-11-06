@@ -1,0 +1,64 @@
+name: core-one-state-enwik8-search-range-restore
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/integrated_enwik8_one_state_gate.py
+      - experiments/loc_text_ef_v0/self_index_exact_range_extractor.py
+      - experiments/loc_text_ef_v0/query_ef_research.py
+      - .github/workflows/core-one-state-enwik8-search-range-restore.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-100mb-one-retained-index-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile exact original binary-safe SA and BWT construction tools
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Compile native stand-alone compressed-index inverse BWT decoder
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror \
+            research/experiments/loc_text_ef_v0/native_inverse_rlb2.cpp \
+            -o "$RUNNER_TEMP/gl-native-inverse-rlb2"
+      - name: Rebuild one compact index then independently check search/range/restore
+        run: |
+          python3 research/experiments/loc_text_ef_v0/integrated_enwik8_one_state_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --native "$RUNNER_TEMP/gl-native-inverse-rlb2" \
+            --output "$RUNNER_TEMP/one-state-enwik8-$GITHUB_RUN_ID"
+      - name: Show exact scope and byte costs
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/one-state-enwik8-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(json.dumps({k:d.get(k) for k in ("status","error","source_restored_bytes","source_recovered_sha256","range_cases","query_cases","only_retained_persistent_index_bytes","retained_index_ratio_to_source","native_restore_peak_rss_kb","python_process_peak_rss_kb","ephemeral_q_to_row_build_seconds","limitations")},indent=2))' "$RUNNER_TEMP/one-state-enwik8-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Upload JSON evidence only, no source or 400MB SA/BWT
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-enwik8-one-retained-index-search-extract-restore
+          path: |
+            ${{ runner.temp }}/one-state-enwik8-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/one-state-enwik8-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn

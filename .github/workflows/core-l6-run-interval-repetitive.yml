@@ -1,0 +1,68 @@
+name: core-l6-run-interval-repetitive-8mib
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/core_l6_repetitive_gate.py
+      - experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp
+      - .github/workflows/core-l6-run-interval-repetitive.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-repetitive-exact-source-restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build unchanged original binary-safe SA and BWT
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Compile serial LF, original parallel LF and experimental run-LF
+        run: |
+          for unit in native_inverse_rlb2 native_parallel_inverse_rlb2_ef native_run_interval_inverse_rlb2_ef; do
+            g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+              "research/experiments/loc_text_ef_v0/$unit.cpp" \
+              -o "$RUNNER_TEMP/$unit"
+          done
+      - name: Generate edited repeated snapshots then compare exact source restore
+        run: |
+          python3 research/experiments/loc_text_ef_v0/core_l6_repetitive_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --sequential "$RUNNER_TEMP/native_inverse_rlb2" \
+            --dense "$RUNNER_TEMP/native_parallel_inverse_rlb2_ef" \
+            --run-index "$RUNNER_TEMP/native_run_interval_inverse_rlb2_ef" \
+            --repeats 3 \
+            --output "$RUNNER_TEMP/core-l6-repetitive-$GITHUB_RUN_ID"
+      - name: Show measured size, speed and memory
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/core-l6-repetitive-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps({k:x.get(k) for k in ("status","error","generated_source","bwt_runs","r_over_n","persistent_subtotal_bytes","cases","limitations")},indent=2))' "$RUNNER_TEMP/core-l6-repetitive-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Preserve bounded receipts only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-core-l6-repetitive-dense-vs-runs
+          path: |
+            ${{ runner.temp }}/core-l6-repetitive-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/core-l6-repetitive-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn

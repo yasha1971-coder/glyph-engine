@@ -1,0 +1,55 @@
+name: core-l6-run-interval-asan-ubsan
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp
+      - experiments/loc_text_ef_v0/native_parallel_inverse_rlb2_ef.cpp
+      - .github/workflows/core-l6-run-interval-asan-ubsan.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-small-binary-sanitizer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build candidate under ASan and UBSan
+        run: |
+          g++ -O1 -g -std=c++17 -Wall -Wextra -Werror -pthread \
+            -fsanitize=address,undefined -fno-omit-frame-pointer \
+            research/experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/glyph-run-interval-sanitized"
+      - name: Execute all 18 byte-perfect binary cases and hostile rejection under sanitizer
+        env:
+          ASAN_OPTIONS: "detect_leaks=1:halt_on_error=1"
+          UBSAN_OPTIONS: "halt_on_error=1:print_stacktrace=1"
+        run: |
+          python3 research/experiments/loc_text_ef_v0/native_parallel_windows_smoke.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --binary "$RUNNER_TEMP/glyph-run-interval-sanitized" \
+            --output "$RUNNER_TEMP/core-l6-sanitized-$GITHUB_RUN_ID"
+      - name: Retain only bounded JSON receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-l6-run-interval-sanitizer-result
+          path: ${{ runner.temp }}/core-l6-sanitized-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: warn
