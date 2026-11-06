@@ -1,0 +1,77 @@
+name: core-l10-composition-compatibility-reference
+
+on:
+  push:
+    branches:
+      - codex/core-l10-incremental-compose-v0
+    paths:
+      - experiments/core_l10_composition_v0/**
+      - .github/workflows/core-l10-composition-v0.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference-v1-frozen-and-new-research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: 81628f843dc8aa633c65594a66d2386bfc3cb5c2
+          path: reference
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: frozen
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Confirm immutable exact composition and binary-safe references
+        run: |
+          test "$(git -C reference rev-parse HEAD)" = "81628f843dc8aa633c65594a66d2386bfc3cb5c2"
+          test "$(git -C frozen rev-parse HEAD)" = "c33cb493bc75f13ee4a904fabb190a29a196c94b"
+      - name: Re-run historical Composition V1 AND independent replay, require 25 EXACT obligations
+        run: |
+          python3 - <<'PY'
+          import json,subprocess,sys
+          p=subprocess.run([sys.executable,"reference/tools/check_composition_reference_v1.py"],capture_output=True,text=True,timeout=1200)
+          if p.returncode!=0:
+              print(p.stdout[-5000:]);print(p.stderr[-8000:],file=sys.stderr);sys.exit(p.returncode)
+          data,idx=json.JSONDecoder().raw_decode(p.stdout.lstrip())
+          assert "GLYPH COMPOSITION REFERENCE OK" in p.stdout[idx:]
+          assert data["normative_exact_count"]==25,data.get("normative_exact_count")
+          assert data["normative_open_count"]==0,data.get("normative_open_count")
+          assert data["normative_closure_complete"] is True
+          assert data["independent_composition_replay_verified"] is True
+          assert data["repartition_identity_stable"] is True
+          assert data["repartition_coordinates_stable"] is True
+          assert data["cross_document_excluded"] is True
+          assert data["cross_block_excluded"] is True
+          print(json.dumps({"status":"CORE_L10_HISTORICAL_COMPOSITION_REPLAY_PASS","normative_exact":25,
+                            "independent_replay":True,"reference_commit":"81628f843dc8aa633c65594a66d2386bfc3cb5c2",
+                            "note":"historical semantics only, new RLB2 operator NOT asserted compatible"},sort_keys=True))
+          PY
+      - name: Run additive RLB2+EF append adapter and independent hostile replay
+        if: ${{ hashFiles('research/experiments/core_l10_composition_v0/gate.py') != '' }}
+        run: |
+          python3 research/experiments/core_l10_composition_v0/gate.py \
+            --frozen "$GITHUB_WORKSPACE/frozen" \
+            --research "$GITHUB_WORKSPACE/research" \
+            --output "$RUNNER_TEMP/core-l10-$GITHUB_RUN_ID"
+      - name: Preserve research receipts only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-core-l10-composition-evidence
+          path: ${{ runner.temp }}/core-l10-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: ignore
