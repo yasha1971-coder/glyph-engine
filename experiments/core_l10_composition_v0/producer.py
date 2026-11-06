@@ -145,7 +145,23 @@ def create_all(root,frozen):
     must(subprocess.check_output(["git","-C",str(frozen),"rev-parse","HEAD"],
          text=True).strip()==FROZEN,"wrong original binary-safe checkout")
     tool=load_frozen_tool(frozen/"tools/rlbwt_container_v2.py")
-    return [create_leaf(store,frozen,i,source,tool) for i,source in enumerate(DOCS)]
+    # Historical snapshot is built FIRST. Appended leaf data does not exist.
+    return [create_leaf(store,frozen,i,DOCS[i],tool) for i in range(9)]
+
+def append_three(root,frozen,old_documents):
+    frozen=Path(frozen).resolve()
+    must(len(old_documents)==9 and len(list((root/"leaves").glob("d*")))==8,
+         "unexpected V0 indexed leaf inventory")
+    # Eight nonempty V0 documents + one explicit hashed empty document.
+    original={(p.relative_to(root).as_posix()):(p.stat().st_size,hfile(p))
+              for p in (root/"leaves").rglob("*") if p.is_file()}
+    tool=load_frozen_tool(frozen/"tools/rlbwt_container_v2.py")
+    added=[create_leaf(root/"leaves",frozen,i,DOCS[i],tool) for i in range(9,12)]
+    must(original=={(p.relative_to(root).as_posix()):(p.stat().st_size,hfile(p))
+                   for p in (root/"leaves").rglob("*")
+                   if p.is_file() and p.relative_to(root).as_posix() in original},
+         "append modified existing stored leaf data")
+    return old_documents+added,original
 
 def groups_from_lengths(lengths):
     groups=[]
