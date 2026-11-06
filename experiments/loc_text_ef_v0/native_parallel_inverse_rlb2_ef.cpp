@@ -118,6 +118,7 @@ static void store_exclusive(const fs::path& p,const std::vector<uint8_t>& data) 
     file.flush();
     demand(bool(file),"output write failure");
 }
+#ifndef GLYPH_PARALLEL_LIBRARY_ONLY
 int main(int argc,char** argv) {
     try {
         demand(argc==6,
@@ -248,3 +249,5 @@ int main(int argc,char** argv) {
         return 3;
     }
 }
+
+#endif  // GLYPH_PARALLEL_LIBRARY_ONLY
