@@ -1,0 +1,74 @@
+# CORE-L8 — independently pinned byte identity BEFORE output publication
+
+2026-11-06, experimental research only. Historical source and binary-safe formats frozen at \`c33cb493bc75f13ee4a904fabb190a29a196c94b\`. [Draft PR #21](https://github.com/yasha1971-coder/glyph-engine/pull/21) only; no merge, main, OVH, public service, ABI or frozen V1 mutation.
+
+## Original global GLYPH claim and the defect this gate targets
+
+Goal: **compact verified searchable compression**, not just a fast BWT/LF codec. A faithful system must refuse to materialize unverified bytes as authoritative, and must bind restored bytes to committed source identity, with independent replay and explicit trust source.
+
+CORE-L7 native \`native_run_stream_inverse_rlb2_ef.cpp\` validates internal header/FNV and EF geometry, and can produce an exact source stream, but its file candidate exists before an independently pinned **cryptographic** output check. FNV is NOT cryptographic authentication. In CORE-L8 we **do not redefine the compiled native core**; instead an additive Python stdlib gate \`trusted_materialize_v0.py\` wraps it.
+
+## Explicit trust contract (under test, not silently elevated to production)
+
+Input:
+- external exact \`--root-sha256\` of one bounded JSON root manifest;
+- the manifest must bind frozen commit, source SHA256+length, RLB2/RLR2/EF SHA256+length and native decoder SHA256;
+- mandatory RLR2 is authenticated even though source inversion uses only RLB2+EF, preserving the exact-search substrate integrity;
+- no raw source, SA, BWT or second compressed source payload is passed to the restorer.
+
+Process:
+1. Strict manifest parse with duplicate JSON key rejection; refuse wrong/changed external root digest and unexpected schema/fields.
+2. Revalidate decoder and copy actual executable to a **private mode-0700 snapshot**; independently SHA-check *the copy to be executed* to close hash-then-exec path races.
+3. Copy all retained RLB2/RLR2/EF inputs to the same private staging directory and SHA-check size and content of each copied snapshot. Any absent, truncated, changed, nonregular or mismatched component -> \`UNTRUSTED\`.
+4. Launch actual, SHA-pinned C++ streaming decoder from private snapshot, with only private retained inputs. The native decoder writes a candidate under the private staging directory.
+5. Independently hash the full source candidate and require exact root-bound source length and SHA. If wrong -> \`UNTRUSTED\`, no public output.
+6. Only after source hash equality, publish an **existing-file-safe** hard-link at the final output path, rejecting overwrite. The returned stdout receipt states its limited evidence scope.
+
+Two independent dependencies can be tampered independently: bytes of original source RLB2 and current rank RLR2; neither may silently be ignored. Temporary snapshots duplicate retained index bytes on disk **during verification**; they must be recorded as temporary I/O/disk costs, not counted as permanent compressed state. This adds verified failure semantics but does NOT yet provide a bound on total temporary disk or a production crash-durable root+file transaction.
+
+**Threat boundary: IMPORTANT.** The external root digest is only as trustworthy as the caller's way of acquiring it. A user-supplied root hash is NOT a cryptographic signature, pinned independent root witness, secure timestamp, threshold authorization, rollback prevention or frozen source-of-truth update. A hostile process with privileged filesystem control is not excluded by the present prototype. Hash binding alone does NOT prove completeness or absence.
+
+World standards for the future independent proof plane:
+- [in-toto Statement v1](https://github.com/in-toto/attestation/blob/main/spec/v1/statement.md) uses subject artifact digest binding; GLYPH can adopt a compatible externally verifiable statement/envelope after independent semantics review, instead of claiming invented "new provenance".
+- [TUF rollback/freeze specification](https://theupdateframework.github.io/specification/v1.0.36/) requires trusted version/time state and signed root/target metadata; a single SHA does not establish it.
+- [Mathlib proof methodology](https://github.com/leanprover-community/mathlib4), already used for LF arithmetic, may later formalize the exact publication state machine and resource/admission inequalities. A theorem does not audit native IO.
+
+## Gate A — small original binary-safe source: EXECUTED PASS
+
+Original [CI 42143532241 — PASS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42143532241), repeated after private executable snapshot [CI 42143720519 — PASS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42143720519).
+
+Original frozen fixture contains 24 bytes including NUL/FF. One positive source byte-perfect restore and **11/11 rejected hostile scenarios**:
+
+1. Wrong external root SHA256 pin.
+2. Root JSON mutated without pin update.
+3. RLB2 bitflip.
+4. Mandatory RLR2 bitflip despite no RLR2 native inverse API dependency.
+5. EF bitflip.
+6. Mandatory RLR2 missing.
+7. Deliberately wrong **source SHA** in a separately re-pinned manifest: the decoder runs, yet no unverified source file is published.
+8. Decoder digest mismatch.
+9. Duplicate JSON manifest property.
+10. Existing output cannot be overwritten.
+11. Existing output symlink cannot be followed/replaced.
+
+Receipt also verifies the root manifest SHA, backend executable SHA and published source SHA against the root-bound fixture. These tests do not cover malware inside an otherwise pinned executable, disk interruption or currentness.
+
+## Gate B — canonical 100MB enwik8 integrated materialization: independent CI
+
+[100MB enwik8 CI 42143898679](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42143898679) is a separately run pending experimental gate. It must:
+- Reproduce all original enwik8 source (100MB), SA (400MB), BWT (200MB), RLB2 (73,365,105B) and RLR2 (12,844,028B) pinned SHA256 plus EF file (2,844,324B) SHA256.
+- Generate root **in trusted CI after confirming those preexisting fixed identities**, including exact actual decoder executable hash, and log its root digest. The root is not signed or externally witnessed, so this is CI-controlled test authority, not a full trust anchor.
+- Delete raw enwik8, canonical SA and BWT before restoring; run the source verifier from frozen RLB2/RLR2/EF only.
+- Restore and SHA-verify all 100,000,000 bytes before final visible output, then independently rehash that final output.
+- Reject wrong external root, corrupted RLR2 and wrong postdecode source SHA without publishing any final output.
+- Account actual peak RSS of the **combined verifier and decoder**, elapsed time, temporary snapshots, the invariant 89,053,457B retained three-file index subtotal and the external verifier/decoder software cost.
+
+**No 100MB CORE-L8 claim until CI PASS and exact logs are reviewed.**
+
+## Next gates after CORE-L8
+
+1. Authentic external-root witness/rollback/fork/currentness protocol, with independently verifiable signatures or an equally explicit threat model, and canonical P/R/O coordinates + query-specific evidence; never claim global PROVEN_EMPTY from source checksum alone.
+2. O3/O4 test: query -> canonical document offset -> small exact byte excerpt -> source hash/manifest -> external verifier, refusing source swaps/forged currentness.
+3. Hostile disk/full/truncated writes, crash recovery, concurrent readers, time-of-check to time-of-use and atomic generation snapshots. A final file+receipt pair is not atomically published by today's code.
+4. Finite resource admission **before allocation**: current n/u32 and EF ~n/s temporary RAM still block TB. Snapshot temporary storage is intentionally nonzero.
+5. Real corpus classes, genuine Move-r/Orbit cross-tool benchmarks and trustworthy full compressed-state ratio including code/proof.
