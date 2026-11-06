@@ -40,7 +40,7 @@ def gated_command(verifier,manifest,root,rlb2,rlr2,ef,decoder,out):
 
 def main():
     p=argparse.ArgumentParser()
-    for name in ("reference","decoder","verifier","output"):
+    for name in ("reference","decoder","verifier","replay","output"):
         p.add_argument("--"+name,type=Path,required=True)
     a=p.parse_args()
     ref=a.reference.resolve()
@@ -117,6 +117,20 @@ def main():
         check(attestation["manifest_sha256"]==root_pin
               and attestation["source_sha256"]==SHA["corpus"],
               "wrong effective root or source identity")
+        # Independent byte identity REPLAY does not invoke the native decoder
+        # or import the materialization implementation.
+        receipt_path=work/"materialization-receipt.json"
+        receipt_path.write_text(json.dumps(attestation,sort_keys=True)+"\n")
+        offline,offline_meta=run([
+            sys.executable,a.replay,"--manifest",manifest_path,
+            "--root-sha256",root_pin,
+            "--rlb2",rlb2,"--rlr2",rlr2,"--ef",ef,
+            "--materialized",destination,
+            "--decoder",decoder,"--receipt",receipt_path
+        ],logs,timeout=300)
+        offline_receipt=json.loads(offline.stdout)
+        check(offline_receipt["status"]=="CORE_L8_OFFLINE_SOURCE_IDENTITY_REPLAY_PASS",
+              "external no-decoder source SHA replay rejected")
 
         def negative(label,path,expected_root,output):
             proc,info=run(gated_command(verifier,path,expected_root,rlb2,
@@ -159,6 +173,8 @@ def main():
             "decoder_snapshot_verified":True,
             "verified_components":["rlb2","rlr2","ef","decoder"],
             "positive_receipt":attestation,
+            "independent_offline_byte_replay":offline_receipt,
+            "independent_replay_wall_seconds":offline_meta["wall_seconds"],
             "materialization_wall_seconds":metric["wall_seconds"],
             "materialization_peak_rss_kb":metric["peak_rss_kb"],
             "retained_index_bytes":sum(p.stat().st_size for p in (rlb2,rlr2,ef)),
