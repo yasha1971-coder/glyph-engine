@@ -1,0 +1,134 @@
+name: core-l9s-100mb-query-replay
+
+on:
+  pull_request:
+    branches:
+      - codex/core-l9-exact-query-proof-a-b
+    paths:
+      - experiments/core_l9_scale_v0/**
+      - .github/workflows/core-l9s-100mb-query-replay.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  producer-100mb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    outputs:
+      root_pin: ${{ steps.pin.outputs.root_pin }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build unchanged frozen construction tools and native L8 backend
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/l8-decoder"
+      - name: Streaming boundaries, overlap and small fail-closed regressions
+        run: |
+          python3 -I research/experiments/core_l9_scale_v0/stream_tests.py \
+            --output "$RUNNER_TEMP/stream-tests"
+          python3 -I research/experiments/core_l9_scale_v0/gate.py --phase small \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/l8-decoder" \
+            --output "$RUNNER_TEMP/l9s-small"
+      - name: Official 100MB rebuild, historical pins, no-source producer, full scan replay
+        run: |
+          python3 -I research/experiments/core_l9_scale_v0/gate.py --phase produce \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/l8-decoder" \
+            --output "$RUNNER_TEMP/l9s-producer"
+      - name: Transport expected root outside the capsule
+        id: pin
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads((Path(os.environ['RUNNER_TEMP'])/'l9s-producer/result.json').read_text())
+          assert report['status'] == 'VERIFIED_100MB_SCAN'
+          pin = report['root_sha256']
+          assert len(pin) == 64 and all(c in '0123456789abcdef' for c in pin)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
+              out.write('root_pin='+pin+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l9s-index-only-capsule
+          path: ${{ runner.temp }}/l9s-producer/capsule/
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l9s-producer-evidence
+          path: |
+            ${{ runner.temp }}/l9s-producer/result.json
+            ${{ runner.temp }}/l9s-producer/commands.json
+            ${{ runner.temp }}/l9s-producer/prerequisite.json
+            ${{ runner.temp }}/l9s-producer/prerequisite-commands.json
+            ${{ runner.temp }}/l9s-producer/selection.json
+            ${{ runner.temp }}/l9s-producer/producer.log
+            ${{ runner.temp }}/l9s-producer/l8-rebuild.log
+            ${{ runner.temp }}/l9s-producer/replay/result.json
+            ${{ runner.temp }}/stream-tests/stream-result.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  independent-100mb-scan:
+    needs: producer-100mb
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      EXPECTED_ROOT: ${{ needs.producer-100mb.outputs.root_pin }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l9s-index-only-capsule
+          path: ${{ runner.temp }}/l9s-capsule
+      - name: Independent source materialization, standalone scan and hostiles
+        run: |
+          python3 -I research/experiments/core_l9_scale_v0/gate.py --phase replay \
+            --reference "$GITHUB_WORKSPACE/reference" --capsule "$RUNNER_TEMP/l9s-capsule" \
+            --expected-root "$EXPECTED_ROOT" --output "$RUNNER_TEMP/l9s-independent"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l9s-independent-evidence
+          path: |
+            ${{ runner.temp }}/l9s-independent/result.json
+            ${{ runner.temp }}/l9s-independent/commands.json
+            ${{ runner.temp }}/l9s-independent/materialize.log
+            ${{ runner.temp }}/l9s-independent/replay/result.json
+          if-no-files-found: warn
+          retention-days: 30
