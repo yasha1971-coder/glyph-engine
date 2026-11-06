@@ -1,0 +1,66 @@
+name: core-l7-streaming-enwik8-100mb
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp
+      - .github/workflows/core-l7-streaming-enwik8.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-enwik8-streaming-vs-dense:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build original canonical source construction
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Compile original and bounded-chunk streamed native readers
+        run: |
+          for unit in native_inverse_rlb2 native_parallel_inverse_rlb2_ef native_run_stream_inverse_rlb2_ef; do
+            g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+              "research/experiments/loc_text_ef_v0/$unit.cpp" \
+              -o "$RUNNER_TEMP/$unit"
+          done
+      - name: Rebuild pinned enwik8 and verify every output SHA across nine modes
+        run: |
+          python3 research/experiments/loc_text_ef_v0/native_parallel_enwik8_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --sequential "$RUNNER_TEMP/native_inverse_rlb2" \
+            --dense-parallel "$RUNNER_TEMP/native_parallel_inverse_rlb2_ef" \
+            --parallel "$RUNNER_TEMP/native_run_stream_inverse_rlb2_ef" \
+            --output "$RUNNER_TEMP/core-l7-enwik8-$GITHUB_RUN_ID"
+      - name: Report candidate-vs-original peak memory and exact source identities
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/core-l7-enwik8-$GITHUB_RUN_ID/result.json"; then
+            python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); print(json.dumps({k:x.get(k) for k in ("status","error","source_bytes","retained_single_index_bytes","cases","limits")},indent=2))' "$RUNNER_TEMP/core-l7-enwik8-$GITHUB_RUN_ID/result.json"
+          fi
+      - name: Preserve only JSON receipts; never corpus, source, SA, BWT
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-core-l7-enwik8-streamed-verified-result
+          path: |
+            ${{ runner.temp }}/core-l7-enwik8-${{ github.run_id }}/result.json
+            ${{ runner.temp }}/core-l7-enwik8-${{ github.run_id }}/commands.json
+          retention-days: 30
+          if-no-files-found: warn
