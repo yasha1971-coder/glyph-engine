@@ -48,6 +48,7 @@ jobs:
             --sequential "$RUNNER_TEMP/native_inverse_rlb2" \
             --dense "$RUNNER_TEMP/native_parallel_inverse_rlb2_ef" \
             --run-index "$RUNNER_TEMP/native_run_interval_inverse_rlb2_ef" \
+            --repeats 3 \
             --output "$RUNNER_TEMP/core-l6-repetitive-$GITHUB_RUN_ID"
       - name: Show measured size, speed and memory
         if: always()
