@@ -52,9 +52,28 @@ Constructed 128 versions of one 65,536-byte byte sequence, each changing 32 posi
 - 4T run-direct median is ~6.47% lower wall time than 4T dense-rank; **only 3 repeats**, no CPU-frequency control, not a p95/p99 or production throughput claim.
 - 4T run-rank is **slower** than 4T dense-rank, showing that extra predecessor work matters despite RAM savings.
 
-## Gate C: original canonical enwik8 100MB — independent CI
+## Gate C: original canonical enwik8 100MB — PASS, one run per profile
 
-[CORE-L6 enwik8 run 42138066924](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42138066924) is a distinct same-source/dense-vs-run-index benchmark. **Status to be checked directly before adding a claim.** It rebuilds hashes and deletes original source/SA/BWT before 1T/2T/4T tests. This document makes no claim of enwik8 run-index PASS until that run finishes successfully and metrics are inspected.
+[CORE-L6 enwik8 CI 42138066924 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42138066924), executed code head \`f3b95e07de6668605c16bf315defe40e6e5336f9\`. Same pinned source/SA/BWT/RLB2/RLR2/EF hashes reproduced, construction-only raw/SA/BWT deleted before any native decode. Every **7/7 full 100,000,000-byte restored source SHA-256** matched exactly. Frozen reference decoder, research run-interval index and optional direct run symbol encoding were executed on the same GitHub runner.
+
+| Decoder | Threads | Full process wall | Peak RSS (kB) |
+|---|---:|---:|---:|
+| Frozen original sequential dense LF | 1 | 30.543427 s | 575,868 |
+| Run-index rank | 1 | 51.980290 s | 466,176 |
+| Run-index rank | 2 | 31.517583 s | 466,152 |
+| Run-index rank | 4 | 25.964716 s | 466,116 |
+| Run-index direct (extra symbol byte per run) | 1 | 52.322078 s | 502,052 |
+| Run-index direct | 2 | 31.761341 s | 502,044 |
+| Run-index direct | 4 | 25.691846 s | 502,044 |
+
+- enwik8 **r=36,661,040** BWT runs over 100,000,001 rows: \`r/n≈0.3666104\`, much higher than deliberately repetitive test data.
+- Transient run LF index: **294,069,572 bytes** rank, **330,730,612 bytes** direct (versus **400,000,004 bytes** for a dense u32 LF mapping).
+- Run rank 4T reduces process peak RSS by ~19% against the sequential dense reference on that runner, **but** the rank1 variant is substantially slower.
+- Coarse hints: **195,313** entries, maximum **504** candidate runs per bucket. Bucketed binary search does **not** match the O(1)-amortized theoretical Move/Orbit structure.
+- Only the original **sequential** dense baseline was present in this CI. The already observed CORE-L5 dense 4T time of 17.633s is a *different execution*. Do **not** compare these as a same-run 4T speed proof.
+- A follow-up [same-run original dense 1T/4T control workflow](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/core-l6-run-interval-enwik8.yml) was added in the experimental branch; its new run must pass before describing the 4T cost tradeoff as an apples-to-apples result.
+
+In sum: **complete 100MB byte correctness is verified for O(r)-transient LF representation** and a memory reduction is measured, but a 4T performance win on enwik8 is NOT demonstrated. The corpus structure determines which representation should be selected.
 
 ## Promotion/kill boundaries
 
