@@ -71,9 +71,25 @@ Constructed 128 versions of one 65,536-byte byte sequence, each changing 32 posi
 - Run rank 4T reduces process peak RSS by ~19% against the sequential dense reference on that runner, **but** the rank1 variant is substantially slower.
 - Coarse hints: **195,313** entries, maximum **504** candidate runs per bucket. Bucketed binary search does **not** match the O(1)-amortized theoretical Move/Orbit structure.
 - Only the original **sequential** dense baseline was present in this CI. The already observed CORE-L5 dense 4T time of 17.633s is a *different execution*. Do **not** compare these as a same-run 4T speed proof.
-- A follow-up [same-run original dense 1T/4T control workflow](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/core-l6-run-interval-enwik8.yml) was added in the experimental branch; its new run must pass before describing the 4T cost tradeoff as an apples-to-apples result.
+- The prior note that same-run dense 4T had not executed is **superseded** by Gate D below. Preserve the historical run identity and distinguish results from different runs.
 
-In sum: **complete 100MB byte correctness is verified for O(r)-transient LF representation** and a memory reduction is measured, but a 4T performance win on enwik8 is NOT demonstrated. The corpus structure determines which representation should be selected.
+## Gate D: same-run 100MB dense 4T versus run-based 4T — PASS
+
+[CI 42139617303 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42139617303), executed source commit `1ec9734755e80a7d98a5152a5f4f29358e76dd5f`. The runner rebuilt and hash-pinned canonical enwik8 and the original RLB2/RLR2/EF, deleted raw/SA/BWT before decode and verified **9/9 complete source SHA-256 matches**.
+
+| Profile | Same-run full wall | Peak RSS kB |
+|---|---:|---:|
+| Original dense LF 4T | **17.608084 s** | 569,568 |
+| Run LF rank 4T | 25.276730 s | **466,152** |
+| Run LF direct 4T | 25.094125 s | 502,052 |
+
+**Measured Pareto tradeoff:** rank-run LF reduces process peak RSS by **103,416 kB (~18.2%)** but costs **~43.6% more wall time** than 4T dense on enwik8. The run-direct variant is ~42.5% slower than 4T dense despite an extra 35MiB symbol cache. All results are single-run and no statistically reliable tail latency is claimed.
+
+**Decision:** neither universally replaces the other. Use *corpus-structured admission* driven by actual `r/n`, predicted transient bytes and measured end-to-end wall time under the same machine configuration. No globally hard-coded `r/n` cutoff is qualified yet: the two tested regimes were `0.00295` and `0.36661`. This closes the direct equal-thread comparison and establishes a precise falsifiable cost frontier for the next design.
+
+## CORE-L6 proof bridge
+
+[Lean 4.25.0 / pinned Mathlib CI 42141468659 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42141468659) checks `RunIntervalLFProof.lean`: prefix rank of a constant-symbol run increments by its length, so `LF(a+d)=LF(a)+d`. The proof is a theorem about an abstract BWT/rank model, not a verification of C++ implementation, SHA-256 binding or the P/R/O trust graph. A first Lean run failed on an arithmetic rewrite direction and was corrected before PASS.
 
 ## Promotion/kill boundaries
 
