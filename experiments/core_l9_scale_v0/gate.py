@@ -29,6 +29,11 @@ def digest(path):
     return h.hexdigest()
 
 
+def file_lengths(path, exclude_git=False):
+    return sum(f.stat().st_size for f in path.rglob('*') if f.is_file() and not f.is_symlink()
+               and (not exclude_git or '.git' not in f.relative_to(path).parts))
+
+
 def run(args, output, timeout=2400):
     started = time.monotonic()
     result = subprocess.run(list(map(str, args)), capture_output=True, text=True, timeout=timeout)
@@ -253,6 +258,17 @@ def main():
         report['retained_query_package_bytes_excluding_platform'] = (
             sum(x['bytes'] for x in retained.values())+report['retained_runtime_source_bytes']
             +report['retained_receipt_bytes']+report['retained_producer_metadata_bytes'])
+        # Git identity checks depend on repository object stores, not just the
+        # named executable source files. Disclose those external checkout costs
+        # separately; do not call the declared component subtotal a full archive.
+        stores = set()
+        for folder in (REPO, ref):
+            common = Path(subprocess.check_output(['git', '-C', str(folder), 'rev-parse', '--git-common-dir'], text=True).strip())
+            stores.add((common if common.is_absolute() else folder/common).resolve())
+        report['source_control_store_file_bytes'] = sum(file_lengths(path) for path in stores)
+        report['research_and_reference_checkout_file_bytes_excluding_git'] = sum(file_lengths(path, True) for path in (REPO, ref))
+        report['downloaded_capsule_file_bytes'] = file_lengths(a.capsule) if a.phase == 'replay' else 0
+        report['package_accounting_scope'] = 'declared query component subtotal; Git stores and full code/build checkouts reported separately; OS/Python/stdlib/git/compiler installations excluded'
         report['additional_research_and_build_source_bytes'] = sum(f.stat().st_size for f in HERE.glob('*.py') if f.name not in ('producer.py', 'verifier.py')) + sum((LOC/n).stat().st_size for n in ('native_run_stream_inverse_rlb2_ef.cpp', 'native_run_interval_inverse_rlb2_ef.cpp', 'native_parallel_inverse_rlb2_ef.cpp', 'native_inverse_rlb2.cpp', 'core_l8_enwik8_pinned_materialize_gate.py', 'native_inverse_enwik8_gate.py', 'real_enwik8_ef_physical_gate.py', 'independent_materialization_replay_v0.py'))
         (target/'result.json').write_text(json.dumps(report, sort_keys=True, indent=2)+'\n')
         print(json.dumps(report, sort_keys=True), flush=True)

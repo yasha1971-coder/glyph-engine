@@ -243,6 +243,10 @@ commit additionally prints those same collected values in the ordinary CI
 result log. It changes telemetry only. The first successful CI remains intact;
 the final HEAD is independently rerun so its precise measurements can be read
 without the unavailable ZIP delivery route. No semantic failure was observed.
+The result also separately measures actual Git object-store and complete
+research/reference checkout file lengths: Git identity checks depend on these
+stores. The declared query-component subtotal is not a standalone archive or
+total installed footprint; checkout costs, construction and platform are explicit.
 
 The old six packed-backend SKIPs, missing bounded-memory RLB3X patch lineage,
 P/R/O root authority, Composition, 64-bit/TB and deployment limitations remain
