@@ -25,8 +25,8 @@ jobs:
           python-version: '3.10'
       - name: Confirm unchanged historical CORE-L9-S two-pass golden
         run: |
-          git -C research show e7f0e3b16381519c8b0269f6fea0ff11feb0cc80:experiments/core_l9_scale_v0/verifier.py > "$RUNNER_TEMP/p01-golden.py"
-          cmp "$RUNNER_TEMP/p01-golden.py" research/experiments/core_l9_scale_v0/verifier.py
+          test "$(git -C research hash-object experiments/core_l9_scale_v0/verifier.py)" = e0a4c660daa5185dd218e840a5356fceb73c61e5
+          cp research/experiments/core_l9_scale_v0/verifier.py "$RUNNER_TEMP/p01-golden.py"
           echo "P01_ORIGINAL_GOLDEN_UNCHANGED"
       - name: Exact binary oracle and fail-closed checks
         run: |
@@ -47,8 +47,8 @@ jobs:
           python-version: '3.10'
       - name: Pin original CORE-L9-S comparator
         run: |
-          git -C research show e7f0e3b16381519c8b0269f6fea0ff11feb0cc80:experiments/core_l9_scale_v0/verifier.py > "$RUNNER_TEMP/p01-golden.py"
-          cmp "$RUNNER_TEMP/p01-golden.py" research/experiments/core_l9_scale_v0/verifier.py
+          test "$(git -C research hash-object experiments/core_l9_scale_v0/verifier.py)" = e0a4c660daa5185dd218e840a5356fceb73c61e5
+          cp research/experiments/core_l9_scale_v0/verifier.py "$RUNNER_TEMP/p01-golden.py"
       - name: Download hash-pinned canonical enwik8 and counterbalanced benchmark
         run: |
           python3 research/experiments/core_perf_research_v0/p01_gate.py \
