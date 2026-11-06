@@ -41,7 +41,7 @@ theorem rankPrefix_on_constant_run
       calc
         rankPrefix bwt c (a + (d + 1))
             = rankPrefix bwt c (a + d) + 1 := by
-                rw [Nat.add_assoc]
+                rw [← Nat.add_assoc]
                 simp only [rankPrefix, if_pos hd, add_zero]
         _ = (rankPrefix bwt c a + d) + 1 := by rw [ih hsmall]
         _ = rankPrefix bwt c a + (d + 1) := by omega
