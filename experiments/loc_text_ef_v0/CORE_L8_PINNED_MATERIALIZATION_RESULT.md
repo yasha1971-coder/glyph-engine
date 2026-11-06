@@ -53,6 +53,12 @@ Original frozen fixture contains 24 bytes including NUL/FF. One positive source 
 
 Receipt also verifies the root manifest SHA, backend executable SHA and published source SHA against the root-bound fixture. These tests do not cover malware inside an otherwise pinned executable, disk interruption or currentness.
 
+## Gate A2 — independent digest replay, no decoder — PASS
+
+[CI 42144432624 — SUCCESS](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42144432624). An additive second verifier \`independent_materialization_replay_v0.py\` has **NO import or call to the native decoder or to \`trusted_materialize_v0.py\`**. It independently rehashes the manifest, root pin, *all three* retained index components and the final published exact source; an optional success receipt is checked for exact factual consistency, NOT believed as proof of chronology.
+
+The original 24-byte binary-safe source was verified and publicly materialized ONLY after the first gate's full SHA check. Offline verification succeeded, then rejected **four forged/mutated cases**: (i) published source bit flip, (ii) receipt false source SHA, (iii) wrong external root digest and (iv) mandatory RLR2 changed after materialization. Total materialization pipeline negative cases 11/11; independent verifier negative cases 4/4. **No signature, witness, global nonmembership or rollback/fork protection.**
+
 ## Gate B — canonical 100MB enwik8 integrated materialization: independent CI
 
 [100MB enwik8 CI 42143898679](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42143898679) is a separately run pending experimental gate. It must:
