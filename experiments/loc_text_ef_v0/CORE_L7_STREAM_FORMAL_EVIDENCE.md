@@ -79,3 +79,18 @@ So output reconstruction no longer needs a separate n-byte RAM vector, but **TOT
 6. Close full P/R/O evidence: immutable source identity, authenticated exact query excerpts and canonical coordinates, independent portable verifier, realistic corrupted/rollback attacks, honest production packaging.
 
 **Owner strategic veto preserved:** no release or merge, OVH deployment, frozen format redefinition, public claims, human-source ingest or C ABI implementation authorized.
+
+
+## P-L7-001 — prospective 100MB output-RAM prediction (recorded before reviewing CI result)
+
+This is a **prediction made while GitHub CI 42141692079 was still running**, not a prospective preregistration made before the CI launch.
+
+Current buffered run-LF enwik8 rank4 same-run reference from [42139617303](https://github.com/yasha1971-coder/glyph-engine/actions/runs/42139617303): peak **466,152 kB**. The buffering path held the entire **100,000,000-byte output** in RAM. CORE-L7 removes this allocation, adding at most four 1MiB write buffers. Since page cache and allocator interactions can confound RSS, exact savings need not equal byte-for-byte difference.
+
+**Predict**:
+- P-L7-001A: streaming run LF rank4 enwik8 produces **identical source SHA-256** and peak RSS **under 400,616 kB** (saving more than 64MiB vs 466,152kB historical run-LF reference). FAILURE if output SHA mismatches, the CI exits nonzero, or measured peak RSS is not below this threshold.
+- P-L7-001B: persistent RLB2+RLR2+EF stays **89,053,457 bytes**; no extra source payload/restart file. FAILURE if any additional retained source-side artifact is needed or a counted file differs in size/hash.
+- P-L7-001C: 4T wall time is **UNKNOWN**. Measure directly against original dense 4T and run-LF buffered where available; no speed claim is implied by RAM savings.
+- P-L7-001D: even if PASS, neither input parsing nor output SHA checking is yet an independent cryptographic P/R/O authority; store final status as research PASS only.
+
+The threshold 400,616 kB is 466,152 minus 65,536 (64MiB in kB). This is an empirical process-RSS prediction, not a theorem. It will be superseded by the exact same-run measured result, retaining any prediction miss.
