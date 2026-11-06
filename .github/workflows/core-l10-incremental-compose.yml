@@ -1,0 +1,148 @@
+name: core-l10-incremental-compose
+
+on:
+  pull_request:
+    branches: [codex/core-l9s-100mb-query-replay]
+    paths:
+      - experiments/core_l10_composition_v0/**
+      - .github/workflows/core-l10-incremental-compose.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  historical-25-exact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 81628f843dc8aa633c65594a66d2386bfc3cb5c2
+          path: historical
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile original operator generation
+        run: |
+          cmake -S historical -B historical/build
+          cmake --build historical/build --target build_sa_binary_v1 build_bwt_binary_v1 build_fm_binary_v1 query_fm_binary_v1 query_fm_locate_binary_v1 -j2
+      - name: Complete original checker and its separate independent replay
+        run: |
+          python3 -I research/experiments/core_l10_composition_v0/historical_gate.py \
+            --historical "$GITHUB_WORKSPACE/historical" --output "$RUNNER_TEMP/l10-historical"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-historical-evidence
+          path: ${{ runner.temp }}/l10-historical/
+          retention-days: 30
+          if-no-files-found: warn
+
+  producer-and-append:
+    needs: historical-25-exact
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      pins: ${{ steps.pins.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build unchanged L8 native oracle materializer
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp -o "$RUNNER_TEMP/l8-decoder"
+      - name: Real leaves, two layouts, preserved V0 receipts, append and hostiles
+        run: |
+          python3 -I research/experiments/core_l10_composition_v0/gate.py --phase produce \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/l8-decoder" \
+            --output "$RUNNER_TEMP/l10-produce"
+      - name: Publish separately expected snapshot root pins
+        id: pins
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          pins=json.loads((Path(os.environ['RUNNER_TEMP'])/'l10-produce/trusted-pins.json').read_text())
+          assert set(pins)=={'A0','B0','A1','B1'}
+          assert all(len(v)==64 and all(c in '0123456789abcdef' for c in v) for v in pins.values())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('pins='+json.dumps(pins,sort_keys=True,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l10-produce/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-producer-evidence
+          path: |
+            ${{ runner.temp }}/l10-produce/result.json
+            ${{ runner.temp }}/l10-produce/commands.json
+            ${{ runner.temp }}/l10-produce/preservation.json
+            ${{ runner.temp }}/l10-produce/trusted-pins.json
+            ${{ runner.temp }}/l10-produce/logs/hostiles.log
+          retention-days: 30
+          if-no-files-found: warn
+
+  independent-composed-replay:
+    needs: producer-and-append
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EXPECTED_PINS: ${{ needs.producer-and-append.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l10-capsule
+      - name: Own source oracles, independent identities/lineage/coverage and all hostiles
+        run: |
+          python3 -I research/experiments/core_l10_composition_v0/gate.py --phase independent \
+            --reference "$GITHUB_WORKSPACE/reference" --capsule "$RUNNER_TEMP/l10-capsule" \
+            --expected-roots-json "$EXPECTED_PINS" --output "$RUNNER_TEMP/l10-independent"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-independent-evidence
+          path: |
+            ${{ runner.temp }}/l10-independent/result.json
+            ${{ runner.temp }}/l10-independent/commands.json
+            ${{ runner.temp }}/l10-independent/logs/hostiles.log
+          retention-days: 30
+          if-no-files-found: warn
