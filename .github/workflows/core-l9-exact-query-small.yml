@@ -1,0 +1,110 @@
+name: core-l9-exact-query-small
+
+on:
+  push:
+    branches:
+      - codex/core-l9-exact-query-proof-a-b
+    paths:
+      - experiments/core_l9_exact_query_v0/**
+      - .github/workflows/core-l9-exact-query-small.yml
+  pull_request:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/core_l9_exact_query_v0/**
+      - .github/workflows/core-l9-exact-query-small.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  producer-exact-fixture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile existing L8 backend without changing it
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/l8-decoder"
+      - name: Reproduce L8 prerequisite (11 materialization + 4 replay hostiles)
+        run: |
+          python3 research/experiments/loc_text_ef_v0/core_l8_pinned_materialize_small_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/l8-decoder" \
+            --verifier "$GITHUB_WORKSPACE/research/experiments/loc_text_ef_v0/trusted_materialize_v0.py" \
+            --replay "$GITHUB_WORKSPACE/research/experiments/loc_text_ef_v0/independent_materialization_replay_v0.py" \
+            --output "$RUNNER_TEMP/l8-small"
+      - name: Exhaustive exact queries and real index receipt-budget boundary
+        run: |
+          python3 -I research/experiments/core_l9_exact_query_v0/run_gate.py --phase exact \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/l8-decoder" \
+            --output "$RUNNER_TEMP/l9-exact"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l9-index-only-capsule
+          path: ${{ runner.temp }}/l9-exact/capsule/
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l9-producer-results
+          path: |
+            ${{ runner.temp }}/l9-exact/exact-result.json
+            ${{ runner.temp }}/l8-small/result.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  independent-hostile-replay:
+    needs: producer-exact-fixture
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l9-index-only-capsule
+          path: ${{ runner.temp }}/l9-capsule
+      - name: Re-materialize source, then standalone verifier and hostile replays
+        run: |
+          python3 -I research/experiments/core_l9_exact_query_v0/run_gate.py --phase hostile \
+            --reference "$GITHUB_WORKSPACE/reference" --capsule "$RUNNER_TEMP/l9-capsule" \
+            --output "$RUNNER_TEMP/l9-independent"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l9-independent-results
+          path: ${{ runner.temp }}/l9-independent/hostile-result.json
+          if-no-files-found: warn
+          retention-days: 30
