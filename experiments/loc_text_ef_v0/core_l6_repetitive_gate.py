@@ -40,7 +40,7 @@ def generate(path):
 
 def case(binary,rlb2,ef,out,mode,threads,expected_bytes,expected_sha,logs):
     command=[binary,rlb2,out] if mode=="sequential" else [
-        binary,rlb2,ef,out,str(threads),mode.replace("run-","").replace("dense-","")]
+        binary,rlb2,ef,out,str(threads),mode.replace("run-","").replace("dense-","").replace("stream-","")]
     p,meta=run(command,logs,timeout=240)
     check(out.stat().st_size==expected_bytes and sha(out)==expected_sha,
           f"source restore mismatch {mode} {threads}")
@@ -58,6 +58,7 @@ def main():
     arg.add_argument("--sequential",type=Path,required=True)
     arg.add_argument("--dense",type=Path,required=True)
     arg.add_argument("--run-index",type=Path,required=True)
+    arg.add_argument("--stream-index",type=Path,default=None)
     arg.add_argument("--output",type=Path,required=True)
     arg.add_argument("--repeats",type=int,default=1)
     a=arg.parse_args()
@@ -111,6 +112,12 @@ def main():
             ("run-rank",4,a.run_index),
             ("run-direct",4,a.run_index),
         ]
+        if a.stream_index:
+            cases.extend([
+                ("stream-rank",1,a.stream_index),
+                ("stream-rank",4,a.stream_index),
+                ("stream-direct",4,a.stream_index),
+            ])
         measured=[]
         for rep in range(a.repeats):
             # Alternate case order to reveal warm-cache/frequency sensitivity.
