@@ -56,7 +56,7 @@ def invoke(tool,root,pin,fixture,ef,decoder,out):
 
 def main():
     p=argparse.ArgumentParser()
-    for key in ("reference","decoder","verifier","output"):
+    for key in ("reference","decoder","verifier","replay","output"):
         p.add_argument("--"+key,type=Path,required=True)
     a=p.parse_args()
     ref=a.reference.resolve()
@@ -98,6 +98,22 @@ def main():
             and output.read_bytes()==fixture["source"],
             "published bytes were not independently verified")
     positive_sha=sha_file(output)
+    receipt_path=target/"materialization.receipt.json"
+    receipt_path.write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n")
+    def replay(receipt_file=receipt_path,root_file=root,pin_sha=pin):
+        args=[sys.executable,str(a.replay),"--manifest",str(root_file),
+              "--root-sha256",pin_sha,
+              "--rlb2",str(fixture["rlb2"]),
+              "--rlr2",str(fixture["rlr2"]),
+              "--ef",str(ef),"--materialized",str(output),
+              "--decoder",str(a.decoder),"--receipt",str(receipt_file)]
+        return subprocess.run(args,capture_output=True,text=True,timeout=45)
+    verified=replay()
+    require(verified.returncode==0 and
+            json.loads(verified.stdout)["status"]==
+              "CORE_L8_OFFLINE_SOURCE_IDENTITY_REPLAY_PASS",
+            "offline replay rejected correct committed bytes: "+verified.stderr)
+    replay_negatives=[]
 
     negatives=[]
     def reject(label,new_root,new_pin,new_output,original_paths=None):
@@ -169,8 +185,35 @@ def main():
             "existing symlink was followed or overwritten")
     negatives.append("no-follow-existing-output-symlink")
 
+    # Offline verifier has a distinct source module and never runs encoder/decoder.
+    altered=bytearray(output.read_bytes());altered[-1]^=1
+    output.write_bytes(altered)
+    failure=replay()
+    require(failure.returncode!=0,"offline verifier accepted changed materialized bytes")
+    replay_negatives.append("replayed-output-bitflip")
+    output.write_bytes(original_content)
+    forged=dict(receipt)
+    forged["source_sha256"]="0"*64
+    forged_receipt=target/"forged.receipt.json"
+    forged_receipt.write_text(json.dumps(forged,sort_keys=True)+"\n")
+    failure=replay(receipt_file=forged_receipt)
+    require(failure.returncode!=0,"offline verifier accepted forged receipt identity")
+    replay_negatives.append("replayed-forged-receipt")
+    failure=replay(pin_sha="0"*64)
+    require(failure.returncode!=0,"offline verifier accepted wrong root identity")
+    replay_negatives.append("replayed-wrong-external-root")
+    changed=bytearray(fixture["rlr2"].read_bytes());changed[-1]^=1
+    fixture["rlr2"].write_bytes(changed)
+    try:
+        failure=replay()
+        require(failure.returncode!=0,"offline verifier ignored mandatory RLR2 change")
+        replay_negatives.append("replayed-mandatory-rlr2-corruption")
+    finally:
+        fixture["rlr2"].write_bytes(bytes(changed[:-1])+bytes([changed[-1]^1]))
+    require(sha_file(output)==positive_sha,"output not recovered after replay attacks")
+
     report={
-        "status":"CORE_L8_PINNED_SOURCE_MATERIALIZATION_POSITIVE_AND_HOSTILES_PASS",
+        "status":"CORE_L8_PINNED_MATERIALIZATION_AND_INDEPENDENT_REPLAY_PASS",
         "source_bytes":len(fixture["source"]),
         "original_source_sha256":sha(fixture["source"]),
         "actual_published_sha256":positive_sha,
@@ -182,6 +225,9 @@ def main():
                     "published_source_bytes_verified":len(fixture["source"])},
         "hostile_cases_rejected":negatives,
         "hostile_case_count":len(negatives),
+        "offline_replay_verified":True,
+        "offline_replay_hostiles_rejected":replay_negatives,
+        "offline_replay_hostile_count":len(replay_negatives),
         "limitations":[
             "Caller-supplied root digest simulated external authority; no cryptographic signature.",
             "No root freshness/rollback/fork protection or fully portable O3/O4 proof.",
@@ -194,6 +240,7 @@ def main():
     (target/"result.json").write_text(json.dumps(report,indent=2,sort_keys=True)+"\n")
     print(json.dumps({k:report.get(k) for k in
         ("status","source_bytes","root_manifest_sha256",
-         "hostile_case_count","hostile_cases_rejected")},sort_keys=True))
+         "hostile_case_count","offline_replay_verified",
+         "offline_replay_hostile_count","hostile_cases_rejected")},sort_keys=True))
 if __name__=="__main__":
     main()
