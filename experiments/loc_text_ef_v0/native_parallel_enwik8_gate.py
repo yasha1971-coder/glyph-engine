@@ -55,15 +55,18 @@ def main():
     a.add_argument("--reference",type=Path,required=True)
     a.add_argument("--sequential",type=Path,required=True)
     a.add_argument("--parallel",type=Path,required=True)
+    a.add_argument("--dense-parallel",type=Path,default=None)
     a.add_argument("--output",type=Path,required=True)
     v=a.parse_args()
     ref=v.reference.resolve()
     seq=v.sequential.resolve()
     par=v.parallel.resolve()
+    dense=v.dense_parallel.resolve() if v.dense_parallel else None
     target=v.output.resolve()
     check(subprocess.check_output(["git","-C",str(ref),"rev-parse","HEAD"],
           text=True).strip()==REF,"wrong pinned frozen source")
-    check(seq.is_file() and par.is_file() and not target.exists(),
+    check(seq.is_file() and par.is_file()
+          and (dense is None or dense.is_file()) and not target.exists(),
           "missing binary or preexisting output")
     target.mkdir(parents=True)
     work=target/"work"
@@ -74,6 +77,7 @@ def main():
         "frozen_source_commit":REF,
         "source_sha256":SHA["corpus"],
         "parallel_decoder_sha256":sha(par),
+        "dense_parallel_decoder_sha256":sha(dense) if dense else None,
         "sequential_decoder_sha256":sha(seq)
     }
     logs=[]
@@ -108,17 +112,25 @@ def main():
         check(all(not x.exists() for x in (raw,sa,bwt)),
               "construction data remained available to runtime")
         rows=[]
-        cases=[
-            ("sequential",1,seq),
-            ("rank",1,par),("rank",2,par),("rank",4,par),
-            ("direct",1,par),("direct",2,par),("direct",4,par),
-        ]
-        for index,(mode,threads,binary) in enumerate(cases):
+        cases=[("sequential",1,seq,"original-sequential")]
+        if dense is not None:
+            cases.extend([("rank",1,dense,"original-dense-1t"),
+                          ("rank",4,dense,"original-dense-4t")])
+        cases.extend([
+            ("rank",1,par,"candidate-rank-1t"),
+            ("rank",2,par,"candidate-rank-2t"),
+            ("rank",4,par,"candidate-rank-4t"),
+            ("direct",1,par,"candidate-direct-1t"),
+            ("direct",2,par,"candidate-direct-2t"),
+            ("direct",4,par,"candidate-direct-4t"),
+        ])
+        for index,(mode,threads,binary,profile) in enumerate(cases):
             row=record_case(binary,rlb2,ef,work/f"restore-{index}.raw",
                             threads,mode,logs)
+            row["profile"]=profile
             rows.append(row)
             print(json.dumps({"case":index+1,"of":len(cases),
-                              "mode":mode,"threads":threads,
+                              "profile":profile,"mode":mode,"threads":threads,
                               "wall_seconds":row["runner_wall_seconds"],
                               "peak_rss_kb":row["peak_rss_kb"],
                               "source_sha256":row["source_sha256"]}),flush=True)
