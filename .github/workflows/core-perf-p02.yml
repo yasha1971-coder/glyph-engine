@@ -7,6 +7,7 @@ on:
     paths:
       - experiments/core_perf_research_v0/batch_pass_v0.py
       - experiments/core_perf_research_v0/p02_gate.py
+      - experiments/core_perf_research_v0/BatchCrossingProof.lean
       - experiments/core_perf_research_v0/P02_*
       - .github/workflows/core-perf-p02.yml
   workflow_dispatch:
@@ -73,3 +74,35 @@ jobs:
           path: ${{ runner.temp }}/perf-p02-100mb/result.json
           retention-days: 30
           if-no-files-found: ignore
+
+  p02-mathlib-carry-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          path: mathlib
+          persist-credentials: false
+      - name: Pin Mathlib proof environment
+        run: |
+          test "$(git -C mathlib rev-parse HEAD)" = "1ccd71f89cbbd82ae7d097723ce1722ca7b01c33"
+          test "$(cat mathlib/lean-toolchain)" = "leanprover/lean4:v4.25.0"
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: mathlib
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: false
+      - name: Kernel-check five mixed-length arithmetic lemmas
+        working-directory: mathlib
+        run: |
+          lake env lean "$GITHUB_WORKSPACE/research/experiments/core_perf_research_v0/BatchCrossingProof.lean"
+          echo "P02_MIXED_LENGTH_CARRY_LEAN_THEOREMS_CHECKED"
