@@ -1,0 +1,53 @@
+name: core-l8-pinned-materialization-small
+
+on:
+  push:
+    branches:
+      - codex/glyph-lf-bound-loc3-ef-research-20261105
+    paths:
+      - experiments/loc_text_ef_v0/trusted_materialize_v0.py
+      - experiments/loc_text_ef_v0/core_l8_pinned_materialize_small_gate.py
+      - experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp
+      - .github/workflows/core-l8-pinned-materialization-small.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cryptographic-pin-and-before-publish-replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: yasha1971-coder/glyph-engine
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile independent chunk-streaming restoration backend
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread \
+            research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp \
+            -o "$RUNNER_TEMP/glyph-core-l8-backend"
+      - name: Pin source, RLB2/RLR2/EF and backend then attack the materialization boundary
+        run: |
+          python3 research/experiments/loc_text_ef_v0/core_l8_pinned_materialize_small_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --decoder "$RUNNER_TEMP/glyph-core-l8-backend" \
+            --verifier "$GITHUB_WORKSPACE/research/experiments/loc_text_ef_v0/trusted_materialize_v0.py" \
+            --output "$RUNNER_TEMP/glyph-l8-small-$GITHUB_RUN_ID"
+      - name: Archive bounded verification receipt, no original source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: glyph-core-l8-pinned-materialization-receipt
+          path: ${{ runner.temp }}/glyph-l8-small-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: warn
