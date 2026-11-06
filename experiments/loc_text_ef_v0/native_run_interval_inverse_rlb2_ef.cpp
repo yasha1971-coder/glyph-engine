@@ -5,9 +5,9 @@
 // Run starts / targets / optional byte symbols / coarse hints are TRANSIENT.
 // The predecessor implementation costs O(log runs-per-bucket) per LF.
 // Frozen RLB2 and previous dense LF reference remain untouched.
-#define main glyph_original_parallel_unused_main
+#define GLYPH_PARALLEL_LIBRARY_ONLY
 #include "native_parallel_inverse_rlb2_ef.cpp"
-#undef main
+#undef GLYPH_PARALLEL_LIBRARY_ONLY
 
 class RunIntervalLF {
 public:
