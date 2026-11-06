@@ -140,20 +140,26 @@ def materialize(args):
     dec_info = decoder.lstat()
     demand(stat.S_ISREG(dec_info.st_mode) and os.access(decoder, os.X_OK),
            "decoder must be executable regular file")
-    demand(digest_file(decoder) == manifest["decoder"]["sha256"],
-           "native decoder identity mismatch")
     demand(1 <= args.threads <= 16 and args.mode in ("rank", "direct"),
            "unsupported native decoder parameters")
-    # Snapshot into private storage before launching untrusted backend input.
-    # Temporary copy overhead MUST be counted separately from retained state.
+    # Snapshot into private storage before launching. Also snapshot and
+    # validate executable BYTES to eliminate the hash-then-exec path race.
+    # Temporary copies are verification work and require separate disk budget.
     with tempfile.TemporaryDirectory(prefix=".glyph-l8-private-",
                                      dir=str(output.parent)) as private:
         stage = Path(private)
         os.chmod(stage, 0o700)
         for key, src in [("rlb2", args.rlb2), ("rlr2", args.rlr2), ("ef", args.ef)]:
             pinned_input(src, stage / (key+".snapshot"), manifest["artifacts"][key])
+        executable_copy = stage / "decoder.snapshot"
+        decoder_record = {
+            "bytes": dec_info.st_size,
+            "sha256": manifest["decoder"]["sha256"],
+        }
+        pinned_input(decoder, executable_copy, decoder_record)
+        os.chmod(executable_copy, 0o700)
         candidate = stage / "candidate.source"
-        command = [str(decoder.absolute()), str(stage / "rlb2.snapshot"),
+        command = [str(executable_copy), str(stage / "rlb2.snapshot"),
                    str(stage / "ef.snapshot"), str(candidate),
                    str(args.threads), args.mode]
         proc = subprocess.run(command, stdin=subprocess.DEVNULL,
@@ -187,6 +193,7 @@ def materialize(args):
             "snapshot_inputs_verified": ["rlb2", "rlr2", "ef"],
             "verified_source_before_publication": True,
             "decoder_sha256": manifest["decoder"]["sha256"],
+            "private_decoder_snapshot_verified": True,
             "frozen_commit": ORIGINAL,
             "authority": "caller-provided external root SHA, not signature or TUF witness",
             "limitation": "no P/R/O root authentication, no anti-rollback, no proof of nonmembership"
