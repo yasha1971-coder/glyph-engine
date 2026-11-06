@@ -1,0 +1,102 @@
+name: core-l10-append-identity-v2-research
+
+on:
+  pull_request:
+    branches: [codex/core-l9s-100mb-query-replay]
+    paths:
+      - experiments/core_l10_append_identity_v2/**
+      - .github/workflows/core-l10-append-identity-v2.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  append-identity-producer-and-hostiles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Execute identity V2 root/rename/revision/tombstone plus hostile replay
+        run: |
+          python3 research/experiments/core_l10_append_identity_v2/gate_v2.py \
+            --output "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID"
+          python3 - <<'PY2'
+          import json,os,pathlib
+          p=pathlib.Path(os.environ['RUNNER_TEMP'])/('core-l10-v2-'+os.environ['GITHUB_RUN_ID'])/'result.json'
+          x=json.loads(p.read_text())
+          assert x['status']=='CORE_L10_APPEND_IDENTITY_V2_REPLAY_PASS_RESEARCH'
+          assert x['snapshot_count']==7 and x['query_replay_count']==49
+          assert x['independent_hostile_rejected']>=35 and x['producer_rejected']>=14
+          assert not x['actual_rlb2_leaf_compatibility_proven']
+          print(json.dumps({k:x[k] for k in ('status','snapshot_count','query_replay_count','independent_hostile_rejected','producer_rejected','elapsed_wall_seconds')},sort_keys=True))
+          PY2
+      - name: Keep only synthetic identity fixtures and bounded evidence
+        run: |
+          mkdir -p "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID/replay-capsule"
+          cp -a "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID/fixture" "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID/replay-capsule/fixture"
+          cp "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID/q00_00.json" "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID/q06_42.json" "$RUNNER_TEMP/core-l10-v2-$GITHUB_RUN_ID/replay-capsule/"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l10-v2-synthetic-identity-capsule
+          path: ${{ runner.temp }}/core-l10-v2-${{ github.run_id }}/replay-capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-v2-hostile-evidence
+          path: ${{ runner.temp }}/core-l10-v2-${{ github.run_id }}/result.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  standalone-offline-verifier-on-different-runner:
+    needs: append-identity-producer-and-hostiles
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EXPECTED_PINS: '["ef16763c1a2c2213f3dad2df6880f9ec10920f5e21c6609d62b3683e261e5c82","7a8057dd12cb0b80e2b60cecf312926efda02be645b2ff80168e85f22698fe3e","8081c6b6ee4a7f8ab712d29348559f8b22826a5da358096d9c0c0c4d690c408b","747783f168b074191863af015bb1ea8887bbfff369e3be192baef257bff9d8d1","bd726f1ce1b6f0ca41a24770a9919b681357c327ca91eb4b709129c20bf6219e","67d18838bee3212de7307e77909d0b852db93447b98987477e095567d2348c19","3aab93d1c891b79d15ec61de985ccf1f86cfec083df5ea13a93499b56354d315"]'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-v2-synthetic-identity-capsule
+          path: ${{ runner.temp }}/identity-replay
+      - name: Independently replay old root and final root using workflow-pinned SHA vector
+        run: |
+          python3 research/experiments/core_l10_append_identity_v2/independent_verifier_v2.py \
+            --bundle "$RUNNER_TEMP/identity-replay/fixture" --expected-pins-json "$EXPECTED_PINS" \
+            --generation 0 --receipt "$RUNNER_TEMP/identity-replay/q00_00.json"
+          python3 research/experiments/core_l10_append_identity_v2/independent_verifier_v2.py \
+            --bundle "$RUNNER_TEMP/identity-replay/fixture" --expected-pins-json "$EXPECTED_PINS" \
+            --generation 6 --receipt "$RUNNER_TEMP/identity-replay/q06_42.json"
+          python3 - <<'PY2'
+          import json,os,pathlib,subprocess,sys
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'identity-replay'
+          bundle=root/'fixture'
+          p=json.loads((root/'q06_42.json').read_text())
+          p['status']='PROVEN_EMPTY'
+          bad=root/'tampered.json'
+          bad.write_text(json.dumps(p,sort_keys=True))
+          cmd=[sys.executable,'research/experiments/core_l10_append_identity_v2/independent_verifier_v2.py',
+               '--bundle',str(bundle),'--expected-pins-json',os.environ['EXPECTED_PINS'],
+               '--generation','6','--receipt',str(bad)]
+          outcome=subprocess.run(cmd,capture_output=True,text=True)
+          assert outcome.returncode==3 and 'UNTRUSTED' in outcome.stderr,outcome
+          print('CORE_L10_V2_SEPARATE_RUNNER_REPLAY_AND_FALSE_EMPTY_REJECTION_PASS')
+          PY2
