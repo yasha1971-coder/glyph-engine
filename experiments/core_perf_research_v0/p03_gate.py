@@ -150,7 +150,7 @@ def safety(root,p02,binary):
     for name,args in variants:reject(name,args,negative)
     source.unlink()
     reject("missing-source",good,negative)
-    check(len(negative)==15,"hostile coverage drift")
+    check(len(negative)==16,"hostile coverage drift")
     return {"status":"P03_NATIVE_AC_SAFETY_PASS","exact_oracle_checks":tested,
             "hostile_count":len(negative),"rejected":negative}
 def enwik8(root,p02,binary):
