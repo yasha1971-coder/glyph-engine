@@ -138,7 +138,7 @@ def safety(root,p02,binary):
         ("uppercase-hex",good[:-1]+["FF"]),
         ("unparseable-bytes",good[:4]+["-1"]+good[5:]),
         ("unknown-flag",good+["--bogus","1"]),
-        ("no-source",good[2:]),
+        ("no-source",good[:1]+good[3:]),
         ("too-many-patterns",good+sum((["--pattern-hex",f"{i:02x}"] for i in range(16)),[])),
         ("duplicate-pattern",good+["--pattern-hex","61"]),
         ("nonregular-input",good[:2]+[str(root)]+good[3:]),
