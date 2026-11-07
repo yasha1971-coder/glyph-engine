@@ -32,7 +32,9 @@ struct Automaton{
   gate(patterns.size()>0&&patterns.size()<=MAX_Q,"query admission");
   size_t sum=0;
   for(size_t k=0;k<patterns.size();k++){
-   gate(!patterns[k].empty(),"empty pattern");sum+=patterns[k].size();gate(sum<=MAX_BYTES,"memory admission");
+   gate(!patterns[k].empty(),"empty pattern");
+   gate(std::find(patterns.begin(),patterns.begin()+static_cast<std::ptrdiff_t>(k),patterns[k])==patterns.begin()+static_cast<std::ptrdiff_t>(k),"duplicate query");
+   sum+=patterns[k].size();gate(sum<=MAX_BYTES,"memory admission");
    uint32_t state=0;
    for(uint8_t c:patterns[k]){
     auto edge=nodes[state].next[c];
