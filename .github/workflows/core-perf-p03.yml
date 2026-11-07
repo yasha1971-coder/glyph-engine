@@ -36,7 +36,7 @@ jobs:
             --native "$RUNNER_TEMP/glyph-ac" \
             --p02 experiments/core_perf_research_v0/batch_pass_v0.py \
             --mode safety --output "$RUNNER_TEMP/p03-safety"
-          python3 -c 'import json,sys;x=json.load(open(sys.argv[1]));assert x["status"]=="P03_NATIVE_AC_SAFETY_PASS" and x["exact_oracle_checks"]>=1500 and x["hostile_count"]==16,x; print("P03_NATIVE_AC_BINARY_ORACLE_AND_15_HOSTILES_PASS")' "$RUNNER_TEMP/p03-safety/result.json"
+          python3 -c 'import json,sys;x=json.load(open(sys.argv[1]));assert x["status"]=="P03_NATIVE_AC_SAFETY_PASS" and x["exact_oracle_checks"]>=1500 and x["hostile_count"]==16,x; print("P03_NATIVE_AC_BINARY_ORACLE_AND_16_HOSTILES_PASS")' "$RUNNER_TEMP/p03-safety/result.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
