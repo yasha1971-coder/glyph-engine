@@ -130,16 +130,17 @@ def safety(root,p02,binary):
     good=[str(binary),"--source",str(source),"--source-bytes","1024",
           "--sha256",read_sha(source),"--pattern-hex","61"]
     variants=[
-        ("bad-pin",good[:7]+["0"*64]+good[8:]),
-        ("bad-length",good[:5]+["1025"]+good[6:]),
+        ("bad-pin",good[:6]+["0"*64]+good[7:]),
+        ("bad-length",good[:4]+["1025"]+good[5:]),
         ("missing-pattern",good[:8]),
         ("empty-pattern",good[:-1]+[""]),
         ("odd-hex",good[:-1]+["6"]),
         ("uppercase-hex",good[:-1]+["FF"]),
-        ("unparseable-bytes",good[:5]+["-1"]+good[6:]),
+        ("unparseable-bytes",good[:4]+["-1"]+good[5:]),
         ("unknown-flag",good+["--bogus","1"]),
         ("no-source",good[2:]),
-        ("too-many-patterns",good+["--pattern-hex","62"]*16),
+        ("too-many-patterns",good+sum((["--pattern-hex",f"{i:02x}"] for i in range(16)),[])),
+        ("duplicate-pattern",good+["--pattern-hex","61"]),
         ("nonregular-input",good[:2]+[str(root)]+good[3:]),
     ]
     link=root/"symlink";link.symlink_to(source)
@@ -149,7 +150,7 @@ def safety(root,p02,binary):
     for name,args in variants:reject(name,args,negative)
     source.unlink()
     reject("missing-source",good,negative)
-    check(len(negative)==14,"hostile coverage drift")
+    check(len(negative)==15,"hostile coverage drift")
     return {"status":"P03_NATIVE_AC_SAFETY_PASS","exact_oracle_checks":tested,
             "hostile_count":len(negative),"rejected":negative}
 def enwik8(root,p02,binary):
