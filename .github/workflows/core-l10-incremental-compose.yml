@@ -5,6 +5,7 @@ on:
     branches: [codex/core-l9s-100mb-query-replay]
     paths:
       - experiments/core_l10_composition_v0/**
+      - experiments/core_l11_integrated_vault_v0/**
       - .github/workflows/core-l10-incremental-compose.yml
   workflow_dispatch:
 
@@ -144,5 +145,116 @@ jobs:
             ${{ runner.temp }}/l10-independent/result.json
             ${{ runner.temp }}/l10-independent/commands.json
             ${{ runner.temp }}/l10-independent/logs/hostiles.log
+          retention-days: 30
+          if-no-files-found: warn
+
+
+  integrated-bridge-producer:
+    needs: producer-and-append
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      bridge_pins: ${{ steps.export-pins.outputs.bridge_pins }}
+      physical_pins: ${{ needs.producer-and-append.outputs.pins }}
+    env:
+      PHYSICAL_PINS: ${{ needs.producer-and-append.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l11-physical-capsule
+      - name: Bind versioned logical identities to existing real frozen physical leaves
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/bridge_producer.py \
+            --bundle "$RUNNER_TEMP/l11-physical-capsule/bundle" \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --expected-physical-pins-json "$PHYSICAL_PINS" \
+            --output "$RUNNER_TEMP/l11-bridge-overlay"
+      - name: Export constrained new research root pins
+        id: export-pins
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib
+          path=pathlib.Path(os.environ['RUNNER_TEMP'])/'l11-bridge-overlay/result.json'
+          data=json.loads(path.read_text())
+          pins=data['pinned_bridge_roots']
+          assert data['status']=='CORE_L11_BRIDGE_PRODUCED_UNVERIFIED'
+          assert len(pins)==3 and all(len(x)==64 for x in pins)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as file:
+              file.write('bridge_pins='+json.dumps(pins,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-index-only-bridge-overlay
+          path: ${{ runner.temp }}/l11-bridge-overlay/
+          retention-days: 14
+          if-no-files-found: error
+
+  integrated-bridge-independent-restore:
+    needs: integrated-bridge-producer
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PHYSICAL_PINS: ${{ needs.integrated-bridge-producer.outputs.physical_pins }}
+      BRIDGE_PINS: ${{ needs.integrated-bridge-producer.outputs.bridge_pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l11-independent-capsule
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-index-only-bridge-overlay
+          path: ${{ runner.temp }}/l11-independent-overlay
+      - name: Independent full source restore, physical source/index replay, and stable-version query replay
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/independent_bridge_verifier.py \
+            --bundle "$RUNNER_TEMP/l11-independent-capsule/bundle" \
+            --overlay "$RUNNER_TEMP/l11-independent-overlay" \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --expected-bridge-pins-json "$BRIDGE_PINS" \
+            --expected-physical-pins-json "$PHYSICAL_PINS" \
+            --output "$RUNNER_TEMP/l11-independent-evidence"
+          python3 - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'l11-independent-evidence/result.json'
+          data=json.loads(root.read_text())
+          assert data['status']=='CORE_L11_INDEXED_IDENTITY_BRIDGE_INDEPENDENT_PASS',data
+          assert data['physical_indexes_restored']==12 and data['bridge_snapshot_count']==3
+          assert data['logical_replay_count']==18 and data['independent_physical_query_replays']==12
+          assert data['old_physical_leaves_unchanged'] and data['no_original_raw_source_retained']
+          print('CORE_L11_REAL_PHYSICAL_INDEXED_V2_BRIDGE_INDEPENDENT_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l11-independent-integration-evidence
+          path: ${{ runner.temp }}/l11-independent-evidence/result.json
           retention-days: 30
           if-no-files-found: warn
