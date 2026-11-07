@@ -232,6 +232,13 @@ jobs:
         with:
           name: core-l11-index-only-bridge-overlay
           path: ${{ runner.temp }}/l11-independent-overlay
+      - name: Restore only executable mode lost by artifact transport
+        run: |
+          test -f "$RUNNER_TEMP/l11-independent-capsule/bundle/decoder"
+          test ! -L "$RUNNER_TEMP/l11-independent-capsule/bundle/decoder"
+          chmod 0700 "$RUNNER_TEMP/l11-independent-capsule/bundle/decoder"
+          # The SHA-256 of executable bytes will be pinned and checked by
+          # the unchanged CORE-L8 materializer before any execution.
       - name: Independent full source restore, physical source/index replay, and stable-version query replay
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/independent_bridge_verifier.py \
