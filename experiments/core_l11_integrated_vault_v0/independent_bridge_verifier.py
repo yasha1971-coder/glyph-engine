@@ -8,6 +8,7 @@ sources for stable doc/revision scoped query answers. Full source scan, not a
 compact absence proof. Unsigned pins only.
 """
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -213,7 +214,7 @@ def main():
         bridge=[parse(read(overlay/("V%d.json"%i))) for i in range(3)]
         roots_validate(bridge,pins,phy)
         count=0
-        verified_physical=set()
+        verified_physical={}
         outcomes=[]
         with tempfile.TemporaryDirectory(prefix="glyph-l11-indexed-restore-") as d:
             staging=Path(d)
@@ -225,6 +226,10 @@ def main():
                     full_path=overlay/"receipts"/(key+".physical.json")
                     physical_receipt=parse(read(full_path,1<<20))
                     physical_key=(root["physical_root_sha256"],needle.hex())
+                    fingerprint=sha(canonical(physical_receipt))
+                    if physical_key in verified_physical:
+                        check(verified_physical[physical_key]==fingerprint,
+                              "same physical root and query returned changing receipt")
                     if physical_key not in verified_physical:
                         # Invoke unchanged standalone Composition V1-aware research
                         # verifier, which independently replays each original L9
@@ -247,7 +252,7 @@ def main():
                         check(checked["full_leaf_block_coverage"] is True
                               and checked["count_verified"] is True,
                               "physical independent search not checked")
-                        verified_physical.add(physical_key)
+                        verified_physical[physical_key]=fingerprint
                     status,num=verify_query(root,claim,physical_receipt,
                                             needle,2 if j==2 else 256,sources)
                     count+=1
@@ -266,11 +271,75 @@ def main():
                   find(1,b"dup")["count"]==3 and
                   find(2,b"dup")["count"]==2,
                   "duplicated document/tombstone semantics violated")
+            # Negative tests run against the very same independent replay
+            # inputs in memory, without reopening a source-backed producer.
+            rejected=[]
+            def should_reject(name,func):
+                try:func()
+                except (ValueError,TypeError,KeyError,IndexError,AssertionError):
+                    rejected.append(name)
+                    return
+                raise AssertionError("FAIL OPEN negative test "+name)
+            logical=parse(read(overlay/"receipts/V1-Q1.json"))
+            physical_receipt=parse(read(overlay/"receipts/V1-Q1.physical.json"))
+            claimroot=bridge[1]
+            def changed(fn):
+                x=copy.deepcopy(logical)
+                fn(x)
+                return verify_query(claimroot,x,physical_receipt,
+                                    b"ONLY_IN_V1",256,sources)
+            should_reject("false-proven-empty",lambda:changed(
+                lambda x:x.update(status="PROVEN_EMPTY",match_count=0,coordinates=[])))
+            should_reject("wrong-count",lambda:changed(
+                lambda x:x.update(match_count=999)))
+            should_reject("missing-offset",lambda:changed(
+                lambda x:x["coordinates"].clear()))
+            should_reject("fake-revision",lambda:changed(
+                lambda x:x["coordinates"][0].__setitem__(1,0)))
+            should_reject("fake-doc-id",lambda:changed(
+                lambda x:x["coordinates"][0].__setitem__(0,9)))
+            should_reject("fake-offset",lambda:changed(
+                lambda x:x["coordinates"][0].__setitem__(2,11)))
+            should_reject("missing-physical-leaf",lambda:changed(
+                lambda x:x["verified_physical_leaves"].pop()))
+            should_reject("forged-physical-root",lambda:changed(
+                lambda x:x.update(physical_root_sha256="0"*64)))
+            should_reject("forged-overlay-root",lambda:changed(
+                lambda x:x.update(bridge_root_sha256="0"*64)))
+            should_reject("false-limited-policy",lambda:changed(
+                lambda x:x.update(status="UNTRUSTED",reason="LIMITED_COMPLETENESS")))
+            should_reject("unknown-receipt-field",lambda:changed(
+                lambda x:x.update(secret="bad")))
+            # Re-pin the adversarial bridge root: a new digest must not
+            # legitimize an unbound/renumbered/rewritten version history.
+            def invalid_bridge(name,mutate):
+                xs=copy.deepcopy(bridge)
+                nextpins=list(pins)
+                mutate(xs[2])
+                nextpins[2]=sha(DOMAIN+canonical(xs[2]))
+                should_reject(name,lambda:roots_validate(xs,nextpins,phy))
+            invalid_bridge("repinned-unbound-leaf",
+                           lambda x:x["documents"][0].update(physical_leaf=999))
+            invalid_bridge("repinned-old-doc-renumber",
+                           lambda x:x["documents"][0].update(doc_id=42))
+            invalid_bridge("repinned-physical-coverage-short",
+                           lambda x:x["expected_physical_leaves"].pop())
+            invalid_bridge("repinned-invalid-parent",
+                           lambda x:x.update(parent_root_sha256="0"*64))
+            invalid_bridge("repinned-mutated-old-document",
+                           lambda x:x["documents"][1].update(revision=0))
+            invalid_bridge("repinned-path-traversal",
+                           lambda x:x["documents"][1].update(path_hex=b"../escape".hex()))
+            invalid_bridge("repinned-undeclared-tombstone",
+                           lambda x:x["documents"][5].update(visible=False))
+            check(len(rejected)==18,"negative-case count drift")
             saved=[{"physical_leaf":n,"source_bytes":len(v),"sha256":sha(v)}
                    for n,v in sources.items()]
         # Do not retain reconstructed full sources in the receipt/capsule.
         result={"status":"CORE_L11_INDEXED_IDENTITY_BRIDGE_INDEPENDENT_PASS",
                 "bridge_snapshot_count":3,"logical_replay_count":count,
+                "adversarial_cases_rejected":len(rejected),
+                "hostile_labels":rejected,
                 "independent_physical_query_replays":len(verified_physical),
                 "physical_indexes_restored":len(saved),
                 "recovered_source_sha256":saved,
