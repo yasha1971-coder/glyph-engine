@@ -248,6 +248,7 @@ jobs:
           assert data['status']=='CORE_L11_INDEXED_IDENTITY_BRIDGE_INDEPENDENT_PASS',data
           assert data['physical_indexes_restored']==12 and data['bridge_snapshot_count']==3
           assert data['logical_replay_count']==18 and data['independent_physical_query_replays']==12
+          assert data['adversarial_cases_rejected']==18
           assert data['old_physical_leaves_unchanged'] and data['no_original_raw_source_retained']
           print('CORE_L11_REAL_PHYSICAL_INDEXED_V2_BRIDGE_INDEPENDENT_PASS')
           PY
