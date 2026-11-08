@@ -311,6 +311,11 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase produce \
             --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
             --output "$RUNNER_TEMP/fourk-ingest" --capsule "$RUNNER_TEMP/bounded-ingest/capsule/fourk"
+      - name: Packed index storage with complete prepublication budget
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/packed_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/packed-vault"
       - name: Scaled 8MiB full-source verification and negatives
         run: |
           python3 -I research/experiments/core_l9_scale_v0/stream_tests.py --output "$RUNNER_TEMP/scaled-stream-boundaries"

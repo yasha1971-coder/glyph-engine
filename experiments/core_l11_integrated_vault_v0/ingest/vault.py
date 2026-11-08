@@ -8,6 +8,7 @@ sys.path.insert(0,str(REPO/'experiments/core_l9_exact_query_v0'))
 from producer import QueryState
 
 def sha(b): return hashlib.sha256(b).hexdigest()
+class AcceptanceRejected(ValueError): pass
 def canon(x): return (json.dumps(x,sort_keys=True,separators=(',',':'))+'\n').encode()
 def syncdir(p):
     fd=os.open(p,os.O_RDONLY|os.O_DIRECTORY)
@@ -63,6 +64,7 @@ class Vault:
                 with (p/'decoder').open('rb') as file: os.fsync(file.fileno())
                 syncdir(p)
             staged=Path(tempfile.mkdtemp(dir=p/'staging'))
+            added=[]; new_snapshot=None
             try:
                 touched=set()
                 for change in changes:
@@ -82,6 +84,7 @@ class Vault:
                             with file.open('rb') as f: os.fsync(f.fileno())
                         syncdir(leaf); crash('object-ready')
                         os.rename(leaf,obj); syncdir(p/'objects')
+                        added.append(obj)
                     manifest=sha((obj/'root.json').read_bytes()) if data else None
                     doc=dict(doc_id=ident,revision=docs[ident]['revision']+1 if ident<len(docs) else 0,path_hex=os.fsencode(name).hex(),sha256=key,bytes=len(data),manifest=manifest)
                     self.validate_object(doc)
@@ -95,13 +98,22 @@ class Vault:
                 if snapshot.exists():
                     if snapshot.read_bytes()!=raw: raise ValueError('immutable snapshot conflict')
                     with snapshot.open('rb') as f: os.fsync(f.fileno())
-                else: write(snapshot,raw)
+                else:
+                    write(snapshot,raw); new_snapshot=snapshot
                 self.snapshot(pin)
                 syncdir(p/'snapshots'); crash('snapshot-ready')
                 head=staged/'CURRENT'; write(head,(pin+'\n').encode()); crash('before-current')
+                self.accept_candidate(root,pin)
                 os.replace(head,p/'CURRENT'); crash('after-current'); syncdir(p); crash('published')
                 return pin
+            except AcceptanceRejected:
+                # Only this writer's unpublished additions, while still holding LOCK.
+                if new_snapshot is not None: new_snapshot.unlink(); syncdir(p/'snapshots')
+                for obj in added: shutil.rmtree(obj)
+                syncdir(p/'objects')
+                raise
             finally: shutil.rmtree(staged)
+    def accept_candidate(self,root,pin): pass
     def build_physical(self,data,leaf,decoder):
         build_object(data,leaf,self.ref,decoder)
     def validate_object(self,d):
