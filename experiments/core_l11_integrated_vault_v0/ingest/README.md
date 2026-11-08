@@ -79,3 +79,24 @@ was compiled anew. No failure is counted as a PASS or silently waived.
 Next beyond this gate: broaden real-file size/admission and replace tiny quadratic
 construction with a bounded-memory builder, then heterogeneous larger full-loop
 and cross-host tests with full retained/dependency/transient cost accounting.
+
+## Native construction continuation
+
+physical.py now invokes the unchanged frozen build_sa_binary_v1 (libsais_int)
+and build_bwt_binary_v1, then existing RLB2/RankV2/EF construction. Compile these
+in the reference checkout before running the gate (CMake targets of the same
+names). The frozen source must remain unchanged. No source/tool redownload.
+
+native_builder_gate.py proves byte parity on six small inputs (18 components)
+against the previous suffix-sorting construction, and exercises a 4096-byte
+synthetic object through native construction, existing independent L8 restoration
+and two existing L9 physical query replays. It does not increase Vault's 256-byte
+admission. Larger physical objects use rank/EF sampling 128; original <=256-byte
+objects keep sampling 4/2 for byte compatibility.
+
+The old quadratic suffix oracle survives only in the small parity test. Native
+construction still uses input-sized RAM and construction SA/BWT/raw temporary
+files, and existing physical-verification/source admission are separate limits.
+No constant-memory, 1GB, arbitrary large-file or improved compression claim follows.
+Next: a separately versioned larger-file Vault admission/query/verification profile,
+including capped high-count queries, without silently relaxing the accepted V0.

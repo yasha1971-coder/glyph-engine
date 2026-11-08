@@ -287,6 +287,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      - name: Build unchanged frozen SA and BWT tools
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
       - name: Compile unchanged native materializer
         run: g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp -o "$RUNNER_TEMP/ingest-decoder"
       - name: Synthetic files, snapshots, process crashes and adversarial replay
@@ -315,6 +319,7 @@ jobs:
         with:
           name: core-l11-bounded-ingest-evidence
           path: |
+            ${{ runner.temp }}/bounded-ingest/native-builder.json
             ${{ runner.temp }}/bounded-ingest/result.json
             ${{ runner.temp }}/bounded-ingest/independent.log
           retention-days: 30

@@ -18,6 +18,8 @@ if args.worker:
     raise SystemExit
 assert not output.exists(), 'refuse existing evidence directory'
 output.mkdir(parents=True)
+from native_builder_gate import run as native_gate
+native_gate(ref,decoder,output/'native-builder.json')
 with tempfile.TemporaryDirectory(prefix='glyph-ingest-synthetic-') as tmp:
     base=Path(tmp); src=base/'source'; src.mkdir()
     (src/'z.bin').write_bytes(b'alpha\x00\xff shared'); (src/'empty').write_bytes(b'')
