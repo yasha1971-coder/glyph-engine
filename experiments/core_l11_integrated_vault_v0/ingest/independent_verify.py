@@ -23,19 +23,19 @@ def parse(raw):
 def ishex(s,n): return type(s) is str and len(s)==n and set(s)<=set('0123456789abcdef')
 def integer(x,n): return type(x) is int and 0<=x<=n
 
-def roots(vault,pin):
+def roots(vault,pin,expected_format="GLYPH_BOUNDED_IMPORT_V0",source_limit=256):
     arr=[]; seen=set(); p=pin
     while p is not None:
         demand(ishex(p,64) and p not in seen and len(arr)<64,'chain bound/pin')
         seen.add(p); raw=read(vault/'snapshots'/p,65536); demand(sha(raw)==p,'wrong snapshot')
         r=parse(raw)
         demand(type(r) is dict and set(r)=={'format','vault_id','parent','documents','decoder_sha256'},'root fields')
-        demand(r['format']=='GLYPH_BOUNDED_IMPORT_V0' and ishex(r['vault_id'],32) and ishex(r['decoder_sha256'],64),'root identity')
+        demand(r['format']==expected_format and ishex(r['vault_id'],32) and ishex(r['decoder_sha256'],64),'root identity')
         demand(type(r['documents']) is list and len(r['documents'])<=64,'document count')
         names=[]
         for slot,d in enumerate(r['documents']):
             demand(type(d) is dict and set(d)=={'doc_id','revision','path_hex','sha256','bytes','manifest'},'document fields')
-            demand(integer(d['doc_id'],63) and d['doc_id']==slot and integer(d['revision'],2**64-1) and integer(d['bytes'],256) and ishex(d['sha256'],64),'document types')
+            demand(integer(d['doc_id'],63) and d['doc_id']==slot and integer(d['revision'],2**64-1) and integer(d['bytes'],source_limit) and ishex(d['sha256'],64),'document types')
             h=d['path_hex']; demand(type(h) is str and 0<len(h)<=510 and len(h)%2==0,'path bound')
             b=bytes.fromhex(h); demand(b.hex()==h and b not in (b'.',b'..') and b'/' not in b and b'\0' not in b and b not in names,'path identity'); names.append(b)
             demand(ishex(d['manifest'],64) if d['bytes'] else d['manifest'] is None and d['sha256']==sha(b''),'source binding')

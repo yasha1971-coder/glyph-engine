@@ -12,7 +12,7 @@ def unique(pairs):
     for k,v in pairs: check(k not in d,'duplicate field'); d[k]=v
     return d
 
-def load_chain(vault,pin):
+def load_chain(vault,pin,expected_format="GLYPH_BOUNDED_IMPORT_V0",source_limit=256):
     current=pin; chain=[]; seen=set()
     while current is not None:
         check(hexstr(current,64) and current not in seen and len(chain)<64,'snapshot chain admission')
@@ -22,12 +22,12 @@ def load_chain(vault,pin):
         check(len(raw)<=65536 and hashlib.sha256(raw).hexdigest()==current,'snapshot pin/size')
         r=json.loads(raw,object_pairs_hook=unique)
         check(canonical(r)==raw and type(r) is dict and set(r)=={'format','vault_id','parent','documents','decoder_sha256'},'snapshot canonical schema')
-        check(r['format']=='GLYPH_BOUNDED_IMPORT_V0' and hexstr(r['vault_id'],32) and hexstr(r['decoder_sha256'],64),'snapshot identity')
+        check(r['format']==expected_format and hexstr(r['vault_id'],32) and hexstr(r['decoder_sha256'],64),'snapshot identity')
         docs=r['documents']; check(type(docs) is list and len(docs)<=64,'document bound')
         paths=set()
         for i,d in enumerate(docs):
             check(type(d) is dict and set(d)=={'doc_id','revision','path_hex','sha256','bytes','manifest'},'document schema')
-            check(number(d['doc_id'],63) and d['doc_id']==i and number(d['revision'],2**64-1) and number(d['bytes'],256) and hexstr(d['sha256'],64),'document identity')
+            check(number(d['doc_id'],63) and d['doc_id']==i and number(d['revision'],2**64-1) and number(d['bytes'],source_limit) and hexstr(d['sha256'],64),'document identity')
             h=d['path_hex']; check(type(h) is str and 0<len(h)<=510 and len(h)%2==0,'path admission')
             path=bytes.fromhex(h)
             check(path.hex()==h and b'/' not in path and b'\0' not in path and path not in (b'.',b'..') and h not in paths,'path safety/uniqueness'); paths.add(h)

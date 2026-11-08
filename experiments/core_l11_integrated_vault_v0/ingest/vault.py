@@ -23,26 +23,28 @@ def digestfile(p):
     with p.open('rb') as f: raw=f.read((1<<20)+1)
     if len(raw)>1<<20: raise ValueError('physical component grew')
     return sha(raw)
-def read_source(folder,name):
+def read_source(folder,name,cap=256):
     raw=os.fsencode(name)
     if not raw or b'/' in raw or raw in (b'.',b'..'): raise ValueError('one-level relative filename required')
     fd=os.open(folder/name,os.O_RDONLY|os.O_NOFOLLOW|os.O_NONBLOCK)
     try:
         a=os.fstat(fd)
-        if not stat.S_ISREG(a.st_mode) or a.st_size>256: raise ValueError('source admission')
-        b=os.read(fd,257); z=os.fstat(fd)
-        if len(b)>256 or len(b)!=a.st_size or (a.st_size,a.st_mtime_ns,a.st_ctime_ns,a.st_ino)!=(z.st_size,z.st_mtime_ns,z.st_ctime_ns,z.st_ino): raise ValueError('source changed')
+        if not stat.S_ISREG(a.st_mode) or a.st_size>cap: raise ValueError('source admission')
+        b=os.read(fd,cap+1); z=os.fstat(fd)
+        if len(b)>cap or len(b)!=a.st_size or (a.st_size,a.st_mtime_ns,a.st_ctime_ns,a.st_ino)!=(z.st_size,z.st_mtime_ns,z.st_ctime_ns,z.st_ino): raise ValueError('source changed')
         return b
     finally: os.close(fd)
 
 class Vault:
+    SOURCE_LIMIT=256
+    FORMAT="GLYPH_BOUNDED_IMPORT_V0"
     def __init__(self,path,reference): self.path=Path(path); self.ref=Path(reference)
     def current(self):
         p=self.path/'CURRENT'
         return p.read_text().strip() if p.exists() else None
     def snapshot(self,pin):
         from snapshot_contract import load_chain
-        return load_chain(self.path,pin)
+        return load_chain(self.path,pin,self.FORMAT,self.SOURCE_LIMIT)
     def import_files(self,source,changes,expected,decoder):
         # changes: explicit {name, doc_id?}; absent paths are never deleted.
         p=self.path
@@ -63,7 +65,7 @@ class Vault:
             try:
                 touched=set()
                 for change in changes:
-                    name=change['name']; data=read_source(Path(source),name)
+                    name=change['name']; data=read_source(Path(source),name,self.SOURCE_LIMIT)
                     ident=change.get('doc_id',len(docs))
                     if type(ident) is not int or not 0<=ident<=len(docs) or ident in touched: raise ValueError('explicit stable identity required')
                     touched.add(ident)
@@ -86,7 +88,7 @@ class Vault:
                     else: docs[ident]=doc
                 if len(docs)>64 or len({d['path_hex'] for d in docs})!=len(docs): raise ValueError('document/path bound')
                 for document in docs: self.validate_object(document)
-                root=dict(format='GLYPH_BOUNDED_IMPORT_V0',vault_id=old['vault_id'] if old else uuid.uuid4().hex,parent=expected,documents=docs,decoder_sha256=digestfile(p/'decoder'))
+                root=dict(format=self.FORMAT,vault_id=old['vault_id'] if old else uuid.uuid4().hex,parent=expected,documents=docs,decoder_sha256=digestfile(p/'decoder'))
                 raw=canon(root); pin=sha(raw)
                 snapshot=p/'snapshots'/pin
                 if snapshot.exists():

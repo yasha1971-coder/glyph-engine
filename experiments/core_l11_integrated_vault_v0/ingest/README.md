@@ -100,3 +100,35 @@ files, and existing physical-verification/source admission are separate limits.
 No constant-memory, 1GB, arbitrary large-file or improved compression claim follows.
 Next: a separately versioned larger-file Vault admission/query/verification profile,
 including capped high-count queries, without silently relaxing the accepted V0.
+
+## Explicit 4096-byte Vault profile
+
+`vault_4k.Vault4K` opts into `GLYPH_BOUNDED_IMPORT_4K_V1`; original `Vault`
+continues to reject V1 snapshots and >256-byte inputs. This is a separate research
+profile, not a migration of Laptop V1 or VIKA. Native construction/durable writer
+are reused. Old snapshots remain immutable. No arbitrary 1GB/TB admission.
+
+V1 query returns a full count plus first <=256 canonical coordinates, explicit
+coverage_complete and enumeration_complete. Capped output is UNTRUSTED even when
+the complete count and prefix are independently verified. Internal locate is
+bounded to <=4096 offsets/leaf; <=64 documents. It never treats missing coverage as
+empty. Independent verifier restores/hashes every source, invokes the existing
+independent L9 physical-source oracle and scans original bytes. It imports no
+producer/importer modules. Quadratic small oracle and full scans remain real costs.
+
+```
+python3 -I experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase produce --reference /ABS/REFERENCE --decoder /ABS/DECODER --output /ABS/NEW/EVIDENCE --capsule /ABS/NEW/CAPSULE
+python3 -I experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase replay --capsule /ABS/CAPSULE --pins-json '<separately transported pins.json>' --output /ABS/NEW/REPLAY
+```
+
+Gate exercises actual 4096-byte files, empty/binary/duplicate/revision inputs,
+three snapshots, 600 initial matches, overlapping matches and cap zero, five
+hostile count/prefix/coverage/completeness claims, missing/corrupted physical
+leaf even for absent query, oversize 4097 input and five SIGKILL/restart boundaries.
+Previous V0/native gate still runs separately; CI transfers only index capsules,
+with expected root/query/policy transported through separate job output.
+Independent selected restore CLI: `run_independent_4k.py` has explicit
+--vault/--pin/--query-hex/--limit/--claim and optional --selected/--output.
+No production HTTP endpoint or VIKA deployment is introduced by this profile.
+Next: broader bounded heterogeneous input and full source/dependency/transient
+cost accounting before moving beyond the small physical oracle or toward 1GB.

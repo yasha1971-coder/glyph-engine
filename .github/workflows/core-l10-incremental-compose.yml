@@ -273,6 +273,7 @@ jobs:
     timeout-minutes: 20
     outputs:
       pins: ${{ steps.pins.outputs.pins }}
+      fourk_pins: ${{ steps.pins.outputs.fourk_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -298,6 +299,11 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/run_gate.py \
             --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
             --output "$RUNNER_TEMP/bounded-ingest"
+      - name: Explicit 4KiB Vault profile, high counts and crash recovery
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase produce \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/fourk-ingest" --capsule "$RUNNER_TEMP/bounded-ingest/capsule/fourk"
       - name: Transport expected snapshot and query pins separately
         id: pins
         run: |
@@ -307,6 +313,8 @@ jobs:
           assert len(data['cases'])==12
           with open(os.environ['GITHUB_OUTPUT'],'a') as file:
               file.write('pins='+json.dumps(data,separators=(',',':'))+'\n')
+              fourk=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'fourk-ingest/pins.json').read_text())
+              file.write('fourk_pins='+json.dumps(fourk,separators=(',',':'))+'\n')
           PY
       - uses: actions/upload-artifact@v4
         with:
@@ -319,6 +327,7 @@ jobs:
         with:
           name: core-l11-bounded-ingest-evidence
           path: |
+            ${{ runner.temp }}/fourk-ingest/
             ${{ runner.temp }}/bounded-ingest/native-builder.json
             ${{ runner.temp }}/bounded-ingest/result.json
             ${{ runner.temp }}/bounded-ingest/independent.log
@@ -331,6 +340,7 @@ jobs:
     timeout-minutes: 20
     env:
       EXPECTED_INGEST_PINS: ${{ needs.bounded-file-ingest.outputs.pins }}
+      EXPECTED_4K_PINS: ${{ needs.bounded-file-ingest.outputs.fourk_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -354,15 +364,23 @@ jobs:
           test -f "$RUNNER_TEMP/bounded-capsule/vault/decoder"
           test ! -L "$RUNNER_TEMP/bounded-capsule/vault/decoder"
           chmod 0700 "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/bounded-capsule/fourk/vault/decoder"
       - name: Independent logical and physical replay without original sources
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_capsule.py \
             --capsule "$RUNNER_TEMP/bounded-capsule" --pins-json "$EXPECTED_INGEST_PINS" \
             --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/bounded-independent"
+      - name: Independent 4KiB Vault replay on clean runner
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase replay \
+            --capsule "$RUNNER_TEMP/bounded-capsule/fourk" --pins-json "$EXPECTED_4K_PINS" \
+            --output "$RUNNER_TEMP/fourk-independent"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: core-l11-bounded-independent-evidence
-          path: ${{ runner.temp }}/bounded-independent/
+          path: |
+            ${{ runner.temp }}/bounded-independent/
+            ${{ runner.temp }}/fourk-independent/
           retention-days: 30
           if-no-files-found: warn
