@@ -6,6 +6,7 @@ on:
     paths:
       - experiments/core_l10_composition_v0/**
       - experiments/core_l11_integrated_vault_v0/**
+      - experiments/personal_memory_1tb_v2/**
       - .github/workflows/core-l10-incremental-compose.yml
   workflow_dispatch:
 
@@ -33,6 +34,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+      - name: Recovered compression, full retained budget and exact restoration
+        run: |
+          python3 -m unittest discover -s research/experiments/personal_memory_1tb_v2/tests -v
+          python3 -m unittest discover -s research/experiments/core_l11_integrated_vault_v0/ingest -p test_storage_budget.py -v
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/recovery_gate.py --output "$RUNNER_TEMP/preservation-recovery"
       - name: Compile original operator generation
         run: |
           cmake -S historical -B historical/build
