@@ -19,7 +19,10 @@ def crash(point):
     if os.environ.get('GLYPH_TEST_CRASH')==point: os.kill(os.getpid(),signal.SIGKILL)
 def digestfile(p):
     if not stat.S_ISREG(p.lstat().st_mode): raise ValueError('regular immutable file required')
-    return sha(p.read_bytes())
+    if p.stat().st_size>1<<20: raise ValueError('physical component size admission')
+    with p.open('rb') as f: raw=f.read((1<<20)+1)
+    if len(raw)>1<<20: raise ValueError('physical component grew')
+    return sha(raw)
 def read_source(folder,name):
     raw=os.fsencode(name)
     if not raw or b'/' in raw or raw in (b'.',b'..'): raise ValueError('one-level relative filename required')
@@ -53,7 +56,9 @@ class Vault:
             if old and digestfile(p/'decoder')!=old['decoder_sha256']: raise ValueError('decoder changed since parent')
             docs=[dict(x) for x in old['documents']] if old else []
             if not (p/'decoder').exists():
-                write(p/'decoder',Path(decoder).read_bytes()); os.chmod(p/'decoder',0o700); syncdir(p)
+                write(p/'decoder',Path(decoder).read_bytes()); os.chmod(p/'decoder',0o700)
+                with (p/'decoder').open('rb') as file: os.fsync(file.fileno())
+                syncdir(p)
             staged=Path(tempfile.mkdtemp(dir=p/'staging'))
             try:
                 touched=set()
@@ -99,9 +104,9 @@ class Vault:
         if obj.is_symlink() or not obj.is_dir(): raise ValueError('invalid object directory')
         if d['bytes']==0:
             if d['sha256']!=sha(b'') or d['manifest'] is not None or not obj.is_dir(): raise ValueError('empty identity')
-            if (obj/'empty.json').is_symlink() or (obj/'empty.json').read_bytes()!=canon({'format':'GLYPH_EMPTY_SOURCE_V0','sha256':d['sha256'],'bytes':0}): raise ValueError('explicit empty binding')
+            if (obj/'empty.json').is_symlink() or (obj/'empty.json').stat().st_size>512 or (obj/'empty.json').read_bytes()!=canon({'format':'GLYPH_EMPTY_SOURCE_V0','sha256':d['sha256'],'bytes':0}): raise ValueError('explicit empty binding')
             return
-        if not stat.S_ISREG((obj/'root.json').lstat().st_mode): raise ValueError('invalid manifest file')
+        if not stat.S_ISREG((obj/'root.json').lstat().st_mode) or (obj/'root.json').stat().st_size>8192: raise ValueError('invalid manifest file')
         raw=(obj/'root.json').read_bytes()
         if sha(raw)!=d['manifest']: raise ValueError('physical root mismatch')
         root=json.loads(raw)

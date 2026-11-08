@@ -9,11 +9,11 @@
   "hostiles_rejected": 14,
   "independent_cases": 12,
   "independent_selected_restore": true,
-  "max_child_rss_kib": 17920,
+  "max_child_rss_kib": 18048,
   "retained_vault_logical_bytes": 103090,
   "scope": "256-byte files; local process crashes only; not full acceptance",
-  "self_cpu_seconds": 0.34148999999999996,
-  "self_peak_rss_kib": 17920,
+  "self_cpu_seconds": 0.39793399999999995,
+  "self_peak_rss_kib": 18048,
   "sigkill_boundaries": 5,
   "snapshots": 3,
   "source_rejections": 4,
@@ -24,9 +24,9 @@
     "experiments/core_l11_integrated_vault_v0/ingest/replay_capsule.py": "0934770c040813d8be0107ba9024e801d12674c4c97cd41d734bcd1181c2753e",
     "experiments/core_l11_integrated_vault_v0/ingest/run_gate.py": "a3170b979c675c4a1a0653c2345fd8c795d13395b671dd5bdd9c9740029c6fe9",
     "experiments/core_l11_integrated_vault_v0/ingest/snapshot_contract.py": "7b63bce5d4aa2a60919058b3cac6cdc830ddbe23a6e000f3050837e4b4b0e43c",
-    "experiments/core_l11_integrated_vault_v0/ingest/vault.py": "ceb96ebfc2a91bfa2a2e134a65adf63e03440a3677cf9d226ee043944323629f"
+    "experiments/core_l11_integrated_vault_v0/ingest/vault.py": "45856cf6e3a7a2486f65d8890d0ec85c768e21a0fd6eb45883004c694d33f8ab"
   },
   "status": "LOCAL_BOUNDED_INGEST_SMOKE_PASS",
-  "terminated_children_cpu_seconds": 8.993002,
-  "wall_seconds": 9.169864398999948
+  "terminated_children_cpu_seconds": 9.882370000000002,
+  "wall_seconds": 10.102287029000081
 }
