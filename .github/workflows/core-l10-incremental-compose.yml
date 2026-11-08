@@ -266,3 +266,98 @@ jobs:
           path: ${{ runner.temp }}/l11-independent-evidence/result.json
           retention-days: 30
           if-no-files-found: warn
+
+  bounded-file-ingest:
+    needs: historical-25-exact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      pins: ${{ steps.pins.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile unchanged native materializer
+        run: g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp -o "$RUNNER_TEMP/ingest-decoder"
+      - name: Synthetic files, snapshots, process crashes and adversarial replay
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/run_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/bounded-ingest"
+      - name: Transport expected snapshot and query pins separately
+        id: pins
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib
+          data=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'bounded-ingest/pins.json').read_text())
+          assert len(data['cases'])==12
+          with open(os.environ['GITHUB_OUTPUT'],'a') as file:
+              file.write('pins='+json.dumps(data,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-bounded-index-only-capsule
+          path: ${{ runner.temp }}/bounded-ingest/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l11-bounded-ingest-evidence
+          path: |
+            ${{ runner.temp }}/bounded-ingest/result.json
+            ${{ runner.temp }}/bounded-ingest/independent.log
+          retention-days: 30
+          if-no-files-found: warn
+
+  bounded-file-independent:
+    needs: bounded-file-ingest
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPECTED_INGEST_PINS: ${{ needs.bounded-file-ingest.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-bounded-index-only-capsule
+          path: ${{ runner.temp }}/bounded-capsule
+      - name: Restore executable mode; executable bytes remain digest checked
+        run: |
+          test -f "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+          test ! -L "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+      - name: Independent logical and physical replay without original sources
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_capsule.py \
+            --capsule "$RUNNER_TEMP/bounded-capsule" --pins-json "$EXPECTED_INGEST_PINS" \
+            --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/bounded-independent"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l11-bounded-independent-evidence
+          path: ${{ runner.temp }}/bounded-independent/
+          retention-days: 30
+          if-no-files-found: warn

@@ -38,13 +38,8 @@ class Vault:
         p=self.path/'CURRENT'
         return p.read_text().strip() if p.exists() else None
     def snapshot(self,pin):
-        if not isinstance(pin,str) or len(pin)!=64 or any(c not in '0123456789abcdef' for c in pin): raise ValueError('invalid snapshot pin')
-        raw=(self.path/'snapshots'/pin).read_bytes()
-        if sha(raw)!=pin: raise ValueError('snapshot pin mismatch')
-        root=json.loads(raw)
-        if root['format']!='GLYPH_BOUNDED_IMPORT_V0' or len(root['documents'])>64: raise ValueError('snapshot schema')
-        if len({d['doc_id'] for d in root['documents']})!=len(root['documents']): raise ValueError('duplicate document identity')
-        return root
+        from snapshot_contract import load_chain
+        return load_chain(self.path,pin)
     def import_files(self,source,changes,expected,decoder):
         # changes: explicit {name, doc_id?}; absent paths are never deleted.
         p=self.path
@@ -55,6 +50,7 @@ class Vault:
             fcntl.flock(lock,fcntl.LOCK_EX)
             if self.current()!=expected: raise ValueError('writer parent conflict')
             old=self.snapshot(expected) if expected else None
+            if old and digestfile(p/'decoder')!=old['decoder_sha256']: raise ValueError('decoder changed since parent')
             docs=[dict(x) for x in old['documents']] if old else []
             if not (p/'decoder').exists():
                 write(p/'decoder',Path(decoder).read_bytes()); os.chmod(p/'decoder',0o700); syncdir(p)
@@ -72,7 +68,8 @@ class Vault:
                         if data:
                             build_object(data,leaf,self.ref,p/'decoder')
                             self.restore_object(leaf,key,len(data),staged/('check-'+key))
-                        else: leaf.mkdir()
+                        else:
+                            leaf.mkdir(); write(leaf/'empty.json',canon({'format':'GLYPH_EMPTY_SOURCE_V0','sha256':key,'bytes':0}))
                         for file in leaf.iterdir():
                             with file.open('rb') as f: os.fsync(f.fileno())
                         syncdir(leaf); crash('object-ready')
@@ -91,6 +88,7 @@ class Vault:
                     if snapshot.read_bytes()!=raw: raise ValueError('immutable snapshot conflict')
                     with snapshot.open('rb') as f: os.fsync(f.fileno())
                 else: write(snapshot,raw)
+                self.snapshot(pin)
                 syncdir(p/'snapshots'); crash('snapshot-ready')
                 head=staged/'CURRENT'; write(head,(pin+'\n').encode()); crash('before-current')
                 os.replace(head,p/'CURRENT'); crash('after-current'); syncdir(p); crash('published')
@@ -98,9 +96,12 @@ class Vault:
             finally: shutil.rmtree(staged)
     def validate_object(self,d):
         obj=self.path/'objects'/d['sha256']
+        if obj.is_symlink() or not obj.is_dir(): raise ValueError('invalid object directory')
         if d['bytes']==0:
             if d['sha256']!=sha(b'') or d['manifest'] is not None or not obj.is_dir(): raise ValueError('empty identity')
+            if (obj/'empty.json').is_symlink() or (obj/'empty.json').read_bytes()!=canon({'format':'GLYPH_EMPTY_SOURCE_V0','sha256':d['sha256'],'bytes':0}): raise ValueError('explicit empty binding')
             return
+        if not stat.S_ISREG((obj/'root.json').lstat().st_mode): raise ValueError('invalid manifest file')
         raw=(obj/'root.json').read_bytes()
         if sha(raw)!=d['manifest']: raise ValueError('physical root mismatch')
         root=json.loads(raw)
@@ -109,7 +110,7 @@ class Vault:
         for n,rec in root['artifacts'].items():
             if n not in ('rlb2','rlr2','ef') or digestfile(obj/n)!=rec['sha256'] or (obj/n).stat().st_size!=rec['bytes']: raise ValueError('incomplete physical coverage')
     def query(self,pin,pattern,limit=256):
-        if not pattern or not 0<=limit<=256: raise ValueError('query admission')
+        if type(pattern) is not bytes or not 0<len(pattern)<=257 or type(limit) is not int or not 0<=limit<=256: raise ValueError('query admission')
         root=self.snapshot(pin); coords=[]; receipts=[]
         if digestfile(self.path/'decoder')!=root['decoder_sha256']: raise ValueError('decoder mismatch')
         for d in root['documents']:
@@ -122,7 +123,7 @@ class Vault:
                 if not r['coverage_complete']: raise ValueError('incomplete physical enumeration')
                 coords.extend([d['doc_id'],d['revision'],off] for off in r['offsets']); receipts.append(r)
             finally: s.close()
-        return dict(snapshot=pin,count=len(coords),coordinates=coords[:limit],status='UNTRUSTED' if len(coords)>limit else 'FOUND' if coords else 'PROVEN_EMPTY',physical_receipts=receipts)
+        return dict(snapshot=pin,query_hex=pattern.hex(),limit=limit,count=len(coords),coordinates=coords[:limit],status='UNTRUSTED' if len(coords)>limit else 'FOUND' if coords else 'PROVEN_EMPTY',physical_receipts=receipts)
     def restore_object(self,obj,key,size,out):
         args=[sys.executable,str(REPO/'experiments/loc_text_ef_v0/trusted_materialize_v0.py'),'--manifest',str(obj/'root.json'),'--root-sha256',digestfile(obj/'root.json'),'--rlb2',str(obj/'rlb2'),'--rlr2',str(obj/'rlr2'),'--ef',str(obj/'ef'),'--decoder',str(self.path/'decoder'),'--output',str(out),'--threads','2','--mode','rank']
         subprocess.run(args,check=True,capture_output=True)
