@@ -274,6 +274,7 @@ jobs:
     outputs:
       pins: ${{ steps.pins.outputs.pins }}
       fourk_pins: ${{ steps.pins.outputs.fourk_pins }}
+      scale_pins: ${{ steps.pins.outputs.scale_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -304,6 +305,13 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase produce \
             --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
             --output "$RUNNER_TEMP/fourk-ingest" --capsule "$RUNNER_TEMP/bounded-ingest/capsule/fourk"
+      - name: Scaled 8MiB full-source verification and negatives
+        run: |
+          python3 -I research/experiments/core_l9_scale_v0/stream_tests.py --output "$RUNNER_TEMP/scaled-stream-boundaries"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/scale_ladder.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/scaled-ladder" --sizes 8388608
+          python3 research/experiments/core_l11_integrated_vault_v0/ingest/scale_negatives.py "$RUNNER_TEMP/scaled-ladder/8388608"
       - name: Transport expected snapshot and query pins separately
         id: pins
         run: |
@@ -315,7 +323,22 @@ jobs:
               file.write('pins='+json.dumps(data,separators=(',',':'))+'\n')
               fourk=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'fourk-ingest/pins.json').read_text())
               file.write('fourk_pins='+json.dumps(fourk,separators=(',',':'))+'\n')
+              cases=[]
+              for index in range(3):
+                  c=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'scaled-ladder/8388608'/(str(index)+'.json')).read_text())
+                  cases.append(dict(pin=c['snapshot'],query_hex=c['query_hex']))
+              file.write('scale_pins='+json.dumps(cases,separators=(',',':'))+'\n')
           PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-scaled-index-only-capsule
+          path: |
+            ${{ runner.temp }}/scaled-ladder/8388608/vault/
+            ${{ runner.temp }}/scaled-ladder/8388608/0.json
+            ${{ runner.temp }}/scaled-ladder/8388608/1.json
+            ${{ runner.temp }}/scaled-ladder/8388608/2.json
+          retention-days: 14
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: core-l11-bounded-index-only-capsule
@@ -327,6 +350,7 @@ jobs:
         with:
           name: core-l11-bounded-ingest-evidence
           path: |
+            ${{ runner.temp }}/scaled-ladder/result.json
             ${{ runner.temp }}/fourk-ingest/
             ${{ runner.temp }}/bounded-ingest/native-builder.json
             ${{ runner.temp }}/bounded-ingest/result.json
@@ -341,6 +365,7 @@ jobs:
     env:
       EXPECTED_INGEST_PINS: ${{ needs.bounded-file-ingest.outputs.pins }}
       EXPECTED_4K_PINS: ${{ needs.bounded-file-ingest.outputs.fourk_pins }}
+      EXPECTED_SCALE_PINS: ${{ needs.bounded-file-ingest.outputs.scale_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -359,17 +384,27 @@ jobs:
         with:
           name: core-l11-bounded-index-only-capsule
           path: ${{ runner.temp }}/bounded-capsule
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-scaled-index-only-capsule
+          path: ${{ runner.temp }}/scaled-capsule
       - name: Restore executable mode; executable bytes remain digest checked
         run: |
           test -f "$RUNNER_TEMP/bounded-capsule/vault/decoder"
           test ! -L "$RUNNER_TEMP/bounded-capsule/vault/decoder"
           chmod 0700 "$RUNNER_TEMP/bounded-capsule/vault/decoder"
           chmod 0700 "$RUNNER_TEMP/bounded-capsule/fourk/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/scaled-capsule/vault/decoder"
       - name: Independent logical and physical replay without original sources
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_capsule.py \
             --capsule "$RUNNER_TEMP/bounded-capsule" --pins-json "$EXPECTED_INGEST_PINS" \
             --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/bounded-independent"
+      - name: Independent scaled Vault replay without original source
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_scale.py \
+            --capsule "$RUNNER_TEMP/scaled-capsule" --pins-json "$EXPECTED_SCALE_PINS" \
+            --output "$RUNNER_TEMP/scaled-independent"
       - name: Independent 4KiB Vault replay on clean runner
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase replay \
@@ -382,5 +417,6 @@ jobs:
           path: |
             ${{ runner.temp }}/bounded-independent/
             ${{ runner.temp }}/fourk-independent/
+            ${{ runner.temp }}/scaled-independent/
           retention-days: 30
           if-no-files-found: warn

@@ -17,11 +17,11 @@ def write(p,b):
     with p.open('xb') as f: f.write(b); f.flush(); os.fsync(f.fileno())
 def crash(point):
     if os.environ.get('GLYPH_TEST_CRASH')==point: os.kill(os.getpid(),signal.SIGKILL)
-def digestfile(p):
+def digestfile(p,cap=1<<20):
     if not stat.S_ISREG(p.lstat().st_mode): raise ValueError('regular immutable file required')
-    if p.stat().st_size>1<<20: raise ValueError('physical component size admission')
-    with p.open('rb') as f: raw=f.read((1<<20)+1)
-    if len(raw)>1<<20: raise ValueError('physical component grew')
+    if p.stat().st_size>cap: raise ValueError('physical component size admission')
+    with p.open('rb') as f: raw=f.read(cap+1)
+    if len(raw)>cap: raise ValueError('physical component grew')
     return sha(raw)
 def read_source(folder,name,cap=256):
     raw=os.fsencode(name)
@@ -36,6 +36,7 @@ def read_source(folder,name,cap=256):
     finally: os.close(fd)
 
 class Vault:
+    COMPONENT_LIMIT=1<<20
     SOURCE_LIMIT=256
     FORMAT="GLYPH_BOUNDED_IMPORT_V0"
     def __init__(self,path,reference): self.path=Path(path); self.ref=Path(reference)
@@ -73,7 +74,7 @@ class Vault:
                     if not obj.exists():
                         leaf=staged/key
                         if data:
-                            build_object(data,leaf,self.ref,p/'decoder')
+                            self.build_physical(data,leaf,p/'decoder')
                             self.restore_object(leaf,key,len(data),staged/('check-'+key))
                         else:
                             leaf.mkdir(); write(leaf/'empty.json',canon({'format':'GLYPH_EMPTY_SOURCE_V0','sha256':key,'bytes':0}))
@@ -101,6 +102,8 @@ class Vault:
                 os.replace(head,p/'CURRENT'); crash('after-current'); syncdir(p); crash('published')
                 return pin
             finally: shutil.rmtree(staged)
+    def build_physical(self,data,leaf,decoder):
+        build_object(data,leaf,self.ref,decoder)
     def validate_object(self,d):
         obj=self.path/'objects'/d['sha256']
         if obj.is_symlink() or not obj.is_dir(): raise ValueError('invalid object directory')
@@ -115,7 +118,7 @@ class Vault:
         if root['source']!={'bytes':d['bytes'],'sha256':d['sha256']}: raise ValueError('source binding')
         if set(root['artifacts'])!={'rlb2','rlr2','ef'}: raise ValueError('mandatory physical artifacts absent')
         for n,rec in root['artifacts'].items():
-            if n not in ('rlb2','rlr2','ef') or digestfile(obj/n)!=rec['sha256'] or (obj/n).stat().st_size!=rec['bytes']: raise ValueError('incomplete physical coverage')
+            if n not in ('rlb2','rlr2','ef') or digestfile(obj/n,self.COMPONENT_LIMIT)!=rec['sha256'] or (obj/n).stat().st_size!=rec['bytes']: raise ValueError('incomplete physical coverage')
     def query(self,pin,pattern,limit=256):
         if type(pattern) is not bytes or not 0<len(pattern)<=257 or type(limit) is not int or not 0<=limit<=256: raise ValueError('query admission')
         root=self.snapshot(pin); coords=[]; receipts=[]
@@ -134,4 +137,4 @@ class Vault:
     def restore_object(self,obj,key,size,out):
         args=[sys.executable,str(REPO/'experiments/loc_text_ef_v0/trusted_materialize_v0.py'),'--manifest',str(obj/'root.json'),'--root-sha256',digestfile(obj/'root.json'),'--rlb2',str(obj/'rlb2'),'--rlr2',str(obj/'rlr2'),'--ef',str(obj/'ef'),'--decoder',str(self.path/'decoder'),'--output',str(out),'--threads','2','--mode','rank']
         subprocess.run(args,check=True,capture_output=True)
-        if digestfile(out)!=key or out.stat().st_size!=size: raise ValueError('independent restore mismatch')
+        if digestfile(out,max(1,self.SOURCE_LIMIT))!=key or out.stat().st_size!=size: raise ValueError('independent restore mismatch')
