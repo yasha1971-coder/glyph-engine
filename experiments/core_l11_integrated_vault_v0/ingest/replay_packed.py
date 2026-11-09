@@ -27,7 +27,11 @@ def run(capsule,pins,output):
         demand(type(cases) is list and 3<=len(cases)<=64 and type(selected) is list and len(selected)<=64,'case/selection bound')
     demand(set(p.name for p in capsule.iterdir())=={'vault',*(str(i)+'.json' for i in range(len(cases)))},'capsule must contain only packed Vault and claims')
     vault=capsule/'vault'
-    demand(not any((vault/'staging').iterdir()),'capsule contains persistent staging; index-only transfer not established')
+    # Artifact ZIPs omit empty directories. Absent staging is empty, whereas
+    # any persistent staging entry still invalidates an index-only capsule.
+    staging=vault/'staging'
+    demand(not staging.exists() or (staging.is_dir() and not staging.is_symlink() and not any(staging.iterdir())),
+           'capsule contains persistent staging; index-only transfer not established')
     before=disk(vault)
     for name in before['files']:
         parts=Path(name).parts

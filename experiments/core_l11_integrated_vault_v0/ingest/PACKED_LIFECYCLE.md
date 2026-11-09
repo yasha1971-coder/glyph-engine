@@ -43,8 +43,10 @@ Fixes are deliberately limited:
   Under the existing LOCK, restart removes only journal-owned *unpublished*
   additions and that transaction's staging. Published roots/objects are retained;
   protected ancestor objects/roots cannot be deleted. Unknown/legacy staging is
-  never garbage-collected and remains charged. No general GC or migration.
-- Clean replay refuses persistent staging and unexpected representations in its
+  never garbage-collected and remains charged. No general GC or migration. Publication target is recorded separately from
+  snapshot deletion ownership, so reuse of an unowned valid orphan cannot turn
+  a committed publication into a cleanup exception. Earlier owned journals remain readable.
+- Clean replay accepts absent empty directories (ZIP transport), but refuses persistent staging and unexpected representations in its
   packed-only capsule, so restored source caches cannot be transferred silently.
   Codec decoded-size admission also rejects bool/nonpositive/oversized lengths.
 
@@ -77,6 +79,7 @@ loser reason WRITER_PARENT_CONFLICT), and all five real SIGKILL boundaries:
 object-ready / snapshot-ready / before-current / after-current / published.
 Each runs in a separate directory, restarts in a fresh process, verifies old/new
 publication state and full history, then forces budget rejection and retries.
+A valid preexisting orphan snapshot is separately reused and kept byte-identical.
 Old files remain unchanged. Pre-recovery staging/leftovers are inventoried honestly;
 post-recovery owned staging is empty. Unknown staging is separately proved retained.
 
@@ -149,8 +152,17 @@ expected stdout hash:
 | history-falsifier-v2.log | ancestor missing, old replay falsely PASS | b55e17ae75ef1687155508600fe0976c2a0d3ba4e097d4cf4c6b3d6557235605 |
 | writer-history-falsifier.log | missing historical EF accepted before fix | a15708bf2625eb3ca7542b21ce781063daa612f48fabdb80e157dcba678f3363 |
 | lifecycle-attempt1.log | fixture repeated CRASH_ONLY, expected1 was wrong; exit1 | ad7d72f6e1a49a2c42f8644597b0fa6f2b1b413f1e94de5e5dcc50221f5e5ed9 |
+| preexisting-snapshot-falsifier.log | first candidate57b2 published then raised on unowned snapshot reuse; fixed target/ownership separation | a02329f6b40daa640d72b0ec4acc09bbd16370df146b45048e9655e17e577e57 |
 
-The last marker was made unique; no count algorithm was weakened. Later complete
+First candidate57b2 research run42613999237 has six successful jobs and a
+bounded-file-independent FAIL: ZIP transport omits empty vault/staging and the
+initial checker incorrectly required its directory entry. Required data was not
+missing. This failure is retained at
+https://github.com/yasha1971-coder/glyph-engine/actions/runs/42613999237/job/129151990340.
+The next candidate reruns all seven jobs, not a relabelled old green.
+Artifact transport drops empty staging directories; replay treats absent staging
+as empty while still rejecting every persistent staging entry.
+The CRASH_ONLY marker was made unique; no count algorithm was weakened. Later complete
 producer and independent runs pass. Historical baseline source caches remain
 preserved; new copies remove only their newly journal-owned transaction artifacts.
 CI results/final commits and unresolved limits are delivered in PR29/response;

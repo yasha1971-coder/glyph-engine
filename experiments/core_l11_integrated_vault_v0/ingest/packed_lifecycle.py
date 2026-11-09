@@ -94,6 +94,16 @@ def main():
     unknown=foreign/'staging/foreign';unknown.mkdir();(unknown/'payload').write_bytes(b'UNOWNED retained bytes')
     known=identity(inventory(foreign));VaultPacked(foreign,a.reference).recover()
     assert identity(inventory(foreign))==known,'recovery deleted unowned staging'
+    # A valid legacy orphan may be reused, but is not owned by this transaction.
+    # Publication target and deletion ownership must remain separate.
+    legacy=out/'preexisting-snapshot';shutil.copytree(v.path,legacy)
+    pending=VaultPacked(legacy,a.reference)
+    prepared=pending.import_files(src,[{'name':'crash'}],head,a.decoder)
+    (legacy/'CURRENT').write_text(head+'\n') # isolated legacy-orphan simulation
+    preexisting=inventory(legacy)
+    reused=pending.import_files(src,[{'name':'crash'}],head,a.decoder)
+    assert reused==prepared and pending.current()==prepared
+    preserved(preexisting,inventory(legacy));authenticate(legacy,reused)
     (src/'random').write_bytes(random.Random(20261109).randbytes(65536));(src/'tiny').write_bytes(b'x')
     for n in ('random','tiny'):
         bad=VaultPacked(out/('rejected-'+n),a.reference)
@@ -155,6 +165,7 @@ def main():
     report=dict(status='PACKED_LIFECYCLE_LOCAL_PASS',head=head,snapshots=pins,query_cases=len(cases),old_receipts_unchanged=len(receipts),
         independent_index_source_semantics=False,import_costs=costs,snapshot_evidence=preservations,
         negatives=negatives,concurrent_writers=writers,crashes=crashes,retained=disk(v.path),
+        preexisting_snapshot_reused_without_cleanup_error=True,
         synthetic_seed=20261109,current_logical_bytes=sum(d['bytes'] for d in states[-1]['documents']),
         source_original_files_preserved=True,power_loss_proven=False,
         scratch_file_lengths=sum(p.stat().st_size for p in out.rglob('*') if p.is_file()))

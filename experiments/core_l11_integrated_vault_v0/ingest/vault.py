@@ -96,6 +96,7 @@ class Vault:
                 for document in docs: self.validate_object(document)
                 root=dict(format=self.FORMAT,vault_id=old['vault_id'] if old else uuid.uuid4().hex,parent=expected,documents=docs,decoder_sha256=digestfile(p/'decoder'))
                 raw=canon(root); pin=sha(raw)
+                self.track_transaction(staged,'target',pin)
                 snapshot=p/'snapshots'/pin
                 if snapshot.exists():
                     if snapshot.read_bytes()!=raw: raise ValueError('immutable snapshot conflict')
