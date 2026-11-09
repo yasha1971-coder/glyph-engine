@@ -1,4 +1,4 @@
-import argparse,json,os,random,subprocess,sys,tempfile,time
+import argparse,json,os,random,subprocess,sys,tempfile,time,shutil
 from pathlib import Path
 HERE=Path(__file__).resolve().parent;sys.path.insert(0,str(HERE))
 from vault_packed import VaultPacked
@@ -55,3 +55,11 @@ retained=sum(p.stat().st_size for p in v.path.rglob('*') if p.is_file())
 assert retained<=len(raw)*2+len(b'new version marker\n')
 report=dict(status='PACKED_FULL_SNAPSHOT_PASS',retained_bytes=retained,distinct_source_bytes=len(raw)*2+len(b'new version marker\n'),snapshots=2,independent=proof,crash_restart=True,incompressible_rejected=rejected,wall_seconds=time.monotonic()-started,limits='temporary expanded indexes; full source scan verification; not constant RAM, production or real VIKA')
 (a.output/'result.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
+capsule=a.output/'capsule';capsule.mkdir();shutil.copytree(v.path,capsule/'vault')
+cases=[]
+for i,(root,pattern) in enumerate([(pin,b'new version marker'),(new,b'new version marker'),(new,b'GLYPH')]):
+ claim=v.query(root,pattern)
+ data=json.dumps(claim,sort_keys=True,separators=(',',':')).encode()+b'\n'
+ (capsule/(str(i)+'.json')).write_bytes(data)
+ cases.append(dict(pin=root,query_hex=pattern.hex(),claim_sha256=sha(data)))
+(a.output/'pins.json').write_text(json.dumps(cases,separators=(',',':'))+'\n')

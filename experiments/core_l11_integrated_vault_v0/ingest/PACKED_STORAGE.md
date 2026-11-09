@@ -45,3 +45,16 @@ broader append/revision/dedup/crash negatives and per-stage RAM/CPU/temp costs;
 then bounded heterogeneous source classes, avoiding unconditional full opaque
 media indexes. Current packing is a compatible bounded research step, not final
 heterogeneous preservation routing or a real-VIKA compactness claim.
+
+## Separate-runner replay continuation
+
+packed_gate.py exports only capsule/vault and three claim JSONs; pins.json stays
+outside the capsule and is transported through CI job outputs. Independent job
+imports no Vault or producer. It authenticates claim pins and snapshot roots,
+expands checked components, independently restores/scans all bytes for old absence,
+new hit and high-count cases. Complete retained budget is rechecked. Wrong count,
+wrong external pin, missing and corrupt component reject. Original source paths
+are not transferred. Test-copy mutations are restored before completion.
+This covers this two-snapshot synthetic fixture, not arbitrary history, real VIKA
+or lower temporary expansion costs. Local passes do not establish cross-runner
+acceptance until the separate CI job at the exact new HEAD passes.
