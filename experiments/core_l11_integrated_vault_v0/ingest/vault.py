@@ -55,6 +55,7 @@ class Vault:
         syncdir(p); syncdir(p.parent)
         with (p/'LOCK').open('a+b') as lock:
             fcntl.flock(lock,fcntl.LOCK_EX)
+            self.recover_pending()
             if self.current()!=expected: raise ValueError('writer parent conflict')
             old=self.snapshot(expected) if expected else None
             if old and digestfile(p/'decoder')!=old['decoder_sha256']: raise ValueError('decoder changed since parent')
@@ -66,6 +67,7 @@ class Vault:
             staged=Path(tempfile.mkdtemp(dir=p/'staging'))
             added=[]; new_snapshot=None
             try:
+                self.start_transaction(staged,expected)
                 touched=set()
                 for change in changes:
                     name=change['name']; data=read_source(Path(source),name,self.SOURCE_LIMIT)
@@ -82,7 +84,7 @@ class Vault:
                             leaf.mkdir(); write(leaf/'empty.json',canon({'format':'GLYPH_EMPTY_SOURCE_V0','sha256':key,'bytes':0}))
                         for file in leaf.iterdir():
                             with file.open('rb') as f: os.fsync(f.fileno())
-                        syncdir(leaf); crash('object-ready')
+                        syncdir(leaf); self.track_transaction(staged,'objects',key); crash('object-ready')
                         os.rename(leaf,obj); syncdir(p/'objects')
                         added.append(obj)
                     manifest=sha((obj/'root.json').read_bytes()) if data else None
@@ -99,6 +101,7 @@ class Vault:
                     if snapshot.read_bytes()!=raw: raise ValueError('immutable snapshot conflict')
                     with snapshot.open('rb') as f: os.fsync(f.fileno())
                 else:
+                    self.track_transaction(staged,'snapshot',pin)
                     write(snapshot,raw); new_snapshot=snapshot
                 self.snapshot(pin)
                 syncdir(p/'snapshots'); crash('snapshot-ready')
@@ -112,7 +115,15 @@ class Vault:
                 for obj in added: shutil.rmtree(obj)
                 syncdir(p/'objects')
                 raise
-            finally: shutil.rmtree(staged)
+            finally:
+                self.finish_transaction(staged)
+                shutil.rmtree(staged)
+    # Packed storage opts into transaction-owned recovery; old profiles keep
+    # their existing behavior, schemas and limits.
+    def recover_pending(self): pass
+    def start_transaction(self,staged,parent): pass
+    def track_transaction(self,staged,kind,value): pass
+    def finish_transaction(self,staged): pass
     def accept_candidate(self,root,pin): pass
     def build_physical(self,data,leaf,decoder):
         build_object(data,leaf,self.ref,decoder)

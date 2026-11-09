@@ -282,6 +282,7 @@ jobs:
       fourk_pins: ${{ steps.pins.outputs.fourk_pins }}
       scale_pins: ${{ steps.pins.outputs.scale_pins }}
       packed_pins: ${{ steps.pins.outputs.packed_pins }}
+      lifecycle_pins: ${{ steps.pins.outputs.lifecycle_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -324,6 +325,25 @@ jobs:
             --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
             --output "$RUNNER_TEMP/scaled-ladder" --sizes 8388608
           python3 research/experiments/core_l11_integrated_vault_v0/ingest/scale_negatives.py "$RUNNER_TEMP/scaled-ladder/8388608"
+      - name: Packed revisions, rename, dedup, five SIGKILL restarts and budget retries
+        run: |
+          python3 - <<'PY'
+          import json,os,stat,sys
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          def lengths(p):
+              return sum(f.lstat().st_size for f in p.rglob('*')
+                         if '.git' not in f.relative_to(p).parts and stat.S_ISREG(f.lstat().st_mode))
+          print('PACKED_LIFECYCLE_SUPPORT_COSTS '+json.dumps(dict(
+              research_checkout_file_lengths=lengths(root/'research'),
+              reference_build_file_lengths=lengths(root/'reference/build'),
+              reference_checkout_and_build_file_lengths=lengths(root/'reference'),
+              native_decoder_bytes=(Path(os.environ['RUNNER_TEMP'])/'ingest-decoder').stat().st_size,
+              complete_installed_environment_footprint_measured=False),sort_keys=True))
+          PY
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/packed_lifecycle.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/packed-lifecycle"
       - name: Transport expected snapshot and query pins separately
         id: pins
         run: |
@@ -342,7 +362,15 @@ jobs:
               file.write('scale_pins='+json.dumps(cases,separators=(',',':'))+'\n')
               packed=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-vault/pins.json').read_text())
               file.write('packed_pins='+json.dumps(packed,separators=(',',':'))+'\n')
+              lifecycle=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-lifecycle/pins.json').read_text())
+              file.write('lifecycle_pins='+json.dumps(lifecycle,separators=(',',':'))+'\n')
           PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-packed-lifecycle-capsule
+          path: ${{ runner.temp }}/packed-lifecycle/capsule/
+          retention-days: 14
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: core-l11-packed-only-capsule
@@ -375,6 +403,9 @@ jobs:
             ${{ runner.temp }}/bounded-ingest/native-builder.json
             ${{ runner.temp }}/bounded-ingest/result.json
             ${{ runner.temp }}/bounded-ingest/independent.log
+            ${{ runner.temp }}/packed-vault/result.json
+            ${{ runner.temp }}/packed-lifecycle/result.json
+            ${{ runner.temp }}/packed-lifecycle/pins.json
           retention-days: 30
           if-no-files-found: warn
 
@@ -387,6 +418,7 @@ jobs:
       EXPECTED_4K_PINS: ${{ needs.bounded-file-ingest.outputs.fourk_pins }}
       EXPECTED_SCALE_PINS: ${{ needs.bounded-file-ingest.outputs.scale_pins }}
       EXPECTED_PACKED_PINS: ${{ needs.bounded-file-ingest.outputs.packed_pins }}
+      EXPECTED_LIFECYCLE_PINS: ${{ needs.bounded-file-ingest.outputs.lifecycle_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -421,6 +453,16 @@ jobs:
           chmod 0700 "$RUNNER_TEMP/bounded-capsule/fourk/vault/decoder"
           chmod 0700 "$RUNNER_TEMP/scaled-capsule/vault/decoder"
           chmod 0700 "$RUNNER_TEMP/packed-capsule/vault/decoder"
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-packed-lifecycle-capsule
+          path: ${{ runner.temp }}/packed-lifecycle-capsule
+      - name: Independent packed lifecycle, complete parent history and historical-source negatives
+        run: |
+          chmod 0700 "$RUNNER_TEMP/packed-lifecycle-capsule/vault/decoder"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+            --capsule "$RUNNER_TEMP/packed-lifecycle-capsule" --pins-json "$EXPECTED_LIFECYCLE_PINS" \
+            --output "$RUNNER_TEMP/packed-lifecycle-independent"
       - name: Independent packed-only replay with externally transported pins
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
@@ -449,6 +491,8 @@ jobs:
             ${{ runner.temp }}/bounded-independent/
             ${{ runner.temp }}/fourk-independent/
             ${{ runner.temp }}/packed-independent/
+            ${{ runner.temp }}/packed-lifecycle-independent/result.json
+            ${{ runner.temp }}/packed-lifecycle-independent/history-negatives/result.json
             ${{ runner.temp }}/scaled-independent/
           retention-days: 30
           if-no-files-found: warn

@@ -58,3 +58,16 @@ are not transferred. Test-copy mutations are restored before completion.
 This covers this two-snapshot synthetic fixture, not arbitrary history, real VIKA
 or lower temporary expansion costs. Local passes do not establish cross-runner
 acceptance until the separate CI job at the exact new HEAD passes.
+
+## Lifecycle reconciliation — 2026-11-09
+
+The preceding separate-runner paragraph describes the earlier claim. A baseline
+reproduction found retained restored-source staging after its SIGKILL, and a
+missing ancestor-only object escaped old query-selected budget verification.
+Do not repeat the former no-source-transfer claim for that historical capsule.
+It remains preserved at its checkpoint. New packed transaction-owned restart
+cleanup and complete-history restore/hash verification address those findings;
+clean capsules reject staging and unknown representations. See
+[PACKED_LIFECYCLE.md](PACKED_LIFECYCLE.md) for failures, five snapshots/revisions,
+five process-crash/restart/budget-retry cases, exact commands and cost boundaries.
+No historical artifact or format was overwritten; unknown staging is never GC'd.

@@ -14,7 +14,7 @@ def expand(obj,out):
     (out/'root.json').write_bytes(raw)
     for name in ('rlb2','rlr2','ef'):
         p=obj/(name+'.packed'); rec=root['artifacts'][name]
-        if not stat.S_ISREG(p.lstat().st_mode) or p.stat().st_size>LIMIT or not 0<=rec['bytes']<=LIMIT: raise ValueError('component budget')
+        if not stat.S_ISREG(p.lstat().st_mode) or p.stat().st_size>LIMIT or type(rec['bytes']) is not int or not 0<rec['bytes']<=LIMIT: raise ValueError('component budget')
         data=p.read_bytes(); codec=codecs[name]
         if codec=='raw': decoded=data
         elif codec in ('xz-9','bzip2-9'):
