@@ -1,0 +1,18 @@
+{
+  "status": "PACKED_FULL_SNAPSHOT_PASS",
+  "retained_bytes": 1173676,
+  "distinct_source_bytes": 2097171,
+  "snapshots": 2,
+  "independent": {
+    "status": "STREAM_FULL_SOURCE_REPLAY_PASS",
+    "count": 1,
+    "source_read_bytes": 4194342,
+    "independent_index_source_semantics": false
+  },
+  "crash_restart": true,
+  "incompressible_rejected": true,
+  "wall_seconds": 8.628851811000004,
+  "limits": "temporary expanded indexes; full source scan verification; not constant RAM, production or real VIKA",
+  "previous_profile_recheck": "V0/native PASS;14hostiles/12independent/5SIGKILL;32compression tests PASS",
+  "failed_prediction": "Random2MiB append accepted within prior savings; incorrect rejection expectation replaced with explicit retained-sidecar budget exhaustion. Failure not codec error."
+}

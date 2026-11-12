@@ -1,0 +1,47 @@
+[
+  {
+    "status": "SCALE_LADDER_STAGE_PASS",
+    "source_file_bytes": 1048576,
+    "logical_snapshot_bytes": 2097152,
+    "snapshots": 2,
+    "physical_content_objects": 1,
+    "queries": 3,
+    "wall_seconds": 3.318335091999984,
+    "retained_vault_bytes": 516191,
+    "self_peak_rss_kib": 21836,
+    "max_child_rss_kib": 21836,
+    "cumulative_self_cpu": 0.604389,
+    "cumulative_child_cpu": 4.278834,
+    "independent_index_source_semantics": false
+  },
+  {
+    "status": "SCALE_LADDER_STAGE_PASS",
+    "source_file_bytes": 8388608,
+    "logical_snapshot_bytes": 16777216,
+    "snapshots": 2,
+    "physical_content_objects": 1,
+    "queries": 3,
+    "wall_seconds": 18.759080341000015,
+    "retained_vault_bytes": 2656957,
+    "self_peak_rss_kib": 75416,
+    "max_child_rss_kib": 108184,
+    "cumulative_self_cpu": 3.7545789999999997,
+    "cumulative_child_cpu": 31.749895,
+    "independent_index_source_semantics": false
+  },
+  {
+    "status": "SCALE_LADDER_STAGE_PASS",
+    "source_file_bytes": 100000000,
+    "logical_snapshot_bytes": 200000000,
+    "snapshots": 2,
+    "physical_content_objects": 1,
+    "queries": 3,
+    "wall_seconds": 194.73760646400007,
+    "retained_vault_bytes": 28816246,
+    "self_peak_rss_kib": 618488,
+    "max_child_rss_kib": 1271208,
+    "cumulative_self_cpu": 37.123822999999994,
+    "cumulative_child_cpu": 310.769673,
+    "independent_index_source_semantics": false
+  }
+]

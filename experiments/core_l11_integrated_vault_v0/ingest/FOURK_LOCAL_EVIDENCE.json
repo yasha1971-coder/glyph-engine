@@ -1,0 +1,1 @@
+{"capped_prefix": 256, "hostiles_rejected": 7, "initial_high_count": 600, "logical_cases": 12, "original_v0_rejects_v1": true, "oversize_rejected": true, "sigkill_boundaries": 5, "snapshots": 3, "status": "REAL_FILE_4K_VAULT_PRODUCER_PASS"}

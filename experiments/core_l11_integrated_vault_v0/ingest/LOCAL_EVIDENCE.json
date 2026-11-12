@@ -1,0 +1,32 @@
+{
+  "baseline_remote_sha": "59c4559987e1488b202d236956598a437fcd00f7",
+  "concurrent_writer_exits": [
+    0,
+    1
+  ],
+  "corrupt_leaf_absence_rejected": true,
+  "cost_scope": "gate processes; compiler and installed Python/stdlib/Git excluded; RSS not simultaneous process-tree peak",
+  "hostiles_rejected": 14,
+  "independent_cases": 12,
+  "independent_selected_restore": true,
+  "max_child_rss_kib": 18048,
+  "retained_vault_logical_bytes": 103090,
+  "scope": "256-byte files; local process crashes only; not full acceptance",
+  "self_cpu_seconds": 0.39793399999999995,
+  "self_peak_rss_kib": 18048,
+  "sigkill_boundaries": 5,
+  "snapshots": 3,
+  "source_rejections": 4,
+  "source_sha256": {
+    "experiments/core_l11_integrated_vault_v0/ingest/gate.py": "4573b13e57788665bd5d8df085f5a59f2b0cda77b4b663f9c78a43d960865e91",
+    "experiments/core_l11_integrated_vault_v0/ingest/independent_verify.py": "5e9dc420d3dc0811dcd6f4c1ff2d43ec7f36a3dd0efef0beef77c122873b3262",
+    "experiments/core_l11_integrated_vault_v0/ingest/physical.py": "55a7e94278601c5d4c7efb4a4521362b0f7c7ff64be2f53cbe52d855e7ccf76c",
+    "experiments/core_l11_integrated_vault_v0/ingest/replay_capsule.py": "0934770c040813d8be0107ba9024e801d12674c4c97cd41d734bcd1181c2753e",
+    "experiments/core_l11_integrated_vault_v0/ingest/run_gate.py": "a3170b979c675c4a1a0653c2345fd8c795d13395b671dd5bdd9c9740029c6fe9",
+    "experiments/core_l11_integrated_vault_v0/ingest/snapshot_contract.py": "7b63bce5d4aa2a60919058b3cac6cdc830ddbe23a6e000f3050837e4b4b0e43c",
+    "experiments/core_l11_integrated_vault_v0/ingest/vault.py": "45856cf6e3a7a2486f65d8890d0ec85c768e21a0fd6eb45883004c694d33f8ab"
+  },
+  "status": "LOCAL_BOUNDED_INGEST_SMOKE_PASS",
+  "terminated_children_cpu_seconds": 9.882370000000002,
+  "wall_seconds": 10.102287029000081
+}

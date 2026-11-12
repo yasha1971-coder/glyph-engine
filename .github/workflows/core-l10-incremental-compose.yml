@@ -1,0 +1,527 @@
+name: core-l10-incremental-compose
+
+on:
+  pull_request:
+    branches: [codex/core-l9s-100mb-query-replay]
+    paths:
+      - experiments/core_l10_composition_v0/**
+      - experiments/core_l11_integrated_vault_v0/**
+      - experiments/personal_memory_1tb_v2/**
+      - .github/workflows/core-l10-incremental-compose.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  historical-25-exact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 81628f843dc8aa633c65594a66d2386bfc3cb5c2
+          path: historical
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Recovered compression, full retained budget and exact restoration
+        run: |
+          python3 -m unittest discover -s research/experiments/personal_memory_1tb_v2/tests -v
+          python3 -m unittest discover -s research/experiments/core_l11_integrated_vault_v0/ingest -p test_storage_budget.py -v
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/recovery_gate.py --output "$RUNNER_TEMP/preservation-recovery"
+      - name: Compile original operator generation
+        run: |
+          cmake -S historical -B historical/build
+          cmake --build historical/build --target build_sa_binary_v1 build_bwt_binary_v1 build_fm_binary_v1 query_fm_binary_v1 query_fm_locate_binary_v1 -j2
+      - name: Complete original checker and its separate independent replay
+        run: |
+          python3 -I research/experiments/core_l10_composition_v0/historical_gate.py \
+            --historical "$GITHUB_WORKSPACE/historical" --output "$RUNNER_TEMP/l10-historical"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-historical-evidence
+          path: ${{ runner.temp }}/l10-historical/
+          retention-days: 30
+          if-no-files-found: warn
+
+  producer-and-append:
+    needs: historical-25-exact
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      pins: ${{ steps.pins.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build unchanged L8 native oracle materializer
+        run: |
+          g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp -o "$RUNNER_TEMP/l8-decoder"
+      - name: Real leaves, two layouts, preserved V0 receipts, append and hostiles
+        run: |
+          python3 -I research/experiments/core_l10_composition_v0/gate.py --phase produce \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/l8-decoder" \
+            --output "$RUNNER_TEMP/l10-produce"
+      - name: Publish separately expected snapshot root pins
+        id: pins
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          pins=json.loads((Path(os.environ['RUNNER_TEMP'])/'l10-produce/trusted-pins.json').read_text())
+          assert set(pins)=={'A0','B0','A1','B1'}
+          assert all(len(v)==64 and all(c in '0123456789abcdef' for c in v) for v in pins.values())
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('pins='+json.dumps(pins,sort_keys=True,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l10-produce/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-producer-evidence
+          path: |
+            ${{ runner.temp }}/l10-produce/result.json
+            ${{ runner.temp }}/l10-produce/commands.json
+            ${{ runner.temp }}/l10-produce/preservation.json
+            ${{ runner.temp }}/l10-produce/trusted-pins.json
+            ${{ runner.temp }}/l10-produce/logs/hostiles.log
+          retention-days: 30
+          if-no-files-found: warn
+
+  independent-composed-replay:
+    needs: producer-and-append
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EXPECTED_PINS: ${{ needs.producer-and-append.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l10-capsule
+      - name: Own source oracles, independent identities/lineage/coverage and all hostiles
+        run: |
+          python3 -I research/experiments/core_l10_composition_v0/gate.py --phase independent \
+            --reference "$GITHUB_WORKSPACE/reference" --capsule "$RUNNER_TEMP/l10-capsule" \
+            --expected-roots-json "$EXPECTED_PINS" --output "$RUNNER_TEMP/l10-independent"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l10-independent-evidence
+          path: |
+            ${{ runner.temp }}/l10-independent/result.json
+            ${{ runner.temp }}/l10-independent/commands.json
+            ${{ runner.temp }}/l10-independent/logs/hostiles.log
+          retention-days: 30
+          if-no-files-found: warn
+
+
+  integrated-bridge-producer:
+    needs: producer-and-append
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      bridge_pins: ${{ steps.export-pins.outputs.bridge_pins }}
+      physical_pins: ${{ needs.producer-and-append.outputs.pins }}
+    env:
+      PHYSICAL_PINS: ${{ needs.producer-and-append.outputs.pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l11-physical-capsule
+      - name: Bind versioned logical identities to existing real frozen physical leaves
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/bridge_producer.py \
+            --bundle "$RUNNER_TEMP/l11-physical-capsule/bundle" \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --expected-physical-pins-json "$PHYSICAL_PINS" \
+            --output "$RUNNER_TEMP/l11-bridge-overlay"
+      - name: Export constrained new research root pins
+        id: export-pins
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib
+          path=pathlib.Path(os.environ['RUNNER_TEMP'])/'l11-bridge-overlay/result.json'
+          data=json.loads(path.read_text())
+          pins=data['pinned_bridge_roots']
+          assert data['status']=='CORE_L11_BRIDGE_PRODUCED_UNVERIFIED'
+          assert len(pins)==3 and all(len(x)==64 for x in pins)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as file:
+              file.write('bridge_pins='+json.dumps(pins,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-index-only-bridge-overlay
+          path: ${{ runner.temp }}/l11-bridge-overlay/
+          retention-days: 14
+          if-no-files-found: error
+
+  integrated-bridge-independent-restore:
+    needs: integrated-bridge-producer
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PHYSICAL_PINS: ${{ needs.integrated-bridge-producer.outputs.physical_pins }}
+      BRIDGE_PINS: ${{ needs.integrated-bridge-producer.outputs.bridge_pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l10-index-only-capsule
+          path: ${{ runner.temp }}/l11-independent-capsule
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-index-only-bridge-overlay
+          path: ${{ runner.temp }}/l11-independent-overlay
+      - name: Restore only executable mode lost by artifact transport
+        run: |
+          test -f "$RUNNER_TEMP/l11-independent-capsule/bundle/decoder"
+          test ! -L "$RUNNER_TEMP/l11-independent-capsule/bundle/decoder"
+          chmod 0700 "$RUNNER_TEMP/l11-independent-capsule/bundle/decoder"
+          # The SHA-256 of executable bytes will be pinned and checked by
+          # the unchanged CORE-L8 materializer before any execution.
+      - name: Independent full source restore, physical source/index replay, and stable-version query replay
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/independent_bridge_verifier.py \
+            --bundle "$RUNNER_TEMP/l11-independent-capsule/bundle" \
+            --overlay "$RUNNER_TEMP/l11-independent-overlay" \
+            --reference "$GITHUB_WORKSPACE/reference" \
+            --expected-bridge-pins-json "$BRIDGE_PINS" \
+            --expected-physical-pins-json "$PHYSICAL_PINS" \
+            --output "$RUNNER_TEMP/l11-independent-evidence"
+          python3 - <<'PY'
+          import json,os,pathlib
+          root=pathlib.Path(os.environ['RUNNER_TEMP'])/'l11-independent-evidence/result.json'
+          data=json.loads(root.read_text())
+          assert data['status']=='CORE_L11_INDEXED_IDENTITY_BRIDGE_INDEPENDENT_PASS',data
+          assert data['physical_indexes_restored']==12 and data['bridge_snapshot_count']==3
+          assert data['logical_replay_count']==18 and data['independent_physical_query_replays']==12
+          assert data['adversarial_cases_rejected']==18
+          assert data['old_physical_leaves_unchanged'] and data['no_original_raw_source_retained']
+          print('CORE_L11_REAL_PHYSICAL_INDEXED_V2_BRIDGE_INDEPENDENT_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l11-independent-integration-evidence
+          path: ${{ runner.temp }}/l11-independent-evidence/result.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  bounded-file-ingest:
+    needs: historical-25-exact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      pins: ${{ steps.pins.outputs.pins }}
+      fourk_pins: ${{ steps.pins.outputs.fourk_pins }}
+      scale_pins: ${{ steps.pins.outputs.scale_pins }}
+      packed_pins: ${{ steps.pins.outputs.packed_pins }}
+      lifecycle_pins: ${{ steps.pins.outputs.lifecycle_pins }}
+      search_pins: ${{ steps.pins.outputs.search_pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Build unchanged frozen SA and BWT tools
+        run: |
+          cmake -S reference -B reference/build
+          cmake --build reference/build --target build_sa_binary_v1 build_bwt_binary_v1 -j2
+      - name: Compile unchanged native materializer
+        run: g++ -O3 -std=c++17 -Wall -Wextra -Werror -pthread research/experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp -o "$RUNNER_TEMP/ingest-decoder"
+      - name: Synthetic files, snapshots, process crashes and adversarial replay
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/run_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/bounded-ingest"
+      - name: Explicit 4KiB Vault profile, high counts and crash recovery
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase produce \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/fourk-ingest" --capsule "$RUNNER_TEMP/bounded-ingest/capsule/fourk"
+      - name: Packed index storage with complete prepublication budget
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/packed_gate.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/packed-vault"
+      - name: Scaled 8MiB full-source verification and negatives
+        run: |
+          python3 -I research/experiments/core_l9_scale_v0/stream_tests.py --output "$RUNNER_TEMP/scaled-stream-boundaries"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/scale_ladder.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/scaled-ladder" --sizes 8388608
+          python3 research/experiments/core_l11_integrated_vault_v0/ingest/scale_negatives.py "$RUNNER_TEMP/scaled-ladder/8388608"
+      - name: Packed revisions, rename, dedup, five SIGKILL restarts and budget retries
+        run: |
+          python3 - <<'PY'
+          import json,os,stat,sys
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          def lengths(p):
+              return sum(f.lstat().st_size for f in p.rglob('*')
+                         if '.git' not in f.relative_to(p).parts and stat.S_ISREG(f.lstat().st_mode))
+          print('PACKED_LIFECYCLE_SUPPORT_COSTS '+json.dumps(dict(
+              research_checkout_file_lengths=lengths(root/'research'),
+              reference_build_file_lengths=lengths(root/'reference/build'),
+              reference_checkout_and_build_file_lengths=lengths(root/'reference'),
+              native_decoder_bytes=(Path(os.environ['RUNNER_TEMP'])/'ingest-decoder').stat().st_size,
+              complete_installed_environment_footprint_measured=False),sort_keys=True))
+          PY
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/packed_lifecycle.py \
+            --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
+            --output "$RUNNER_TEMP/packed-lifecycle"
+      - name: Packed search cold/warm costs, bounded session and live/private hostiles
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/search_cost/gate.py \
+            --capsule "$RUNNER_TEMP/packed-lifecycle/capsule" --pins "$RUNNER_TEMP/packed-lifecycle/pins.json" \
+            --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/packed-search"
+      - name: Transport expected snapshot and query pins separately
+        id: pins
+        run: |
+          python3 - <<'PY'
+          import json,os,pathlib
+          data=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'bounded-ingest/pins.json').read_text())
+          assert len(data['cases'])==12
+          with open(os.environ['GITHUB_OUTPUT'],'a') as file:
+              file.write('pins='+json.dumps(data,separators=(',',':'))+'\n')
+              fourk=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'fourk-ingest/pins.json').read_text())
+              file.write('fourk_pins='+json.dumps(fourk,separators=(',',':'))+'\n')
+              cases=[]
+              for index in range(3):
+                  c=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'scaled-ladder/8388608'/(str(index)+'.json')).read_text())
+                  cases.append(dict(pin=c['snapshot'],query_hex=c['query_hex']))
+              file.write('scale_pins='+json.dumps(cases,separators=(',',':'))+'\n')
+              packed=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-vault/pins.json').read_text())
+              file.write('packed_pins='+json.dumps(packed,separators=(',',':'))+'\n')
+              lifecycle=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-lifecycle/pins.json').read_text())
+              file.write('lifecycle_pins='+json.dumps(lifecycle,separators=(',',':'))+'\n')
+              search=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-search/pins.json').read_text())
+              file.write('search_pins='+json.dumps(search,separators=(',',':'))+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-packed-search-capsule
+          path: ${{ runner.temp }}/packed-search/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-packed-lifecycle-capsule
+          path: ${{ runner.temp }}/packed-lifecycle/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-packed-only-capsule
+          path: ${{ runner.temp }}/packed-vault/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-scaled-index-only-capsule
+          path: |
+            ${{ runner.temp }}/scaled-ladder/8388608/vault/
+            ${{ runner.temp }}/scaled-ladder/8388608/0.json
+            ${{ runner.temp }}/scaled-ladder/8388608/1.json
+            ${{ runner.temp }}/scaled-ladder/8388608/2.json
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-bounded-index-only-capsule
+          path: ${{ runner.temp }}/bounded-ingest/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l11-bounded-ingest-evidence
+          path: |
+            ${{ runner.temp }}/scaled-ladder/result.json
+            ${{ runner.temp }}/fourk-ingest/
+            ${{ runner.temp }}/bounded-ingest/native-builder.json
+            ${{ runner.temp }}/bounded-ingest/result.json
+            ${{ runner.temp }}/bounded-ingest/independent.log
+            ${{ runner.temp }}/packed-vault/result.json
+            ${{ runner.temp }}/packed-lifecycle/result.json
+            ${{ runner.temp }}/packed-lifecycle/pins.json
+            ${{ runner.temp }}/packed-search/result.json
+            ${{ runner.temp }}/packed-search/profile/result.json
+            ${{ runner.temp }}/packed-search/hostiles/result.json
+          retention-days: 30
+          if-no-files-found: warn
+
+  bounded-file-independent:
+    needs: bounded-file-ingest
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPECTED_INGEST_PINS: ${{ needs.bounded-file-ingest.outputs.pins }}
+      EXPECTED_4K_PINS: ${{ needs.bounded-file-ingest.outputs.fourk_pins }}
+      EXPECTED_SCALE_PINS: ${{ needs.bounded-file-ingest.outputs.scale_pins }}
+      EXPECTED_PACKED_PINS: ${{ needs.bounded-file-ingest.outputs.packed_pins }}
+      EXPECTED_LIFECYCLE_PINS: ${{ needs.bounded-file-ingest.outputs.lifecycle_pins }}
+      EXPECTED_SEARCH_PINS: ${{ needs.bounded-file-ingest.outputs.search_pins }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: research
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c33cb493bc75f13ee4a904fabb190a29a196c94b
+          path: reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-bounded-index-only-capsule
+          path: ${{ runner.temp }}/bounded-capsule
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-scaled-index-only-capsule
+          path: ${{ runner.temp }}/scaled-capsule
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-packed-only-capsule
+          path: ${{ runner.temp }}/packed-capsule
+      - name: Restore executable mode; executable bytes remain digest checked
+        run: |
+          test -f "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+          test ! -L "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/bounded-capsule/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/bounded-capsule/fourk/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/scaled-capsule/vault/decoder"
+          chmod 0700 "$RUNNER_TEMP/packed-capsule/vault/decoder"
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-packed-lifecycle-capsule
+          path: ${{ runner.temp }}/packed-lifecycle-capsule
+      - name: Independent packed lifecycle, complete parent history and historical-source negatives
+        run: |
+          chmod 0700 "$RUNNER_TEMP/packed-lifecycle-capsule/vault/decoder"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+            --capsule "$RUNNER_TEMP/packed-lifecycle-capsule" --pins-json "$EXPECTED_LIFECYCLE_PINS" \
+            --output "$RUNNER_TEMP/packed-lifecycle-independent"
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-packed-search-capsule
+          path: ${{ runner.temp }}/packed-search-capsule
+      - name: Independent full-history replay of actual session-produced claims
+        run: |
+          chmod 0700 "$RUNNER_TEMP/packed-search-capsule/vault/decoder"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+            --capsule "$RUNNER_TEMP/packed-search-capsule" --pins-json "$EXPECTED_SEARCH_PINS" \
+            --output "$RUNNER_TEMP/packed-search-independent"
+      - name: Independent packed-only replay with externally transported pins
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+            --capsule "$RUNNER_TEMP/packed-capsule" --pins-json "$EXPECTED_PACKED_PINS" \
+            --output "$RUNNER_TEMP/packed-independent"
+      - name: Independent logical and physical replay without original sources
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_capsule.py \
+            --capsule "$RUNNER_TEMP/bounded-capsule" --pins-json "$EXPECTED_INGEST_PINS" \
+            --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/bounded-independent"
+      - name: Independent scaled Vault replay without original source
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_scale.py \
+            --capsule "$RUNNER_TEMP/scaled-capsule" --pins-json "$EXPECTED_SCALE_PINS" \
+            --output "$RUNNER_TEMP/scaled-independent"
+      - name: Independent 4KiB Vault replay on clean runner
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/gate_4k.py --phase replay \
+            --capsule "$RUNNER_TEMP/bounded-capsule/fourk" --pins-json "$EXPECTED_4K_PINS" \
+            --output "$RUNNER_TEMP/fourk-independent"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-l11-bounded-independent-evidence
+          path: |
+            ${{ runner.temp }}/bounded-independent/
+            ${{ runner.temp }}/fourk-independent/
+            ${{ runner.temp }}/packed-independent/
+            ${{ runner.temp }}/packed-lifecycle-independent/result.json
+            ${{ runner.temp }}/packed-search-independent/result.json
+            ${{ runner.temp }}/packed-lifecycle-independent/history-negatives/result.json
+            ${{ runner.temp }}/scaled-independent/
+          retention-days: 30
+          if-no-files-found: warn

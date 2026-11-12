@@ -1,0 +1,23 @@
+[
+  {
+    "status": "SCALE_LADDER_STAGE_PASS",
+    "source_file_bytes": 1048576,
+    "logical_snapshot_bytes": 2097152,
+    "snapshots": 2,
+    "physical_content_objects": 1,
+    "queries": 3,
+    "wall_seconds": 3.1515529440000023,
+    "retained_vault_bytes": 516191,
+    "self_peak_rss_kib": 21864,
+    "max_child_rss_kib": 21864,
+    "cumulative_self_cpu": 0.5904389999999999,
+    "cumulative_child_cpu": 3.975095,
+    "independent_index_source_semantics": false
+  },
+  {
+    "status": "SCALE_LADDER_STAGE_FAILED",
+    "source_file_bytes": 8388608,
+    "error": "missing/nonregular/oversize: /workspace/scratch/43355f21983a/scale-ladder-1/8388608/vault/staging/tmprriyh3y6/2008ffb9b599fbc0433c7f90f86051c4bf721b1a48c371d2f36f74bdedc218cd/rlr2",
+    "wall_seconds": 8.435181440000008
+  }
+]

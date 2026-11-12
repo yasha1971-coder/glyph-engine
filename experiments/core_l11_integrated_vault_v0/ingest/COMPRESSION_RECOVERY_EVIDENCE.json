@@ -1,0 +1,55 @@
+{
+  "recovered_from": "54e4aad8266684dd900311f3960d0455eaeadc00",
+  "historical_vika_owner_report": {
+    "source_bytes": 249967975,
+    "container_bytes": 196861728,
+    "files": 415,
+    "directories": 38,
+    "receipt_sha256": "e3253b6e1ef269a85f94ec632d581ffffe8df22ed554b2b46e9c86f8adeddf55"
+  },
+  "current_archive_tests": 32,
+  "budget_tests": 3,
+  "synthetic_replay": [
+    {
+      "case": "random",
+      "budget": {
+        "format": "GLYPH_RETAINED_STORAGE_BUDGET_V1",
+        "source_bytes": 1048576,
+        "retained_bytes": 1050555,
+        "files": 3,
+        "storage_budget_pass": false,
+        "status": "BUDGET_REJECTED",
+        "byte_perfect_replay_established": false,
+        "scope": "all regular file lengths under candidate; include all required sidecars/indexes/history here; installed code and allocated blocks separate"
+      },
+      "restored_file_sha256": {
+        "random.bin": "7349e1d491417ff3e7d7f962b7dd4c5b6710275afb42e1d409b02c44e14aaa66"
+      },
+      "byte_perfect_compare": true
+    },
+    {
+      "case": "mixed",
+      "budget": {
+        "format": "GLYPH_RETAINED_STORAGE_BUDGET_V1",
+        "source_bytes": 2097152,
+        "retained_bytes": 1051416,
+        "files": 4,
+        "storage_budget_pass": true,
+        "status": "BUDGET_PASS",
+        "byte_perfect_replay_established": false,
+        "scope": "all regular file lengths under candidate; include all required sidecars/indexes/history here; installed code and allocated blocks separate"
+      },
+      "restored_file_sha256": {
+        "text.txt": "83a5e746c61c2eae7f17ffd26ca560abc5620cf4bca906d5045be7db6782c135",
+        "random.bin": "7349e1d491417ff3e7d7f962b7dd4c5b6710275afb42e1d409b02c44e14aaa66"
+      },
+      "byte_perfect_compare": true
+    }
+  ],
+  "failures_preserved": [
+    "unavailable historical precomp refs982533/1f8d; recovered source from PR14",
+    "62 original PR14 tests PASS on own code; copied complete bridge incompatible with current portable host (2 failures/6 errors); excluded unrelated bridge/browser",
+    "first mixed replay: manifest size did not converge; fallback fixed canonical padding included in stored size"
+  ],
+  "scope": "Compression preservation recovery and budget acceptance gate, not integrated indexed Vault compactness; no real Precomp executable or private VIKA replay"
+}
