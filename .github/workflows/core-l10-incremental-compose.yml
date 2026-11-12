@@ -283,6 +283,7 @@ jobs:
       scale_pins: ${{ steps.pins.outputs.scale_pins }}
       packed_pins: ${{ steps.pins.outputs.packed_pins }}
       lifecycle_pins: ${{ steps.pins.outputs.lifecycle_pins }}
+      search_pins: ${{ steps.pins.outputs.search_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -344,6 +345,11 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/packed_lifecycle.py \
             --reference "$GITHUB_WORKSPACE/reference" --decoder "$RUNNER_TEMP/ingest-decoder" \
             --output "$RUNNER_TEMP/packed-lifecycle"
+      - name: Packed search cold/warm costs, bounded session and live/private hostiles
+        run: |
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/search_cost/gate.py \
+            --capsule "$RUNNER_TEMP/packed-lifecycle/capsule" --pins "$RUNNER_TEMP/packed-lifecycle/pins.json" \
+            --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/packed-search"
       - name: Transport expected snapshot and query pins separately
         id: pins
         run: |
@@ -364,7 +370,15 @@ jobs:
               file.write('packed_pins='+json.dumps(packed,separators=(',',':'))+'\n')
               lifecycle=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-lifecycle/pins.json').read_text())
               file.write('lifecycle_pins='+json.dumps(lifecycle,separators=(',',':'))+'\n')
+              search=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-search/pins.json').read_text())
+              file.write('search_pins='+json.dumps(search,separators=(',',':'))+'\n')
           PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-packed-search-capsule
+          path: ${{ runner.temp }}/packed-search/capsule/
+          retention-days: 14
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         with:
           name: core-l11-packed-lifecycle-capsule
@@ -406,6 +420,9 @@ jobs:
             ${{ runner.temp }}/packed-vault/result.json
             ${{ runner.temp }}/packed-lifecycle/result.json
             ${{ runner.temp }}/packed-lifecycle/pins.json
+            ${{ runner.temp }}/packed-search/result.json
+            ${{ runner.temp }}/packed-search/profile/result.json
+            ${{ runner.temp }}/packed-search/hostiles/result.json
           retention-days: 30
           if-no-files-found: warn
 
@@ -419,6 +436,7 @@ jobs:
       EXPECTED_SCALE_PINS: ${{ needs.bounded-file-ingest.outputs.scale_pins }}
       EXPECTED_PACKED_PINS: ${{ needs.bounded-file-ingest.outputs.packed_pins }}
       EXPECTED_LIFECYCLE_PINS: ${{ needs.bounded-file-ingest.outputs.lifecycle_pins }}
+      EXPECTED_SEARCH_PINS: ${{ needs.bounded-file-ingest.outputs.search_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -463,6 +481,16 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
             --capsule "$RUNNER_TEMP/packed-lifecycle-capsule" --pins-json "$EXPECTED_LIFECYCLE_PINS" \
             --output "$RUNNER_TEMP/packed-lifecycle-independent"
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-packed-search-capsule
+          path: ${{ runner.temp }}/packed-search-capsule
+      - name: Independent full-history replay of actual session-produced claims
+        run: |
+          chmod 0700 "$RUNNER_TEMP/packed-search-capsule/vault/decoder"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+            --capsule "$RUNNER_TEMP/packed-search-capsule" --pins-json "$EXPECTED_SEARCH_PINS" \
+            --output "$RUNNER_TEMP/packed-search-independent"
       - name: Independent packed-only replay with externally transported pins
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
@@ -492,6 +520,7 @@ jobs:
             ${{ runner.temp }}/fourk-independent/
             ${{ runner.temp }}/packed-independent/
             ${{ runner.temp }}/packed-lifecycle-independent/result.json
+            ${{ runner.temp }}/packed-search-independent/result.json
             ${{ runner.temp }}/packed-lifecycle-independent/history-negatives/result.json
             ${{ runner.temp }}/scaled-independent/
           retention-days: 30
