@@ -427,12 +427,9 @@
       </p>
 
       <div class="hero-actions">
-        <a class="btn primary"
-           href="https://github.com/yasha1971-coder/glyph-engine">
-          Review on GitHub
-        </a>
+        <a class="btn primary" href="https://demo.glyph.rs/">Try the live demo</a>
+        <a class="btn" href="#workflow">Share a verification case</a>
         <a class="btn" href="#verify">Run the verified chain</a>
-        <a class="btn" href="#boundaries">Read the boundaries</a>
       </div>
 
       <div class="terminal" id="verify">
@@ -577,8 +574,8 @@ VERIFY OK</code></pre>
         <h2 class="section-title">Embedded API V1.</h2>
 
         <p class="section-lead">
-          Integration semantics are being frozen before implementation,
-          rather than discovered accidentally after third-party adoption.
+          The public C contract remains in pre-freeze review. Its executable
+          checks are available for independent inspection.
         </p>
 
         <div class="card">
@@ -845,33 +842,32 @@ benchmarks/results/GLYPH_EMBEDDED_I0_CONTRACT_V1.json
     </div>
   </section>
 
-  <section>
+  <section id="workflow" aria-labelledby="workflow-title">
     <div class="wrap grid two">
       <div>
-        <h2 class="section-title">Next gate.</h2>
+        <h2 id="workflow-title" class="section-title">Share a verification case</h2>
         <p class="section-lead">
-          The next project decision is not feature expansion. It is the second
-          independent line-by-line pre-freeze review of the Embedded I0 contract.
+          Have you needed someone else to verify a byte match in a file,
+          archive, or disk image? Tell us what happened, what you used,
+          and where the verification got difficult.
         </p>
       </div>
 
       <div class="card">
-        <div class="metric">
-          <span>Current phase</span>
-          <strong>I0 PRE-FREEZE</strong>
-        </div>
-        <div class="metric">
-          <span>Next action</span>
-          <strong>SECOND EXTERNAL REVIEW</strong>
-        </div>
-        <div class="metric">
-          <span>After accepted review</span>
-          <strong>FREEZE DECISION</strong>
-        </div>
-        <div class="metric">
-          <span>Implementation phase</span>
-          <strong>E1 — NOT STARTED</strong>
-        </div>
+        <h3>What would make a useful test?</h3>
+        <p>
+          A short description is enough. If available, include a public or
+          synthetic example, the expected result, and the time or steps
+          involved. Keep private evidence out of the message.
+        </p>
+        <p>
+          <a class="mono" href="mailto:contact@glyph.rs?subject=GLYPH%20verification%20case">contact@glyph.rs</a>
+        </p>
+        <p>
+          Active development is paused while we look for a real workflow
+          where independent verification would help. The demo and review
+          materials are available.
+        </p>
       </div>
     </div>
   </section>
