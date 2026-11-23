@@ -65,6 +65,11 @@ cd glyph-engine
 
 The final closure must include:
 
+The I0 provenance check requires complete Git history to resolve the last
+commit that changed its reviewed contract sources. CI therefore checks out with
+`fetch-depth: 0`; a shallow checkout must not regenerate the artifact around its
+temporary checkout commit.
+
 ```text
 GLYPH PROOF GRAPH OK
 GLYPH RUNTIME CONFORMANCE OK

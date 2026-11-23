@@ -68,3 +68,22 @@ and CPU/threads are paid; no new retained Vault files or compact-proof claim.
 The root README now states the known default per-query preparation cost,
 measured tradeoff and verifier full-scan boundary. Existing CI gains the complete
 top-level verification and candidate regression/replay steps; no checks removed.
+
+## 2026-11-23 — Full Git ancestry for the existing I0 provenance check
+
+Regular PR CI45288521354 passed P/R/O but exposed a distinct setup issue:
+actions/checkout's default depth-one synthetic merge commit made the unchanged
+checker resolve `reviewed_commit` as `ecf6e8b8c1b0d0d9a21a1b8ea3c25814e8c86481`.
+That changed the computed JSON SHA256 to
+`f86451937b37045f8badf2a6af7ea96fffad0e6fce3dbbb1324d3158e7882417`.
+The complete field diff from the correct SOURCE_SCAN_43 result was only
+`reviewed_commit`; all source/spec hashes and checks matched.
+
+Independently reproduced the exact merge checkout at depth one: verify exits1
+with that exact digest. Fetching full ancestry while keeping the same HEAD,
+tree, checker and committed artifacts makes verify exit0, resolves the actual
+reviewed source commit `fe94eb0314cff76191a7eaba20347c234069a8f2`, and restores
+the committed SHA256 `b2818a4b698c2fde684c0a207b45ec9b5b9b03ff764bf4388a20d281b99257a1`.
+The regular CI checkout now uses `fetch-depth: 0`. No result is rewritten for
+a CI merge identity, no provenance/checker logic is weakened, and the failed
+run is preserved. Runtime/parallel Session behavior is unchanged.
