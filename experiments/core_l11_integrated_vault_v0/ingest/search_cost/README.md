@@ -157,3 +157,68 @@ heterogeneous behavior, large histories, full installed/peak transient/unique
 process-tree memory, power-loss, unsigned-root freshness and independent full
 rank/EF semantics remain open. Old six backend SKIPs / bounded RLB3X builder patch
 lineage are not closed. No full top-level VERIFY or production promotion follows.
+
+## Parallel full-SHA scheduling experiment
+
+Owner instruction on 2026-11-23 resumed bounded autonomous engineering. It does
+not establish an external customer or alter the proof contract. Existing serial
+Session and default VaultPacked query remain byte-identical to their baseline.
+
+`parallel_session.py` is an explicit opt-in subclass. Two read workers call the
+unchanged `session.catalog` over every live and private root. Every byte is still
+SHA-256 checked before and after each query; frozen HEAD and code checks remain.
+No stat cache, cached success flag, skipped history, new retained index, changed
+receipt or reduced coverage is introduced. On failure, all reads finish before
+private files can be cleaned up. The original cooperative, quiescent-filesystem
+scope remains; this does not add concurrent mutation or query/close guarantees.
+
+`PARALLEL_GUARD_LOCK.json` fixes the corpus, three rotated orders, resource
+arguments, correctness conditions and public guard-time ratio hypothesis <=0.8
+before measurement. Three current public receipts repeated three times per
+batch, three batches and two modes give 54 pinned replies. The earlier lifecycle
+fixture gives 120 pinned replies across the same three orders. A missed speed
+hypothesis remains a negative result, separately from integrity acceptance.
+
+Local measured code checkpoint: `1727b245da1721b8073bd1117f9e39906e0ceb1f`.
+Public paired guard ratios: 0.597585 / 0.587132 / 0.592668; median 0.592668.
+Warm serial / parallel medians in milliseconds: hit 686/558, absence 343/214,
+high count 323/198. Open once per arm: 33.480/34.679 seconds. Every request
+hashes 466,016,288 live/private file bytes, plus declared code. Thus the number
+of checks is fixed, while their byte cost scales with state. This is a CPU
+scheduling benefit, not less verification work or a new search algorithm.
+
+The small fixture's median guard ratio was 1.303417: guard work is slower there.
+It does not justify an automatic routing threshold or default promotion. These
+measurements use ordinary OS caches and in-process calls; they are not directly
+the old stdio round-trip timings. Two open private states share the measurement
+process; cumulative process peaks are not isolated per-arm RAM measurements.
+
+The probe reuses the original hostile assertions with the real candidate class
+injected: 16 constructor/session cases use the candidate. The original RSS
+assertion still launches its original worker and is reported as such; an
+additional candidate-owned worker is actually killed at a one-byte RSS budget.
+Seven additional file-integrity/failure-cleanup tests use real reads, including
+same-size content mutation with restored mtime and a pending read after another
+catalog fails. Scheduling instrumentation does not substitute hash results.
+
+```bash
+python3 -m unittest discover -s experiments/core_l11_integrated_vault_v0/ingest/search_cost/tests -v
+python3 -I experiments/core_l11_integrated_vault_v0/ingest/search_cost/parallel_guard_gate.py \
+  --capsule "$LIFECYCLE/capsule" --pins "$LIFECYCLE/pins.json" \
+  --reference "$REFERENCE" --output "$SCRATCH/parallel-guards" --profile small --hostiles
+python3 -I experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+  --capsule "$SCRATCH/parallel-guards/capsule" --pins-json "$EXTERNAL_PINS" \
+  --output "$SCRATCH/parallel-independent"
+```
+
+Public `--profile public` accepts only the previously pinned three-case, whole
+100MB enwik8 capsule. It explicitly requests 100,000,000 source bytes and
+512MiB temporary admission through the existing Session API. The accepted old
+8MiB/32MiB defaults and lock are unchanged. It is dev evidence, not a fresh
+holdout, enwik9 admission, a 200ms SLA or independent cryptographic completeness.
+Independent replay still restores and scans source. Old six backend SKIPs and
+bounded RLB3X builder lineage remain open.
+
+The source-count I0 reconciliation is a separate preserved movement in
+`docs/governance/GLYPH_MOVEMENT_LEDGER.md`. Historical paragraphs above describe
+their own earlier checkpoints, including their former top-level VERIFY scope.

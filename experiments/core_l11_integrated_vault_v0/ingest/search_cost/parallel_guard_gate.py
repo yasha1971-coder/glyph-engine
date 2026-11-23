@@ -170,4 +170,6 @@ if __name__ == '__main__':
     if arguments.candidate_worker:
         candidate_worker(arguments)
     else:
-        parser.error('--pins, --output and --profile are required') if not all((arguments.pins, arguments.output, arguments.profile)) else run(arguments)
+        if not all((arguments.pins, arguments.output, arguments.profile)):
+            parser.error('--pins, --output and --profile are required')
+        run(arguments)

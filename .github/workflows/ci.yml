@@ -46,4 +46,6 @@ jobs:
       - name: Run correctness regression suite
         run: |
           ./tests/run_tests.sh
-          
+
+      - name: Complete proof, runtime, operator and Embedded I0 verification
+        run: ./verify.sh

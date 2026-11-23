@@ -284,6 +284,7 @@ jobs:
       packed_pins: ${{ steps.pins.outputs.packed_pins }}
       lifecycle_pins: ${{ steps.pins.outputs.lifecycle_pins }}
       search_pins: ${{ steps.pins.outputs.search_pins }}
+      parallel_guard_pins: ${{ steps.pins.outputs.parallel_guard_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -350,6 +351,13 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/search_cost/gate.py \
             --capsule "$RUNNER_TEMP/packed-lifecycle/capsule" --pins "$RUNNER_TEMP/packed-lifecycle/pins.json" \
             --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/packed-search"
+      - name: Full-SHA parallel candidate correctness, failure cleanup and hostile inputs
+        run: |
+          python3 -m unittest discover -s research/experiments/core_l11_integrated_vault_v0/ingest/search_cost/tests -v
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/search_cost/parallel_guard_gate.py \
+            --capsule "$RUNNER_TEMP/packed-lifecycle/capsule" --pins "$RUNNER_TEMP/packed-lifecycle/pins.json" \
+            --reference "$GITHUB_WORKSPACE/reference" --output "$RUNNER_TEMP/parallel-guards" \
+            --profile small --hostiles
       - name: Transport expected snapshot and query pins separately
         id: pins
         run: |
@@ -372,11 +380,19 @@ jobs:
               file.write('lifecycle_pins='+json.dumps(lifecycle,separators=(',',':'))+'\n')
               search=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'packed-search/pins.json').read_text())
               file.write('search_pins='+json.dumps(search,separators=(',',':'))+'\n')
+              parallel=json.loads((pathlib.Path(os.environ['RUNNER_TEMP'])/'parallel-guards/pins.json').read_text())
+              file.write('parallel_guard_pins='+json.dumps(parallel,separators=(',',':'))+'\n')
           PY
       - uses: actions/upload-artifact@v4
         with:
           name: core-l11-packed-search-capsule
           path: ${{ runner.temp }}/packed-search/capsule/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-l11-parallel-guard-capsule
+          path: ${{ runner.temp }}/parallel-guards/capsule/
           retention-days: 14
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
@@ -423,6 +439,8 @@ jobs:
             ${{ runner.temp }}/packed-search/result.json
             ${{ runner.temp }}/packed-search/profile/result.json
             ${{ runner.temp }}/packed-search/hostiles/result.json
+            ${{ runner.temp }}/parallel-guards/result.json
+            ${{ runner.temp }}/parallel-guards/original/result.json
           retention-days: 30
           if-no-files-found: warn
 
@@ -437,6 +455,7 @@ jobs:
       EXPECTED_PACKED_PINS: ${{ needs.bounded-file-ingest.outputs.packed_pins }}
       EXPECTED_LIFECYCLE_PINS: ${{ needs.bounded-file-ingest.outputs.lifecycle_pins }}
       EXPECTED_SEARCH_PINS: ${{ needs.bounded-file-ingest.outputs.search_pins }}
+      EXPECTED_PARALLEL_GUARD_PINS: ${{ needs.bounded-file-ingest.outputs.parallel_guard_pins }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -491,6 +510,16 @@ jobs:
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
             --capsule "$RUNNER_TEMP/packed-search-capsule" --pins-json "$EXPECTED_SEARCH_PINS" \
             --output "$RUNNER_TEMP/packed-search-independent"
+      - uses: actions/download-artifact@v4
+        with:
+          name: core-l11-parallel-guard-capsule
+          path: ${{ runner.temp }}/parallel-guard-capsule
+      - name: Independent replay of actual parallel-guard candidate receipts
+        run: |
+          chmod 0700 "$RUNNER_TEMP/parallel-guard-capsule/vault/decoder"
+          python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
+            --capsule "$RUNNER_TEMP/parallel-guard-capsule" --pins-json "$EXPECTED_PARALLEL_GUARD_PINS" \
+            --output "$RUNNER_TEMP/parallel-guard-independent"
       - name: Independent packed-only replay with externally transported pins
         run: |
           python3 -I research/experiments/core_l11_integrated_vault_v0/ingest/replay_packed.py \
@@ -521,6 +550,7 @@ jobs:
             ${{ runner.temp }}/packed-independent/
             ${{ runner.temp }}/packed-lifecycle-independent/result.json
             ${{ runner.temp }}/packed-search-independent/result.json
+            ${{ runner.temp }}/parallel-guard-independent/result.json
             ${{ runner.temp }}/packed-lifecycle-independent/history-negatives/result.json
             ${{ runner.temp }}/scaled-independent/
           retention-days: 30
