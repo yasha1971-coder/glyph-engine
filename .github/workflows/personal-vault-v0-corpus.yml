@@ -1,0 +1,23 @@
+name: personal-vault-v0-corpus-fixture
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'experiments/personal_vault_v0/**'
+      - '.github/workflows/personal-vault-v0-corpus.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  corpus-fixture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and verify 30-object fixture
+        run: bash experiments/personal_vault_v0/fetch_corpora.sh /tmp/personal-vault-corpora-v0
+      - name: Show manifest
+        run: |
+          wc -l /tmp/personal-vault-corpora-v0/SHA256SUMS
+          cat /tmp/personal-vault-corpora-v0/SHA256SUMS
