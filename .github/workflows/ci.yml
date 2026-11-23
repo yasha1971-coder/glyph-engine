@@ -11,6 +11,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # I0 resolves the last commit touching its reviewed contract sources.
+          # A depth-one merge checkout incorrectly treats that merge as origin.
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -46,4 +50,6 @@ jobs:
       - name: Run correctness regression suite
         run: |
           ./tests/run_tests.sh
-          
+
+      - name: Complete proof, runtime, operator and Embedded I0 verification
+        run: ./verify.sh

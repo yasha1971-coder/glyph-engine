@@ -1,0 +1,14 @@
+{
+  "format": "GLYPH_PARALLEL_FULL_GUARD_LOCK_V1",
+  "baseline_source_commit": "4811406e85f1c3b9da8df3ae3b1ff5225d959540",
+  "scope": "Opt-in research; default Session and all full SHA checks unchanged.",
+  "public_source_sha256": "2b49720ec4d78c3c9fabaee6e4179a5e997302b3a70029f30f2d582218c024a8",
+  "trial_order": [["serial", "parallel"], ["parallel", "serial"], ["serial", "parallel"]],
+  "cycles": {"small": 4, "public": 3},
+  "public_resource_arguments": {"source_budget": 100000000, "temp_budget": 536870912, "object_limit": 4},
+  "candidate_hash_workers": 2,
+  "hypothesis_public_median_paired_full_guard_ratio_at_most": 0.8,
+  "acceptance": "Canonical replies match all external pins; full catalog equality; unchanged Vault; no leaked normal-close state; exact hostile rejections. A missed performance hypothesis is a preserved negative result.",
+  "timing": "One session open per arm; three declared rotated batches; same current cases and limits. In-process query includes both full guards. Open and close separate; no OS cache flush or concurrent query workload.",
+  "not_claimed": ["200ms SLA", "p99 from these probes", "enwik9", "sublinear guards", "no-rescan verifier", "production", "new ABI", "adversarial filesystem race safety"]
+}

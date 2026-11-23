@@ -1,0 +1,33 @@
+{
+  "status": "CLEAN_PACKED_CAPSULE_PASS",
+  "replays": [
+    {
+      "status": "STREAM_FULL_SOURCE_REPLAY_PASS",
+      "count": 0,
+      "source_read_bytes": 2097152,
+      "independent_index_source_semantics": false
+    },
+    {
+      "status": "STREAM_FULL_SOURCE_REPLAY_PASS",
+      "count": 1,
+      "source_read_bytes": 4194342,
+      "independent_index_source_semantics": false
+    },
+    {
+      "status": "STREAM_FULL_SOURCE_REPLAY_PASS",
+      "count": 59920,
+      "source_read_bytes": 4194342,
+      "independent_index_source_semantics": false
+    }
+  ],
+  "retained_bytes": 1173676,
+  "distinct_source_bytes": 2097171,
+  "negatives_rejected": [
+    "wrong-count",
+    "wrong-external-root-pin",
+    "missing-component",
+    "corrupt-component"
+  ],
+  "original_sources_transferred": false,
+  "independent_index_source_semantics": false
+}

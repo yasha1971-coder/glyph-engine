@@ -1,0 +1,96 @@
+name: core-perf-p01-one-pass-sha-search
+
+on:
+  push:
+    branches:
+      - codex/core-l10-append-replay-20261106
+    paths:
+      - experiments/core_perf_research_v0/**
+      - .github/workflows/core-perf-p01.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  p01-small-exhaustive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Confirm unchanged historical CORE-L9-S two-pass golden
+        run: |
+          test "$(git -C research hash-object experiments/core_l9_scale_v0/verifier.py)" = e0a4c660daa5185dd218e840a5356fceb73c61e5
+          cp research/experiments/core_l9_scale_v0/verifier.py "$RUNNER_TEMP/p01-golden.py"
+          echo "P01_ORIGINAL_GOLDEN_UNCHANGED"
+      - name: Exact binary oracle and fail-closed checks
+        run: |
+          python3 research/experiments/core_perf_research_v0/p01_gate.py \
+            --golden "$RUNNER_TEMP/p01-golden.py" \
+            --candidate "$GITHUB_WORKSPACE/research/experiments/core_perf_research_v0/one_pass_scan.py" \
+            --mode safety --output "$RUNNER_TEMP/p01-safety"
+          python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x["status"]=="P01_SAFETY_PASS" and x["exact_oracle_cases"]>=15458 and x["hostile_count"]>=13,x; print("P01_15458_PLUS_EXACT_ORACLE_AND_13_HOSTILES_PASS")' "$RUNNER_TEMP/p01-safety/result.json"
+  p01-100mb-paired:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Pin original CORE-L9-S comparator
+        run: |
+          test "$(git -C research hash-object experiments/core_l9_scale_v0/verifier.py)" = e0a4c660daa5185dd218e840a5356fceb73c61e5
+          cp research/experiments/core_l9_scale_v0/verifier.py "$RUNNER_TEMP/p01-golden.py"
+      - name: Download hash-pinned canonical enwik8 and counterbalanced benchmark
+        run: |
+          python3 research/experiments/core_perf_research_v0/p01_gate.py \
+            --golden "$RUNNER_TEMP/p01-golden.py" \
+            --candidate "$GITHUB_WORKSPACE/research/experiments/core_perf_research_v0/one_pass_scan.py" \
+            --mode enwik8 --output "$RUNNER_TEMP/p01-enwik8"
+          python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); assert x["status"]=="P01_100MB_EXACT_BENCH_PASS" and x["source_bytes"]==100000000 and x["repetitions_per_mode"]==3; print("P01_100MB_TWO_PROFILES_EXACT_PASS"); print(json.dumps(x["summary"],indent=2))' "$RUNNER_TEMP/p01-enwik8/result.json"
+      - name: Record prediction outcome without disguising a miss as an algorithmic win
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/p01-enwik8/result.json"; then
+            python3 -c 'import json,sys; x=json.load(open(sys.argv[1])); a=x.get("summary",{}); print("P01_B_FREQUENT_BYTE_SPEEDUP_2X_PREDICTION="+str(a.get("frequent_one_byte",{}).get("observed_speedup_x",0)>=2)); print("P01_C_TWO_HIT_NONREGRESSION_1_2X="+str(a.get("two_hits",{}).get("observed_speedup_x",0)>=1/1.2)); print("P01_C_ABSENT_NONREGRESSION_1_2X="+str(a.get("absent_binary",{}).get("observed_speedup_x",0)>=1/1.2))' "$RUNNER_TEMP/p01-enwik8/result.json"
+          fi
+  p01-mathlib-boundary-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: research
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          path: mathlib
+          persist-credentials: false
+      - name: Pin Lean toolchain and Mathlib commit
+        run: |
+          test "$(git -C mathlib rev-parse HEAD)" = 1ccd71f89cbbd82ae7d097723ce1722ca7b01c33
+          test "$(cat mathlib/lean-toolchain)" = "leanprover/lean4:v4.25.0"
+      - name: Configure Lean 4 / mathlib cache
+        uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: mathlib
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: true
+          use-github-cache: false
+      - name: Kernel check carry coverage arithmetic
+        working-directory: mathlib
+        run: |
+          lake env lean "$GITHUB_WORKSPACE/research/experiments/core_perf_research_v0/ChunkCrossingProof.lean"
+          echo "P01_CARRY_CROSSING_LEAN_THEOREMS_CHECKED"

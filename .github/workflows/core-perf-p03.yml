@@ -1,0 +1,73 @@
+name: core-perf-p03-native-aho-corasick
+
+on:
+  push:
+    branches: [codex/core-l10-append-replay-20261106]
+    paths:
+      - experiments/core_perf_research_v0/ac_native_v0.cpp
+      - experiments/core_perf_research_v0/p03_gate.py
+      - experiments/core_perf_research_v0/P03_*
+      - .github/workflows/core-perf-p03.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  native-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Pin unchanged P01/P02 baseline and source
+        run: |
+          test "$(git hash-object experiments/core_l9_scale_v0/verifier.py)" = "e0a4c660daa5185dd218e840a5356fceb73c61e5"
+          test "$(git hash-object experiments/core_perf_research_v0/one_pass_scan.py)" = "56245f51a2dd0c4b17fb018d277b5222096448f9"
+      - name: Compile strict bounded C++17 AC source scanner
+        run: |
+          g++ -std=c++17 -O3 -Wall -Wextra -Werror -pedantic \
+            -o "$RUNNER_TEMP/glyph-ac" experiments/core_perf_research_v0/ac_native_v0.cpp -lcrypto
+      - name: Independent binary oracle, overlap/cross-boundary and hostiles
+        run: |
+          python3 experiments/core_perf_research_v0/p03_gate.py \
+            --native "$RUNNER_TEMP/glyph-ac" \
+            --p02 experiments/core_perf_research_v0/batch_pass_v0.py \
+            --mode safety --output "$RUNNER_TEMP/p03-safety"
+          python3 -c 'import json,sys;x=json.load(open(sys.argv[1]));assert x["status"]=="P03_NATIVE_AC_SAFETY_PASS" and x["exact_oracle_checks"]>=1500 and x["hostile_count"]==16,x; print("P03_NATIVE_AC_BINARY_ORACLE_AND_16_HOSTILES_PASS")' "$RUNNER_TEMP/p03-safety/result.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-p03-native-safety-evidence
+          path: ${{ runner.temp }}/p03-safety/result.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+  native-100mb-paired:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Compile C++17 native AC with audited bounds
+        run: |
+          g++ -std=c++17 -O3 -Wall -Wextra -Werror -pedantic \
+            -o "$RUNNER_TEMP/glyph-ac" experiments/core_perf_research_v0/ac_native_v0.cpp -lcrypto
+      - name: Same-runner CPU/RSS/wall source-authenticated enwik8 comparison
+        run: |
+          python3 experiments/core_perf_research_v0/p03_gate.py \
+            --native "$RUNNER_TEMP/glyph-ac" \
+            --p02 experiments/core_perf_research_v0/batch_pass_v0.py \
+            --mode enwik8 --output "$RUNNER_TEMP/p03-enwik8"
+          python3 -c 'import json,sys;x=json.load(open(sys.argv[1]));assert x["status"]=="P03_100MB_NATIVE_AC_EXACT_BENCH_PASS" and x["source_bytes"]==100000000 and set(x["summary"])=={"1","2","4","8","16"};print("P03_NATIVE_100MB_EXACT_PAIRED_PASS");print(json.dumps(x["summary"],sort_keys=True,indent=2));print("PREREGISTERED_P03_C=",x["P03_C_prediction_Q16_faster"])' "$RUNNER_TEMP/p03-enwik8/result.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: core-p03-enwik8-measurements
+          path: ${{ runner.temp }}/p03-enwik8/result.json
+          retention-days: 30
+          if-no-files-found: ignore

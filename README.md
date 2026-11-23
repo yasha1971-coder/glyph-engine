@@ -1,5 +1,25 @@
 # GLYPH
 
+> **Research checkpoint, 2026-11-23.** On whole public enwik8 (100,000,000 B),
+> the default packed Vault call took **36.53–42.43 s per query**, including
+> repeated preparation and source authentication. Opt-in sessions pay roughly
+> **34 s once per snapshot**. Their full SHA guards still read all live/private
+> bytes before and after each query; this work grows with retained state.
+>
+> A two-worker opt-in scheduling experiment at `1727b245da1721b8073bd1117f9e39906e0ceb1f`
+> reduced median full-guard time by about **41%** on this 100 MB fixture.
+> Serial / parallel warm medians were **686/558 ms** (one hit), **343/214 ms**
+> (absence), and **323/198 ms** (high count, coordinates omitted). All 54
+> replies matched external SHA pins. Small-fixture guard work was about 30%
+> slower, so the default Session remains serial. These are diagnostic probes,
+> not a 1000-query distribution, p99, production SLA or a win over ripgrep.
+>
+> Retained Vault files were **29,039,938 B**, including decoder and metadata;
+> installed dependencies and temporary working files are excluded. Independent
+> replay still restores and scans source, about **35 s per claim** on this
+> run. No sublinear/no-rescan verification or general FM-index footprint win
+> is established. [Protocol and limits](experiments/core_l11_integrated_vault_v0/ingest/search_cost/README.md#parallel-full-sha-scheduling-experiment).
+
 [![CI status](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml/badge.svg)](https://github.com/yasha1971-coder/glyph-engine/actions/workflows/ci.yml)
 
 **Verifiable exact-byte retrieval over committed corpora.**
@@ -44,6 +64,11 @@ cd glyph-engine
 ```
 
 The final closure must include:
+
+The I0 provenance check requires complete Git history to resolve the last
+commit that changed its reviewed contract sources. CI therefore checks out with
+`fetch-depth: 0`; a shallow checkout must not regenerate the artifact around its
+temporary checkout commit.
 
 ```text
 GLYPH PROOF GRAPH OK
