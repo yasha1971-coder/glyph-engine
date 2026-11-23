@@ -10,8 +10,17 @@ unchanged, SHA-256
 `3f7cce1c03a4c409163f58131f77b1b04e9efd981fa4d3797acea82a45ead51c`.
 Its recorded scan covers 38 tracked implementation source files. The current
 unchanged checker covers 43 and reports no Embedded ABI implementation hits.
-The Personal Memory `gear_native.cpp` already explained the first 38-to-39
-increase; subsequent native research sources bring this checkpoint to 43.
+On this research branch, the five additions relative to frozen C33 are:
+
+- `experiments/core_perf_research_v0/ac_native_v0.cpp`
+- `experiments/loc_text_ef_v0/native_inverse_rlb2.cpp`
+- `experiments/loc_text_ef_v0/native_parallel_inverse_rlb2_ef.cpp`
+- `experiments/loc_text_ef_v0/native_run_interval_inverse_rlb2_ef.cpp`
+- `experiments/loc_text_ef_v0/native_run_stream_inverse_rlb2_ef.cpp`
+
+The earlier Personal Memory PR #15 38-to-39 result involved `gear_native.cpp`
+on its separate lineage. That file is absent here; it is not the explanation
+for this branch's 38-to-43 result.
 
 Generated with the existing checker, without changing its algorithms:
 
