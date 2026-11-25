@@ -1,0 +1,33 @@
+name: Standalone evidence package
+on: [pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  recipient:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and exercise the distribution outside the checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          pkg="$RUNNER_TEMP/evidence-dist"
+          mkdir -p "$pkg"
+          bash tools/glyph-evidence/build-release.sh "$pkg"
+          cd "$pkg"
+          tar -xzf glyph-evidence-0.1.0-rc1-linux-x86_64.tar.gz
+          cli="$pkg/glyph-evidence-0.1.0-rc1/glyph-evidence"
+          mkdir author recipient
+          cd author
+          printf 'banana' > corpus
+          printf 'ana' > query
+          pin=$(sha256sum corpus | cut -d' ' -f1)
+          "$cli" create --file corpus --query-file query --out ../recipient/result.glyph
+          cd ../recipient
+          "$cli" verify result.glyph --expect-corpus-sha256 "$pin" --query-file ../author/query > result.json
+          python3 -c 'import json; r=json.load(open("result.json")); assert r["ok"] and r["byte_check"] and r["count"] == 2 and sorted(r["offsets"]) == [1,3]'
+          wrong=$(printf 'Banana' | sha256sum | cut -d' ' -f1)
+          if "$cli" verify result.glyph --expect-corpus-sha256 "$wrong"; then
+            echo "Accepted an incorrect corpus digest" >&2
+            exit 1
+          fi
