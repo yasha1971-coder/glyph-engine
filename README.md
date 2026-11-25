@@ -20,6 +20,13 @@ GLYPH is designed for fixed corpora that have become archives, evidence
 objects, reference datasets, or other immutable inputs where reproducibility
 matters more than ranking or semantic similarity.
 
+## Tool 01 · glyph-evidence
+
+Give a colleague an exact byte-search result they can replay offline against
+a known corpus digest. The transfer contains the source data and the query.
+See the [standalone tool and worked example](tools/glyph-evidence/README.md)
+for the create and verify commands, supported inputs, and dependencies.
+
 ## Current status
 
 | Layer | Status |
