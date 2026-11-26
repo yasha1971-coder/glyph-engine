@@ -202,6 +202,12 @@ def verify(args, work):
 
 
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] in ("create-index", "verify-index"):
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(ROOT / "tools"))
+        from index_result_v1 import main as index_main
+        cmd = "create" if sys.argv[1] == "create-index" else "verify"
+        return index_main([cmd, *sys.argv[2:]], default_tool=ROOT)
     ap = argparse.ArgumentParser(description=__doc__)
     sub = ap.add_subparsers(dest="cmd", required=True)
     c = sub.add_parser("create")

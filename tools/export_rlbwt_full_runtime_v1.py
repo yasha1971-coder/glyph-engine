@@ -24,6 +24,25 @@ def file_info(path: Path):
     return {"name": path.name, "bytes": path.stat().st_size}
 
 
+def export_bwt_and_rank(bwt, rlbwt, rank, rank_step, stdout=None):
+    subprocess.run([
+        sys.executable,
+        str(ROOT / "tools" / "rlbwt_container_v1.py"),
+        "encode",
+        "--bwt", str(bwt),
+        "--out", str(rlbwt),
+    ], check=True, stdout=stdout)
+
+    subprocess.run([
+        sys.executable,
+        str(ROOT / "tools" / "rlbwt_rank_blocks_v1.py"),
+        "build",
+        "--rlbwt", str(rlbwt),
+        "--out", str(rank),
+        "--rank-step", str(rank_step),
+    ], check=True, stdout=stdout)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Export RLBWT Full Runtime Profile V1.")
     ap.add_argument("--source-index-dir", required=True)
@@ -55,22 +74,7 @@ def main():
     rank = out / "bwt.rlbwt.rank"
     locate_core = out / f"locate_core_s{args.sample_step}.bin"
 
-    subprocess.run([
-        sys.executable,
-        str(ROOT / "tools" / "rlbwt_container_v1.py"),
-        "encode",
-        "--bwt", str(bwt),
-        "--out", str(rlbwt),
-    ], check=True)
-
-    subprocess.run([
-        sys.executable,
-        str(ROOT / "tools" / "rlbwt_rank_blocks_v1.py"),
-        "build",
-        "--rlbwt", str(rlbwt),
-        "--out", str(rank),
-        "--rank-step", str(args.rank_step),
-    ], check=True)
+    export_bwt_and_rank(bwt, rlbwt, rank, args.rank_step)
 
     with tempfile.TemporaryDirectory() as td:
         tmp = Path(td)

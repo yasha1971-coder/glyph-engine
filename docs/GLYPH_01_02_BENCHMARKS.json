@@ -1,0 +1,72 @@
+{
+  "schema": "glyph-01-02-public-aggregate-v1",
+  "corpora": {
+    "enwik8": {
+      "bytes": 100000000,
+      "A_runs": 1,
+      "B_same_request_repeats": 5,
+      "rows": {
+        "glyph": {
+          "A_bytes": 38814541,
+          "A_seconds": 20.35663990303874,
+          "B_bytes": 1017,
+          "B_seconds": 0.6774956200970337
+        },
+        "sdsl": {
+          "A_bytes": 59668395,
+          "A_seconds": 58.19348805502523,
+          "B_bytes": 1021,
+          "B_seconds": 0.48957883391994983
+        },
+        "mover": {
+          "A_bytes": 457173473,
+          "A_seconds": 14.389317534049042,
+          "B_bytes": 1026,
+          "B_seconds": 1.827946778968908
+        },
+        "rindex": {
+          "A_bytes": 306786030,
+          "A_seconds": 205.72066693706438,
+          "B_bytes": 1020,
+          "B_seconds": 1.6625088200671598
+        }
+      }
+    },
+    "Shakespeare-PG100": {
+      "bytes": 5852404,
+      "A_runs": 5,
+      "B_cases_per_series": 5,
+      "B_series_runs": 5,
+      "rows": {
+        "glyph": {
+          "A_bytes": 6299039,
+          "A_seconds": 1.5723187159746885,
+          "B_bytes": 2566,
+          "B_seconds": 0.46307260694447905
+        },
+        "sdsl": {
+          "A_bytes": 4744879,
+          "A_seconds": 1.3558060809737071,
+          "B_bytes": 2565,
+          "B_seconds": 0.38143122592009604
+        },
+        "mover": {
+          "A_bytes": 35307890,
+          "A_seconds": 1.1048199250362813,
+          "B_bytes": 2567,
+          "B_seconds": 0.8825613220687956
+        },
+        "rindex": {
+          "A_bytes": 19984484,
+          "A_seconds": 8.148433674010448,
+          "B_bytes": 2568,
+          "B_seconds": 0.6867410889826715
+        }
+      }
+    }
+  },
+  "source_snapshot": "3c049914805ba564bcd7dce50dc816d85a160774",
+  "correctness_second": "HIT",
+  "size_second": "MISS",
+  "native_competitor_verification": "shared experimental wrapper; not upstream evidence product"
+}

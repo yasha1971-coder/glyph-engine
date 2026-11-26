@@ -38,6 +38,7 @@ struct LocateCore {
     uint32_t sample_step = 0;
     uint64_t sampled_count = 0;
     std::unordered_map<uint64_t, uint64_t> sampled_sa;
+    std::vector<uint32_t> dense_sa;
 };
 
 static uint32_t read_u32_at(const std::vector<uint8_t>& d, size_t off) {
@@ -190,11 +191,33 @@ static LocateCore load_locate_core(const std::string& path) {
 
     char magic[4];
     in.read(magic, 4);
-    if (!in || std::string(magic, 4) != "LOC1") throw std::runtime_error("bad LOC1 magic");
+    if (!in) throw std::runtime_error("truncated locate magic");
+    const std::string format(magic, 4);
+    if (format != "LOC1" && format != "LOC2") throw std::runtime_error("bad locate magic");
 
     loc.sa_size = read_u64_stream(in);
     loc.sample_step = read_u32_stream(in);
     loc.sampled_count = read_u64_stream(in);
+
+    if (format == "LOC2") {
+        if (loc.sa_size == 0 || loc.sa_size > UINT32_MAX || loc.sample_step == 0 ||
+            loc.sampled_count != 1 + (loc.sa_size - 1) / loc.sample_step) {
+            throw std::runtime_error("invalid LOC2 dimensions");
+        }
+        const auto payload = in.tellg();
+        in.seekg(0, std::ios::end);
+        if (in.tellg() - payload != static_cast<std::streamoff>(loc.sampled_count * 4)) {
+            throw std::runtime_error("LOC2 size mismatch");
+        }
+        in.seekg(payload);
+        loc.dense_sa.reserve(static_cast<size_t>(loc.sampled_count));
+        for (uint64_t i = 0; i < loc.sampled_count; ++i) {
+            const auto pos = read_u32_stream(in);
+            if (pos >= loc.sa_size) throw std::runtime_error("LOC2 coordinate out of range");
+            loc.dense_sa.push_back(pos);
+        }
+        return loc;
+    }
 
     loc.sampled_sa.reserve(static_cast<size_t>(loc.sampled_count * 1.3));
 
@@ -294,9 +317,14 @@ static uint64_t locate_one(const RLBWTCore& core, const LocateCore& loc, uint64_
     steps = 0;
 
     while (true) {
-        auto it = loc.sampled_sa.find(cur);
-        if (it != loc.sampled_sa.end()) {
-            return (it->second + steps) % loc.sa_size;
+        if (!loc.dense_sa.empty()) {
+            if (cur >= loc.sa_size) throw std::runtime_error("locate row out of range");
+            if (cur % loc.sample_step == 0) {
+                return (loc.dense_sa[cur / loc.sample_step] + steps) % loc.sa_size;
+            }
+        } else {
+            auto it = loc.sampled_sa.find(cur);
+            if (it != loc.sampled_sa.end()) return (it->second + steps) % loc.sa_size;
         }
 
         cur = lf(core, cur);
@@ -374,7 +402,7 @@ int main(int argc, char** argv) {
         LocateCore loc = load_locate_core(locate_path);
 
         if (loc.sa_size != core.raw_len) {
-            throw std::runtime_error("LOC1 sa_size != raw_len");
+            throw std::runtime_error("locate sa_size != raw_len");
         }
 
         std::string line;

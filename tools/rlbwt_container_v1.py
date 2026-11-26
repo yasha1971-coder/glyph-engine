@@ -131,6 +131,8 @@ def decode_rlbwt(rlbwt_path: Path, out_path: Path):
 
         raw_len = read_u64(f)
         run_count = read_u64(f)
+        if not 1 <= run_count <= raw_len:
+            raise ValueError("invalid RLBWT run count")
         expected_sha = f.read(32)
         if len(expected_sha) != 32:
             raise EOFError("failed to read sha256")
@@ -144,6 +146,8 @@ def decode_rlbwt(rlbwt_path: Path, out_path: Path):
                 if len(sym_b) != 1:
                     raise EOFError("unexpected EOF reading symbol")
                 run_len = read_varint(f)
+                if not 1 <= run_len <= raw_len - written:
+                    raise ValueError("run length exceeds declared BWT length")
                 out.write(sym_b * run_len)
                 written += run_len
 
