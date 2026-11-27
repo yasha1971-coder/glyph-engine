@@ -1,0 +1,34 @@
+{
+  "status": "CORPUS_QUERY_ORACLE_LOCKED_BEFORE_NATIVE_PREFLIGHT",
+  "experiment": "glyph04-pizza50-official-v1",
+  "corpus": {
+    "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
+    "sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "bytes": 50000000,
+    "range": [
+      0,
+      50000000
+    ]
+  },
+  "query": {
+    "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/query.bin",
+    "sha256": "b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0",
+    "bytes": 3,
+    "hex": "746865"
+  },
+  "oracle": {
+    "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/oracle/oracle.json",
+    "sha256": "aad924cbb44127e404fad78f4eefe4e152c52f5023056bc6ebf9624f20402f2a"
+  },
+  "GLYPH_index": {
+    "path": null,
+    "sha256": null,
+    "kind": "GLYPH manifest.json; validate every part before loading"
+  },
+  "Move-r_index": {
+    "path": null,
+    "sha256": null,
+    "kind": "serialized Move-r index"
+  },
+  "index_hashes_required_before_performance_measurement": true
+}

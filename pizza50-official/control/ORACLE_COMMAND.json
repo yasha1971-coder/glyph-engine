@@ -1,0 +1,25 @@
+{
+  "wrapper_argv": [
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/run_logged.py",
+    "--prefix",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/control/oracle-attempt01",
+    "--cwd",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32",
+    "--",
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/independent_oracle.py",
+    "--corpus",
+    "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
+    "--query",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/query.bin",
+    "--out",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/oracle"
+  ],
+  "wrapper_pid": 387,
+  "work": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32",
+  "status": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/control/oracle-attempt01.status.json",
+  "oracle_script_sha256": "695e6462701695bc13bbe81a3a8da321c6b3ab5ad206c530f688a6e64eedc527",
+  "native_engine_queries_started": 0,
+  "performance_queries_started": 0
+}

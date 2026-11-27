@@ -1,0 +1,57 @@
+{
+  "BUG_PIZZA_CHILI_PREFIX_UNDERCOUNT.md": {
+    "bytes": 4010,
+    "original_relative_path": "docs/legacy/BUG_PIZZA_CHILI_PREFIX_UNDERCOUNT.md",
+    "sha256": "8fc14c3959fc612e04f2a859e480dee6eef8abd283b05e5294be5e15a1d30110"
+  },
+  "BWT_REPETITIVENESS_PROBE_V1.jsonl": {
+    "bytes": 1673,
+    "original_relative_path": "benchmarks/results/BWT_REPETITIVENESS_PROBE_V1.jsonl",
+    "sha256": "764a0ce9e02e5e92d3fbe577f96b3ca40e269c3f491ed6134ddfa7c23a49e483"
+  },
+  "PIZZA_CHILI_ENGLISH_V1.md": {
+    "bytes": 878,
+    "original_relative_path": "REFERENCE_BENCH/REPORTS/PIZZA_CHILI_ENGLISH_V1.md",
+    "sha256": "730f70509fa85ee243c82499741264d24c808c88ef5c60e0300eab8c0c05c4d8"
+  },
+  "PIZZA_SENTINEL_50MB_V1.md": {
+    "bytes": 1400,
+    "original_relative_path": "REFERENCE_BENCH/REPORTS/PIZZA_SENTINEL_50MB_V1.md",
+    "sha256": "e5956bddbeaae221769cdc3e453f2ee1ca5841b9b6b49edc0f670824edfb6486"
+  },
+  "RLBWT_BOUNDED_EVIDENCE_V1_VERIFY.md": {
+    "bytes": 2503,
+    "original_relative_path": "benchmarks/results/RLBWT_BOUNDED_EVIDENCE_V1_VERIFY.md",
+    "sha256": "7c4446cc6f02e86f86927facc0c74d469a904d59132fdec0dbfe3bcd87fbe7a6"
+  },
+  "RLBWT_BOUNDED_LOCATE_V1.md": {
+    "bytes": 2998,
+    "original_relative_path": "benchmarks/results/RLBWT_BOUNDED_LOCATE_V1.md",
+    "sha256": "7bc794b01d074d9694bd6409494abfee267659220b7f759baa89bb1a4891adc7"
+  },
+  "RLBWT_BOUNDED_SERVER_V1.md": {
+    "bytes": 1472,
+    "original_relative_path": "benchmarks/results/RLBWT_BOUNDED_SERVER_V1.md",
+    "sha256": "49c799624a7b53334427b82b6d59df761a960596006ba54866d99ac994e880e5"
+  },
+  "RLBWT_FULL_RUNTIME_PROFILE_V1_VERIFY.md": {
+    "bytes": 2953,
+    "original_relative_path": "benchmarks/results/RLBWT_FULL_RUNTIME_PROFILE_V1_VERIFY.md",
+    "sha256": "68cedd7815e809a8a7954a9931b7b84965648d6f95b055450dde16728d1a91b1"
+  },
+  "RLBWT_HIGH_COUNT_LOCATE_STRESS_V1.md": {
+    "bytes": 2935,
+    "original_relative_path": "benchmarks/results/RLBWT_HIGH_COUNT_LOCATE_STRESS_V1.md",
+    "sha256": "8d63f61b6da0ce545f1f0ab2f4ee3e0cc5f1d6e67cfbe1219cde6dbde67a7c6a"
+  },
+  "RLBWT_RANK_BLOCKS_V1_VERIFY.md": {
+    "bytes": 2249,
+    "original_relative_path": "benchmarks/results/RLBWT_RANK_BLOCKS_V1_VERIFY.md",
+    "sha256": "0e20197b417a91ea22f9c7d1bb8566bc25f7d76a5b78acc3d4fbec6fb8ddd179"
+  },
+  "RLBWT_SIZE_PROBE_V1.md": {
+    "bytes": 2813,
+    "original_relative_path": "benchmarks/results/RLBWT_SIZE_PROBE_V1.md",
+    "sha256": "b4e364a941f08c984757329100e21b301eeecd01ec5cfd89abfa930eddd694f3"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "home": "/home/contour",
+  "uid": 1000,
+  "permanent_folder": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1",
+  "folder_already_exists": false,
+  "gzip": "/usr/bin/gzip",
+  "python": "3.12.3",
+  "disk": {
+    "total": 1081101176832,
+    "used": 145788182528,
+    "free": 880320638976
+  }
+}

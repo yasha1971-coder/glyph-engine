@@ -1,0 +1,16 @@
+{
+  "query_hex": "746865",
+  "query_bytes": 3,
+  "query_sha256": "b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0",
+  "historical_report_field_equals_current_bytes": true,
+  "historical_report_file": "history/reports/RLBWT_BOUNDED_EVIDENCE_V1_VERIFY.md",
+  "historical_report_sha256": "7c4446cc6f02e86f86927facc0c74d469a904d59132fdec0dbfe3bcd87fbe7a6",
+  "historical_plaintext_sha256": null,
+  "historical_query_artifact_original_not_found": true,
+  "historical_report_does_not_pin_query_newline_as_bytes": true,
+  "new_query_has_no_newline": true,
+  "new_forecast_unchanged_from_previous_calibration": {
+    "point_p95_ms": 4.0,
+    "threshold_ms": 5.0
+  }
+}

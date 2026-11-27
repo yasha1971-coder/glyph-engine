@@ -1,0 +1,60 @@
+{
+  "phase": "PASS",
+  "pid": 384,
+  "started_utc": "2026-11-27T12:05:24Z",
+  "source_page": "https://pizzachili.dcc.uchile.cl/texts/nlang/",
+  "requested_url": "https://pizzachili.dcc.uchile.cl/texts/nlang/english.50MB.gz",
+  "performance_queries_started": 0,
+  "response": {
+    "status": 200,
+    "final_url": "https://pizzachili.dcc.uchile.cl/texts/nlang/english.50MB.gz",
+    "headers": {
+      "Server": "nginx",
+      "Date": "Fri, 27 Nov 2026 12:05:26 GMT",
+      "Content-Type": "application/octet-stream",
+      "Content-Length": "19672355",
+      "Last-Modified": "Thu, 09 Jun 2005 20:39:15 GMT",
+      "Connection": "close",
+      "ETag": "\"42a8a8f3-12c2d23\"",
+      "X-Frame-Options": "sameorigin",
+      "Strict-Transport-Security": "max-age=31536000; includeSubdomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-XSS-Protection": "1; mode=block",
+      "Accept-Ranges": "bytes"
+    }
+  },
+  "compressed": {
+    "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.50MB.gz",
+    "bytes": 19672355,
+    "sha256": "4261b313e2e662563db93e04224ed8a9181ccbbe0e53b4d521798af8f9f2c263"
+  },
+  "gzip_test": {
+    "argv": [
+      "gzip",
+      "-t",
+      "--",
+      "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.50MB.gz"
+    ],
+    "exit_code": 0,
+    "stdout_file": "gzip-test.stdout",
+    "stderr_file": "gzip-test.stderr"
+  },
+  "decompressed": {
+    "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.50MB",
+    "bytes": 52428800,
+    "sha256": "93564400c7aea529c953d8286b6aa6f6d4ef2075f308ef4e6941f05d771bf62d"
+  },
+  "prefix": {
+    "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
+    "bytes": 50000000,
+    "range": [
+      0,
+      50000000
+    ],
+    "sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "readback_sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "nul_bytes": 0
+  },
+  "finished_utc": "2026-11-27T12:05:46Z",
+  "exit_code": 0
+}

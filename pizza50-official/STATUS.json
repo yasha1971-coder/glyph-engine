@@ -1,0 +1,20 @@
+{
+  "experiment": "glyph04-pizza50-official-v1",
+  "status": "CORPUS_AND_ORACLE_PASS_AWAITING_NATIVE_PREFLIGHT",
+  "download": "PASS",
+  "gzip_integrity": "PASS",
+  "prefix_bytes": 50000000,
+  "prefix_sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+  "independent_oracle": "PASS",
+  "expected_count": 761402,
+  "historical_query_text_field_matches": true,
+  "historical_original_binary_query_available": false,
+  "historical_plaintext_sha256": null,
+  "historical_corpus_identity_claimed": false,
+  "correctness_native_queries_completed": 0,
+  "performance_samples": 0,
+  "WSL_restarted": false,
+  "Docker_stopped": false,
+  "published": false,
+  "new_engine_dependency": false
+}

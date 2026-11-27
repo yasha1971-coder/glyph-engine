@@ -1,0 +1,244 @@
+{
+  "purpose": "frozen input programs for untimed correctness preflight and future benchmark",
+  "files": [
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/PROVENANCE.json",
+      "bytes": 283,
+      "sha256": "e88f17df582feb42b4a84a5617f15010f67141009f495b4a5ac44900083545e1",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/THIRD_PARTY_NOTICES.md",
+      "bytes": 315,
+      "sha256": "3a13eb917b7493b498944e07e2a3bd0f10d217e3ac186c7657780b573e5e2fa8",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/build_bwt",
+      "bytes": 2058896,
+      "sha256": "978e224e0784992f03f9d84ae134cf180fc09ae0192566c16cfb7556ad5879a2",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/build_fm",
+      "bytes": 2054800,
+      "sha256": "c6767c40ce6881877fcd0c7e0c5cf7b42354cae2a5fbdd0f158c4404d9a7bde0",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/build_sa_u32",
+      "bytes": 2103984,
+      "sha256": "ba223ebea05c029de0a7904136821c2038809f67e09e39a4dbb1dc3e905ad905",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/recover_bwt_libsais",
+      "bytes": 1919632,
+      "sha256": "4a6342a36ddd611f65a0f8e0fb520c420ec839dd54b58830381cac782e497fcf",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/rlbwt_full_query_locate_server_v1",
+      "bytes": 1890960,
+      "sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/glyph-evidence",
+      "bytes": 11309,
+      "sha256": "57b2a619cb748543041d5e149e27fb80af217a62f33bce41bc3fb76c780a999b",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/glyph-search",
+      "bytes": 9455,
+      "sha256": "134ba2067c39baab6d25975694e3fa5d9c143f1c6ae30f222aa60fa1cb4b7d87",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libc6-copyright",
+      "bytes": 26462,
+      "sha256": "d3c95b56fa33e28b57860580f0baf4e4f4de2a268a2b80f1d031a5191bade265",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libgcc-s1-copyright",
+      "bytes": 69004,
+      "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libsais-LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libstdc++6-copyright",
+      "bytes": 69004,
+      "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/build_glyph_index_v1.sh",
+      "bytes": 1689,
+      "sha256": "686a4f26038af8a88133077dab45b8ec20b5e6396ea4192c288b75867f1e6177",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/build_locate_fixture_v1.py",
+      "bytes": 5197,
+      "sha256": "0073a9fb1c12b398868ee18e9f682ae816667148840998a1936b78f9a3a94cde",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/export_rlbwt_full_runtime_v1.py",
+      "bytes": 4196,
+      "sha256": "b2f5540a35c2d33d78c55d114932cd21376a11c572bd69a2e2071b9022357794",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/index_result_v1.py",
+      "bytes": 11519,
+      "sha256": "a8b6d2569fa1227e7593f9fe9d7839f98ac9a4874e0e8e5e769d3d9b2bf97bd8",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/make_rlbwt_bounded_evidence_bundle_v1.py",
+      "bytes": 4191,
+      "sha256": "5add5726618dc1dec98f20a4ace60992759a6cdaab4c6149f18c1c061e85f891",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/make_rlbwt_bounded_evidence_v1.py",
+      "bytes": 5456,
+      "sha256": "1a4cc00bfbe2a8f1420f8d853daeeef05cbaf69c3d41f085cafccb1f1bd69a07",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/prepare_sentinel_corpus_v1.py",
+      "bytes": 953,
+      "sha256": "1182b4796f6a2d6203a2567639b6054308b1d09c287b4d9bd42e1d0f2b859aed",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/recover_search_index_v1.py",
+      "bytes": 1548,
+      "sha256": "573ea6cd797695352b53c226eca21bec5040d3f7fa08007f7281eaa6210c5491",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/rlbwt_container_v1.py",
+      "bytes": 6333,
+      "sha256": "43950f3c730e6a7b351f375f537bf2761f6ed32d3ace340078f36374b3f92609",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/rlbwt_rank_blocks_v1.py",
+      "bytes": 10378,
+      "sha256": "7def61f736b0fd433e0203cd19fe80c3b691e76764f7f2300440a44a8956970c",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/verify_rlbwt_bounded_evidence_bundle_v1.py",
+      "bytes": 3154,
+      "sha256": "0834e8ca94d8126a21b19953cc9cb3794c9e1c9fa8015b8a3e4ef657b07071ee",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/verify_rlbwt_bounded_evidence_v1.py",
+      "bytes": 5907,
+      "sha256": "11e6ccbc7f36cf6bbf59e243c48101ff1907962458c2242fbefbd7bece03d459",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-reader.native",
+      "bytes": 1890960,
+      "sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/engine",
+      "bytes": 477,
+      "sha256": "c7f1d402f0e0cea48d053bd03bfdf1da7ba4126ffde6cfb07f7a7a13e2e3c044",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/engine.native",
+      "bytes": 9161408,
+      "sha256": "1828f0101c0da5c9cb615259618983d384527fb5e135f37f332ed3d7085ab1ad",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libatomic.so.1",
+      "bytes": 35120,
+      "sha256": "9d8a34468e614a71a6427dbabb0ac24eb8cb1e324dc6aa3bf95eb6f59201f000",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libgcc_s.so.1",
+      "bytes": 183024,
+      "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libgomp.so.1",
+      "bytes": 352304,
+      "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libstdc++.so.6",
+      "bytes": 2592224,
+      "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11",
+      "symlink_target": null
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libtbb.so.12",
+      "bytes": 252632,
+      "sha256": "1e2a936d4519f2a4f2e62411a9f680f967a4742525ecf5c2dcac57f1b82501e7",
+      "symlink_target": null
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+      "bytes": 952616,
+      "sha256": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0",
+      "system_library": true
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+      "bytes": 2129424,
+      "sha256": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf",
+      "system_library": true
+    },
+    {
+      "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+      "bytes": 236616,
+      "sha256": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da",
+      "system_library": true
+    }
+  ],
+  "GLYPH_release": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+  "Move-r_commit": "f48c9e1726a30861afab9b681b89616b2e45eda3",
+  "source_checks": [
+    {
+      "name": "GLYPH",
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/stock/kit/glyph/build/rlbwt_full_query_locate_server_v1",
+      "sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+      "ok": true
+    },
+    {
+      "name": "Move-r",
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/engine.native",
+      "sha256": "1828f0101c0da5c9cb615259618983d384527fb5e135f37f332ed3d7085ab1ad",
+      "ok": true
+    }
+  ]
+}
+

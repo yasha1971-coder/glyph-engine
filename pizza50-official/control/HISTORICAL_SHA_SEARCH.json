@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "rg",
+    "-l",
+    "--hidden",
+    "--no-ignore",
+    "-F",
+    "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "-g",
+    "*.md",
+    "-g",
+    "*.json",
+    "-g",
+    "*.jsonl",
+    "-g",
+    "*.sha256",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-engineering-8ls_ep9z\\repo-main\\benchmarks\\results",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-engineering-8ls_ep9z\\repo-main\\REFERENCE_BENCH\\REPORTS",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-engineering-8ls_ep9z\\repo-main\\docs",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-acceptance-up9k50ar\\repo-new\\benchmarks\\results",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-acceptance-up9k50ar\\repo-new\\REFERENCE_BENCH\\REPORTS",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-acceptance-up9k50ar\\repo-new\\docs",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph03-profile-y4i097g4\\repo\\benchmarks\\results",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph03-profile-y4i097g4\\repo\\REFERENCE_BENCH\\REPORTS",
+    "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph03-profile-y4i097g4\\repo\\docs"
+  ],
+  "exit_code": 1,
+  "matching_files": [],
+  "stderr": "",
+  "interpretation": "new prefix SHA was not found in the checked preserved historical reports"
+}
