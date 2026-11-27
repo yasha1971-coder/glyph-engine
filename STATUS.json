@@ -1,0 +1,9 @@
+{
+  "status": "CALIBRATION_PREPARED_NOT_RUN",
+  "performance_measurements": 0,
+  "source_oracle_preparation_only": true,
+  "correctness_forecast": "pending",
+  "speed_forecast": "pending",
+  "memory_forecast": "pending",
+  "full_runner_implemented": false
+}

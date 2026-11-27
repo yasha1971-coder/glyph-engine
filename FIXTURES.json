@@ -1,0 +1,81 @@
+[
+  {
+    "id": "overlap_aaa",
+    "corpus": "fixtures/overlap_aaa.bin",
+    "corpus_sha256": "ed968e840d10d2d313a870bc131a4e2c311d7ad09bdf32b3418147221f51a6e2",
+    "query": "fixtures/overlap_aaa.query",
+    "query_sha256": "9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0",
+    "count": 3,
+    "offsets": [
+      0,
+      1,
+      2
+    ]
+  },
+  {
+    "id": "overlap_aba",
+    "corpus": "fixtures/overlap_aba.bin",
+    "corpus_sha256": "f9b8d87e305fcf0125d889e2e40ea64b446b4c09d9459358c7d64a4a2fefcabe",
+    "query": "fixtures/overlap_aba.query",
+    "query_sha256": "e124adcce1fb2f88e1ea799c3d0820845ed343e6c739e54131fcb3a56e4bc1bd",
+    "count": 2,
+    "offsets": [
+      0,
+      2
+    ]
+  },
+  {
+    "id": "absent",
+    "corpus": "fixtures/absent.bin",
+    "corpus_sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "query": "fixtures/absent.query",
+    "query_sha256": "4ae81572f06e1b88fd5ced7a1a000945432e83e1551e6f721ee9c00b8cc33260",
+    "count": 0,
+    "offsets": []
+  },
+  {
+    "id": "unique",
+    "corpus": "fixtures/unique.bin",
+    "corpus_sha256": "0581843a533a2869191412c8174c3c0474c4abf092eed541cd8f13b26053520c",
+    "query": "fixtures/unique.query",
+    "query_sha256": "594e519ae499312b29433b7dd8a97ff068defcba9755b6d5d00e84c524d67b06",
+    "count": 1,
+    "offsets": [
+      2
+    ]
+  },
+  {
+    "id": "start",
+    "corpus": "fixtures/start.bin",
+    "corpus_sha256": "f54ed1fb89d6d0318c14a21f460310588054f3a61eaa0f7a537024c4e2a06e78",
+    "query": "fixtures/start.query",
+    "query_sha256": "594e519ae499312b29433b7dd8a97ff068defcba9755b6d5d00e84c524d67b06",
+    "count": 1,
+    "offsets": [
+      0
+    ]
+  },
+  {
+    "id": "end",
+    "corpus": "fixtures/end.bin",
+    "corpus_sha256": "d340daeb5293c2a4bd981476782b53424944f7d0d8207795266444884cccb972",
+    "query": "fixtures/end.query",
+    "query_sha256": "594e519ae499312b29433b7dd8a97ff068defcba9755b6d5d00e84c524d67b06",
+    "count": 1,
+    "offsets": [
+      3
+    ]
+  },
+  {
+    "id": "utf8",
+    "corpus": "fixtures/utf8.bin",
+    "corpus_sha256": "1c96674991fcb0a97502059c3c45881935fb74012ac4188939581ba92dfbaf22",
+    "query": "fixtures/utf8.query",
+    "query_sha256": "4a99557e4033c3539de2eb65472017cad5f9557f7a0625a09f1c3f6e2ba69c4c",
+    "count": 2,
+    "offsets": [
+      3,
+      9
+    ]
+  }
+]

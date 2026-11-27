@@ -1,0 +1,73 @@
+{
+  "Move-r": {
+    "CPython": {
+      "documents_sha256": "499a3d582d49fbef958e5d00af9c3234c79db3b29ab87d8d035bfd01046dee89",
+      "index_bytes": 189513487,
+      "index_path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/CPython/mover/kit/index/core/index.native",
+      "index_sha256": "a2d037c262f4ccdad2fa2a002cb049c16381a13c2f681b3bb9caa7f20e784f3c",
+      "libraries": {
+        "libatomic.so.1": {
+          "bytes": 35120,
+          "sha256": "9d8a34468e614a71a6427dbabb0ac24eb8cb1e324dc6aa3bf95eb6f59201f000"
+        },
+        "libgcc_s.so.1": {
+          "bytes": 183024,
+          "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb"
+        },
+        "libgomp.so.1": {
+          "bytes": 352304,
+          "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1"
+        },
+        "libstdc++.so.6": {
+          "bytes": 2592224,
+          "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11"
+        },
+        "libtbb.so.12": {
+          "bytes": 252632,
+          "sha256": "1e2a936d4519f2a4f2e62411a9f680f967a4742525ecf5c2dcac57f1b82501e7"
+        }
+      },
+      "registry_sha256": "ae32756c28649d1640003b075233c60f9b42076a0297bddb601f239f22db7f57"
+    },
+    "Git": {
+      "documents_sha256": "89605b49c1ded32cb0eb04d1eebabc07fd5a06aaa460c4d9bcb7d03ad6b3d8c2",
+      "index_bytes": 73122856,
+      "index_path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/index/core/index.native",
+      "index_sha256": "08754be76be91722681b4184ecbaa14d346cdaa4fefe27f1e7bab8bce154db36",
+      "libraries": {
+        "libatomic.so.1": {
+          "bytes": 35120,
+          "sha256": "9d8a34468e614a71a6427dbabb0ac24eb8cb1e324dc6aa3bf95eb6f59201f000"
+        },
+        "libgcc_s.so.1": {
+          "bytes": 183024,
+          "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb"
+        },
+        "libgomp.so.1": {
+          "bytes": 352304,
+          "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1"
+        },
+        "libstdc++.so.6": {
+          "bytes": 2592224,
+          "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11"
+        },
+        "libtbb.so.12": {
+          "bytes": 252632,
+          "sha256": "1e2a936d4519f2a4f2e62411a9f680f967a4742525ecf5c2dcac57f1b82501e7"
+        }
+      },
+      "registry_sha256": "078278c472fbee72106257b07bd556076bdba8ff3a02c6b3cef9bfed8c3d8b09"
+    }
+  },
+  "cpu": "13th Gen Intel(R) Core(TM) i7-1355U",
+  "grep_help_byte_semantics": [
+    "-P, --perl-regexp         PATTERNS are Perl regular expressions",
+    "-b, --byte-offset         print the byte offset with output lines",
+    "-o, --only-matching       show only nonempty parts of lines that match",
+    "-c, --count               print only a count of selected lines per FILE"
+  ],
+  "kernel": "6.6.87.2-microsoft-standard-WSL2",
+  "machine": "x86_64",
+  "os_release": "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.4 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+  "python": "3.12.3"
+}
