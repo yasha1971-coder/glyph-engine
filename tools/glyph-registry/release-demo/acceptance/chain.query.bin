@@ -1,0 +1,5 @@
+ is $tree
+'
+
+echo 'one
+two/one' >ex

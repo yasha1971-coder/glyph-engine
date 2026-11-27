@@ -1,0 +1,24 @@
+{
+  "accepted_experiment": "glyph03-five-sh1mnw75",
+  "anchor_sha256": "655918b17755a5d9cb9af1872fbf3509429500eb82b0cc5ba46cd2de5860cf6c",
+  "compiler_required": false,
+  "native_reader_sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+  "network_required": false,
+  "personal_corpus_or_private_queries_included": false,
+  "pins": {
+    "core_sha256": "7c8a60d8e380787beeef022581937c0dffebb9a72f606b79c42543862bd667b6",
+    "corpus_bytes": 20905170,
+    "corpus_sha256": "a2959331768bffeaeeadf9bda22a5e64ee24158ebc347a33ed697ae36481e5a3",
+    "documents_sha256": "89605b49c1ded32cb0eb04d1eebabc07fd5a06aaa460c4d9bcb7d03ad6b3d8c2",
+    "engine": "stock",
+    "file_count": 2255,
+    "registry_sha256": "3c937033273babffd9a8445a6fd40000d4d2a2c6e7373f17d94110d8cb4bf607",
+    "source_bytes": 20902915
+  },
+  "profile": "glyph-index-result-v1 pinned; not canonical runtime rebuild",
+  "release_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+  "release_tag": "glyph-01-02-v0.1.0-rc1",
+  "source_commit": "683c54c999c301c2cd6f715c411407c413b1d84e",
+  "standard_index_result_sha256": "a8b6d2569fa1227e7593f9fe9d7839f98ac9a4874e0e8e5e769d3d9b2bf97bd8",
+  "trust_source": "Publisher archive authenticated independently of the result sender. Receiver code and anchors fixed before receiving data capsule."
+}

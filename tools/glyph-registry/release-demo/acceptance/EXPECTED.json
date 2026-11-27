@@ -1,0 +1,1044 @@
+{
+  "anchor_sha256": "655918b17755a5d9cb9af1872fbf3509429500eb82b0cc5ba46cd2de5860cf6c",
+  "chain": {
+    "count": 1,
+    "full_matches": [
+      {
+        "offset": 234,
+        "path": "t/t1003-read-tree-prefix.sh"
+      }
+    ],
+    "limit": 10,
+    "query_bytes": 35,
+    "query_sha256": "8fd3b4e77213833087f36e8d6ee30158b2fc17a1771e96705c4e1a1a13f1275b",
+    "returned": 1
+  },
+  "core_manifest_sha256": "7c8a60d8e380787beeef022581937c0dffebb9a72f606b79c42543862bd667b6",
+  "corpus_sha256": "a2959331768bffeaeeadf9bda22a5e64ee24158ebc347a33ed697ae36481e5a3",
+  "negative": {
+    "error_contains": "count or coverage mismatch",
+    "exit_code": 1,
+    "mutation": "declared count1->2; registry count+result link and outer transport SHA recomputed; pinned source/index/query unchanged"
+  },
+  "registry_sha256": "3c937033273babffd9a8445a6fd40000d4d2a2c6e7373f17d94110d8cb4bf607",
+  "scope": "Expected answers from immutable original public bytes before candidate product acceptance. Any10 distinct valid positions, no earliest10 promise.",
+  "source_commit": "683c54c999c301c2cd6f715c411407c413b1d84e",
+  "source_files": 2255,
+  "standalone": {
+    "count": 252,
+    "full_matches": [
+      {
+        "offset": 15942,
+        "path": "add-patch.c"
+      },
+      {
+        "offset": 16718,
+        "path": "add-patch.c"
+      },
+      {
+        "offset": 17783,
+        "path": "add-patch.c"
+      },
+      {
+        "offset": 28806,
+        "path": "add-patch.c"
+      },
+      {
+        "offset": 2045,
+        "path": "alias.c"
+      },
+      {
+        "offset": 2657,
+        "path": "alias.c"
+      },
+      {
+        "offset": 1324,
+        "path": "alloc.c"
+      },
+      {
+        "offset": 7867,
+        "path": "apply.c"
+      },
+      {
+        "offset": 10401,
+        "path": "archive-tar.c"
+      },
+      {
+        "offset": 1011,
+        "path": "archive.c"
+      },
+      {
+        "offset": 12822,
+        "path": "attr.c"
+      },
+      {
+        "offset": 14985,
+        "path": "attr.c"
+      },
+      {
+        "offset": 15907,
+        "path": "attr.c"
+      },
+      {
+        "offset": 10647,
+        "path": "builtin/blame.c"
+      },
+      {
+        "offset": 10895,
+        "path": "builtin/blame.c"
+      },
+      {
+        "offset": 18709,
+        "path": "builtin/cat-file.c"
+      },
+      {
+        "offset": 2802,
+        "path": "builtin/checkout--worker.c"
+      },
+      {
+        "offset": 11029,
+        "path": "builtin/config.c"
+      },
+      {
+        "offset": 13196,
+        "path": "builtin/config.c"
+      },
+      {
+        "offset": 554,
+        "path": "builtin/credential-cache--daemon.c"
+      },
+      {
+        "offset": 1136,
+        "path": "builtin/fetch-pack.c"
+      },
+      {
+        "offset": 13109,
+        "path": "builtin/fsmonitor--daemon.c"
+      },
+      {
+        "offset": 13367,
+        "path": "builtin/fsmonitor--daemon.c"
+      },
+      {
+        "offset": 10375,
+        "path": "builtin/grep.c"
+      },
+      {
+        "offset": 26075,
+        "path": "builtin/index-pack.c"
+      },
+      {
+        "offset": 33204,
+        "path": "builtin/index-pack.c"
+      },
+      {
+        "offset": 46838,
+        "path": "builtin/index-pack.c"
+      },
+      {
+        "offset": 50364,
+        "path": "builtin/log.c"
+      },
+      {
+        "offset": 5696,
+        "path": "builtin/merge.c"
+      },
+      {
+        "offset": 729,
+        "path": "builtin/mktree.c"
+      },
+      {
+        "offset": 6230,
+        "path": "builtin/name-rev.c"
+      },
+      {
+        "offset": 7798,
+        "path": "builtin/name-rev.c"
+      },
+      {
+        "offset": 7482,
+        "path": "builtin/notes.c"
+      },
+      {
+        "offset": 8058,
+        "path": "builtin/notes.c"
+      },
+      {
+        "offset": 8952,
+        "path": "builtin/notes.c"
+      },
+      {
+        "offset": 27601,
+        "path": "builtin/pack-objects.c"
+      },
+      {
+        "offset": 51654,
+        "path": "builtin/pack-objects.c"
+      },
+      {
+        "offset": 14317,
+        "path": "builtin/repack.c"
+      },
+      {
+        "offset": 10626,
+        "path": "builtin/rev-parse.c"
+      },
+      {
+        "offset": 12025,
+        "path": "builtin/rev-parse.c"
+      },
+      {
+        "offset": 9590,
+        "path": "builtin/rm.c"
+      },
+      {
+        "offset": 5413,
+        "path": "builtin/submodule--helper.c"
+      },
+      {
+        "offset": 6152,
+        "path": "builtin/submodule--helper.c"
+      },
+      {
+        "offset": 28964,
+        "path": "builtin/submodule--helper.c"
+      },
+      {
+        "offset": 59322,
+        "path": "builtin/submodule--helper.c"
+      },
+      {
+        "offset": 63401,
+        "path": "builtin/submodule--helper.c"
+      },
+      {
+        "offset": 8942,
+        "path": "bulk-checkin.c"
+      },
+      {
+        "offset": 1884,
+        "path": "cache-tree.c"
+      },
+      {
+        "offset": 1024,
+        "path": "chunk-format.c"
+      },
+      {
+        "offset": 2591,
+        "path": "chunk-format.c"
+      },
+      {
+        "offset": 52935,
+        "path": "commit-graph.c"
+      },
+      {
+        "offset": 62956,
+        "path": "commit-graph.c"
+      },
+      {
+        "offset": 8109,
+        "path": "commit-reach.c"
+      },
+      {
+        "offset": 18387,
+        "path": "commit-reach.c"
+      },
+      {
+        "offset": 5845,
+        "path": "commit.c"
+      },
+      {
+        "offset": 26391,
+        "path": "commit.c"
+      },
+      {
+        "offset": 41260,
+        "path": "compat/mingw.c"
+      },
+      {
+        "offset": 41652,
+        "path": "compat/mingw.c"
+      },
+      {
+        "offset": 338,
+        "path": "compat/msvc.h"
+      },
+      {
+        "offset": 13868,
+        "path": "compat/simple-ipc/ipc-unix-socket.c"
+      },
+      {
+        "offset": 2378,
+        "path": "compat/win32/trace2_win32_process_info.c"
+      },
+      {
+        "offset": 56505,
+        "path": "config.c"
+      },
+      {
+        "offset": 70309,
+        "path": "config.c"
+      },
+      {
+        "offset": 71106,
+        "path": "config.c"
+      },
+      {
+        "offset": 71604,
+        "path": "config.c"
+      },
+      {
+        "offset": 71903,
+        "path": "config.c"
+      },
+      {
+        "offset": 82714,
+        "path": "config.c"
+      },
+      {
+        "offset": 84458,
+        "path": "config.c"
+      },
+      {
+        "offset": 25970,
+        "path": "daemon.c"
+      },
+      {
+        "offset": 27330,
+        "path": "daemon.c"
+      },
+      {
+        "offset": 8140,
+        "path": "delta-islands.c"
+      },
+      {
+        "offset": 23305,
+        "path": "diff.c"
+      },
+      {
+        "offset": 28224,
+        "path": "diff.c"
+      },
+      {
+        "offset": 29961,
+        "path": "diff.c"
+      },
+      {
+        "offset": 52086,
+        "path": "diff.c"
+      },
+      {
+        "offset": 58699,
+        "path": "diff.c"
+      },
+      {
+        "offset": 58990,
+        "path": "diff.c"
+      },
+      {
+        "offset": 59230,
+        "path": "diff.c"
+      },
+      {
+        "offset": 69942,
+        "path": "diff.c"
+      },
+      {
+        "offset": 87369,
+        "path": "diff.c"
+      },
+      {
+        "offset": 88361,
+        "path": "diff.c"
+      },
+      {
+        "offset": 142428,
+        "path": "diff.c"
+      },
+      {
+        "offset": 150060,
+        "path": "diff.c"
+      },
+      {
+        "offset": 169092,
+        "path": "diff.c"
+      },
+      {
+        "offset": 1084,
+        "path": "diffcore-rename.c"
+      },
+      {
+        "offset": 1785,
+        "path": "diffcore-rename.c"
+      },
+      {
+        "offset": 2068,
+        "path": "dir-iterator.c"
+      },
+      {
+        "offset": 6866,
+        "path": "dir-iterator.c"
+      },
+      {
+        "offset": 24456,
+        "path": "dir.c"
+      },
+      {
+        "offset": 26657,
+        "path": "dir.c"
+      },
+      {
+        "offset": 31699,
+        "path": "dir.c"
+      },
+      {
+        "offset": 47222,
+        "path": "dir.c"
+      },
+      {
+        "offset": 47545,
+        "path": "dir.c"
+      },
+      {
+        "offset": 67223,
+        "path": "dir.c"
+      },
+      {
+        "offset": 1509,
+        "path": "ewah/bitmap.c"
+      },
+      {
+        "offset": 2920,
+        "path": "ewah/bitmap.c"
+      },
+      {
+        "offset": 1174,
+        "path": "ewah/ewah_bitmap.c"
+      },
+      {
+        "offset": 2675,
+        "path": "fetch-pack.c"
+      },
+      {
+        "offset": 2873,
+        "path": "fmt-merge-msg.c"
+      },
+      {
+        "offset": 11974,
+        "path": "fsck.c"
+      },
+      {
+        "offset": 32678,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33031,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33308,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33342,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33367,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33500,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33720,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 33918,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 34074,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 34096,
+        "path": "git-compat-util.h"
+      },
+      {
+        "offset": 4285,
+        "path": "help.c"
+      },
+      {
+        "offset": 14624,
+        "path": "help.c"
+      },
+      {
+        "offset": 513,
+        "path": "line-log.c"
+      },
+      {
+        "offset": 13141,
+        "path": "line-log.c"
+      },
+      {
+        "offset": 3324,
+        "path": "list-objects-filter-options.c"
+      },
+      {
+        "offset": 6869,
+        "path": "list-objects-filter-options.c"
+      },
+      {
+        "offset": 11231,
+        "path": "list-objects-filter.c"
+      },
+      {
+        "offset": 14822,
+        "path": "list-objects-filter.c"
+      },
+      {
+        "offset": 32329,
+        "path": "merge-ort.c"
+      },
+      {
+        "offset": 113698,
+        "path": "merge-ort.c"
+      },
+      {
+        "offset": 142678,
+        "path": "merge-ort.c"
+      },
+      {
+        "offset": 153623,
+        "path": "merge-ort.c"
+      },
+      {
+        "offset": 4201,
+        "path": "midx-write.c"
+      },
+      {
+        "offset": 6498,
+        "path": "midx-write.c"
+      },
+      {
+        "offset": 10599,
+        "path": "midx-write.c"
+      },
+      {
+        "offset": 19518,
+        "path": "midx-write.c"
+      },
+      {
+        "offset": 25001,
+        "path": "midx-write.c"
+      },
+      {
+        "offset": 47192,
+        "path": "object-file.c"
+      },
+      {
+        "offset": 194,
+        "path": "oid-array.c"
+      },
+      {
+        "offset": 8937,
+        "path": "pack-bitmap-write.c"
+      },
+      {
+        "offset": 10085,
+        "path": "pack-bitmap-write.c"
+      },
+      {
+        "offset": 21123,
+        "path": "pack-bitmap.c"
+      },
+      {
+        "offset": 60990,
+        "path": "pack-bitmap.c"
+      },
+      {
+        "offset": 61974,
+        "path": "pack-bitmap.c"
+      },
+      {
+        "offset": 5137,
+        "path": "pack-objects.c"
+      },
+      {
+        "offset": 35471,
+        "path": "packfile.c"
+      },
+      {
+        "offset": 47009,
+        "path": "packfile.c"
+      },
+      {
+        "offset": 56321,
+        "path": "packfile.c"
+      },
+      {
+        "offset": 56387,
+        "path": "packfile.c"
+      },
+      {
+        "offset": 4636,
+        "path": "parallel-checkout.c"
+      },
+      {
+        "offset": 2093,
+        "path": "pretty.c"
+      },
+      {
+        "offset": 3699,
+        "path": "pretty.c"
+      },
+      {
+        "offset": 960,
+        "path": "prio-queue.c"
+      },
+      {
+        "offset": 7808,
+        "path": "pseudo-merge.c"
+      },
+      {
+        "offset": 7999,
+        "path": "pseudo-merge.c"
+      },
+      {
+        "offset": 8293,
+        "path": "pseudo-merge.c"
+      },
+      {
+        "offset": 10249,
+        "path": "pseudo-merge.c"
+      },
+      {
+        "offset": 11546,
+        "path": "pseudo-merge.c"
+      },
+      {
+        "offset": 3811,
+        "path": "quote.c"
+      },
+      {
+        "offset": 36664,
+        "path": "read-cache.c"
+      },
+      {
+        "offset": 77205,
+        "path": "ref-filter.c"
+      },
+      {
+        "offset": 665,
+        "path": "reflog-walk.c"
+      },
+      {
+        "offset": 5284,
+        "path": "reflog-walk.c"
+      },
+      {
+        "offset": 31630,
+        "path": "refs.c"
+      },
+      {
+        "offset": 9865,
+        "path": "refs/packed-backend.c"
+      },
+      {
+        "offset": 10537,
+        "path": "refs/packed-backend.c"
+      },
+      {
+        "offset": 29029,
+        "path": "refs/packed-backend.c"
+      },
+      {
+        "offset": 248,
+        "path": "refs/ref-cache.c"
+      },
+      {
+        "offset": 11106,
+        "path": "refs/ref-cache.c"
+      },
+      {
+        "offset": 12888,
+        "path": "refs/ref-cache.c"
+      },
+      {
+        "offset": 22902,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 23091,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 28702,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 29721,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 43939,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 44924,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 52300,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 53218,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 53690,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 54802,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 55032,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 63513,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 72581,
+        "path": "refs/reftable-backend.c"
+      },
+      {
+        "offset": 4534,
+        "path": "refspec.c"
+      },
+      {
+        "offset": 2465,
+        "path": "reftable/basics.c"
+      },
+      {
+        "offset": 4271,
+        "path": "reftable/basics.c"
+      },
+      {
+        "offset": 4459,
+        "path": "reftable/basics.c"
+      },
+      {
+        "offset": 4304,
+        "path": "reftable/basics.h"
+      },
+      {
+        "offset": 4466,
+        "path": "reftable/basics.h"
+      },
+      {
+        "offset": 4573,
+        "path": "reftable/basics.h"
+      },
+      {
+        "offset": 895,
+        "path": "reftable/block.c"
+      },
+      {
+        "offset": 3956,
+        "path": "reftable/block.c"
+      },
+      {
+        "offset": 5759,
+        "path": "reftable/block.c"
+      },
+      {
+        "offset": 1083,
+        "path": "reftable/pq.c"
+      },
+      {
+        "offset": 5548,
+        "path": "reftable/record.c"
+      },
+      {
+        "offset": 8702,
+        "path": "reftable/record.c"
+      },
+      {
+        "offset": 19919,
+        "path": "reftable/record.c"
+      },
+      {
+        "offset": 22584,
+        "path": "reftable/record.c"
+      },
+      {
+        "offset": 7340,
+        "path": "reftable/stack.c"
+      },
+      {
+        "offset": 22770,
+        "path": "reftable/stack.c"
+      },
+      {
+        "offset": 6322,
+        "path": "reftable/writer.c"
+      },
+      {
+        "offset": 20521,
+        "path": "reftable/writer.c"
+      },
+      {
+        "offset": 35081,
+        "path": "remote-curl.c"
+      },
+      {
+        "offset": 3485,
+        "path": "remote.c"
+      },
+      {
+        "offset": 4293,
+        "path": "remote.c"
+      },
+      {
+        "offset": 6796,
+        "path": "remote.c"
+      },
+      {
+        "offset": 7244,
+        "path": "remote.c"
+      },
+      {
+        "offset": 35696,
+        "path": "remote.c"
+      },
+      {
+        "offset": 37912,
+        "path": "remote.c"
+      },
+      {
+        "offset": 64523,
+        "path": "remote.c"
+      },
+      {
+        "offset": 66830,
+        "path": "remote.c"
+      },
+      {
+        "offset": 1528,
+        "path": "rerere.c"
+      },
+      {
+        "offset": 6342,
+        "path": "revision.c"
+      },
+      {
+        "offset": 42742,
+        "path": "revision.c"
+      },
+      {
+        "offset": 25495,
+        "path": "run-command.c"
+      },
+      {
+        "offset": 75892,
+        "path": "sequencer.c"
+      },
+      {
+        "offset": 176588,
+        "path": "sequencer.c"
+      },
+      {
+        "offset": 176732,
+        "path": "sequencer.c"
+      },
+      {
+        "offset": 176934,
+        "path": "sequencer.c"
+      },
+      {
+        "offset": 181385,
+        "path": "sequencer.c"
+      },
+      {
+        "offset": 182856,
+        "path": "sequencer.c"
+      },
+      {
+        "offset": 6538,
+        "path": "server-info.c"
+      },
+      {
+        "offset": 20761,
+        "path": "shallow.c"
+      },
+      {
+        "offset": 449,
+        "path": "sigchain.c"
+      },
+      {
+        "offset": 7025,
+        "path": "sparse-index.c"
+      },
+      {
+        "offset": 2927,
+        "path": "split-index.c"
+      },
+      {
+        "offset": 4920,
+        "path": "split-index.c"
+      },
+      {
+        "offset": 10961,
+        "path": "split-index.c"
+      },
+      {
+        "offset": 11294,
+        "path": "split-index.c"
+      },
+      {
+        "offset": 2112,
+        "path": "strbuf.c"
+      },
+      {
+        "offset": 3822,
+        "path": "strbuf.c"
+      },
+      {
+        "offset": 3904,
+        "path": "strbuf.c"
+      },
+      {
+        "offset": 1249,
+        "path": "string-list.c"
+      },
+      {
+        "offset": 5350,
+        "path": "string-list.c"
+      },
+      {
+        "offset": 342,
+        "path": "strvec.c"
+      },
+      {
+        "offset": 1452,
+        "path": "strvec.c"
+      },
+      {
+        "offset": 24807,
+        "path": "submodule-config.c"
+      },
+      {
+        "offset": 50245,
+        "path": "submodule.c"
+      },
+      {
+        "offset": 1946,
+        "path": "t/helper/test-reach.c"
+      },
+      {
+        "offset": 2113,
+        "path": "t/helper/test-reach.c"
+      },
+      {
+        "offset": 3384,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 3484,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 3681,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 3862,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 4029,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 4120,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 4253,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 4461,
+        "path": "t/unit-tests/t-reftable-basics.c"
+      },
+      {
+        "offset": 4940,
+        "path": "t/unit-tests/t-reftable-merged.c"
+      },
+      {
+        "offset": 12180,
+        "path": "t/unit-tests/t-reftable-merged.c"
+      },
+      {
+        "offset": 2783,
+        "path": "trace2/tr2_tls.c"
+      },
+      {
+        "offset": 537,
+        "path": "trace2/tr2_tls.h"
+      },
+      {
+        "offset": 26319,
+        "path": "trailer.c"
+      },
+      {
+        "offset": 42981,
+        "path": "transport.c"
+      },
+      {
+        "offset": 16893,
+        "path": "tree-walk.c"
+      },
+      {
+        "offset": 14960,
+        "path": "userdiff.c"
+      },
+      {
+        "offset": 5088,
+        "path": "worktree.c"
+      },
+      {
+        "offset": 5186,
+        "path": "worktree.c"
+      },
+      {
+        "offset": 2366,
+        "path": "xdiff/xmacros.h"
+      },
+      {
+        "offset": 3304,
+        "path": "xdiff/xprepare.c"
+      },
+      {
+        "offset": 4605,
+        "path": "xdiff/xprepare.c"
+      },
+      {
+        "offset": 1779,
+        "path": "xdiff/xutils.h"
+      }
+    ],
+    "limit": 10,
+    "query_bytes": 10,
+    "query_sha256": "4c75110ca5187b28c77a15c50ef0ce8475ed20ce498ed6919d74079cdd94c30c",
+    "returned": 10
+  }
+}

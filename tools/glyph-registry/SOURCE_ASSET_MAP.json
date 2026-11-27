@@ -1,0 +1,351 @@
+{
+  "asset": "glyph03-candidate-linux-x86_64.tar.gz",
+  "bytes": 7572753,
+  "sha256": "c29dcb2096e5b9803acfa705ced3bd95b1703a16d72e14340c8ab1f21aa8c48f",
+  "original_tested_source_commit": "10ab5f9002792a7c241a700e6086cccf092194e8",
+  "native_and_evidence_base_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+  "private_experiment_history_not_imported": true,
+  "source_files_byte_identical_to_asset": [
+    {
+      "archive_member": "BUILD_IDENTITY.json",
+      "repository_path": "tools/glyph-registry/release-demo/BUILD_IDENTITY.json",
+      "bytes": 252,
+      "sha256": "6b0f916d3429f3d1694a43d0c230bab9ca3d8a3b80d5c5748e6c7c8b3ab5dca5",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "CHECKSUMS.sha256",
+      "repository_path": "tools/glyph-registry/release-demo/CHECKSUMS.sha256",
+      "bytes": 4035,
+      "sha256": "13141c6c1ec7874f2e70896159a563652b4513344d31e3107efb33d7d4fefde5",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "DECISION_RLB2.md",
+      "repository_path": "tools/glyph-registry/release-demo/DECISION_RLB2.md",
+      "bytes": 1702,
+      "sha256": "83ab1d09e23350cf46f4f8134db11c92c63f3b3d75e1b89b9389b752662f541e",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "FILES.json",
+      "repository_path": "tools/glyph-registry/release-demo/FILES.json",
+      "bytes": 5868,
+      "sha256": "a21e681864949c51ba88939b6770df68f65f39f864045ed449c1cecf0e6ac833",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "PROVENANCE.json",
+      "repository_path": "tools/glyph-registry/release-demo/PROVENANCE.json",
+      "bytes": 1355,
+      "sha256": "ed55b641322813933e3dcb3f218d45796d87da9cba4b75a2fdd6bd77556c88e5",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "README_RU.md",
+      "repository_path": "tools/glyph-registry/release-demo/README_RU.md",
+      "bytes": 6397,
+      "sha256": "6352b1e7ec7d6fd01dabdbfba6380bd94557bcc99099c807c09e002516a8dd29",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "TRUSTED_CODE.json",
+      "repository_path": "tools/glyph-registry/release-demo/TRUSTED_CODE.json",
+      "bytes": 3123,
+      "sha256": "ff074aede07b2f1973ef38db44cfdff191ab3345f194f32f2135b3b179436376",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "acceptance/EXPECTED.json",
+      "repository_path": "tools/glyph-registry/release-demo/acceptance/EXPECTED.json",
+      "bytes": 20305,
+      "sha256": "77e6ac2ebe8b97b0ae1e72be0cad7b9f93cfb22ce8c2f429d44f3f55839afcf5",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "acceptance/chain.query.bin",
+      "repository_path": "tools/glyph-registry/release-demo/acceptance/chain.query.bin",
+      "bytes": 35,
+      "sha256": "8fd3b4e77213833087f36e8d6ee30158b2fc17a1771e96705c4e1a1a13f1275b",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "acceptance/standalone.query.bin",
+      "repository_path": "tools/glyph-registry/release-demo/acceptance/standalone.query.bin",
+      "bytes": 10,
+      "sha256": "4c75110ca5187b28c77a15c50ef0ce8475ed20ce498ed6919d74079cdd94c30c",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "datasets/Git/index/core/manifest.json",
+      "repository_path": "tools/glyph-registry/release-demo/datasets/Git/index/core/manifest.json",
+      "bytes": 587,
+      "sha256": "7c8a60d8e380787beeef022581937c0dffebb9a72f606b79c42543862bd667b6",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "datasets/Git/index/documents.json",
+      "repository_path": "tools/glyph-registry/release-demo/datasets/Git/index/documents.json",
+      "bytes": 594760,
+      "sha256": "89605b49c1ded32cb0eb04d1eebabc07fd5a06aaa460c4d9bcb7d03ad6b3d8c2",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "datasets/Git/index/registry.json",
+      "repository_path": "tools/glyph-registry/release-demo/datasets/Git/index/registry.json",
+      "bytes": 1049,
+      "sha256": "3c937033273babffd9a8445a6fd40000d4d2a2c6e7373f17d94110d8cb4bf607",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "datasets/Git/pins.json",
+      "repository_path": "tools/glyph-registry/release-demo/datasets/Git/pins.json",
+      "bytes": 453,
+      "sha256": "655918b17755a5d9cb9af1872fbf3509429500eb82b0cc5ba46cd2de5860cf6c",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "demo.py",
+      "repository_path": "tools/glyph-registry/release-demo/demo.py",
+      "bytes": 10277,
+      "sha256": "da69a6b1b1d933073b5a121472db53987c5e74599dc89808f57a2789d1c49776",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "examples/Git/expected.json",
+      "repository_path": "tools/glyph-registry/release-demo/examples/Git/expected.json",
+      "bytes": 7195,
+      "sha256": "0006a74016c2accc1de50fb00526cebaac52866b6bed60ee0bd8cc1303138573",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "examples/Git/query.bin",
+      "repository_path": "tools/glyph-registry/release-demo/examples/Git/query.bin",
+      "bytes": 32,
+      "sha256": "8cbd801a149bb55f50a2462470e2af236b810c7ef7129b498938e756fcccc161",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "glyph_registry.py",
+      "repository_path": "tools/glyph-registry/release-demo/glyph_registry.py",
+      "bytes": 9946,
+      "sha256": "d0aaec093f8a82f20171fb2f1125cb341d1fc68a2d2a7d32f7a14251c9590031",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/GLYPH-Apache-2.0.txt",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/GLYPH-Apache-2.0.txt",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/GLYPH-THIRD-PARTY-NOTICES.md",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/GLYPH-THIRD-PARTY-NOTICES.md",
+      "bytes": 315,
+      "sha256": "3a13eb917b7493b498944e07e2a3bd0f10d217e3ac186c7657780b573e5e2fa8",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/Git-corpus-COPYING.txt",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/Git-corpus-COPYING.txt",
+      "bytes": 18765,
+      "sha256": "5b2198d1645f767585e8a88ac0499b04472164c0d2da22e75ecf97ef443ab32e",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/glyph-native/libc6-copyright",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/glyph-native/libc6-copyright",
+      "bytes": 26462,
+      "sha256": "d3c95b56fa33e28b57860580f0baf4e4f4de2a268a2b80f1d031a5191bade265",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/glyph-native/libgcc-s1-copyright",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/glyph-native/libgcc-s1-copyright",
+      "bytes": 69004,
+      "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/glyph-native/libsais-LICENSE",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/glyph-native/libsais-LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/glyph-native/libstdc++6-copyright",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/glyph-native/libstdc++6-copyright",
+      "bytes": 69004,
+      "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/native-runtime/gcc-13-base-copyright.txt",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/native-runtime/gcc-13-base-copyright.txt",
+      "bytes": 69100,
+      "sha256": "08c6f3dee4c19aa1e57eb7d4ad45829b2e99656313bd07fa0922e2553f500be5",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/native-runtime/libc6-copyright.txt",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/native-runtime/libc6-copyright.txt",
+      "bytes": 26462,
+      "sha256": "d3c95b56fa33e28b57860580f0baf4e4f4de2a268a2b80f1d031a5191bade265",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "licenses/native-runtime/libstdc++6-copyright.txt",
+      "repository_path": "tools/glyph-registry/release-demo/licenses/native-runtime/libstdc++6-copyright.txt",
+      "bytes": 69004,
+      "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "receive.py",
+      "repository_path": "tools/glyph-registry/release-demo/receive.py",
+      "bytes": 3036,
+      "sha256": "da8787090ac9f3b6a60fff3040c816f6b60bfb8a84f8dbb522025f8a36b5b30c",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "runtime/chain.py",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/chain.py",
+      "bytes": 10213,
+      "sha256": "276a1297984bc5e1d90112ba0ce4bcd4c1449d38d9ec8ffeeba6006907e87384",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "runtime/convert.py",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/convert.py",
+      "bytes": 2980,
+      "sha256": "63bd64d4242a1cb9f95572d49b8daa328d9e778b87c961340b36977f0e01e9cf",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "runtime/glyph/glyph-evidence",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/glyph/glyph-evidence",
+      "bytes": 11309,
+      "sha256": "57b2a619cb748543041d5e149e27fb80af217a62f33bce41bc3fb76c780a999b",
+      "byte_identical": true,
+      "executable_in_asset": true
+    },
+    {
+      "archive_member": "runtime/glyph/tools/index_result_v1.py",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/glyph/tools/index_result_v1.py",
+      "bytes": 11519,
+      "sha256": "a8b6d2569fa1227e7593f9fe9d7839f98ac9a4874e0e8e5e769d3d9b2bf97bd8",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "runtime/glyph/tools/recover_search_index_v1.py",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/glyph/tools/recover_search_index_v1.py",
+      "bytes": 1548,
+      "sha256": "573ea6cd797695352b53c226eca21bec5040d3f7fa08007f7281eaa6210c5491",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "runtime/glyph/tools/rlbwt_container_v1.py",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/glyph/tools/rlbwt_container_v1.py",
+      "bytes": 6333,
+      "sha256": "43950f3c730e6a7b351f375f537bf2761f6ed32d3ace340078f36374b3f92609",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "runtime/registry.py",
+      "repository_path": "tools/glyph-registry/release-demo/runtime/registry.py",
+      "bytes": 11356,
+      "sha256": "e617354b9229ee322f84d2f475c996275e6eb13513c5e1424450b58b7ee24682",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "trust/Git-anchor.json",
+      "repository_path": "tools/glyph-registry/release-demo/trust/Git-anchor.json",
+      "bytes": 453,
+      "sha256": "655918b17755a5d9cb9af1872fbf3509429500eb82b0cc5ba46cd2de5860cf6c",
+      "byte_identical": true,
+      "executable_in_asset": false
+    },
+    {
+      "archive_member": "verify_handoff.py",
+      "repository_path": "tools/glyph-registry/release-demo/verify_handoff.py",
+      "bytes": 7434,
+      "sha256": "a2557bbb6dad244d9550e7fb37a6d29d7543273b736a348f1b4f05a38cd18d92",
+      "byte_identical": true,
+      "executable_in_asset": false
+    }
+  ],
+  "stock_source_files_identical_to_public_parent": [
+    {
+      "archive_member": "runtime/glyph/glyph-evidence",
+      "public_parent_path": "tools/glyph-evidence/glyph-evidence",
+      "public_parent_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+      "sha256": "57b2a619cb748543041d5e149e27fb80af217a62f33bce41bc3fb76c780a999b",
+      "byte_identical": true
+    },
+    {
+      "archive_member": "runtime/glyph/tools/index_result_v1.py",
+      "public_parent_path": "tools/index_result_v1.py",
+      "public_parent_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+      "sha256": "a8b6d2569fa1227e7593f9fe9d7839f98ac9a4874e0e8e5e769d3d9b2bf97bd8",
+      "byte_identical": true
+    },
+    {
+      "archive_member": "runtime/glyph/tools/recover_search_index_v1.py",
+      "public_parent_path": "tools/recover_search_index_v1.py",
+      "public_parent_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+      "sha256": "573ea6cd797695352b53c226eca21bec5040d3f7fa08007f7281eaa6210c5491",
+      "byte_identical": true
+    },
+    {
+      "archive_member": "runtime/glyph/tools/rlbwt_container_v1.py",
+      "public_parent_path": "tools/rlbwt_container_v1.py",
+      "public_parent_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+      "sha256": "43950f3c730e6a7b351f375f537bf2761f6ed32d3ace340078f36374b3f92609",
+      "byte_identical": true
+    }
+  ],
+  "generated_index_and_prebuilt_helpers_only_in_asset": [
+    "datasets/Git/index/core/bwt.rlbwt",
+    "datasets/Git/index/core/bwt.rlbwt.rank",
+    "datasets/Git/index/core/locate_core_s128.bin",
+    "runtime/glyph/build/recover_bwt_libsais",
+    "runtime/glyph/build/rlbwt_full_query_locate_server_v1"
+  ]
+}

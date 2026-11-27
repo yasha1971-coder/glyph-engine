@@ -1,0 +1,303 @@
+{
+  "count": 59,
+  "dataset": "Git",
+  "full_matches": [
+    {
+      "concat_offset": 17069401,
+      "offset": 23708,
+      "path": "t/t6402-merge-rename.sh"
+    },
+    {
+      "concat_offset": 17069736,
+      "offset": 24043,
+      "path": "t/t6402-merge-rename.sh"
+    },
+    {
+      "concat_offset": 17099225,
+      "offset": 1027,
+      "path": "t/t6407-merge-binary.sh"
+    },
+    {
+      "concat_offset": 17116251,
+      "offset": 2909,
+      "path": "t/t6415-merge-dir-to-symlink.sh"
+    },
+    {
+      "concat_offset": 17116707,
+      "offset": 3365,
+      "path": "t/t6415-merge-dir-to-symlink.sh"
+    },
+    {
+      "concat_offset": 17118925,
+      "offset": 1128,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17120256,
+      "offset": 2459,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17122134,
+      "offset": 4337,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17124139,
+      "offset": 6342,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17126376,
+      "offset": 8579,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17126853,
+      "offset": 9056,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17133711,
+      "offset": 15914,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17134702,
+      "offset": 16905,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17135693,
+      "offset": 17896,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17136796,
+      "offset": 18999,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17138484,
+      "offset": 20687,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17139171,
+      "offset": 21374,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17147536,
+      "offset": 29739,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17148852,
+      "offset": 31055,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17150552,
+      "offset": 32755,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17152240,
+      "offset": 34443,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17153763,
+      "offset": 35966,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17155237,
+      "offset": 37440,
+      "path": "t/t6416-recursive-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17165871,
+      "offset": 592,
+      "path": "t/t6417-merge-ours-theirs.sh"
+    },
+    {
+      "concat_offset": 17167705,
+      "offset": 2426,
+      "path": "t/t6417-merge-ours-theirs.sh"
+    },
+    {
+      "concat_offset": 17192033,
+      "offset": 1002,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17194641,
+      "offset": 3610,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17197474,
+      "offset": 6443,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17198199,
+      "offset": 7168,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17201031,
+      "offset": 10000,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17202122,
+      "offset": 11091,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17204085,
+      "offset": 13054,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17205546,
+      "offset": 14515,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17206849,
+      "offset": 15818,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17208777,
+      "offset": 17746,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17210442,
+      "offset": 19411,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17212417,
+      "offset": 21386,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17214871,
+      "offset": 23840,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17219648,
+      "offset": 28617,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17222555,
+      "offset": 31524,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17224772,
+      "offset": 33741,
+      "path": "t/t6422-merge-rename-corner-cases.sh"
+    },
+    {
+      "concat_offset": 17361015,
+      "offset": 135950,
+      "path": "t/t6423-merge-rename-directories.sh"
+    },
+    {
+      "concat_offset": 17362975,
+      "offset": 137910,
+      "path": "t/t6423-merge-rename-directories.sh"
+    },
+    {
+      "concat_offset": 17364963,
+      "offset": 139898,
+      "path": "t/t6423-merge-rename-directories.sh"
+    },
+    {
+      "concat_offset": 17367072,
+      "offset": 142007,
+      "path": "t/t6423-merge-rename-directories.sh"
+    },
+    {
+      "concat_offset": 17374655,
+      "offset": 3484,
+      "path": "t/t6424-merge-unrelated-index-changes.sh"
+    },
+    {
+      "concat_offset": 17374977,
+      "offset": 3806,
+      "path": "t/t6424-merge-unrelated-index-changes.sh"
+    },
+    {
+      "concat_offset": 17375741,
+      "offset": 4570,
+      "path": "t/t6424-merge-unrelated-index-changes.sh"
+    },
+    {
+      "concat_offset": 17376239,
+      "offset": 5068,
+      "path": "t/t6424-merge-unrelated-index-changes.sh"
+    },
+    {
+      "concat_offset": 17378395,
+      "offset": 7224,
+      "path": "t/t6424-merge-unrelated-index-changes.sh"
+    },
+    {
+      "concat_offset": 17387540,
+      "offset": 8120,
+      "path": "t/t6426-merge-skip-unneeded-updates.sh"
+    },
+    {
+      "concat_offset": 17404521,
+      "offset": 1800,
+      "path": "t/t6428-merge-conflicts-sparse.sh"
+    },
+    {
+      "concat_offset": 17405308,
+      "offset": 2587,
+      "path": "t/t6428-merge-conflicts-sparse.sh"
+    },
+    {
+      "concat_offset": 18406044,
+      "offset": 19126,
+      "path": "t/t7600-merge.sh"
+    },
+    {
+      "concat_offset": 18413165,
+      "offset": 26247,
+      "path": "t/t7600-merge.sh"
+    },
+    {
+      "concat_offset": 18429284,
+      "offset": 13794,
+      "path": "t/t7601-merge-pull-config.sh"
+    },
+    {
+      "concat_offset": 18429391,
+      "offset": 13901,
+      "path": "t/t7601-merge-pull-config.sh"
+    },
+    {
+      "concat_offset": 18429803,
+      "offset": 14313,
+      "path": "t/t7601-merge-pull-config.sh"
+    },
+    {
+      "concat_offset": 18487952,
+      "offset": 703,
+      "path": "t/t7615-diff-algo-with-mergy-operations.sh"
+    }
+  ],
+  "query_id": "q20_representative",
+  "query_sha256": "8cbd801a149bb55f50a2462470e2af236b810c7ef7129b498938e756fcccc161"
+}

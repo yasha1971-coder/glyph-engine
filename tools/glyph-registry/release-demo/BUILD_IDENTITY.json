@@ -1,0 +1,6 @@
+{
+  "source_commit": "10ab5f9002792a7c241a700e6086cccf092194e8",
+  "acceptance_plan_commit": "0dc613572e9a3596d62977ac2c454e4d4f832fe8",
+  "project_decision_commit": "de0c98b9bef7097933437a841da914c71f6af6e3",
+  "product_runs_before_freeze": 0
+}

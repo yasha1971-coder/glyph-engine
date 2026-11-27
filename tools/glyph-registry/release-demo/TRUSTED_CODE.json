@@ -1,0 +1,86 @@
+{
+  "licenses/GLYPH-Apache-2.0.txt": {
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "licenses/GLYPH-THIRD-PARTY-NOTICES.md": {
+    "bytes": 315,
+    "sha256": "3a13eb917b7493b498944e07e2a3bd0f10d217e3ac186c7657780b573e5e2fa8"
+  },
+  "licenses/Git-corpus-COPYING.txt": {
+    "bytes": 18765,
+    "sha256": "5b2198d1645f767585e8a88ac0499b04472164c0d2da22e75ecf97ef443ab32e"
+  },
+  "licenses/glyph-native/libc6-copyright": {
+    "bytes": 26462,
+    "sha256": "d3c95b56fa33e28b57860580f0baf4e4f4de2a268a2b80f1d031a5191bade265"
+  },
+  "licenses/glyph-native/libgcc-s1-copyright": {
+    "bytes": 69004,
+    "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79"
+  },
+  "licenses/glyph-native/libsais-LICENSE": {
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  "licenses/glyph-native/libstdc++6-copyright": {
+    "bytes": 69004,
+    "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79"
+  },
+  "licenses/native-runtime/gcc-13-base-copyright.txt": {
+    "bytes": 69100,
+    "sha256": "08c6f3dee4c19aa1e57eb7d4ad45829b2e99656313bd07fa0922e2553f500be5"
+  },
+  "licenses/native-runtime/libc6-copyright.txt": {
+    "bytes": 26462,
+    "sha256": "d3c95b56fa33e28b57860580f0baf4e4f4de2a268a2b80f1d031a5191bade265"
+  },
+  "licenses/native-runtime/libstdc++6-copyright.txt": {
+    "bytes": 69004,
+    "sha256": "20390f8a6f3b1e4d7cb45dd8652dabb259bbef688cbad839bcdb0b9ba7252f79"
+  },
+  "runtime/chain.py": {
+    "bytes": 10213,
+    "sha256": "276a1297984bc5e1d90112ba0ce4bcd4c1449d38d9ec8ffeeba6006907e87384"
+  },
+  "runtime/convert.py": {
+    "bytes": 2980,
+    "sha256": "63bd64d4242a1cb9f95572d49b8daa328d9e778b87c961340b36977f0e01e9cf"
+  },
+  "runtime/glyph/build/recover_bwt_libsais": {
+    "bytes": 1919632,
+    "sha256": "4a6342a36ddd611f65a0f8e0fb520c420ec839dd54b58830381cac782e497fcf"
+  },
+  "runtime/glyph/build/rlbwt_full_query_locate_server_v1": {
+    "bytes": 1890960,
+    "sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95"
+  },
+  "runtime/glyph/glyph-evidence": {
+    "bytes": 11309,
+    "sha256": "57b2a619cb748543041d5e149e27fb80af217a62f33bce41bc3fb76c780a999b"
+  },
+  "runtime/glyph/tools/index_result_v1.py": {
+    "bytes": 11519,
+    "sha256": "a8b6d2569fa1227e7593f9fe9d7839f98ac9a4874e0e8e5e769d3d9b2bf97bd8"
+  },
+  "runtime/glyph/tools/recover_search_index_v1.py": {
+    "bytes": 1548,
+    "sha256": "573ea6cd797695352b53c226eca21bec5040d3f7fa08007f7281eaa6210c5491"
+  },
+  "runtime/glyph/tools/rlbwt_container_v1.py": {
+    "bytes": 6333,
+    "sha256": "43950f3c730e6a7b351f375f537bf2761f6ed32d3ace340078f36374b3f92609"
+  },
+  "runtime/registry.py": {
+    "bytes": 11356,
+    "sha256": "e617354b9229ee322f84d2f475c996275e6eb13513c5e1424450b58b7ee24682"
+  },
+  "trust/Git-anchor.json": {
+    "bytes": 453,
+    "sha256": "655918b17755a5d9cb9af1872fbf3509429500eb82b0cc5ba46cd2de5860cf6c"
+  },
+  "verify_handoff.py": {
+    "bytes": 7434,
+    "sha256": "a2557bbb6dad244d9550e7fb37a6d29d7543273b736a348f1b4f05a38cd18d92"
+  }
+}

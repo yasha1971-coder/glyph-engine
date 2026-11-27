@@ -1,0 +1,236 @@
+#!/usr/bin/env python3
+"""Create or verify one bounded exact-byte result over a committed file."""
+import argparse
+import hashlib
+import json
+import os
+import re
+import shutil
+import struct
+import subprocess
+import sys
+import tempfile
+import zlib
+from pathlib import Path
+from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
+
+ROOT = Path(__file__).resolve().parent
+MIB = 1024 * 1024
+MAX_CORPUS = 128 * MIB
+MAX_TRANSPORT = 768 * MIB
+MAX_QUERY = 1024
+MAX_OFFSETS = 128
+NATIVE = ("bwt.rlbwt", "bwt.rlbwt.rank", "locate_core_s128.bin")
+RUNTIME = (*NATIVE, "manifest.json", "rlbwt_full_runtime_manifest_v1.json")
+FILES = {"README_REPLAY.md", "evidence.json", "corpus.bin", "bundle_manifest_v1.json",
+         *("runtime/" + name for name in RUNTIME)}
+
+
+def require(condition, message):
+    if not condition:
+        raise ValueError(message)
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(MIB), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def read_query(path):
+    with path.open("rb") as f:
+        q = f.read(MAX_QUERY + 1)
+    require(0 < len(q) <= MAX_QUERY and b"\0" not in q, "unsupported query length or NUL")
+    return q.decode("utf-8")
+
+
+def tool(script, *args):
+    interpreter = "bash" if script.endswith(".sh") else sys.executable
+    proc = subprocess.run([interpreter, ROOT / "tools" / script, *map(str, args)],
+                          cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if proc.returncode:
+        raise ValueError(script + " failed: " + proc.stderr.decode(errors="replace")[-1200:])
+    return proc.stdout
+
+
+def build_runtime(corpus, work):
+    index = work / "index"
+    runtime = work / "runtime"
+    tool("build_glyph_index_v1.sh", corpus, index)
+    tool("export_rlbwt_full_runtime_v1.py", "--source-index-dir", index, "--out-dir", runtime,
+         "--rank-step", 8192, "--sample-step", 128)
+    # Published manifests should not disclose the producer's temporary directories.
+    for name in RUNTIME[len(NATIVE):]:
+        p = runtime / name
+        p.write_bytes(p.read_bytes().replace(str(work).encode(), b"."))
+    return runtime
+
+
+def create(args, work):
+    require(0 < args.max_offsets <= MAX_OFFSETS, "unsupported offset cap")
+    q = read_query(args.query_file)
+    corpus = work / "corpus.bin"
+    require(args.file.is_file() and args.file.stat().st_size <= MAX_CORPUS, "unsupported corpus")
+    with args.file.open("rb") as src, corpus.open("xb") as dst:
+        for chunk in iter(lambda: src.read(MIB), b""):
+            require(dst.tell() + len(chunk) <= MAX_CORPUS and b"\0" not in chunk,
+                    "corpus exceeds size limit or contains NUL")
+            dst.write(chunk)
+    require(corpus.stat().st_size > 0, "empty corpus")
+    runtime = build_runtime(corpus, work)
+    art = work / "evidence.json"
+    tool("make_rlbwt_bounded_evidence_v1.py", "--runtime-dir", runtime, "--source-corpus", corpus,
+         "--query=" + q, "--max-offsets", args.max_offsets, "--out", art)
+    bundle = work / "bundle"
+    tool("make_rlbwt_bounded_evidence_bundle_v1.py", "--artifact", art, "--out-dir", bundle)
+    with tempfile.TemporaryDirectory(dir=args.out.parent) as temp:
+        archive = Path(temp) / "result.glyph"
+        with ZipFile(archive, "w") as z:
+            for name in sorted(FILES):
+                info = ZipInfo(name)
+                info.compress_type = ZIP_DEFLATED
+                with (bundle / name).open("rb") as src, z.open(info, "w") as dst:
+                    shutil.copyfileobj(src, dst)
+        result = {"ok": True, "corpus_sha256": digest(corpus), "bundle_sha256": digest(archive)}
+        os.link(archive, args.out)
+        return result
+
+
+def unpack(archive, bundle):
+    # This profile has one central directory, nine entries, no ZIP64 or comment.
+    size = archive.stat().st_size
+    require(22 <= size <= MAX_TRANSPORT, "invalid archive size")
+    with archive.open("rb") as src:
+        src.seek(-22, 2)
+        sig, disk, start, n, total, cdsize, off, comment = struct.unpack("<4s4H2IH", src.read(22))
+        require(sig == b"PK\x05\x06" and disk == start == comment == 0 and
+                n == total == len(FILES) and cdsize <= 8192 and off + cdsize + 22 == size,
+                "unsupported ZIP directory")
+        with ZipFile(src) as z:
+            entries = z.infolist()
+            require(len(entries) == len(FILES) and set(z.namelist()) == FILES, "wrong archive members")
+            require(sum(i.file_size for i in entries) <= MAX_TRANSPORT, "expanded bundle too large")
+            for i in entries:
+                limit = MAX_CORPUS if i.filename == "corpus.bin" else MAX_TRANSPORT
+                if i.filename.endswith((".json", ".md")):
+                    limit = 4 * MIB
+                require(i.compress_type == ZIP_DEFLATED and i.file_size <= limit, "invalid member")
+                dst = bundle / i.filename
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                with z.open(i) as source, dst.open("xb") as target:
+                    shutil.copyfileobj(source, target)
+                require(dst.stat().st_size == i.file_size, "short archive member")
+
+
+def verify(args, work):
+    require(re.fullmatch("[0-9a-fA-F]{64}", args.expect_corpus_sha256), "invalid corpus pin")
+    bundle = work / "bundle"
+    # Freeze archive bytes before validating a caller-provided digest or re-opening.
+    archive = work / "input.glyph"
+    require(args.bundle.is_file() and args.bundle.stat().st_size <= MAX_TRANSPORT, "invalid bundle size")
+    with args.bundle.open("rb") as src, archive.open("xb") as dst:
+        for block in iter(lambda: src.read(MIB), b""):
+            require(dst.tell() + len(block) <= MAX_TRANSPORT, "bundle grew beyond limit")
+            dst.write(block)
+    if args.expect_bundle_sha256:
+        require(digest(archive) == args.expect_bundle_sha256.lower(), "bundle SHA-256 mismatch")
+    unpack(archive, bundle)
+    corpus = bundle / "corpus.bin"
+    corpus_pin = digest(corpus)
+    require(corpus_pin == args.expect_corpus_sha256.lower(), "corpus SHA-256 mismatch")
+    data = corpus.read_bytes()
+    require(data and b"\0" not in data, "unsupported corpus")
+    manifest = json.loads((bundle / "bundle_manifest_v1.json").read_bytes())
+    records = manifest["files"]
+    require(len(records) == len(FILES) - 1 and {r["path"] for r in records} == FILES - {"bundle_manifest_v1.json"},
+            "wrong manifest coverage")
+    require(manifest["evidence"] == "evidence.json" and manifest["source_corpus"] == "corpus.bin"
+            and manifest["runtime_dir"] == "runtime", "invalid manifest paths")
+    e = json.loads((bundle / "evidence.json").read_bytes())
+    recs = e["runtime_files"]
+    require(len(recs) == len(RUNTIME) and {r["name"] for r in recs} == set(RUNTIME)
+            and all(r["path"] == "runtime/" + r["name"] for r in recs), "invalid runtime paths")
+    require(e["source_corpus"]["path"] == "corpus.bin" and e["runtime_dir"] == "runtime", "invalid paths")
+    q = e["query"]["text"].encode("utf-8")
+    require(0 < len(q) <= MAX_QUERY and b"\0" not in q and e["query"]["bytes"] == len(q), "invalid query")
+    if args.query_file:
+        require(q == read_query(args.query_file).encode("utf-8"), "expected query mismatch")
+    r = e["retrieval"]
+    cap = r["max_offsets"]
+    offsets = r["offsets"]
+    require(type(cap) is int and 0 < cap <= MAX_OFFSETS and isinstance(offsets, list)
+            and len(offsets) <= cap, "invalid result bounds")
+    count = 0
+    start = data.find(q)
+    while start >= 0:
+        count += 1
+        start = data.find(q, start + 1)
+    require(all(type(k) is int and k >= 0 and data[k:k + len(q)] == q for k in offsets)
+            and len(set(offsets)) == len(offsets), "offset byte mismatch")
+    require(type(r["match_count"]) is int and r["match_count"] == r["total_possible_count"] == count
+            and len(offsets) == r["returned_count"] == min(count, cap)
+            and r["bounded"] is (count > cap), "count or coverage mismatch")
+    expected_checks = [{"offset": k, "expected_hex": q.hex(), "observed_hex": q.hex(), "ok": True}
+                       for k in offsets]
+    require(e["ok"] is True and e["byte_check"]["checks"] == expected_checks
+            and e["byte_check"]["all_returned_offsets_match_query"] is True,
+            "invalid recorded byte checks")
+    require(manifest["artifact_version"] == e["artifact_version"]
+            and manifest["profile"] == e["profile"]
+            and manifest["bundle_version"] == "RLBWT_BOUNDED_EVIDENCE_BUNDLE_V1",
+            "inconsistent profile")
+    del data
+    # A corpus-only pin authenticates no index bytes. Reconstruct the native inputs
+    # before parsing them with the C++ engine. A separately trusted bundle pin
+    # permits direct native replay of a known producer's bytes.
+    if not args.expect_bundle_sha256:
+        rebuild = work / "rebuild"
+        rebuild.mkdir()
+        trusted = build_runtime(corpus, rebuild)
+        for name in NATIVE:
+            require(digest(trusted / name) == digest(bundle / "runtime" / name),
+                    "runtime reconstruction mismatch: " + name)
+    stock = json.loads(tool("verify_rlbwt_bounded_evidence_bundle_v1.py", "--bundle", bundle))
+    require(stock["ok"] is True, "stock verifier rejected")
+    replay = stock["replay_result"]["replay_result"]
+    require(r["total_steps_returned"] == replay["total_steps"]
+            and r["max_steps_returned"] == replay["max_steps"], "replay step totals mismatch")
+    return {"ok": True, "corpus_sha256": corpus_pin, "query_hex": q.hex(),
+            "count": count, "offsets": offsets, "bounded": r["bounded"], "byte_check": True}
+
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] in ("create-index", "verify-index"):
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(ROOT / "tools"))
+        from index_result_v1 import main as index_main
+        cmd = "create" if sys.argv[1] == "create-index" else "verify"
+        return index_main([cmd, *sys.argv[2:]], default_tool=ROOT)
+    ap = argparse.ArgumentParser(description=__doc__)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    c = sub.add_parser("create")
+    c.add_argument("--file", required=True, type=Path)
+    c.add_argument("--query-file", required=True, type=Path)
+    c.add_argument("--out", required=True, type=Path)
+    c.add_argument("--max-offsets", type=int, default=10)
+    v = sub.add_parser("verify")
+    v.add_argument("bundle", type=Path)
+    v.add_argument("--expect-corpus-sha256", required=True)
+    v.add_argument("--expect-bundle-sha256", help="trusted digest from known producer")
+    v.add_argument("--query-file", type=Path)
+    args = ap.parse_args()
+    try:
+        with tempfile.TemporaryDirectory(dir="/tmp") as temp:
+            result = (create if args.cmd == "create" else verify)(args, Path(temp))
+        print(json.dumps(result, sort_keys=True))
+        return 0
+    except (OSError, ValueError, KeyError, TypeError, AttributeError, EOFError, RecursionError,
+            RuntimeError, zlib.error, BadZipFile) as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=True), file=sys.stderr)
+        return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

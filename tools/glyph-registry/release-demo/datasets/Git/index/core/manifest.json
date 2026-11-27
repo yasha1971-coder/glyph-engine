@@ -1,0 +1,19 @@
+{
+  "corpus_bytes": 20905170,
+  "corpus_sha256": "a2959331768bffeaeeadf9bda22a5e64ee24158ebc347a33ed697ae36481e5a3",
+  "files": {
+    "bwt.rlbwt": {
+      "bytes": 10116058,
+      "sha256": "f2c7832b7fc94b40fcf089f8717e85137d061e06f8ab9533347cab56f5a3954f"
+    },
+    "bwt.rlbwt.rank": {
+      "bytes": 5289876,
+      "sha256": "210041b3a79e8c69a07df131fff79e49ac97261fa7bde4807bcb9e6b9385a1ed"
+    },
+    "locate_core_s128.bin": {
+      "bytes": 653312,
+      "sha256": "cf632859eb70ad3e25e8eddc27465b0ab92e866f8e97e53231f183bec7142e19"
+    }
+  },
+  "format": "glyph-search-index-v2"
+}

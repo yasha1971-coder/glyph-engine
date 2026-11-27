@@ -1,0 +1,175 @@
+{
+  "profile": "pinned-index semantic verification; archive already on disk; not canonical rebuild",
+  "measurement_campaign": "accepted glyph03-five-sh1mnw75; no new benchmark for publication preparation",
+  "corpora": {
+    "Git": {
+      "commit": "683c54c999c301c2cd6f715c411407c413b1d84e",
+      "source_bytes": 20902915,
+      "corpus_bytes": 20905170,
+      "files": 2255,
+      "corpus_sha256": "a2959331768bffeaeeadf9bda22a5e64ee24158ebc347a33ed697ae36481e5a3"
+    },
+    "CPython": {
+      "commit": "0fb18b02c8ad56299d6a2910be0bab8ad601ef24",
+      "source_bytes": 59428258,
+      "corpus_bytes": 59431090,
+      "files": 2832,
+      "corpus_sha256": "96a59ea5f3ff7af729f3f54f35a774fb278797a85be81d8de1cf11b68288dac5"
+    }
+  },
+  "kits": [
+    {
+      "dataset": "Git",
+      "engine": "stock",
+      "name": "GLYPH release",
+      "full_first_transfer_bytes": 7565620,
+      "archive_bytes": 7561499,
+      "external_files_bytes": 4121,
+      "full_receiver_PASS_median_s": 3.975792535,
+      "full_receiver_PASS_samples_s": [
+        3.144156567,
+        3.975792535,
+        4.029688904
+      ],
+      "warm_search_p50_ms": 1.1748805,
+      "warm_search_p95_ms": 26.69560454999995,
+      "source_restoration": "RLB1 BWT inverse/libsais",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2255
+    },
+    {
+      "dataset": "Git",
+      "engine": "sdsl",
+      "name": "SDSL csa_wt",
+      "full_first_transfer_bytes": 12782571,
+      "archive_bytes": 12778451,
+      "external_files_bytes": 4120,
+      "full_receiver_PASS_median_s": 6.096335065,
+      "full_receiver_PASS_samples_s": [
+        6.096335065,
+        6.531107573,
+        6.044854257
+      ],
+      "warm_search_p50_ms": 0.3103005,
+      "warm_search_p95_ms": 1.1320140499999982,
+      "source_restoration": "csa_wt extract",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2255
+    },
+    {
+      "dataset": "Git",
+      "engine": "mover",
+      "name": "Move-r",
+      "full_first_transfer_bytes": 70592233,
+      "archive_bytes": 70588112,
+      "external_files_bytes": 4121,
+      "full_receiver_PASS_median_s": 3.048608939,
+      "full_receiver_PASS_samples_s": [
+        2.275362619,
+        3.048608939,
+        5.700475565
+      ],
+      "warm_search_p50_ms": 0.22214650000000002,
+      "warm_search_p95_ms": 0.5005120499999994,
+      "source_restoration": "Move-r revert<string>(1)",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2255
+    },
+    {
+      "dataset": "Git",
+      "engine": "zoekt",
+      "name": "Zoekt + wrapper",
+      "full_first_transfer_bytes": 46092173,
+      "archive_bytes": 46088052,
+      "external_files_bytes": 4121,
+      "full_receiver_PASS_median_s": 1.900412062,
+      "full_receiver_PASS_samples_s": [
+        1.210227875,
+        1.900412062,
+        2.525275
+      ],
+      "warm_search_p50_ms": 0.4232025,
+      "warm_search_p95_ms": 1.4421796,
+      "source_restoration": "index-stored raw fileContents via compat-extract",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2255
+    },
+    {
+      "dataset": "CPython",
+      "engine": "stock",
+      "name": "GLYPH release",
+      "full_first_transfer_bytes": 16064796,
+      "archive_bytes": 16060675,
+      "external_files_bytes": 4121,
+      "full_receiver_PASS_median_s": 11.122073192,
+      "full_receiver_PASS_samples_s": [
+        8.741773067,
+        11.122073192,
+        13.228720663
+      ],
+      "warm_search_p50_ms": 2.0847059999999997,
+      "warm_search_p95_ms": 58.48197574999997,
+      "source_restoration": "RLB1 BWT inverse/libsais",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2832
+    },
+    {
+      "dataset": "CPython",
+      "engine": "sdsl",
+      "name": "SDSL csa_wt",
+      "full_first_transfer_bytes": 30516582,
+      "archive_bytes": 30512462,
+      "external_files_bytes": 4120,
+      "full_receiver_PASS_median_s": 18.617914681,
+      "full_receiver_PASS_samples_s": [
+        17.237434222,
+        18.617914681,
+        18.955106155
+      ],
+      "warm_search_p50_ms": 0.41995699999999997,
+      "warm_search_p95_ms": 2.6760743499999973,
+      "source_restoration": "csa_wt extract",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2832
+    },
+    {
+      "dataset": "CPython",
+      "engine": "mover",
+      "name": "Move-r",
+      "full_first_transfer_bytes": 162050587,
+      "archive_bytes": 162046466,
+      "external_files_bytes": 4121,
+      "full_receiver_PASS_median_s": 8.974247939,
+      "full_receiver_PASS_samples_s": [
+        7.116139066,
+        8.974247939,
+        16.243326055
+      ],
+      "warm_search_p50_ms": 0.236747,
+      "warm_search_p95_ms": 0.6853150499999999,
+      "source_restoration": "Move-r revert<string>(1)",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2832
+    },
+    {
+      "dataset": "CPython",
+      "engine": "zoekt",
+      "name": "Zoekt + wrapper",
+      "full_first_transfer_bytes": 97788332,
+      "archive_bytes": 97784211,
+      "external_files_bytes": 4121,
+      "full_receiver_PASS_median_s": 4.458600198,
+      "full_receiver_PASS_samples_s": [
+        4.458600198,
+        3.804615897,
+        6.369623353
+      ],
+      "warm_search_p50_ms": 0.502066,
+      "warm_search_p95_ms": 2.799366499999999,
+      "source_restoration": "index-stored raw fileContents via compat-extract",
+      "source_plaintext_copy_bytes_transferred": 0,
+      "restored_files": 2832
+    }
+  ],
+  "limitations": "Some GLYPH query samples reuse earlier accepted runs on the same laptop/configuration; not a fully paired simultaneous campaign. Timings below are not download/network timings. Search is a warm loaded reader; full receiver PASS is outer process start-to-exit median of three clean receivers."
+}

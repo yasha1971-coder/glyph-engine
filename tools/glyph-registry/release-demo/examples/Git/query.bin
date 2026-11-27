@@ -1,0 +1,1 @@
+est_must_fail git merge -s recur
