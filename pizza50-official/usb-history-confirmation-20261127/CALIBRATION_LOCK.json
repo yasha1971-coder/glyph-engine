@@ -1,0 +1,154 @@
+{
+  "experiment": "glyph04-pizza50-official-v1",
+  "addendum": "USB historical corpus pin confirmed before performance series",
+  "date": "2026-11-27",
+  "previous_accepted_calibration_commit": "e01053c01d58200a587c522866aae417b5174b89",
+  "corpus": {
+    "D_path": "D:\\GOLDEN\\01_text\\english.200MB\\english.200MB",
+    "D_file_bytes": 209715200,
+    "selected_range": [
+      0,
+      50000000
+    ],
+    "prefix_bytes": 50000000,
+    "prefix_sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "WSL_path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
+    "WSL_current_sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "historical_pin_path": "D:\\VIKA_proekt\\glyph-demo-ui-review 2\\demo\\v0\\demo_contract_v0.json",
+    "historical_pin_file_sha256": "550019797d51ae39b58c127cf5cf7b70fc452f3b2217a3a3d046e6a06bed01bb",
+    "historical_pin_matches": true
+  },
+  "query": {
+    "text": "the",
+    "hex": "746865",
+    "bytes": 3,
+    "sha256": "b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0",
+    "current_WSL_bytes_verified": true,
+    "historical_text_field_matches": true,
+    "historical_original_binary_query_found": false
+  },
+  "expected_full_count": 761402,
+  "expected_K10": [
+    786213,
+    4736688,
+    5595028,
+    7801431,
+    8761711,
+    19383215,
+    20264073,
+    46448252,
+    46448984,
+    47354405
+  ],
+  "selection_rule": {
+    "select": "first min(K,count) rows of matching suffix-array interval, in increasing SA row order",
+    "suffix_comparison": "unsigned raw byte lexicographic; EOF shorter; corpus NUL-free",
+    "emit": "selected zero-based raw byte offsets sorted numerically ascending",
+    "require_exact_same_subset": true,
+    "require_exact_same_order": true,
+    "any_k_acceptable": false,
+    "globally_earliest_text_k_promised": false
+  },
+  "forecast": {
+    "point_p95_ms": 4.0,
+    "maximum_p95_ms": 5.0,
+    "time_PASS": "all planned samples complete, correctness PASS, p95<=5.0 ms",
+    "time_MISS": "p95>5.0 ms",
+    "correctness_FAIL": "any incorrect count, selected offset, order or byte",
+    "incomplete": "never PASS; NOT_MEASURED unless a saved failure already proves violation",
+    "Move-r_winner_predeclared": false
+  },
+  "timing": {
+    "clock": "perf_counter_ns",
+    "t0": "immediately before sending request to loaded process",
+    "t1": "complete response read, parsed, common offset normalization finished",
+    "t2": "count, cardinality, uniqueness, exact list, bounds and every returned raw byte slice checked",
+    "search": "t1-t0",
+    "bytecheck_and_validation": "t2-t1",
+    "total": "t2-t0",
+    "primary": "p95(total) for GLYPH K10",
+    "quantiles": "linear interpolation at (n-1)*p",
+    "per_request_timeout_seconds": 10,
+    "startup_timeout_seconds": 300,
+    "oracle_build_and_log_writes_inside_hot_timer": false
+  },
+  "schedule": {
+    "warmup_rounds": 10,
+    "timed_rounds": 200,
+    "limits": [
+      1,
+      10,
+      100
+    ],
+    "timed_queries_total": 1200
+  },
+  "GLYPH": {
+    "format": "glyph-search-index-v2",
+    "runtime": [
+      "RLB1",
+      "RLR1",
+      "LOC2"
+    ],
+    "rank_step": 8192,
+    "sample_step": 128,
+    "release_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+    "reader_sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+    "reader_changed_for_this_experiment": false
+  },
+  "Move-r": {
+    "commit": "f48c9e1726a30861afab9b681b89616b2e45eda3",
+    "type": "locate_move",
+    "build_mode": "suffix_array",
+    "threads": 1,
+    "reader_sha256": "1828f0101c0da5c9cb615259618983d384527fb5e135f37f332ed3d7085ab1ad",
+    "flags": [
+      "-O3",
+      "-march=native",
+      "-DNDEBUG",
+      "-std=gnu++20"
+    ],
+    "adapter_unchanged": true,
+    "reorder_alphabet": false,
+    "builder": "local driver exposes existing library parameter; reader unchanged"
+  },
+  "performance_samples": 0,
+  "actual_p95_ms": null,
+  "baseline_files": {
+    "PARAMETERS.json": {
+      "original_path": "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph04-pizza-official-_ys8wm32\\PARAMETERS.json",
+      "snapshot": "BASELINE_PARAMETERS.json",
+      "bytes": 5490,
+      "sha256": "b83269ba754cfffd7e849f0a08516349bd9671dbf4da14f7c8eef8d9dfa81e16"
+    },
+    "INPUT_LOCK.json": {
+      "original_path": "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph04-pizza-official-_ys8wm32\\INPUT_LOCK.json",
+      "snapshot": "BASELINE_INPUT_LOCK.json",
+      "bytes": 2625,
+      "sha256": "4249925213f732b3cbefe63f9b4d0a01bc9e5eff34938002936708319a14e206"
+    },
+    "oracle.json": {
+      "original_path": "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph04-pizza-official-_ys8wm32\\oracle.json",
+      "snapshot": "BASELINE_oracle.json",
+      "bytes": 5921,
+      "sha256": "aad924cbb44127e404fad78f4eefe4e152c52f5023056bc6ebf9624f20402f2a"
+    },
+    "TOOL_BUNDLE_LOCK.json": {
+      "original_path": "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph04-pizza-official-_ys8wm32\\TOOL_BUNDLE_LOCK.json",
+      "snapshot": "BASELINE_TOOL_BUNDLE_LOCK.json",
+      "bytes": 10806,
+      "sha256": "b2496867cada4f261d368517d6f8f7015e679178fa2402e7bf8ad250bbe88f96"
+    },
+    "CALIBRATION_RU.md": {
+      "original_path": "C:\\Users\\Контур\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph04-pizza-official-_ys8wm32\\CALIBRATION_RU.md",
+      "snapshot": "BASELINE_CALIBRATION_RU.md",
+      "bytes": 13740,
+      "sha256": "c2d94dae3fd48f80a708668be9e26f905ff77e1b49e81de32772f1eb08b6bf04"
+    }
+  },
+  "old_reports_and_calibration_unchanged": true,
+  "source_D_writes": 0,
+  "downloads": 0,
+  "WSL_restarted": false,
+  "Docker_stopped": false,
+  "next_action": "Run the frozen paired one-loaded-index performance protocol; no timing prediction or input changes after observing samples."
+}

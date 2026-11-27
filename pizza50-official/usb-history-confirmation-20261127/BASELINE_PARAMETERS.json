@@ -1,0 +1,177 @@
+{
+  "experiment": "glyph04-pizza50-official-v1",
+  "date": "2026-11-27",
+  "performance_runs_started": 0,
+  "corpus": {
+    "source": "official Pizza & Chili english.50MB.gz",
+    "range_start": 0,
+    "range_end_exclusive": 50000000,
+    "bytes": 50000000,
+    "raw_bytes_only": true,
+    "nul_policy": "NUL-free input verified; no sanitization or encoding conversion permitted",
+    "sentinel_indexed_bytes_GLYPH": 50000001,
+    "url": "https://pizzachili.dcc.uchile.cl/texts/nlang/english.50MB.gz",
+    "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
+    "sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+    "historical_plaintext_identity_claimed": false
+  },
+  "query": {
+    "file": "query.bin",
+    "bytes": 3,
+    "hex": "746865",
+    "sha256": "b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0",
+    "overlapping": true,
+    "case_sensitive": true
+  },
+  "historical_expected": {
+    "count": 761402,
+    "fm_interval_half_open": [
+      45130554,
+      45891956
+    ],
+    "k10_offsets_sorted": [
+      786213,
+      4736688,
+      5595028,
+      7801431,
+      8761711,
+      19383215,
+      20264073,
+      46448252,
+      46448984,
+      47354405
+    ],
+    "server_k10_p95_ms": 3.698,
+    "server_k10_p99_ms": 3.812,
+    "server_k10_total_lf_steps": 1596,
+    "server_k10_max_lf_steps": 429,
+    "historical_locate_format": "LOC1",
+    "raw_bwt_bytes": 50000001,
+    "raw_bwt_sha256_NOT_plaintext_sha256": "eca058f8d67a98cb665fe36b24bb8a1195504f32636171ae2625a2b251cddd06"
+  },
+  "engines": [
+    "GLYPH",
+    "Move-r"
+  ],
+  "limits": [
+    1,
+    10,
+    100
+  ],
+  "primary_limit": 10,
+  "selection": {
+    "select": "first min(K,count) rows of matching suffix-array interval, in increasing SA row order",
+    "suffix_comparison": "unsigned raw byte lexicographic; EOF shorter; corpus NUL-free",
+    "emit": "selected zero-based raw byte offsets sorted numerically ascending",
+    "require_exact_same_subset": true,
+    "require_exact_same_order": true,
+    "any_k_acceptable": false,
+    "globally_earliest_text_k_promised": false
+  },
+  "GLYPH": {
+    "format": "glyph-search-index-v2",
+    "runtime": [
+      "RLB1",
+      "RLR1",
+      "LOC2"
+    ],
+    "rank_step": 8192,
+    "sample_step": 128,
+    "release_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+    "reader_sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+    "reader_changed_for_this_experiment": false
+  },
+  "Move-r": {
+    "commit": "f48c9e1726a30861afab9b681b89616b2e45eda3",
+    "type": "locate_move",
+    "build_mode": "suffix_array",
+    "threads": 1,
+    "reader_sha256": "1828f0101c0da5c9cb615259618983d384527fb5e135f37f332ed3d7085ab1ad",
+    "flags": [
+      "-O3",
+      "-march=native",
+      "-DNDEBUG",
+      "-std=gnu++20"
+    ],
+    "adapter_unchanged": true,
+    "reorder_alphabet": false,
+    "builder": "local driver exposes existing library parameter; reader unchanged"
+  },
+  "loaded_processes_per_engine": 1,
+  "reload_between_limits": false,
+  "warmup_rounds": 10,
+  "timed_rounds": 200,
+  "timed_queries_total": 1200,
+  "schedule": {
+    "limits": "rotate [1,10,100] left by r % 3",
+    "engines": "[GLYPH,Move-r] if (r+j)%2==0 else reversed; j is limit slot",
+    "warmup_uses_separate_round_counter": true
+  },
+  "timing": {
+    "clock": "perf_counter_ns",
+    "t0": "immediately before sending request to loaded process",
+    "t1": "complete response read, parsed, common offset normalization finished",
+    "t2": "count, cardinality, uniqueness, exact list, bounds and every returned raw byte slice checked",
+    "search": "t1-t0",
+    "bytecheck_and_validation": "t2-t1",
+    "total": "t2-t0",
+    "primary": "p95(total) for GLYPH K10",
+    "quantiles": "linear interpolation at (n-1)*p",
+    "per_request_timeout_seconds": 10,
+    "startup_timeout_seconds": 300,
+    "oracle_build_and_log_writes_inside_hot_timer": false
+  },
+  "forecast": {
+    "point_p95_ms": 4.0,
+    "maximum_p95_ms": 5.0,
+    "time_PASS": "all planned samples complete, correctness PASS, p95<=5.0 ms",
+    "time_MISS": "p95>5.0 ms",
+    "correctness_FAIL": "any incorrect count, selected offset, order or byte",
+    "incomplete": "never PASS; NOT_MEASURED unless a saved failure already proves violation",
+    "Move-r_winner_predeclared": false
+  },
+  "environment": {
+    "target": "DESKTOP-V4IOL2Q Ubuntu WSL",
+    "search_and_client_cpu": 0,
+    "observer_cpu": 1,
+    "threads": 1,
+    "env": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "LC_ALL": "C",
+      "PYTHONHASHSEED": "0"
+    },
+    "Docker": "leave running",
+    "restart_WSL": false,
+    "drop_cache": false,
+    "inputs_on": "Ubuntu filesystem, not /mnt/c"
+  },
+  "memory": {
+    "poll_period_ms": 5,
+    "record": [
+      "native RSS after ready",
+      "observed native RSS maximum",
+      "VmHWM including load",
+      "client RSS including immutable 50MB source buffer",
+      "observer RSS"
+    ],
+    "no_samples": "NOT_MEASURED, never zero",
+    "numeric_memory_forecast": null
+  },
+  "expected_count": 761402,
+  "expected_offsets_K10": [
+    786213,
+    4736688,
+    5595028,
+    7801431,
+    8761711,
+    19383215,
+    20264073,
+    46448252,
+    46448984,
+    47354405
+  ],
+  "scope": "new independent experiment; historical count matches but historical plaintext SHA unavailable",
+  "revision": "r2-input-byte-order-reference"
+}

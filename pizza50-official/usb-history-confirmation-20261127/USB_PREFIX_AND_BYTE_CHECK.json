@@ -1,0 +1,66 @@
+{
+  "volume": {
+    "label": "Новый том",
+    "serial_hex": "6ED7EA9B",
+    "filesystem": "exFAT"
+  },
+  "raw_path": "D:\\GOLDEN\\01_text\\english.200MB\\english.200MB",
+  "raw_bytes": 209715200,
+  "raw_full_sha256": "825509473e2b0ac0dab8c4b8d2ac76641ae08cd30cd71df5764669e305c66876",
+  "prefix_range": [
+    0,
+    50000000
+  ],
+  "prefix_bytes": 50000000,
+  "prefix_sha256": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437",
+  "gzip_path": "D:\\GOLDEN\\01_text\\english.200MB.gz",
+  "gzip_bytes": 78941298,
+  "gzip_sha256": "16da801a678d49942ff2a1c590daa7dcc1f1943133415851b9e068d126d155b2",
+  "gzip_crc_and_size_to_eof": "PASS",
+  "gzip_decompressed_bytes": 209715200,
+  "gzip_decompressed_sha256": "825509473e2b0ac0dab8c4b8d2ac76641ae08cd30cd71df5764669e305c66876",
+  "query_hex": "746865",
+  "query_sha256": "b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0",
+  "direct_search_overlapping_count": 761402,
+  "first_10_offsets_in_byte_order": [
+    73,
+    138,
+    272,
+    303,
+    351,
+    368,
+    376,
+    401,
+    452,
+    509
+  ],
+  "historical_bounded_returned_offsets": [
+    786213,
+    4736688,
+    5595028,
+    7801431,
+    8761711,
+    19383215,
+    20264073,
+    46448252,
+    46448984,
+    47354405
+  ],
+  "corpus_pin_manifest": "D:\\VIKA_proekt\\glyph-demo-ui-review 2\\demo\\v0\\demo_contract_v0.json",
+  "corpus_pin_manifest_sha256": "550019797d51ae39b58c127cf5cf7b70fc452f3b2217a3a3d046e6a06bed01bb",
+  "checks": {
+    "prefix_size": true,
+    "known_prefix_sha": true,
+    "preserved_corpus_pin_sha": true,
+    "preserved_corpus_pin_size": true,
+    "historical_count": true,
+    "historical_returned_offsets": true,
+    "historical_returned_bytes": true,
+    "full_raw_equals_decompressed_gzip": true,
+    "gzip_prefix_matches": true
+  },
+  "source_writes": 0,
+  "downloads": 0,
+  "ok": true,
+  "limit": "Historical June count/positions are saved narrative results; their exact raw execution receipt is not implied by the later corpus pin."
+}

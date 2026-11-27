@@ -1,0 +1,458 @@
+{
+  "manifest_path": "D:\\VIKA_proekt\\glyph-demo-ui-review 2\\demo\\v0\\demo_contract_v0.json",
+  "manifest_bytes": 5266,
+  "manifest_sha256": "550019797d51ae39b58c127cf5cf7b70fc452f3b2217a3a3d046e6a06bed01bb",
+  "mtime_ns": 1786831696000000000,
+  "fields": [
+    {
+      "pointer": "/authorized_storage_bytes",
+      "value": 10737418240
+    },
+    {
+      "pointer": "/base_commit",
+      "value": "c4138812f60704083f099fe0daeb6461abc9d0c2"
+    },
+    {
+      "pointer": "/bind_host",
+      "value": "127.0.0.1"
+    },
+    {
+      "pointer": "/bundle_retention_count",
+      "value": 1
+    },
+    {
+      "pointer": "/bundle_ttl_seconds",
+      "value": 900
+    },
+    {
+      "pointer": "/contract_version",
+      "value": "GLYPH_DEMO_CONTRACT_V0"
+    },
+    {
+      "pointer": "/corpus/candidate_name",
+      "value": "Pizza & Chili English 50MB prefix"
+    },
+    {
+      "pointer": "/corpus/candidate_sha256",
+      "value": "974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437"
+    },
+    {
+      "pointer": "/corpus/candidate_size_bytes",
+      "value": 50000000
+    },
+    {
+      "pointer": "/corpus/expected_validation_offsets/0",
+      "value": 53
+    },
+    {
+      "pointer": "/corpus/identity_status",
+      "value": "STATE_IMPORTED_VERIFIED"
+    },
+    {
+      "pointer": "/corpus/state_id",
+      "value": "0310cf1199a20e6fa615c54c31817f97ea6c550c6e19ea091ee09ef72746e6f6"
+    },
+    {
+      "pointer": "/corpus/state_manifest_sha256",
+      "value": "f13f2567d0a241e6292abb313187bcd2eac933651122129f5479929be1fd6b97"
+    },
+    {
+      "pointer": "/corpus/validation_query_hex",
+      "string_bytes_if_UTF8": 58,
+      "string_sha256_if_UTF8": "868ccade542b653cc1d6ce4bad15ec150fc7c8e6fe24076c1520ae7124daf584",
+      "is_literal_the": false
+    },
+    {
+      "pointer": "/hard_storage_bytes",
+      "value": 8589934592
+    },
+    {
+      "pointer": "/hot_path/binding_status",
+      "value": "VERIFIED_PERSISTENT_BINARY_SAFE_RUNTIME"
+    },
+    {
+      "pointer": "/hot_path/combined_demo_bytes",
+      "value": 2017243136
+    },
+    {
+      "pointer": "/hot_path/hot_median_microseconds",
+      "value": 11.507
+    },
+    {
+      "pointer": "/hot_path/hot_p95_microseconds",
+      "value": 16.611
+    },
+    {
+      "pointer": "/hot_path/implementation_commit",
+      "value": "63b5b764b895c7da2c7d97c9000a06911060be1b"
+    },
+    {
+      "pointer": "/hot_path/measurement_request_count",
+      "value": 100
+    },
+    {
+      "pointer": "/hot_path/protocol",
+      "value": "LOWERCASE_HEX_TAB_DECIMAL_MAX_OFFSETS_LINE"
+    },
+    {
+      "pointer": "/hot_path/runtime_index_id",
+      "value": "986f5f94eadb65439c3fb84eb77e75786e98a0e04687403d7b772607f67c42d9"
+    },
+    {
+      "pointer": "/hot_path/server_binary_sha256",
+      "value": "a21698a782a458c8eb8a4adbcf17dbb71ea55360ecf8573ab1b686491cdd5847"
+    },
+    {
+      "pointer": "/hot_path/server_binary_size_bytes",
+      "value": 65104
+    },
+    {
+      "pointer": "/hot_path/server_format",
+      "value": "GLYPH_BINARY_RUNTIME_SERVER_V0"
+    },
+    {
+      "pointer": "/hot_path/server_source_blob_id",
+      "value": "78a9a27fe8f639d73746873d8768977e467d54f3"
+    },
+    {
+      "pointer": "/hot_path/server_source_sha256",
+      "value": "f5b548573b19407054f7aa17df671c728585a1d6f5f49d7228a18133d9215348"
+    },
+    {
+      "pointer": "/hot_path/startup_verification",
+      "value": "LOAD_VALIDATE_ONCE_BEFORE_READY"
+    },
+    {
+      "pointer": "/hot_path/validation_status",
+      "value": "PASS"
+    },
+    {
+      "pointer": "/http_boundary/artifact_bytes",
+      "value": 4239
+    },
+    {
+      "pointer": "/http_boundary/artifact_path",
+      "value": "demo/v0/http_boundary_binding_v0.json"
+    },
+    {
+      "pointer": "/http_boundary/artifact_sha256",
+      "value": "80ccd9049e9f007508f6e13dd7bbcedd3658593c035fc0866e1d08a507037d25"
+    },
+    {
+      "pointer": "/http_boundary/artifact_version",
+      "value": "GLYPH_DEMO_HTTP_BOUNDARY_BINDING_V0"
+    },
+    {
+      "pointer": "/http_boundary/binding_status",
+      "value": "VERIFIED_LOOPBACK_HTTP_BOUNDARY"
+    },
+    {
+      "pointer": "/http_boundary/implementation_source_blob_id",
+      "value": "aab4b2aae5703d76cf766e447355eddb205fb90c"
+    },
+    {
+      "pointer": "/http_boundary/implementation_source_path",
+      "value": "tools/glyph_demo_http_boundary_v0.py"
+    },
+    {
+      "pointer": "/http_boundary/implementation_source_sha256",
+      "value": "d481e7d9bb603130ffd4c9a7d4a1a7c9d837b1625d2f096324d56e919ee93f5e"
+    },
+    {
+      "pointer": "/http_boundary/network_exposure",
+      "value": "LOOPBACK_ONLY"
+    },
+    {
+      "pointer": "/http_boundary/public_deployment_status",
+      "value": "BLOCKED_EXTERNAL_GATEWAY_PENDING"
+    },
+    {
+      "pointer": "/http_boundary/routes/0",
+      "value": "GET /health"
+    },
+    {
+      "pointer": "/http_boundary/routes/1",
+      "value": "POST /query"
+    },
+    {
+      "pointer": "/http_boundary_design/artifact_path",
+      "value": "demo/v0/http_boundary_design_v0.json"
+    },
+    {
+      "pointer": "/http_boundary_design/artifact_version",
+      "value": "GLYPH_DEMO_HTTP_BOUNDARY_DESIGN_V0"
+    },
+    {
+      "pointer": "/http_boundary_design/bind_host",
+      "value": "127.0.0.1"
+    },
+    {
+      "pointer": "/http_boundary_design/design_bytes",
+      "value": 4233
+    },
+    {
+      "pointer": "/http_boundary_design/design_sha256",
+      "value": "b991555e55218cf9e12549ebfc93afa814ebd081468cc1d393e6ef3af530cdc3"
+    },
+    {
+      "pointer": "/http_boundary_design/design_status",
+      "value": "FROZEN_CANDIDATE_IMPLEMENTATION_PENDING"
+    },
+    {
+      "pointer": "/http_boundary_design/http_runtime",
+      "value": "PYTHON_STDLIB_HTTP_SERVER"
+    },
+    {
+      "pointer": "/http_boundary_design/max_concurrency",
+      "value": 1
+    },
+    {
+      "pointer": "/http_boundary_design/port",
+      "value": 8787
+    },
+    {
+      "pointer": "/http_boundary_design/public_deployment_status",
+      "value": "BLOCKED_HTTP_IMPLEMENTATION_PENDING"
+    },
+    {
+      "pointer": "/http_boundary_design/routes/0",
+      "value": "GET /health"
+    },
+    {
+      "pointer": "/http_boundary_design/routes/1",
+      "value": "POST /query"
+    },
+    {
+      "pointer": "/http_boundary_design/target_source",
+      "value": "tools/glyph_demo_http_boundary_v0.py"
+    },
+    {
+      "pointer": "/http_boundary_status",
+      "value": "VERIFIED_LOOPBACK_HTTP_BOUNDARY"
+    },
+    {
+      "pointer": "/max_concurrency",
+      "value": 1
+    },
+    {
+      "pointer": "/max_offsets",
+      "value": 100
+    },
+    {
+      "pointer": "/max_query_bytes",
+      "value": 256
+    },
+    {
+      "pointer": "/max_request_bytes",
+      "value": 4096
+    },
+    {
+      "pointer": "/min_query_bytes",
+      "value": 1
+    },
+    {
+      "pointer": "/network_exposure",
+      "value": "LOOPBACK_ONLY"
+    },
+    {
+      "pointer": "/port",
+      "value": 8787
+    },
+    {
+      "pointer": "/production_readiness_claimed",
+      "value": false
+    },
+    {
+      "pointer": "/public_demo_gateway/artifact_bytes",
+      "value": 4072
+    },
+    {
+      "pointer": "/public_demo_gateway/artifact_path",
+      "value": "demo/v0/public_demo_gateway_design_v0.json"
+    },
+    {
+      "pointer": "/public_demo_gateway/artifact_sha256",
+      "value": "bdb112305c3d7e3ecc17c24381a04e921856639b2a67cc999f8a5cc8af011414"
+    },
+    {
+      "pointer": "/public_demo_gateway/artifact_version",
+      "value": "GLYPH_DEMO_PUBLIC_GATEWAY_DESIGN_V0"
+    },
+    {
+      "pointer": "/public_demo_gateway/deployment_status",
+      "value": "BLOCKED_PUBLIC_WORKER_IMPLEMENTATION_PENDING"
+    },
+    {
+      "pointer": "/public_demo_gateway/design_commit",
+      "value": "ea90ae67156437bc599fc4bc25b02e8a906cd002"
+    },
+    {
+      "pointer": "/public_demo_gateway/gateway_status",
+      "value": "DESIGN_FROZEN_IMPLEMENTATION_PENDING"
+    },
+    {
+      "pointer": "/public_demo_gateway/origin_authentication",
+      "value": "SERVICE_TOKEN_ONLY"
+    },
+    {
+      "pointer": "/public_demo_gateway/origin_hostname",
+      "value": "origin-demo.glyph.rs"
+    },
+    {
+      "pointer": "/public_demo_gateway/origin_http_boundary_binding_sha256",
+      "value": "80ccd9049e9f007508f6e13dd7bbcedd3658593c035fc0866e1d08a507037d25"
+    },
+    {
+      "pointer": "/public_demo_gateway/public_authentication",
+      "value": "ANONYMOUS"
+    },
+    {
+      "pointer": "/public_demo_gateway/public_hostname",
+      "value": "demo.glyph.rs"
+    },
+    {
+      "pointer": "/public_demo_gateway/public_max_offsets",
+      "value": 20
+    },
+    {
+      "pointer": "/public_demo_gateway/public_rate_limit/binding",
+      "value": "WORKERS_RATE_LIMITING_API"
+    },
+    {
+      "pointer": "/public_demo_gateway/public_rate_limit/key",
+      "value": "CF_CONNECTING_IP_AND_QUERY_ROUTE"
+    },
+    {
+      "pointer": "/public_demo_gateway/public_rate_limit/limit",
+      "value": 20
+    },
+    {
+      "pointer": "/public_demo_gateway/public_rate_limit/period_seconds",
+      "value": 60
+    },
+    {
+      "pointer": "/public_demo_gateway/public_runtime",
+      "value": "CLOUDFLARE_WORKERS_FREE"
+    },
+    {
+      "pointer": "/public_demo_gateway/routes/0",
+      "value": "GET /"
+    },
+    {
+      "pointer": "/public_demo_gateway/routes/1",
+      "value": "GET /health"
+    },
+    {
+      "pointer": "/public_demo_gateway/routes/2",
+      "value": "POST /query"
+    },
+    {
+      "pointer": "/public_demo_gateway/social_publication_allowed",
+      "value": false
+    },
+    {
+      "pointer": "/public_demo_gateway/topology",
+      "value": "PUBLIC_WORKER_TO_AUTHENTICATED_TUNNEL_ORIGIN"
+    },
+    {
+      "pointer": "/public_demo_gateway/worker_paid_plan_enabled",
+      "value": false
+    },
+    {
+      "pointer": "/public_demo_gateway/worker_plan",
+      "value": "WORKERS_FREE"
+    },
+    {
+      "pointer": "/public_demo_gateway/worker_request_budget_per_day",
+      "value": 100000
+    },
+    {
+      "pointer": "/public_demo_gateway_status",
+      "value": "DESIGN_FROZEN_IMPLEMENTATION_PENDING"
+    },
+    {
+      "pointer": "/public_deployment_status",
+      "value": "BLOCKED_PUBLIC_WORKER_IMPLEMENTATION_PENDING"
+    },
+    {
+      "pointer": "/query_log_policy",
+      "string_bytes_if_UTF8": 40,
+      "string_sha256_if_UTF8": "ca0abe11d8ecc9b0262e336e7fb43e52d6d7ca2febc3163dc36ba088eb2d9783",
+      "is_literal_the": false
+    },
+    {
+      "pointer": "/query_transport",
+      "string_bytes_if_UTF8": 13,
+      "string_sha256_if_UTF8": "d8ff424bf851a4a3869805a7e0c1b26b9e5b1ff328be802ac287022fb3f97a15",
+      "is_literal_the": false
+    },
+    {
+      "pointer": "/runtime/alphabet_size",
+      "value": 257
+    },
+    {
+      "pointer": "/runtime/checkpoint_step",
+      "value": 32
+    },
+    {
+      "pointer": "/runtime/combined_demo_bytes",
+      "value": 2016964608
+    },
+    {
+      "pointer": "/runtime/corpus_id",
+      "value": "94cdf3783e17af733e2c9ce2ad0ddadcb49fb5a28d8310196d295a9fbcb5b112"
+    },
+    {
+      "pointer": "/runtime/deterministic_rebuild_verified",
+      "value": true
+    },
+    {
+      "pointer": "/runtime/logical_sentinel",
+      "value": 256
+    },
+    {
+      "pointer": "/runtime/query_result_id",
+      "string_bytes_if_UTF8": 64,
+      "string_sha256_if_UTF8": "3f66e4fbd703942f27bd9ac0bc55837a104fc2429ce4e11c77700e844ee50de2",
+      "is_literal_the": false
+    },
+    {
+      "pointer": "/runtime/query_validation_status",
+      "string_bytes_if_UTF8": 4,
+      "string_sha256_if_UTF8": "2f9acb02faa121bb2a3621951f57b4c690655337edee2e5ac350be2b3be88ea8",
+      "is_literal_the": false
+    },
+    {
+      "pointer": "/runtime/runtime_index_id",
+      "value": "986f5f94eadb65439c3fb84eb77e75786e98a0e04687403d7b772607f67c42d9"
+    },
+    {
+      "pointer": "/runtime/runtime_manifest_sha256",
+      "value": "4d8ba6cadf8025cf28a170c825e782f7d3226a0aadbbd16f10ff0679113f54d2"
+    },
+    {
+      "pointer": "/runtime/source_manifest_id",
+      "value": "b0f47cb7a14ed41d55a212e7db62c401dde4a81fb6803b98052aeefb21e06546"
+    },
+    {
+      "pointer": "/runtime/source_manifest_sha256",
+      "value": "9a7893fd55e43b62e7ae0d9f353d2fbddb269cb49e211373577db2effb00d0d8"
+    },
+    {
+      "pointer": "/runtime/total_runtime_bytes",
+      "value": 1906253270
+    },
+    {
+      "pointer": "/runtime_profile",
+      "value": "GLYPH_BINARY_RUNTIME_V1"
+    },
+    {
+      "pointer": "/target_storage_bytes",
+      "value": 6442450944
+    },
+    {
+      "pointer": "/user_uploads_enabled",
+      "value": false
+    }
+  ]
+}

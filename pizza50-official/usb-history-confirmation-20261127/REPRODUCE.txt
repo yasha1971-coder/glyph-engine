@@ -1,0 +1,14 @@
+Только Ubuntu WSL; без сети и без запуска таймера.
+
+corpus='/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin'
+query='/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/query.bin'
+printf '%s  %s\n' '974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437' "$corpus" | sha256sum -c -
+printf '%s  %s\n' 'b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0' "$query" | sha256sum -c -
+od -An -tx1 -v -- "$query"
+
+Ожидается два OK и hex 74 68 65.
+Полный count и выбранные координаты: BASELINE_oracle.json.
+Прогноз и порог: CALIBRATION_LOCK.json, 4.0 ms / 5.0 ms.
+Повторного скачивания и модификации D: не требуется.
+Первая CALIBRATION: 46bd7cac2f1acbfb875e57bf5443826760486d9f.
+Принятые проверки и последняя прежняя фиксация: e01053c01d58200a587c522866aae417b5174b89.

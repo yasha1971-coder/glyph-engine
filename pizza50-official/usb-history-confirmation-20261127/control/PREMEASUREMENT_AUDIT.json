@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "frozen_files_checked": 113,
+  "r2_frozen_files_unchanged": true,
+  "errors": [],
+  "D_prefix_equals_pinned_WSL_corpus_by_SHA": true,
+  "query_bytes": "746865",
+  "query_sha256": "b9776d7ddf459c9ad5b0e1d6ac61e27befb5e99fd62446677600d7cacef544d0",
+  "full_count": 761402,
+  "expected_K10": [
+    786213,
+    4736688,
+    5595028,
+    7801431,
+    8761711,
+    19383215,
+    20264073,
+    46448252,
+    46448984,
+    47354405
+  ],
+  "performance_samples_in_accepted_record": 0,
+  "actual_p95_ms": null,
+  "forecast_p95_ms": 4.0,
+  "MISS_threshold_ms": 5.0,
+  "corpus_downloaded_again": false,
+  "source_D_writes": 0
+}
