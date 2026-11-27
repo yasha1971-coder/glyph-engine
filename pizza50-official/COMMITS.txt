@@ -1,0 +1,5 @@
+First official independent Pizza50 CALIBRATION commit: 46bd7cac2f1acbfb875e57bf5443826760486d9f
+Branch: calibration/glyph04-pizza50-official
+Parent historical preliminary calibration: 49b0d82175d38570b3ff21f76f98c501f2fd7035
+Repository: C:\Users\Контур\Documents\Codex\2026-11-25\ssh-ace-core-glyph-home-glyph\glyph03-user-za25gaf0\calibration04
+Corpus and oracle frozen; native queries 0 and performance samples 0 at this commit.

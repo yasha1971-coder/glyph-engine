@@ -1,0 +1,101 @@
+{
+  "files": [
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/ACCEPTED_BUILD_FLAGS.json",
+      "bytes": 4097,
+      "sha256": "9be731d4ff05d72e36dddf974ff4aaa86b1e7f11e7e023b4832395e96bcc6ac4"
+    },
+    {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/mover_build_byte_order.cpp",
+      "bytes": 792,
+      "sha256": "11668e73580951158f728de363648fb84b404ad2598457627d09f8fe46c59257"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/CMakeFiles/glyph02_mover_adapter.dir/external/string-utils/external/malloc_count/malloc_count.c.o",
+      "bytes": 23312,
+      "sha256": "655b81c453648da345182568426013f35139a307f413fe72ae511034dbe0290e"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/external/move-data-structure/libmove_cache_lines.a",
+      "bytes": 172150,
+      "sha256": "637c7bfa50106100ff96c2b436c048e898c9cc4d13da521d084b0e68ab9ee062"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/external/pfp-rlbwt/libpfp_rlbwt.a",
+      "bytes": 18446730,
+      "sha256": "7cba2017dbe17bdf54811ad0aa8b995855fbcc49e6ae77521aa7184a90b755b2"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/external/string-utils/libsdsl_core.a",
+      "bytes": 232426,
+      "sha256": "2d5971d7707485e73c3c5e44c29787b2ad747e195b42e452492a9c74f4b6d5ea"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/liblibsais.a",
+      "bytes": 1106548,
+      "sha256": "47c668eab54cbf7fad13edba1d734618cccf6d4e9ba3f9ee4f8887ec94d8a6e6"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/liblibsais40.a",
+      "bytes": 845298,
+      "sha256": "3458b7f63767f7184e115dadd8ae6605d6faeedc86c53d51b86e55882c2e142d"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/liblibsais48.a",
+      "bytes": 609656,
+      "sha256": "45b8c380f9e06bef2fc93df7db3d1863477eed1b1896f54ba90d3021d4a5df1d"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/libmove_r_pfp_integer.a",
+      "bytes": 270362,
+      "sha256": "5971de82e9a1ce94f5de2c4cb0c95f751d896ba1248bec2b518b452c33cf250c"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/include/move_r/construction/text_alphabet.hpp",
+      "bytes": 12156,
+      "sha256": "f61d1dee749a4c26f9341dfb47dfc179cd4825b03c4dfabf00c358d8a0d16768"
+    },
+    {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/include/move_r/move_r.hpp",
+      "bytes": 76328,
+      "sha256": "f9cf555cbf003664deed7d1e758e59679a236a4f1a3648fb8cacf0d18b7ffe0c"
+    },
+    {
+      "path": "/usr/bin/x86_64-linux-gnu-g++-13",
+      "bytes": 1027128,
+      "sha256": "1353e9bdd29a7295c7226bf6c63abccce056d8cac31f112e5cdbecc3f28c2769"
+    }
+  ],
+  "Move-r_commit": "f48c9e1726a30861afab9b681b89616b2e45eda3",
+  "core_header_diff": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "string_utils_header_diff": {
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  "preexisting_accepted_build_patches": {
+    "Move-r": {
+      "exit_code": 0,
+      "stdout": "diff --git a/CMakeLists.txt b/CMakeLists.txt\nindex e7527b7..b029d60 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -527,3 +527,6 @@ set(move_r_external_targets\n \n string_utils_mark_system(${move_r_external_targets})\n string_utils_silence_warnings(${move_r_external_targets})\n+\n+add_executable(glyph02_mover_adapter bench-mover.cpp)\n+target_link_libraries(glyph02_mover_adapter PRIVATE move_r)\ndiff --git a/external/string-utils b/external/string-utils\n--- a/external/string-utils\n+++ b/external/string-utils\n@@ -1 +1 @@\n-Subproject commit 4a5f44f4f863f35ec5807939354f3e295a8e028f\n+Subproject commit 4a5f44f4f863f35ec5807939354f3e295a8e028f-dirty\n",
+      "stderr": ""
+    },
+    "string-utils": {
+      "exit_code": 0,
+      "stdout": "diff --git a/external/ips2ra b/external/ips2ra\n--- a/external/ips2ra\n+++ b/external/ips2ra\n@@ -1 +1 @@\n-Subproject commit ef3407632348f58a6ab75832a749cde99f3b9ad8\n+Subproject commit ef3407632348f58a6ab75832a749cde99f3b9ad8-dirty\ndiff --git a/external/ips4o b/external/ips4o\n--- a/external/ips4o\n+++ b/external/ips4o\n@@ -1 +1 @@\n-Subproject commit 08a5b926ee65cef19139057c6bde02bb5542c1cb\n+Subproject commit 08a5b926ee65cef19139057c6bde02bb5542c1cb-dirty\ndiff --git a/external/libsais b/external/libsais\n--- a/external/libsais\n+++ b/external/libsais\n@@ -1 +1 @@\n-Subproject commit b1aa1fde090e00a4e2030b9fb54198698b84e463\n+Subproject commit b1aa1fde090e00a4e2030b9fb54198698b84e463-dirty\ndiff --git a/external/malloc_count b/external/malloc_count\n--- a/external/malloc_count\n+++ b/external/malloc_count\n@@ -1 +1 @@\n-Subproject commit f23b8c584af979363ca08fc9170565ecc017e015\n+Subproject commit f23b8c584af979363ca08fc9170565ecc017e015-dirty\ndiff --git a/external/sdsl-lite b/external/sdsl-lite\n--- a/external/sdsl-lite\n+++ b/external/sdsl-lite\n@@ -1 +1 @@\n-Subproject commit c32874cb2d8524119f25f3b501526fe692df29f4\n+Subproject commit c32874cb2d8524119f25f3b501526fe692df29f4-dirty\ndiff --git a/external/sux b/external/sux\n--- a/external/sux\n+++ b/external/sux\n@@ -1 +1 @@\n-Subproject commit 568903f1b7957ef03620ebad65d6ef68e031fef9\n+Subproject commit 568903f1b7957ef03620ebad65d6ef68e031fef9-dirty\n",
+      "stderr": ""
+    }
+  },
+  "compiler": "x86_64-linux-gnu-g++-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0\nCopyright (C) 2023 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "fixed_parameter": {
+    "reorder_alphabet": false
+  },
+  "library_sources_modified_by_this_task": false,
+  "reader_rebuilt": false,
+  "GLYPH_modified": false,
+  "initial_lock_assertion_failure": "previous build integration changes prevent claiming whole vendor tree clean; core/include differences checked separately"
+}
+

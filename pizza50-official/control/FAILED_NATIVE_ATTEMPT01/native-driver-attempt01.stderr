@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/native_preflight.py", line 132, in main
+    raise ValueError("Move-r raw selection is not the frozen SA prefix")
+ValueError: Move-r raw selection is not the frozen SA prefix

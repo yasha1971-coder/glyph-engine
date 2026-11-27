@@ -1,0 +1,18 @@
+{
+  "status": "FAIL",
+  "reason": "Move-r raw selection is not the frozen SA prefix",
+  "controller_exit": 1,
+  "all_native_stage_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "GLYPH_K1_K10_K100": "PASS",
+  "Move-r_exact_count_and_returned_bytes": "PASS after independent diagnosis",
+  "Move-r_same_raw_byte_SA_prefix": "FAIL",
+  "cause_confirmed": "Move-r default reorder_alphabet=true sorts its internal alphabet by decreasing frequency",
+  "correctness_requests_sent": 6,
+  "performance_samples": 0,
+  "raw_logs": "control/FAILED_NATIVE_ATTEMPT01"
+}

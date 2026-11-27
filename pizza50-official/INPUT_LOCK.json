@@ -1,5 +1,5 @@
 {
-  "status": "CORPUS_QUERY_ORACLE_LOCKED_BEFORE_NATIVE_PREFLIGHT",
+  "status": "CORPUS_ORACLE_AND_GLYPH_LOCKED_MOVE_BYTE_ORDER_CORRECTION_PENDING",
   "experiment": "glyph04-pizza50-official-v1",
   "corpus": {
     "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
@@ -21,14 +21,38 @@
     "sha256": "aad924cbb44127e404fad78f4eefe4e152c52f5023056bc6ebf9624f20402f2a"
   },
   "GLYPH_index": {
-    "path": null,
-    "sha256": null,
-    "kind": "GLYPH manifest.json; validate every part before loading"
+    "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/glyph.gidx/manifest.json",
+    "bytes": 589,
+    "sha256": "52406bd60a9d1c0aa5fd1a123c0ee0de06c58e6ee38e402355e47a63cc2eae66"
   },
   "Move-r_index": {
     "path": null,
     "sha256": null,
-    "kind": "serialized Move-r index"
+    "required_parameter": {
+      "reorder_alphabet": false
+    }
   },
-  "index_hashes_required_before_performance_measurement": true
+  "index_hashes_required_before_performance_measurement": true,
+  "GLYPH_parts": {
+    "bwt.rlbwt": {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/glyph.gidx/bwt.rlbwt",
+      "bytes": 31922909,
+      "sha256": "a31851ecf6b1e90b254fadae211790a48fac154ab5dc5587342f5ab8e9c66775"
+    },
+    "bwt.rlbwt.rank": {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/glyph.gidx/bwt.rlbwt.rank",
+      "bytes": 12649620,
+      "sha256": "9db4fe4a0d43306328ea4586fc624f9b1b3bd4d2b6af1c2be2346ea1e067a721"
+    },
+    "locate_core_s128.bin": {
+      "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/glyph.gidx/locate_core_s128.bin",
+      "bytes": 1562528,
+      "sha256": "a709ea8f1f96698bb4c35ad98a3cfe5df60f4295966fb0b8d79be78fc6cc8a6d"
+    }
+  },
+  "prior_Move-r_default_index": {
+    "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/move.index",
+    "bytes": 224670410,
+    "sha256": "d94bbec0d56c02467bf18074adfe7d2c472349479aab447d2ba23c5bbf8730c2"
+  }
 }

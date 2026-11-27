@@ -1,0 +1,73 @@
+[1/4] prepare sentinel corpus
+input: /tmp/glyph-search-ekvp7xug/input.bin
+output: /tmp/glyph-search-ekvp7xug/index/corpus.sentinel.bin
+input_bytes: 50000000
+output_bytes: 50000001
+sentinel_appended: 0x00
+[2/4] build SA32u
+============================================
+ BUILD SA U32 VIA LIBSAIS64
+============================================
+input:  "/tmp/glyph-search-ekvp7xug/index/corpus.sentinel.bin"
+output: "/tmp/glyph-search-ekvp7xug/index/sa.bin"
+corpus_bytes: 50000001
+libsais64_ok
+basic_validation_ok
+saved: "/tmp/glyph-search-ekvp7xug/index/sa.bin"
+done
+[3/4] build BWT
+============================================
+ BUILD TRUE BWT
+============================================
+corpus:   "/tmp/glyph-search-ekvp7xug/index/corpus.sentinel.bin"
+sa:       "/tmp/glyph-search-ekvp7xug/index/sa.bin"
+output:   "/tmp/glyph-search-ekvp7xug/index/bwt.bin"
+sentinel: 0
+bwt_ok
+saved: "/tmp/glyph-search-ekvp7xug/index/bwt.bin"
+done
+[4/4] build FM
+============================================
+ BUILD FM V1
+============================================
+bwt:             "/tmp/glyph-search-ekvp7xug/index/bwt.bin"
+output:          "/tmp/glyph-search-ekvp7xug/index/fm.bin"
+checkpoint_step: 128
+bwt_bytes: 50000001
+hist_ok
+C_ok
+num_blocks: 390627
+saved: "/tmp/glyph-search-ekvp7xug/index/fm.bin"
+done
+[5/5] write manifest
+manifest: /tmp/glyph-search-ekvp7xug/index/manifest.json
+[done]
+index_corpus: /tmp/glyph-search-ekvp7xug/index/corpus.sentinel.bin
+sa: /tmp/glyph-search-ekvp7xug/index/sa.bin
+bwt: /tmp/glyph-search-ekvp7xug/index/bwt.bin
+fm: /tmp/glyph-search-ekvp7xug/index/fm.bin
+{
+  "ok": true,
+  "mode": "encode",
+  "bwt_path": "/tmp/glyph-search-ekvp7xug/index/bwt.bin",
+  "out_path": "/tmp/glyph-search-ekvp7xug/runtime/bwt.rlbwt",
+  "raw_bwt_bytes": 50000001,
+  "encoded_bytes": 31922909,
+  "runs": 15954147,
+  "avg_run_len": 3.1339814657593412,
+  "ratio_vs_bwt": 0.6384581672308367,
+  "raw_sha256": "eca058f8d67a98cb665fe36b24bb8a1195504f32636171ae2625a2b251cddd06"
+}
+{
+  "ok": true,
+  "rlbwt": "/tmp/glyph-search-ekvp7xug/runtime/bwt.rlbwt",
+  "rank_index": "/tmp/glyph-search-ekvp7xug/runtime/bwt.rlbwt.rank",
+  "raw_bwt_bytes": 50000001,
+  "run_count": 15954147,
+  "rank_step": 8192,
+  "rank_blocks": 6105,
+  "rank_index_bytes": 12649620,
+  "rlbwt_bytes": 31922909,
+  "combined_bytes": 44572529,
+  "combined_ratio_vs_bwt": 0.8914505621709887
+}

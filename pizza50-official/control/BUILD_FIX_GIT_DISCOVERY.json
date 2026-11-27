@@ -1,0 +1,29 @@
+[
+  {
+    "argv": [
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "f48c9e1726a30861afab9b681b89616b2e45eda3\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "diff",
+      "--quiet"
+    ],
+    "exit": 1,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "status",
+      "--short"
+    ],
+    "exit": 0,
+    "stdout": " M CMakeLists.txt\n m external/string-utils\n?? bench-mover.cpp\n",
+    "stderr": ""
+  }
+]

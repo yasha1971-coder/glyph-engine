@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/diagnose_move_order.py",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32"
+  ],
+  "exit_code": 0,
+  "stdout": "{\n  \"diagnosis\": \"Move-r default reorder_alphabet=true sorts its internal alphabet by decreasing frequency\",\n  \"hypothesis_confirmed_by_independent_translated_suffix_comparison\": true,\n  \"new_index_engine_queries\": 0,\n  \"performance_samples\": 0,\n  \"raw_byte_prefix_contract\": \"FAIL; original attempt retained\",\n  \"records\": [\n    {\n      \"all_offsets_in_full_direct_list\": true,\n      \"all_returned_bytes_PASS\": true,\n      \"count_matches_direct_search\": true,\n      \"exact_frequency_order_prefix_matches\": true,\n      \"limit\": 1,\n      \"raw_byte_order_prefix_matches\": false\n    },\n    {\n      \"all_offsets_in_full_direct_list\": true,\n      \"all_returned_bytes_PASS\": true,\n      \"count_matches_direct_search\": true,\n      \"exact_frequency_order_prefix_matches\": true,\n      \"limit\": 10,\n      \"raw_byte_order_prefix_matches\": false\n    },\n    {\n      \"all_offsets_in_full_direct_list\": true,\n      \"all_returned_bytes_PASS\": true,\n      \"count_matches_direct_search\": true,\n      \"exact_frequency_order_prefix_matches\": true,\n      \"limit\": 100,\n      \"raw_byte_order_prefix_matches\": false\n    }\n  ],\n  \"underlying_exact_count_and_returned_bytes\": \"PASS in all three replies\"\n}\n",
+  "stderr": ""
+}

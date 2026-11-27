@@ -1,0 +1,15 @@
+{
+  "glyph-build.stderr": "3150e2f3920f2f1131b5288e64f500218e27eb16da969313ef2f05515ca9ea19",
+  "glyph-build.stdout": "6e19ffe48ed4d3d53286eecbef4409713eca8cc08eb9b2859b65296c91fa3335",
+  "GLYPH-preflight.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "GLYPH-preflight.stdin": "0b06a372156dc2890032806c227c2389471d58f09ed1f5dc5bc445c2c027f40d",
+  "GLYPH-preflight.stdout": "29d4f8276252800d13130bf14db3b6ddf46e06883e716c84f07d6bccc9f1deaa",
+  "move-build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "move-build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "Move-r-preflight.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "Move-r-preflight.stdin": "0b06a372156dc2890032806c227c2389471d58f09ed1f5dc5bc445c2c027f40d",
+  "Move-r-preflight.stdout": "a0f70e72418a738e38ba34a47d739e3ea8bd59c72066254468705b4cec342b97",
+  "native-driver-attempt01.stderr": "28b8b011d817861c8000540d9b91a46d4350e276c6b61cedc977dc836f737c69",
+  "native-driver-attempt01.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "NATIVE_POLL.json": "fa026a9c4dd28e76bc573d3bf568f26760f76d581f4e9e98f9b06ad15e8e28bf"
+}

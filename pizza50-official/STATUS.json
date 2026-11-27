@@ -1,6 +1,6 @@
 {
   "experiment": "glyph04-pizza50-official-v1",
-  "status": "CORPUS_AND_ORACLE_PASS_AWAITING_NATIVE_PREFLIGHT",
+  "status": "ORIGINAL_PREFLIGHT_FAIL_PRESERVED_PREPARING_MOVE_BYTE_ORDER_REFERENCE",
   "download": "PASS",
   "gzip_integrity": "PASS",
   "prefix_bytes": 50000000,
@@ -11,10 +11,18 @@
   "historical_original_binary_query_available": false,
   "historical_plaintext_sha256": null,
   "historical_corpus_identity_claimed": false,
-  "correctness_native_queries_completed": 0,
+  "correctness_native_queries_completed": 6,
   "performance_samples": 0,
   "WSL_restarted": false,
   "Docker_stopped": false,
   "published": false,
-  "new_engine_dependency": false
+  "new_engine_dependency": false,
+  "original_attempt": "FAIL: different SA prefix with default Move-r alphabet mapping",
+  "GLYPH_preflight": "PASS for K1/K10/K100",
+  "Move_r_default_count_and_bytes": "PASS",
+  "Move_r_default_selection": "FAIL",
+  "correction": {
+    "reorder_alphabet": false,
+    "state": "frozen before compile in a separate local branch"
+  }
 }

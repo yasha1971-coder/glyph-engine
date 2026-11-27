@@ -93,7 +93,9 @@
       "-DNDEBUG",
       "-std=gnu++20"
     ],
-    "adapter_unchanged": true
+    "adapter_unchanged": true,
+    "reorder_alphabet": false,
+    "builder": "local driver exposes existing library parameter; reader unchanged"
   },
   "loaded_processes_per_engine": 1,
   "reload_between_limits": false,
@@ -170,5 +172,6 @@
     46448984,
     47354405
   ],
-  "scope": "new independent experiment; historical count matches but historical plaintext SHA unavailable"
+  "scope": "new independent experiment; historical count matches but historical plaintext SHA unavailable",
+  "revision": "r2-input-byte-order-reference"
 }
