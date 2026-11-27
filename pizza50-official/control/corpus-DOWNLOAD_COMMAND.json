@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/download_and_pin.py",
+    "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1"
+  ],
+  "cwd": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1",
+  "pid": 384,
+  "script_sha256": "e08e4935ded7bb425273c91e928002d8d2269ae98fee5a6c66668aa87c6cf9d5",
+  "stdout": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/download.stdout",
+  "stderr": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/download.stderr",
+  "status": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/DOWNLOAD_STATUS.json"
+}

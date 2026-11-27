@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/run_logged.py",
+    "--prefix",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/control/move-fix-driver-attempt01",
+    "--cwd",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32",
+    "--",
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/move_byte_order_fix.py",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32"
+  ],
+  "wrapper_pid": 385,
+  "status": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/control/move-fix-driver-attempt01.status.json",
+  "stage_status": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/control/move-byteorder-fix.json",
+  "correction_calibration_commit": "a402daf9d47e1d9bee211a800fe3fe6b5b97aae8",
+  "performance_samples": 0
+}

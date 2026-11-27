@@ -1,0 +1,10 @@
+{
+  "phase": "build input provenance lock preparation",
+  "exit_code": 1,
+  "reason": "whole vendor tree cleanliness assertion rejected pre-existing accepted build integration patches",
+  "compiler_started": false,
+  "native_search_started": false,
+  "original_stderr_separately_captured": false,
+  "followup_exact_git_diagnostics": "BUILD_FIX_GIT_DISCOVERY.json",
+  "followup_header_cleanliness_and_saved_diffs": "../BUILD_FIX_INPUT_LOCK.json"
+}

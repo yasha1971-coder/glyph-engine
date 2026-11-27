@@ -1,6 +1,6 @@
 {
   "experiment": "glyph04-pizza50-official-v1",
-  "status": "ORIGINAL_PREFLIGHT_FAIL_PRESERVED_PREPARING_MOVE_BYTE_ORDER_REFERENCE",
+  "status": "CALIBRATION_READY_CORRECTNESS_PASS_PERFORMANCE_NOT_RUN",
   "download": "PASS",
   "gzip_integrity": "PASS",
   "prefix_bytes": 50000000,
@@ -11,18 +11,24 @@
   "historical_original_binary_query_available": false,
   "historical_plaintext_sha256": null,
   "historical_corpus_identity_claimed": false,
-  "correctness_native_queries_completed": 6,
+  "correctness_native_queries_completed": 9,
   "performance_samples": 0,
   "WSL_restarted": false,
   "Docker_stopped": false,
   "published": false,
   "new_engine_dependency": false,
   "original_attempt": "FAIL: different SA prefix with default Move-r alphabet mapping",
-  "GLYPH_preflight": "PASS for K1/K10/K100",
+  "GLYPH_preflight": "PASS K1/K10/K100",
   "Move_r_default_count_and_bytes": "PASS",
   "Move_r_default_selection": "FAIL",
   "correction": {
     "reorder_alphabet": false,
-    "state": "frozen before compile in a separate local branch"
-  }
+    "state": "PASS using unchanged reader",
+    "commit_before_compile": "a402daf9d47e1d9bee211a800fe3fe6b5b97aae8"
+  },
+  "correctness_queries_accepted_under_final_contract": 6,
+  "original_Move_r_queries_rejected_under_contract": 3,
+  "Move_r_corrected_preflight": "PASS K1/K10/K100",
+  "Move_r_reorder_alphabet": false,
+  "downloaded": true
 }

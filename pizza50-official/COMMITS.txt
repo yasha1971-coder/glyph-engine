@@ -3,3 +3,7 @@ Branch: calibration/glyph04-pizza50-official
 Parent historical preliminary calibration: 49b0d82175d38570b3ff21f76f98c501f2fd7035
 Repository: C:\Users\Контур\Documents\Codex\2026-11-25\ssh-ace-core-glyph-home-glyph\glyph03-user-za25gaf0\calibration04
 Corpus and oracle frozen; native queries 0 and performance samples 0 at this commit.
+
+Move-r byte-order correction frozen before compilation: a402daf9d47e1d9bee211a800fe3fe6b5b97aae8
+Branch: calibration/glyph04-pizza50-move-byte-order
+Original FAIL retained. Data, oracle, selection rule, forecast4.0ms and threshold5.0ms unchanged.

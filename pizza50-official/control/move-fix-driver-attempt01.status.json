@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/move_byte_order_fix.py",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32"
+  ],
+  "cwd": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32",
+  "wrapper_pid": 385,
+  "started_utc": "2026-11-27T12:27:54.797212+00:00",
+  "phase": "COMPLETE",
+  "performance_benchmark": false,
+  "child_pid": 386,
+  "exit_code": 0,
+  "preparation_or_control_seconds": 69.79279809992295,
+  "finished_utc": "2026-11-27T12:29:07.267674+00:00"
+}

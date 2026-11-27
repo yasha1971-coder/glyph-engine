@@ -1,0 +1,5 @@
+{"phase": "STARTED", "pid": 384}
+{"phase": "DOWNLOADING", "pid": 384}
+{"phase": "GZIP_TEST", "pid": 384}
+{"phase": "DECOMPRESS_AND_PIN", "pid": 384}
+{"phase": "PASS", "pid": 384}

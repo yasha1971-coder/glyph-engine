@@ -1,5 +1,5 @@
 {
-  "status": "CORPUS_ORACLE_AND_GLYPH_LOCKED_MOVE_BYTE_ORDER_CORRECTION_PENDING",
+  "status": "ALL_INPUTS_LOCKED_CORRECTNESS_PASS_PERFORMANCE_NOT_RUN",
   "experiment": "glyph04-pizza50-official-v1",
   "corpus": {
     "path": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin",
@@ -26,11 +26,10 @@
     "sha256": "52406bd60a9d1c0aa5fd1a123c0ee0de06c58e6ee38e402355e47a63cc2eae66"
   },
   "Move-r_index": {
-    "path": null,
-    "sha256": null,
-    "required_parameter": {
-      "reorder_alphabet": false
-    }
+    "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/move-byteorder.index",
+    "sha256": "afd7827d9f6be38d35b280e5b71c0b3d83c8b37f7f07b9932c8f0a96f6132f3f",
+    "bytes": 224202526,
+    "reorder_alphabet": false
   },
   "index_hashes_required_before_performance_measurement": true,
   "GLYPH_parts": {
@@ -54,5 +53,10 @@
     "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/move.index",
     "bytes": 224670410,
     "sha256": "d94bbec0d56c02467bf18074adfe7d2c472349479aab447d2ba23c5bbf8730c2"
+  },
+  "Move-r_builder": {
+    "path": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/build-byteorder.native",
+    "sha256": "1ae53cd6cd7ea1409c0c2fe58ff1097f7a104c91076145ba189561b722107e18",
+    "bytes": 10951648
   }
 }

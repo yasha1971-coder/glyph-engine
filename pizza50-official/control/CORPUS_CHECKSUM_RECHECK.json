@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "sha256sum",
+    "-c",
+    "SHA256SUMS"
+  ],
+  "cwd": "/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1",
+  "exit_code": 0,
+  "stdout": "english.50MB.gz: OK\nenglish.50MB: OK\nenglish.prefix-50000000.bin: OK\n",
+  "stderr": ""
+}

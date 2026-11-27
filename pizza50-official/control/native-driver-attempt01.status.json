@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "/usr/bin/python3",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/code/native_preflight.py",
+    "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32"
+  ],
+  "cwd": "/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32",
+  "wrapper_pid": 386,
+  "started_utc": "2026-11-27T12:16:23.908585+00:00",
+  "phase": "COMPLETE",
+  "performance_benchmark": false,
+  "child_pid": 387,
+  "exit_code": 1,
+  "preparation_or_control_seconds": 36.50410909205675,
+  "finished_utc": "2026-11-27T12:17:00.478794+00:00"
+}

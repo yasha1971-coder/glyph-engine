@@ -1,0 +1,67 @@
+{
+  "frozen_checksum_check": {
+    "argv": [
+      "sha256sum",
+      "-c",
+      "SHA256SUMS"
+    ],
+    "exit_code": 0,
+    "stdout": "ACCEPTED_BUILD_FLAGS.json: OK\nBUILD_FIX_INPUT_LOCK.json: OK\nCALIBRATION_RU.md: OK\nCARD_RU.md: OK\nFINAL_RESULTS.json: OK\nFREEZE.json: OK\nINPUT_LOCK.json: OK\nMOVE_ORDER_CORRECTION_RU.md: OK\nPARAMETERS.json: OK\nREPORT_RU.md: OK\nREPRODUCE.txt: OK\nSTATUS.json: OK\nTOOL_BUNDLE_LOCK.json: OK\ncheck_ready.py: OK\ncode/diagnose_move_order.py: OK\ncode/download_and_pin.py: OK\ncode/independent_oracle.py: OK\ncode/move_byte_order_fix.py: OK\ncode/mover_build_byte_order.cpp: OK\ncode/native_preflight.py: OK\ncode/run_logged.py: OK\ncontrol/BUILD_FIX_GIT_DISCOVERY.json: OK\ncontrol/BUILD_FIX_LOCK_ATTEMPT01.json: OK\ncontrol/BUILD_FIX_LOCK_ATTEMPT01.stderr: OK\ncontrol/BUILD_FIX_LOCK_ATTEMPT02.stderr: OK\ncontrol/CORPUS_CHECKSUM_RECHECK.json: OK\ncontrol/DOWNLOAD_COMMAND.json: OK\ncontrol/DOWNLOAD_COMMAND_ORIGINAL.json: OK\ncontrol/DOWNLOAD_POLL.json: OK\ncontrol/DOWNLOAD_STATUS.json: OK\ncontrol/ENVIRONMENT_BEFORE_DOWNLOAD.json: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/GLYPH-preflight.stderr: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/GLYPH-preflight.stdin: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/GLYPH-preflight.stdout: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/Move-r-preflight.stderr: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/Move-r-preflight.stdin: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/Move-r-preflight.stdout: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/NATIVE_POLL.json: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/SHA256.json: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/glyph-build.stderr: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/glyph-build.stdout: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/move-build.stderr: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/move-build.stdout: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/native-driver-attempt01.stderr: OK\ncontrol/FAILED_NATIVE_ATTEMPT01/native-driver-attempt01.stdout: OK\ncontrol/GLYPH-preflight.stderr: OK\ncontrol/GLYPH-preflight.stdin: OK\ncontrol/GLYPH-preflight.stdout: OK\ncontrol/HISTORICAL_SHA_SEARCH.json: OK\ncontrol/LAUNCH_DOWNLOAD.stderr: OK\ncontrol/MOVE_FIX_LAUNCH.json: OK\ncontrol/MOVE_FIX_POLL.json: OK\ncontrol/MOVE_ORDER_CAUSE_SOURCE.json: OK\ncontrol/MOVE_ORDER_DIAGNOSIS.json: OK\ncontrol/MOVE_ORDER_SOURCE_DISCOVERY.json: OK\ncontrol/Move-r-preflight.stderr: OK\ncontrol/Move-r-preflight.stdin: OK\ncontrol/Move-r-preflight.stdout: OK\ncontrol/NATIVE_LAUNCH.json: OK\ncontrol/NATIVE_POLL.json: OK\ncontrol/ORACLE_COMMAND.json: OK\ncontrol/ORACLE_RESULT.json: OK\ncontrol/PREFLIGHT_ATTEMPT01_FAIL.json: OK\ncontrol/PRODUCER_BUILD_SCRIPT_AND_MEMORY.json: OK\ncontrol/QUERY_HISTORY_CHECK.json: OK\ncontrol/corpus-DOWNLOAD_COMMAND.json: OK\ncontrol/corpus-DOWNLOAD_STATUS.json: OK\ncontrol/corpus-SHA256SUMS: OK\ncontrol/corpus-download.stderr: OK\ncontrol/corpus-download.stdout: OK\ncontrol/corpus-gzip-test.stderr: OK\ncontrol/corpus-gzip-test.stdout: OK\ncontrol/glyph-build.stderr: OK\ncontrol/glyph-build.stdout: OK\ncontrol/move-build.stderr: OK\ncontrol/move-build.stdout: OK\ncontrol/move-byteorder-build.stderr: OK\ncontrol/move-byteorder-build.stdout: OK\ncontrol/move-byteorder-compile.stderr: OK\ncontrol/move-byteorder-compile.stdout: OK\ncontrol/move-byteorder-fix.json: OK\ncontrol/move-byteorder-link.stderr: OK\ncontrol/move-byteorder-link.stdout: OK\ncontrol/move-byteorder-query.stderr: OK\ncontrol/move-byteorder-query.stdin: OK\ncontrol/move-byteorder-query.stdout: OK\ncontrol/move-fix-driver-attempt01.status.json: OK\ncontrol/native-driver-attempt01.status.json: OK\ncontrol/native-driver-attempt01.stderr: OK\ncontrol/native-driver-attempt01.stdout: OK\ncontrol/native-preflight.json: OK\ncontrol/native-wrapper.stderr: OK\ncontrol/native-wrapper.stdout: OK\ncontrol/oracle-attempt01.stderr: OK\ncontrol/oracle-attempt01.stdout: OK\ncontrol/oracle-wrapper.stderr: OK\ncontrol/oracle-wrapper.stdout: OK\nhistory/PREVIOUS_HISTORY_LOCK.json: OK\nhistory/PREVIOUS_PARAMETERS.json: OK\nhistory/PREVIOUS_TOOL_LOCK.json: OK\nhistory/move-text-alphabet.hpp: OK\nhistory/reports/BUG_PIZZA_CHILI_PREFIX_UNDERCOUNT.md: OK\nhistory/reports/BWT_REPETITIVENESS_PROBE_V1.jsonl: OK\nhistory/reports/PIZZA_CHILI_ENGLISH_V1.md: OK\nhistory/reports/PIZZA_SENTINEL_50MB_V1.md: OK\nhistory/reports/RLBWT_BOUNDED_EVIDENCE_V1_VERIFY.md: OK\nhistory/reports/RLBWT_BOUNDED_LOCATE_V1.md: OK\nhistory/reports/RLBWT_BOUNDED_SERVER_V1.md: OK\nhistory/reports/RLBWT_FULL_RUNTIME_PROFILE_V1_VERIFY.md: OK\nhistory/reports/RLBWT_HIGH_COUNT_LOCATE_STRESS_V1.md: OK\nhistory/reports/RLBWT_RANK_BLOCKS_V1_VERIFY.md: OK\nhistory/reports/RLBWT_SIZE_PROBE_V1.md: OK\noracle.json: OK\nquery.bin: OK\n",
+    "stderr": ""
+  },
+  "lock_gate": {
+    "argv": [
+      "/usr/bin/python3",
+      "/mnt/c/Users/\u041a\u043e\u043d\u0442\u0443\u0440/Documents/Codex/2026-11-25/ssh-ace-core-glyph-home-glyph/glyph04-pizza-official-_ys8wm32/check_ready.py"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"performance_runs_started\": 0, \"ready\": true, \"reasons\": []}\n",
+    "stderr": ""
+  },
+  "additional_file_checks": {
+    "bwt.rlbwt": true,
+    "bwt.rlbwt.rank": true,
+    "locate_core_s128.bin": true,
+    "query": true,
+    "new_Move-r_builder": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/LICENSE": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/PROVENANCE.json": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/THIRD_PARTY_NOTICES.md": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/build_bwt": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/build_fm": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/build_sa_u32": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/recover_bwt_libsais": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/build/rlbwt_full_query_locate_server_v1": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/glyph-evidence": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/glyph-search": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libc6-copyright": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libgcc-s1-copyright": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libsais-LICENSE": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/licenses/libstdc++6-copyright": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/build_glyph_index_v1.sh": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/build_locate_fixture_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/export_rlbwt_full_runtime_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/index_result_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/make_rlbwt_bounded_evidence_bundle_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/make_rlbwt_bounded_evidence_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/prepare_sentinel_corpus_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/recover_search_index_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/rlbwt_container_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/rlbwt_rank_blocks_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/verify_rlbwt_bounded_evidence_bundle_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-producer/tools/verify_rlbwt_bounded_evidence_v1.py": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/glyph-reader.native": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/engine": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/engine.native": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libatomic.so.1": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libgcc_s.so.1": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libgomp.so.1": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libstdc++.so.6": true,
+    "tool:/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32/tools/move-native/lib/libtbb.so.12": true,
+    "tool:/usr/lib/x86_64-linux-gnu/libm.so.6": true,
+    "tool:/usr/lib/x86_64-linux-gnu/libc.so.6": true,
+    "tool:/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": true
+  },
+  "native_queries_in_this_check": 0,
+  "performance_samples": 0
+}

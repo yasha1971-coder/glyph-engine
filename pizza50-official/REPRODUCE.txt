@@ -1,0 +1,75 @@
+Ubuntu WSL, интерактивный bash. Это подготовка CALIBRATION и проверка правильности,
+не серия замеров p95. Docker оставляется работающим.
+
+Постоянный корпус:
+/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1/english.prefix-50000000.bin
+Размер50000000. SHA256974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437.
+
+Исходная gzip-ссылка с официальной страницы:
+https://pizzachili.dcc.uchile.cl/texts/nlang/english.50MB.gz
+Архив сохранён рядом с корпусом: english.50MB.gz; весь распакованный файл english.50MB.
+
+Проверка уже сохранённого источника и префикса:
+
+corpus_dir='/home/contour/glyph-corpora/pizzachili/english50m-official-20261127-v1'
+gzip -t -- "$corpus_dir/english.50MB.gz"
+printf '974837f10883d6d0b4b2d4896ff9c4adc23363fced1f5f9b031f287c54c6b437  %s\n' "$corpus_dir/english.prefix-50000000.bin" | sha256sum -c -
+
+Фактически выполненная загрузка, полный argv и код0:
+python3 "$corpus_dir/download_and_pin.py" "$corpus_dir"
+Повторно эту команду с тем же каталогом НЕ запускать: она отказывает в замене данных.
+Для нового скачивания указать другой новый пустой каталог. download_and_pin.py
+скачивает официальный URL, выполняет gzip -t и читает весь gzip до конца,
+сохраняет весь распакованный файл и отдельные первые50000000 байт, SHA и статус.
+DOWNLOAD_STATUS.json / DOWNLOAD_COMMAND.json / download.stdout / download.stderr
+в папке корпуса сохраняют исходную попытку. Не переписывать их повторным запуском.
+
+Независимое повторное вычисление count и допустимых координат:
+
+work='/home/contour/glyph-experiments/glyph04-pizza-official-_ys8wm32'
+python3 "$work/code/independent_oracle.py" --corpus "$corpus_dir/english.prefix-50000000.bin" --query "$work/query.bin" --out "$work/oracle-repeat-1"
+
+Выходной oracle-repeat-1 должен отсутствовать. Ожидается exit0, count761402,
+K1=[46448252], K10=[786213,4736688,5595028,7801431,8761711,19383215,20264073,46448252,46448984,47354405],
+all_returned_bytes_check=true, восемь fixture PASS. Полный список совпадений
+little-endian u32, K100 и исходный SA-порядок сохранены рядом с новым oracle.json.
+Алгоритм использует bytes.find со start=previous+1 и поблочное сравнение суффиксов;
+GLYPH/Move-r/SA/index не используются. Самостоятельность алгоритма, не отдельный
+человек-контролёр: подготовку и проверку выполнял тот же исполнитель Codex.
+
+Фактическая первичная native-проверка сохранена отдельно и дала FAIL:
+python3 "$work/code/native_preflight.py" "$work"
+Её не повторять в том же work: сохранены индексы, stdout/stderr и статусы попытки.
+Контролёр остановился из-за выбора Move-r при reorder_alphabet=true.
+Сам полный count и все выданные Move-r байты правильны; см. MOVE_ORDER_CORRECTION_RU.md.
+
+Фактическое исправление конфигурации выполняется отдельным построителем:
+python3 "$work/code/move_byte_order_fix.py" "$work"
+Команда компиляции/линковки, создание move-byteorder.index и запросы сохранены
+в control/move-byteorder-fix.json и control/move-byteorder-*.stdout/stderr.
+Она также одноразовая: в том же work не заменяет существующие результаты.
+Новая настройка — штатный params.reorder_alphabet=false, прежний reader неизменён.
+
+Повторить только запросы к готовым индексам, не перестраивая их:
+
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 LC_ALL=C PYTHONHASHSEED=0
+printf '746865\t1\n746865\t10\n746865\t100\nQUIT\n' | taskset -c 0 "$work/tools/glyph-reader.native" "$work/glyph.gidx/bwt.rlbwt" "$work/glyph.gidx/bwt.rlbwt.rank" "$work/glyph.gidx/locate_core_s128.bin"
+printf '746865\t1\n746865\t10\n746865\t100\nQUIT\n' | taskset -c 0 "$work/tools/move-native/engine.native" serve "$work/move-byteorder.index"
+
+Оба процесса должны завершиться0. GLYPH выдаёт3 строки OK с count761402.
+Move-r сначала READY, затем3 JSON с count761402. У Move-r raw offsets идут в SA-порядке;
+перед сравнением с K10 выше и offsets_by_limit в oracle.json их численно сортируют.
+Набор обязан совпасть целиком; любой count761402 с другими10 координатами этот
+объявленный протокол не принимает. Каждая координата сверяется по исходным bytes.
+
+Полные реальные argv, stdin, stdout, stderr и завершения отдельных стадий:
+control/native-preflight.json, control/native-driver-attempt01.status.json,
+control/move-byteorder-fix.json, control/move-fix-driver-attempt01.status.json.
+На Windows их сохранённые копии — в control/NATIVE_POLL.json и control/MOVE_FIX_POLL.json.
+Изначальный FAIL дополнительно сохранён в control/FAILED_NATIVE_ATTEMPT01.
+Короткие вызовы проверяют status-файлы; долгие процессы работают независимо
+от жизненного цикла вызова Codex с записью в файлы через code/run_logged.py.
+
+Будущая p95-серия не выполнена. Её границы и расписание закреплены PARAMETERS.json
+и CALIBRATION_RU.md. Нельзя выдавать время загрузки или служебного wrapper
+из этих контрольных запусков за измеренный тёплый p95.
