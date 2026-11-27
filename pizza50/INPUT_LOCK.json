@@ -1,0 +1,29 @@
+{
+  "status": "AWAITING_CORPUS_BYTES",
+  "corpus": {
+    "path": null,
+    "sha256": null,
+    "bytes": 50000000,
+    "original_path": null,
+    "range": [
+      0,
+      50000000
+    ]
+  },
+  "GLYPH_index": {
+    "path": null,
+    "sha256": null,
+    "kind": "manifest.json; verify every part against this pinned manifest before loading"
+  },
+  "Move-r_index": {
+    "path": null,
+    "sha256": null,
+    "kind": "serialized index.native"
+  },
+  "oracle": {
+    "path": null,
+    "sha256": null,
+    "kind": "independent raw-byte full count and exact suffix-prefix subsets for K1,K10,K100"
+  },
+  "required_before_measurement": "read actual corpus, freeze all remaining hashes and oracle in a separate local commit; do not change PARAMETERS forecast/selection"
+}

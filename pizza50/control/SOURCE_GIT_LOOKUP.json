@@ -1,0 +1,27 @@
+{
+  "C:\\Users\\\u041a\u043e\u043d\u0442\u0443\u0440\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph-acceptance-up9k50ar\\repo-new": {
+    "exit_code": 0,
+    "type": "commit",
+    "stderr": "",
+    "matching_paths": [
+      "src/rlbwt_full_query_locate_server_v1.cpp",
+      "tools/build_locate_fixture_v1.py",
+      "tools/rlbwt_rank_blocks_v1.py"
+    ]
+  },
+  "C:\\Users\\\u041a\u043e\u043d\u0442\u0443\u0440\\glyph-engine": {
+    "exit_code": 128,
+    "type": "",
+    "stderr": "fatal: cannot change to 'C:\\Users\\\u041a\u043e\u043d\u0442\u0443\u0440\\glyph-engine': Permission denied\n"
+  },
+  "C:\\Users\\\u041a\u043e\u043d\u0442\u0443\u0440\\Documents\\Codex\\2026-11-25\\ssh-ace-core-glyph-home-glyph\\glyph03-profile-y4i097g4\\repo": {
+    "exit_code": 0,
+    "type": "commit",
+    "stderr": "",
+    "matching_paths": [
+      "src/rlbwt_full_query_locate_server_v1.cpp",
+      "tools/build_locate_fixture_v1.py",
+      "tools/rlbwt_rank_blocks_v1.py"
+    ]
+  }
+}

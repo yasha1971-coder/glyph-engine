@@ -1,0 +1,19 @@
+{
+  "rg_exit": 2,
+  "rg_stderr": "rg: /tmp/systemd-private-823248e30a084db8bdbb52ef521597aa-systemd-timedated.service-teYd1I: Permission denied (os error 13)\nrg: /tmp/systemd-private-823248e30a084db8bdbb52ef521597aa-systemd-timesyncd.service-Vq53cG: Permission denied (os error 13)\nrg: /tmp/systemd-private-823248e30a084db8bdbb52ef521597aa-systemd-logind.service-Llg1ij: Permission denied (os error 13)\nrg: /tmp/snap-private-tmp: Permission denied (os error 13)\nrg: /tmp/systemd-private-823248e30a084db8bdbb52ef521597aa-systemd-resolved.service-x0Sl6M: Permission denied (os error 13)\n",
+  "checked_RLB1_files": 222,
+  "raw_length_counts": {
+    "100000001": 74,
+    "20905171": 42,
+    "5852405": 56,
+    "74": 11,
+    "5000001": 3,
+    "5852404": 2,
+    "59431091": 24,
+    "14": 7,
+    "19": 3
+  },
+  "Pizza50_candidates": [],
+  "read_errors": [],
+  "native_queries_started": 0
+}

@@ -1,0 +1,33 @@
+{
+  "status": "AWAITING_CORPUS_BYTES",
+  "performance_runs_started": 0,
+  "performance_results": null,
+  "corpus_plaintext_sha256": null,
+  "original_files_modified": false,
+  "downloaded": false,
+  "published": false,
+  "WSL_restarted": false,
+  "Docker_stopped": false,
+  "manual_acceptance3": "PASS already saved in ../glyph03-candidate-za9n9y3z/REPORT_RU.md",
+  "blocker": "local Pizza50/English source not found; user asked for path",
+  "prepared": [
+    "historical evidence copies and hashes",
+    "query bytes and SHA",
+    "reader, producer, source and library SHA pins",
+    "strict common SA-prefix selection and numeric output ordering",
+    "4.0ms forecast and 5.0ms threshold",
+    "one-loaded-index warm timing and memory protocol"
+  ],
+  "not_prepared": [
+    "actual corpus hash",
+    "new Pizza runtime hashes",
+    "new independent corpus oracle",
+    "new performance results",
+    "common timed client is next implementation step after input lock; no claim of runnable benchmark yet"
+  ],
+  "local_runtime_search": {
+    "RLB1_headers_examined": 222,
+    "raw_length_50000001_candidates": 0,
+    "private_system_tmp_directories_inaccessible": true
+  }
+}

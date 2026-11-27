@@ -1,0 +1,60 @@
+№4 / Pizza50: подготовка опыта, не новый результат производительности.
+
+В интерактивной Ubuntu WSL, без PowerShell-обёртки с вложенными $переменными:
+
+cd '/mnt/c/Users/Контур/Documents/Codex/2026-11-25/ssh-ace-core-glyph-home-glyph/glyph04-pizza-sq8594jn'
+python3 check_ready.py
+
+Текущий ожидаемый вывод: ready=false, performance_runs_started=0,
+четыре причины missing input lock: corpus / GLYPH_index / Move-r_index / oracle.
+Ожидаемый код выхода: 2. Это правильная остановка допуска, не FAIL GLYPH.
+Команда не строит индекс, не выполняет поиск и ничего не публикует.
+
+Карточка: CARD_RU.md. Полный протокол: CALIBRATION_RU.md.
+Параметры и прогноз до результатов: PARAMETERS.json.
+Файлы запроса, исторических свидетельств и кода: FREEZE.json и SHA256SUMS.
+Неизвестные входы: INPUT_LOCK.json, поля path/sha256=null.
+
+После получения локального пути к исходным Pizza English:
+1. Прочитать rb только байты [0:50000000), сохранить отдельную копию на диске Ubuntu.
+   Закрепить SHA оригинального диапазона и повторно прочитанной копии; оригинал не менять.
+2. Независимым прямым побайтовым поиском с перекрытиями вычислить полный count,
+   затем точные SA-prefix наборы для K1/10/100 по исходным суффиксам (см. протокол).
+   Сохранить oracle и его SHA. count761402 и исторический K10 перепроверить.
+3. Построить НОВЫЕ индексы существующими программами; сохранить stdout/stderr,
+   argv, exit, полное время и RSS подготовки. Это не часть hot-p95.
+4. Закрепить хеши входов, каждой части GLYPH, сериализованного Move-r и oracle
+   следующим локальным коммитом до запуска timed-серии. Порог4,0/5,0мс не менять.
+5. Реализовать/проверить общий клиент по закреплённому протоколу и сохранить его
+   SHA до первого timed-запроса. Полного нового benchmark-runner в этой подготовке нет.
+   Не выдавать разрозненные CLI-вызовы ниже за замер одного загруженного индекса.
+
+Найденные существующие программы в Ubuntu (пути проверены, SHA в TOOL_LOCK.json):
+
+BASE='/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i'
+GLYPH_TOOL="$BASE/glyph03-five-sh1mnw75/lab/glyph"
+GLYPH_READER="$BASE/glyph03-five-sh1mnw75/results/search-kits/Git/stock/kit/glyph/build/rlbwt_full_query_locate_server_v1"
+MOVE_READER="$BASE/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/engine.native"
+export OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 LC_ALL=C PYTHONHASHSEED=0
+
+Ниже шаблоны штатных команд. CORPUS и WORK пока НЕ назначены: вход отсутствует.
+Их не выполняли в №4. Использовать новые несуществующие выходные пути.
+
+taskset -c 0 python3 "$GLYPH_TOOL/glyph-search" build "$CORPUS" --out "$WORK/glyph.gidx"
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 LC_ALL=C taskset -c 0 "$MOVE_READER" build "$CORPUS" "$WORK/move.index"
+
+Однократный запуск каждого persistent reader для общей серии:
+
+taskset -c 0 "$GLYPH_READER" "$WORK/glyph.gidx/bwt.rlbwt" "$WORK/glyph.gidx/bwt.rlbwt.rank" "$WORK/glyph.gidx/locate_core_s128.bin"
+env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 LC_ALL=C taskset -c 0 "$MOVE_READER" serve "$WORK/move.index"
+
+Клиент держит stdin/stdout открытыми и отправляет одному загруженному процессу
+последовательно строки 746865<TAB>1, 746865<TAB>10, 746865<TAB>100.
+GLYPH: ответ OK<TAB>l<TAB>r<TAB>count<TAB>returned<TAB>bounded<TAB>LFsum<TAB>LFmax<TAB>offsets.
+Move-r: сначала {"ready":true}, затем JSON с query_hex, count, offsets.
+Оба ответа проходят одну нормализацию и один byte-checker внутри общего таймера.
+Штатная программа glyph-search query создаёт subprocess на вызов, поэтому её
+повторные отдельные запуски НЕ заменяют эту persistent-серию.
+
+Старые benchmark-логи и результаты №3 не изменены. Архив кандидата №3 не менялся.
+Никаких новых замеров №4, загрузки корпуса из сети, остановки Docker или перезапуска WSL.

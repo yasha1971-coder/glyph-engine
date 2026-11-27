@@ -1,0 +1,211 @@
+#!/usr/bin/env python3
+"""Build and query a portable GLYPH run-length BWT index."""
+import argparse
+import ctypes
+import hashlib
+import json
+import os
+from pathlib import Path
+import struct
+import shutil
+import stat
+import subprocess
+import sys
+import tempfile
+
+ROOT = Path(__file__).resolve().parent
+PARTS = ("bwt.rlbwt", "bwt.rlbwt.rank", "locate_core_s128.bin")
+FORMAT = "glyph-search-index-v2"
+LOCATE_MAGIC = {"glyph-search-index-v1": b"LOC1", FORMAT: b"LOC2"}
+SAMPLE_STEP = 128
+MAX_BYTES = 128 * 1024 * 1024
+
+
+def digest(path):
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1024 * 1024), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def publish_directory(stage, out):
+    # Linux renameat2 with RENAME_NOREPLACE publishes a complete directory
+    # or fails if another process won the race, even for an empty target.
+    rename = ctypes.CDLL(None, use_errno=True).renameat2
+    if rename(-100, os.fsencode(stage), -100, os.fsencode(out), 1):
+        errno = ctypes.get_errno()
+        raise OSError(errno, os.strerror(errno), str(out))
+
+
+def build(src, output):
+    src, out = Path(src), Path(output).absolute()
+    if os.path.lexists(out):
+        raise ValueError(f"output already exists: {out}")
+    if not src.is_file() or not 1 <= src.stat().st_size <= MAX_BYTES:
+        raise ValueError("expected a nonempty regular file up to 128 MiB")
+    # The upstream shell builder embeds paths in a heredoc. Only hand it
+    # trusted paths generated here, never a path supplied by a caller.
+    with tempfile.TemporaryDirectory(dir="/tmp", prefix="glyph-search-") as scratch:
+        tmp = Path(scratch)
+        snapshot = tmp / "input.bin"
+        shutil.copyfile(src, snapshot)
+        if not 1 <= snapshot.stat().st_size <= MAX_BYTES:
+            raise ValueError("snapshot outside supported size range")
+        index, runtime = tmp / "index", tmp / "runtime"
+        subprocess.run(["bash", "tools/build_glyph_index_v1.sh", snapshot, index],
+                       cwd=ROOT, stdout=sys.stderr, check=True)
+        runtime.mkdir()
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(ROOT / "tools"))
+        from export_rlbwt_full_runtime_v1 import export_bwt_and_rank
+        from build_locate_fixture_v1 import read_sa_u32
+
+        export_bwt_and_rank(index / "bwt.bin", runtime / PARTS[0], runtime / PARTS[1],
+                            8192, stdout=sys.stderr)
+        sa = read_sa_u32(index / "sa.bin")
+        if len(sa) != snapshot.stat().st_size + 1:
+            raise ValueError("suffix array size differs from sentinel corpus")
+        samples = sa[::SAMPLE_STEP]
+        if sys.byteorder != "little":
+            samples.byteswap()
+        with (runtime / PARTS[2]).open("wb") as dest:
+            dest.write(struct.pack("<4sQIQ", b"LOC2", len(sa), SAMPLE_STEP, len(samples)))
+            samples.tofile(dest)
+        with tempfile.TemporaryDirectory(dir=out.parent, prefix=".glyph-stage-") as staging:
+            stage = Path(staging) / "index"
+            stage.mkdir()
+            files = {}
+            for name in PARTS:
+                p = stage / name
+                shutil.copyfile(runtime / name, p)
+                files[name] = {"bytes": p.stat().st_size, "sha256": digest(p)}
+            manifest = {"format": FORMAT, "corpus_bytes": snapshot.stat().st_size,
+                        "corpus_sha256": digest(snapshot), "files": files}
+            p = stage / "manifest.json"
+            p.write_text(json.dumps(manifest, sort_keys=True, indent=2) + "\n")
+            manifest_sha = digest(p)
+            publish_directory(stage, out)
+    print(json.dumps({"ok": True, "index": str(out), "manifest_sha256": manifest_sha,
+                      "corpus_sha256": manifest["corpus_sha256"]}))
+
+
+def load_index(directory, expected):
+    directory = Path(directory)
+    path = directory / "manifest.json"
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > 8192:
+        raise ValueError("invalid index manifest")
+    raw = path.read_bytes()
+    if expected and hashlib.sha256(raw).hexdigest() != expected:
+        raise ValueError("manifest SHA-256 mismatch")
+    m = json.loads(raw)
+    if not isinstance(m, dict) or m.get("format") not in LOCATE_MAGIC:
+        raise ValueError("unsupported index format")
+    size = m.get("corpus_bytes")
+    if type(size) is not int or not 1 <= size <= MAX_BYTES or set(m["files"]) != set(PARTS):
+        raise ValueError("invalid index dimensions or file list")
+    parts = [directory / name for name in PARTS]
+    for p in parts:
+        s = p.lstat()
+        spec = m["files"][p.name]
+        if not stat.S_ISREG(s.st_mode) or s.st_size != spec["bytes"] or digest(p) != spec["sha256"]:
+            raise ValueError(f"index integrity mismatch: {p.name}")
+    magic = LOCATE_MAGIC[m["format"]]
+    count = 1 + size // SAMPLE_STEP
+    header = struct.pack("<4sQIQ", magic, size + 1, SAMPLE_STEP, count)
+    stride = 4 if magic == b"LOC2" else 16
+    with parts[2].open("rb") as locate:
+        if locate.read(len(header)) != header or parts[2].stat().st_size != len(header) + stride * count:
+            raise ValueError("locate layout differs from manifest")
+    return size, parts
+
+
+def read_queries(args):
+    if args.text is not None:
+        queries = [args.text.encode("utf-8")]
+    elif args.query_file:
+        queries = [Path(args.query_file).read_bytes()]
+    else:
+        lines = Path(args.queries_hex).read_text(encoding="ascii").splitlines()
+        queries = [bytes.fromhex(line) for line in lines]
+    if not queries or any(not 1 <= len(q) <= 1024 or b"\0" in q for q in queries):
+        raise ValueError("each query must contain 1 to 1024 nonzero bytes")
+    return queries
+
+
+def query(args):
+    if not 0 <= args.limit <= 65536:
+        raise ValueError("limit must be between 0 and 65536")
+    queries = read_queries(args)
+    size, parts = load_index(args.index, args.expect_manifest_sha256)
+    request = "".join(f"{q.hex()}\t{args.limit}\n" for q in queries)
+    response = subprocess.run([ROOT / "build/rlbwt_full_query_locate_server_v1", *parts],
+                              input=request, stdout=subprocess.PIPE, text=True, check=True)
+    lines = response.stdout.splitlines()
+    if len(lines) != len(queries):
+        raise ValueError("incomplete search response")
+    for q, line in zip(queries, lines):
+        fields = line.split("\t")
+        if len(fields) != 9 or fields[0] != "OK":
+            raise ValueError("unexpected search response")
+        count, n = map(int, fields[3:5])
+        offsets = [int(x) for x in fields[8].split(",")] if fields[8] else []
+        if not (0 <= count <= size and n == len(offsets) == min(count, args.limit)
+                and fields[5] == str(n < count).lower() and offsets == sorted(set(offsets))
+                and all(0 <= off <= size - len(q) for off in offsets)):
+            raise ValueError("inconsistent search result")
+        print(json.dumps({"ok": True, "query_hex": q.hex(), "count": count,
+                          "offsets": offsets, "bounded": n < count}))
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    b = sub.add_parser("build")
+    b.add_argument("file")
+    b.add_argument("--out", required=True)
+    q = sub.add_parser("query")
+    q.add_argument("index")
+    q.add_argument("--limit", type=int, default=10)
+    q.add_argument("--expect-manifest-sha256", metavar="HEX")
+    group = q.add_mutually_exclusive_group(required=True)
+    group.add_argument("--text")
+    group.add_argument("--query-file")
+    group.add_argument("--queries-hex")
+    r = sub.add_parser("recover", help="recover exact corpus bytes from a pinned index")
+    r.add_argument("index", type=Path)
+    r.add_argument("--expect-manifest-sha256", required=True)
+    r.add_argument("--expect-corpus-sha256", required=True)
+    r.add_argument("--out", type=Path, required=True)
+    args = ap.parse_args()
+    if args.cmd == "build":
+        build(args.file, args.out)
+    elif args.cmd == "query":
+        query(args)
+    else:
+        sys.dont_write_bytecode = True
+        sys.path.insert(0, str(ROOT / "tools"))
+        from index_result_v1 import pin, read_regular
+        from recover_search_index_v1 import recover
+        pin(args.expect_manifest_sha256)
+        pin(args.expect_corpus_sha256)
+        # Recover only from a private index snapshot that was hashed while
+        # copying. Reuse the same snapshot logic as the index-result verifier.
+        from index_result_v1 import snapshot_index
+        manifest = json.loads(read_regular(args.index / "manifest.json", 8192))
+        args.engine = "glyph"
+        args.expect_index_sha256 = args.expect_manifest_sha256
+        args.corpus_bytes = manifest["corpus_bytes"]
+        with tempfile.TemporaryDirectory(dir="/tmp", prefix="glyph-recover-") as t:
+            index, size = snapshot_index(args, Path(t))
+            result = recover(index / PARTS[0], size, args.expect_corpus_sha256,
+                             args.out, ROOT / "build/recover_bwt_libsais", t)
+        print(json.dumps(result, sort_keys=True))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except (OSError, ValueError, KeyError, TypeError, EOFError, OverflowError, subprocess.CalledProcessError) as e:
+        print(json.dumps({"ok": False, "error": str(e)}), file=sys.stderr)
+        sys.exit(1)

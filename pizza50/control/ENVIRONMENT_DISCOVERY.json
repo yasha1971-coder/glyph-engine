@@ -1,0 +1,206 @@
+{
+  "environment": {
+    "python": "3.12.3",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "machine": "x86_64",
+    "cpu_affinity_allowed": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "os_release": "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.4 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n"
+  },
+  "readers": {
+    "GLYPH": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/stock/kit/glyph/build/rlbwt_full_query_locate_server_v1",
+      "bytes": 1890960,
+      "sha256": "c0bea7f0db0c23bb88022c564503e99754c8bdf022bffc94b6bacdd9f506dd95",
+      "ldd": {
+        "exit_code": 1,
+        "stdout": "",
+        "stderr": "\tnot a dynamic executable\n"
+      },
+      "libraries": {}
+    },
+    "Move-r": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/engine.native",
+      "bytes": 9161408,
+      "sha256": "1828f0101c0da5c9cb615259618983d384527fb5e135f37f332ed3d7085ab1ad",
+      "ldd": {
+        "exit_code": 0,
+        "stdout": "\tlinux-vdso.so.1 (0x00007ffdb599e000)\n\tlibtbb.so.12 => /home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libtbb.so.12 (0x0000754e85875000)\n\tlibatomic.so.1 => /home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libatomic.so.1 (0x0000754e8586a000)\n\tlibstdc++.so.6 => /home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libstdc++.so.6 (0x0000754e84a00000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000754e84d17000)\n\tlibgomp.so.1 => /home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libgomp.so.1 (0x0000754e8580b000)\n\tlibgcc_s.so.1 => /home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libgcc_s.so.1 (0x0000754e857dd000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000754e84600000)\n\t/lib64/ld-linux-x86-64.so.2 (0x0000754e858cb000)\n",
+        "stderr": ""
+      },
+      "libraries": {
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libtbb.so.12": {
+          "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libtbb.so.12",
+          "bytes": 252632,
+          "sha256": "1e2a936d4519f2a4f2e62411a9f680f967a4742525ecf5c2dcac57f1b82501e7"
+        },
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libatomic.so.1": {
+          "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libatomic.so.1",
+          "bytes": 35120,
+          "sha256": "9d8a34468e614a71a6427dbabb0ac24eb8cb1e324dc6aa3bf95eb6f59201f000"
+        },
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libstdc++.so.6": {
+          "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libstdc++.so.6",
+          "bytes": 2592224,
+          "sha256": "1fd75fe70354a416d75aef22bcae68c47bd25d20e2d0568c30b1a9838cf62f11"
+        },
+        "/usr/lib/x86_64-linux-gnu/libm.so.6": {
+          "path": "/usr/lib/x86_64-linux-gnu/libm.so.6",
+          "bytes": 952616,
+          "sha256": "fce00b6f25f459cf4ae0b7fae4257909a1a8a86f9149e7c029a5d617baf1ccd0"
+        },
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libgomp.so.1": {
+          "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libgomp.so.1",
+          "bytes": 352304,
+          "sha256": "135f3c8f006d2fe5e68e51281c7974cb991a03de3bfb3593d68d174dfcf854d1"
+        },
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libgcc_s.so.1": {
+          "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/results/search-kits/Git/mover/kit/native/lib/libgcc_s.so.1",
+          "bytes": 183024,
+          "sha256": "d93224d2b0dab4247598be683adca02f5cf00586f99c187579cd7e92058fb7cb"
+        },
+        "/usr/lib/x86_64-linux-gnu/libc.so.6": {
+          "path": "/usr/lib/x86_64-linux-gnu/libc.so.6",
+          "bytes": 2129424,
+          "sha256": "3a15d66867d83762c7f2f1e37359cb8f6c5743edb369c65285cb0b1c4f7498bf"
+        },
+        "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2": {
+          "path": "/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2",
+          "bytes": 236616,
+          "sha256": "c20a2dc8917c755f02b94049356320fe1f62ac7d9f8994731f807d9df39302da"
+        }
+      }
+    }
+  },
+  "build_flags": {
+    "mover-compile.json": {
+      "command": [
+        "g++",
+        "-DLIBSAIS_OPENMP",
+        "-DSTRING_UTILS_ENV_PREFIX=\"MOVE_R\"",
+        "-DSTRING_UTILS_NO_EXTERN_TEMPLATES",
+        "-DSTRING_UTILS_USE_MALLOC_COUNT=1",
+        "-w",
+        "-march=native",
+        "-DNDEBUG",
+        "-O3",
+        "-std=gnu++20",
+        "-pthread",
+        "-ffunction-sections",
+        "-fdata-sections",
+        "-fopenmp",
+        "-I/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/include",
+        "-I/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/include",
+        "-I/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/pfp-rlbwt/include",
+        "-I/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/move-data-structure/include",
+        "-I/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/rlz-ref/include",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/sdsl-lite/include",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/ips4o/include",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/ips2ra/include",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/malloc_count",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/sux",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/libsais/include",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/gtl/include",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/string-utils/external/emhash",
+        "-isystem",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/external/sparse-map/include",
+        "-c",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/source/mover_reader.cpp",
+        "-o",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/bin/mover_reader.o"
+      ],
+      "cwd": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build",
+      "exit_code": 0,
+      "seconds": 56.82212600298226
+    },
+    "mover-link.json": {
+      "command": [
+        "g++",
+        "-w",
+        "-march=native",
+        "-DNDEBUG",
+        "-O3",
+        "-Wl,--gc-sections",
+        "-Wl,-rpath,$ORIGIN/lib",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/bin/mover_reader.o",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/CMakeFiles/glyph02_mover_adapter.dir/external/string-utils/external/malloc_count/malloc_count.c.o",
+        "-o",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/lab/native/mover/engine.native",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/libmove_r_pfp_integer.a",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/external/pfp-rlbwt/libpfp_rlbwt.a",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/liblibsais.a",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/liblibsais40.a",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/external/move-data-structure/libmove_cache_lines.a",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/external/string-utils/libsdsl_core.a",
+        "-ldl",
+        "-ltbb",
+        "-latomic",
+        "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/build/liblibsais48.a",
+        "-fopenmp",
+        "-pthread"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "seconds": 0.31684941705316305
+    }
+  },
+  "producer_files": {
+    "glyph-search": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/lab/glyph/glyph-search",
+      "bytes": 9455,
+      "sha256": "134ba2067c39baab6d25975694e3fa5d9c143f1c6ae30f222aa60fa1cb4b7d87"
+    },
+    "tools/build_glyph_index_v1.sh": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/lab/glyph/tools/build_glyph_index_v1.sh",
+      "bytes": 1689,
+      "sha256": "686a4f26038af8a88133077dab45b8ec20b5e6396ea4192c288b75867f1e6177"
+    },
+    "tools/export_rlbwt_full_runtime_v1.py": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/lab/glyph/tools/export_rlbwt_full_runtime_v1.py",
+      "bytes": 4196,
+      "sha256": "b2f5540a35c2d33d78c55d114932cd21376a11c572bd69a2e2071b9022357794"
+    },
+    "tools/build_locate_fixture_v1.py": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/lab/glyph/tools/build_locate_fixture_v1.py",
+      "bytes": 5197,
+      "sha256": "0073a9fb1c12b398868ee18e9f682ae816667148840998a1936b78f9a3a94cde"
+    }
+  },
+  "source_locks": {
+    "Move_adapter": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/glyph03-five-sh1mnw75/source/mover_reader.cpp",
+      "bytes": 1727,
+      "sha256": "031ee33514bcd0f6517898c78fc8a4527f5e718cf7475cfde1dd1e2503931158"
+    },
+    "Move_queries": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/include/move_r/queries.tpp",
+      "bytes": 29025,
+      "sha256": "8927a66c8ac31f2f0208436e7f82ceb7d4b469aaffb564ea00e6dffdc56e1263"
+    },
+    "Move_API": {
+      "path": "/home/contour/glyph-local-checks/glyph-01-02-se2jqn7i/vendor/mover/src/include/move_r/move_r.hpp",
+      "bytes": 76328,
+      "sha256": "f9cf555cbf003664deed7d1e758e59679a236a4f1a3648fb8cacf0d18b7ffe0c"
+    }
+  }
+}

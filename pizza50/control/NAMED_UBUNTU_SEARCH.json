@@ -1,0 +1,9 @@
+{
+  "home": "/home/contour",
+  "python": "3.12.3",
+  "os": "PRETTY_NAME=\"Ubuntu 24.04.4 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.4 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+  "candidate_manual_dir_exists": true,
+  "exact_50M": [],
+  "find_exit": 1,
+  "find_stderr": "find: \u2018/tmp/snap-private-tmp\u2019: Permission denied\nfind: \u2018/tmp/systemd-private-823248e30a084db8bdbb52ef521597aa-systemd-logind.service-bjDqKO\u2019: Permission denied\nfind: \u2018/tmp/systemd-private-823248e30a084db8bdbb52ef521597aa-systemd-timedated.service-J4JE5X\u2019: Permission denied\nfind: \u2018/tmp/systemd-privat"
+}

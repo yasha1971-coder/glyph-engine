@@ -1,0 +1,26 @@
+{
+  "src/rlbwt_full_query_locate_server_v1.cpp": {
+    "source_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+    "source_path": "src/rlbwt_full_query_locate_server_v1.cpp",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 15494,
+    "sha256": "435848c2b262cf7474ed0c82ee96798497fb0241cc233e350d359cb24267f3de"
+  },
+  "tools/build_locate_fixture_v1.py": {
+    "source_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+    "source_path": "tools/build_locate_fixture_v1.py",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 5197,
+    "sha256": "0073a9fb1c12b398868ee18e9f682ae816667148840998a1936b78f9a3a94cde"
+  },
+  "tools/rlbwt_rank_blocks_v1.py": {
+    "source_commit": "5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28",
+    "source_path": "tools/rlbwt_rank_blocks_v1.py",
+    "exit_code": 0,
+    "stderr": "",
+    "bytes": 10378,
+    "sha256": "7def61f736b0fd433e0203cd19fe80c3b691e76764f7f2300440a44a8956970c"
+  }
+}

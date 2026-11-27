@@ -1,0 +1,24 @@
+{
+  "gate": {
+    "argv": [
+      "/usr/bin/python3",
+      "check_ready.py"
+    ],
+    "cwd": "/mnt/c/Users/Контур/Documents/Codex/2026-11-25/ssh-ace-core-glyph-home-glyph/glyph04-pizza-sq8594jn",
+    "stdout": "{\"performance_runs_started\": 0, \"ready\": false, \"reasons\": [\"missing input lock: corpus\", \"missing input lock: GLYPH_index\", \"missing input lock: Move-r_index\", \"missing input lock: oracle\"]}\n",
+    "stderr": "",
+    "actual_exit": 2,
+    "expected_exit": 2
+  },
+  "sha256sum": {
+    "argv": [
+      "sha256sum",
+      "-c",
+      "SHA256SUMS"
+    ],
+    "exit_code": 0,
+    "stdout": "CALIBRATION_RU.md: OK\nCARD_RU.md: OK\nFREEZE.json: OK\nHISTORY_LOCK.json: OK\nINPUT_LOCK.json: OK\nPARAMETERS.json: OK\nREPRODUCE.txt: OK\nSTATUS.json: OK\nTOOL_LOCK.json: OK\ncheck_ready.py: OK\ncode/build_locate_fixture_v1.py: OK\ncode/glyph-search: OK\ncode/move_r.hpp: OK\ncode/mover-cli.cpp: OK\ncode/mover_reader.cpp: OK\ncode/queries.tpp: OK\ncode/rlbwt_full_query_locate_server_v1.cpp: OK\ncode/rlbwt_rank_blocks_v1.py: OK\ncontrol/CODE_DISCOVERY.json: OK\ncontrol/ENVIRONMENT_DISCOVERY.json: OK\ncontrol/ENVIRONMENT_DISCOVERY.stderr: OK\ncontrol/GLYPH_SOURCE_LOCK.json: OK\ncontrol/LOCAL_SENTINEL_SEARCH.json: OK\ncontrol/NAMED_UBUNTU_SEARCH.json: OK\ncontrol/NAMED_UBUNTU_SEARCH.stderr: OK\ncontrol/NAMED_UBUNTU_SEARCH.stdout: OK\ncontrol/PRIOR_ENVIRONMENT_GIT_CPYTHON.json: OK\ncontrol/PRODUCER_LOCK.json: OK\ncontrol/RELEASE_SOURCE_LOCK.json: OK\ncontrol/RUNTIME_HEADER_SEARCH.json: OK\ncontrol/RUNTIME_HEADER_SEARCH.stderr: OK\ncontrol/SOURCE_GIT_LOOKUP.json: OK\nhistory/BUG_PIZZA_CHILI_PREFIX_UNDERCOUNT.md: OK\nhistory/BWT_REPETITIVENESS_PROBE_V1.jsonl: OK\nhistory/PIZZA_CHILI_ENGLISH_V1.md: OK\nhistory/PIZZA_SENTINEL_50MB_V1.md: OK\nhistory/RLBWT_BOUNDED_EVIDENCE_V1_VERIFY.md: OK\nhistory/RLBWT_BOUNDED_LOCATE_V1.md: OK\nhistory/RLBWT_BOUNDED_SERVER_V1.md: OK\nhistory/RLBWT_FULL_RUNTIME_PROFILE_V1_VERIFY.md: OK\nhistory/RLBWT_HIGH_COUNT_LOCATE_STRESS_V1.md: OK\nhistory/RLBWT_RANK_BLOCKS_V1_VERIFY.md: OK\nhistory/RLBWT_SIZE_PROBE_V1.md: OK\nquery.bin: OK\n",
+    "stderr": ""
+  },
+  "no_native_queries": true
+}

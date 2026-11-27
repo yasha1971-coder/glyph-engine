@@ -1,0 +1,14 @@
+{
+  "src/rlbwt_full_query_locate_server_v1.cpp": {
+    "git_show_exit": 128,
+    "stderr": "fatal: path 'src/rlbwt_full_query_locate_server_v1.cpp' exists on disk, but not in '5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28'\n"
+  },
+  "tools/rlbwt_rank_blocks_v1.py": {
+    "git_show_exit": 128,
+    "stderr": "fatal: path 'tools/rlbwt_rank_blocks_v1.py' exists on disk, but not in '5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28'\n"
+  },
+  "tools/build_locate_fixture_v1.py": {
+    "git_show_exit": 128,
+    "stderr": "fatal: path 'tools/build_locate_fixture_v1.py' exists on disk, but not in '5fb6fb0c7d825a1070c7d48f70d6533f7e10cd28'\n"
+  }
+}
